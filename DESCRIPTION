@@ -1,0 +1,14 @@
+Package: factoextra
+Type: Package
+Title: Visualization of FactoMineR outputs (PCA, CA, MCA) using ggplot2
+Version: 1.0.0
+Date: 2015-02-21
+Author: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
+Maintainer: Alboukadel kassambara <alboukadel.kassambara@gmail.com>
+Description: Provide easy to use functions to visualize FactoMineR PCA, CA and MCA outputs using ggplot2
+License: GPL-3
+Depends: FactoMineR, ggplot2
+Imports: FactoMineR, ggplot2
+VignetteBuilder: knitr
+URL: htt://www.sthda.com 
+BugReports:https://github.com/kassambara/factoextra/issues
