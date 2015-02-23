@@ -5,10 +5,23 @@ Version: 1.0.0
 Date: 2015-02-21
 Author: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
 Maintainer: Alboukadel kassambara <alboukadel.kassambara@gmail.com>
-Description: Provide easy to use functions to visualize FactoMineR PCA, CA and MCA outputs using ggplot2
+Description: Provide easy to use functions to visualize FactoMineR PCA, CA and
+    MCA outputs using ggplot2
 License: GPL-3
-Depends: FactoMineR, ggplot2
-Imports: FactoMineR, ggplot2
+Depends:
+    FactoMineR,
+    ggplot2,
+    grid
+Imports:
+    FactoMineR,
+    ggplot2,
+    grid
 VignetteBuilder: knitr
-URL: htt://www.sthda.com 
-BugReports:https://github.com/kassambara/factoextra/issues
+URL: htt://www.sthda.com
+BugReports: https://github.com/kassambara/factoextra/issues
+Collate:
+    'fviz_pca_ind.R'
+    'fviz_pca_biplot.R'
+    'fviz_pca_var.R'
+    'get_eigenvalue.R'
+    'fviz_screeplot.R'
