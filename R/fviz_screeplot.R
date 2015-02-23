@@ -1,9 +1,11 @@
+#' @include get_eigenvalue.R
+NULL
 #' Screeplot : Plots the variances/eigenvalues against the number of dimensions
 #' 
 #' @param X Object of class PCA, MCA, CA (from FactoMineR)
 #' @param choice Character specifing the type of the data to be plotted.
 #'  Allowed values are "variance" or "eigenvalue"
-#' @param geom Character specifing the geometry to be used for the graph.
+#' @param geom Character specifying the geometry to be used for the graph.
 #'  Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to use both type
 #' @param barfill Fill color for bar plot
 #' @param barcolor Outline color for bar plot
@@ -19,8 +21,11 @@
 #' \donttest{
 #'  library("FactoMineR")
 #'  data(decathlon)
-#'  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13)
+#'  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
 #'  fviz_screeplot(res.pca)
+#'  
+#'  # Add labels
+#'  fviz_screeplot(res.pca, addlabels=TRUE)
 #'  }
 fviz_screeplot<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                          barfill="steelblue", barcolor="steelblue", linecolor = "black",
@@ -28,8 +33,8 @@ fviz_screeplot<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "l
 {
   library("ggplot2")
   
-  eig <- X$eig
-  if(ncp > 0 & nrow(eig) > ncp) eig <- eig[1:ncp, , drop=FALSE]
+  eig <- get_eigenvalue(X)
+  eig <-eig[1:min(ncp, nrow(eig)), , drop=FALSE]
   
   title <- "Scree plot"
   xlab <- "Dimensions"
