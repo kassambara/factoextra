@@ -2,7 +2,7 @@
 % Please edit documentation in R/fviz_screeplot.R
 \name{fviz_screeplot}
 \alias{fviz_screeplot}
-\title{Screeplot : Plots the variances against the number of dimensions}
+\title{Screeplot : Plots the variances/eigenvalues against the number of dimensions}
 \usage{
 fviz_screeplot(X, choice = c("variance", "eigenvalue"), geom = c("bar",
   "line"), barfill = "steelblue", barcolor = "steelblue",
@@ -14,7 +14,7 @@ fviz_screeplot(X, choice = c("variance", "eigenvalue"), geom = c("bar",
 \item{choice}{Character specifing the type of the data to be plotted.
 Allowed values are "variance" or "eigenvalue"}
 
-\item{geom}{Character specifing the geometry to be used for the graph.
+\item{geom}{Character specifying the geometry to be used for the graph.
 Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to use both type}
 
 \item{barfill}{Fill color for bar plot}
@@ -32,20 +32,23 @@ Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to
 a ggplot2 plot
 }
 \description{
-Screeplot : Plots the variances against the number of dimensions
+Screeplot : Plots the variances/eigenvalues against the number of dimensions
 }
 \examples{
 \donttest{
  library("FactoMineR")
  data(decathlon)
- res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13)
+ res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
  fviz_screeplot(res.pca)
+
+ # Add labels
+ fviz_screeplot(res.pca, addlabels=TRUE)
  }
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://en.sthda.com
+http://www.sthda.com
 }
 
