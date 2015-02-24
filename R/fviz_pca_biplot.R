@@ -159,7 +159,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
   }
   
   # Add supplementary quantitative variables
-  quanti_coord <- as.data.frame(X$quanti.sup$coord)
+  quanti_coord <- X$quanti.sup$coord
   if(!is.null(quanti_coord) & !hide.quanti){
     quanti_coord <- as.data.frame(quanti_coord[, axes, drop=FALSE])*r*0.7
     colnames(quanti_coord) <- c("x", "y")
