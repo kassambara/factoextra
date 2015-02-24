@@ -28,7 +28,8 @@
 #'  head(ind$contrib)
 #'  }
 #'  
-#'  
+#' @export get_pca_ind
+#' 
 get_pca_ind<-function(res.pca, data = NULL){
   
   # FactoMineR package
@@ -44,10 +45,16 @@ get_pca_ind<-function(res.pca, data = NULL){
   
   # Compute the coordinates, the cos2 and contributions
   # of individuals
-  if(inherits(res.pca, 'princomp')){   
-    
-    if(is.null(data)) stop("The argument data is NULL. ",
-                    "The original data used for the pca analysis are required.")
+  if(inherits(res.pca, 'princomp')){     
+    if(is.null(data)) { 
+      data.name <- readline(
+        paste0("The original data used during the PCA analysis are required. ",
+               "What's the name of the object data ? : ")
+        )
+      data <- eval(parse(text=data.name))
+      if(is.null(data)) stop("The argument data is NULL. ",
+           "The original data used for the pca analysis are required.")
+    }
       
     # Compute the square of the distance between an individual and the
     # center of gravity
@@ -75,5 +82,20 @@ get_pca_ind<-function(res.pca, data = NULL){
    ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
   }
   
+  class(ind)<-"pca_ind"
+  
   ind
+}
+
+# Print method for PCA individuals
+print.pca_ind<-function(x){
+  if(!inherits(x, "pca_ind"))
+    stop("Can't handle data of class ", clas(x))
+  cat("Principal Component Analysis Results for individuals\n",
+      "===================================================\n")
+  res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
+  res[1, ] <- c("$coord", "Coordinates for the individuals")
+  res[2, ] <- c("$cos2", "Cos2 for the individuals")
+  res[3, ] <- c("$contrib", "contributions of the individuals")
+  print(res[1:3,])
 }
