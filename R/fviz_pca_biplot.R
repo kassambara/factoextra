@@ -172,6 +172,6 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
                          label = rownames(quanti_coord), color=col.quanti.sup, 
                          size = labelsize, hjust=0.8, vjust=0) 
   }
-  p+labs(title=title)+coord_equal()
+  p+labs(title=title)
 }
 
