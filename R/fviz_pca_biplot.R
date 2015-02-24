@@ -1,4 +1,5 @@
 #' @include fviz_pca_ind.R
+#' @include get_pca_var.R
  NULL
 
 #' Biplot of Principal Component Analysis Individuals and Variables using ggplot2
@@ -20,6 +21,7 @@
 #'  coloring individuals by groups. Default value is "none".
 #' @param addEllipses logical value.
 #'  If TRUE, draw ellipses around the individuals when habillage != "none".
+#' @param ellipse.level the size of the concentration ellipse in normal probability
 #' @param col.ind, col.var color for individuals and variables, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
@@ -35,8 +37,9 @@
 #'  To use this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
 #' @param col.circle a color for the correlation circle.
-#' @param autolab logical value. If TRUE, the best positions for labels are calculated to avoid overlapping.
-#'  This can be time-consuming if there are many variables.
+#' @param ... optional arguments to be passed to the function get_pca_ind().
+#' This can includes the argument data (the original data used for pca) 
+#' which is required when X is not from FactoMineR.
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -59,32 +62,35 @@
 #'  }
 #'  
 fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", labelsize=4,
-                  habillage="none", addEllipses=FALSE, 
+                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                   col.var="steelblue", alpha.var=1, col.quanti.sup="blue",
-                  col.circle ="grey70", autolab=FALSE)
+                  col.circle ="grey70", ...)
 {
   
   library("ggplot2")
   library("grid")
-  library("FactoMineR")
   
-  ind <- data.frame(X$ind$coord[, axes, drop=FALSE])
+  eig.df <- get_eigenvalue(X)
+  pca.ind <- get_pca_ind(X, ...)
+  pca.var <- get_pca_var(X)
+  scale.unit <- .get_scale_unit(X)
+  
+  ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
   colnames(ind)<- c("x", "y")
   
-  eig <- X$eig[,2]
-  var <- data.frame(X$var$coord[, axes, drop=FALSE])
+  eig <- eig.df[,2]
+  var <- data.frame(pca.var$coord[, axes, drop=FALSE])
   colnames(var)<- c("x", "y")
   
   title <- "Biplot"
-  xlab = paste0("Dim.", axes[1], " (", round(eig[axes[1]],1), "%)") 
-  ylab = paste0("Dim.", axes[2], " (", round(eig[axes[2]], 1),"%)")
-  scale.unit <- X$call$scale.unit
+  xlab = paste0("PC", axes[1], " (", round(eig[axes[1]],1), "%)") 
+  ylab = paste0("PC", axes[2], " (", round(eig[axes[2]], 1),"%)")
   
-  cos2 <- apply(X$var$cos2[, axes], 1, sum)
-  coord <- apply(X$var$coord[, axes]^2, 1, sum)
-  contrib <- X$var$contrib[, axes]
-  eig <- X$eig[,axes]
+  cos2 <- apply(pca.var$cos2[, axes], 1, sum)
+  coord <- apply(pca.var$coord[, axes]^2, 1, sum)
+  contrib <- pca.var$contrib[, axes]
+  eig <- eig.df[,axes]
   contrib <- contrib[,1]*eig[1,1] +  contrib[,2]*eig[2,1] 
   
   # rescale variable coordinates
@@ -107,7 +113,6 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
                           textpos_x = textpos$x, textpos_y = textpos$y,
                           var, cos2 = cos2, contrib = contrib, coord=coord)
   
-  
   lab.var <- lab.quanti <- FALSE
   if(label[1]=="all" | "var" %in% label) lab.var =TRUE
   if(label[1]=="all" | "quanti.sup" %in% label) lab.quanti =TRUE
@@ -117,12 +122,15 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, label = label, invisible=invisible,
-                    labelsize=labelsize, 
-                    col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-                    habillage=habillage, addEllipses=addEllipses, autolab=autolab)
+          labelsize=labelsize, 
+          col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
+          habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level)
   
   
   if(!hide.var){
+    
+    # The color and the transparency of variables are automatically controlled by
+    # their cos2, contrib, coord, "x" or "y" coordinates
     if(col.var %in% c("cos2","contrib", "coord", "x", "y") &
          alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
     {
@@ -131,47 +139,57 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
                                        color=col.var, alpha=alpha.var),
                             arrow = arrow(length = unit(0.2, 'cm')))
       if(lab.var) p <- p + geom_text(data = var, 
-                                     aes_string('textpos_x','textpos_y', label = 'name', 
-                                                color=col.var, alpha=alpha.var), size = labelsize)
+                           aes_string('textpos_x','textpos_y', label = 'name', 
+                              color=col.var, alpha=alpha.var), size = labelsize)
     }
+    
+    # Only the color is controlled automatically
     else if(col.var %in% c("cos2","contrib", "coord", "x", "y")){
       p <- p + geom_segment(data = var,
-                            aes_string(x = 0, y = 0, xend = 'x', yend = 'y', color=col.var),
-                            arrow = arrow(length = unit(0.2, 'cm')), alpha = alpha.var)
+              aes_string(x = 0, y = 0, xend = 'x', yend = 'y', color=col.var),
+              arrow = arrow(length = unit(0.2, 'cm')), alpha = alpha.var)
+      
       if(lab.var) p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y', color=col.var),
-                                     label = var$name,  size = labelsize, alpha=alpha.var)
+                            label = var$name,  size = labelsize, alpha=alpha.var)
     }
+    
+    # Only the transparency is controlled automatically
     else if(alpha.var %in% c("cos2","contrib", "coord", "x", "y")){
       p <- p + geom_segment(data = var,
-                            aes_string(x = 0, y = 0, xend = 'x', yend = 'y', alpha=alpha.var),
-                            arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
+                aes_string(x = 0, y = 0, xend = 'x', yend = 'y', alpha=alpha.var),
+                arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
       if(lab.var)p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y', alpha=alpha.var, label ='name'),
                                     size = labelsize, color=col.var)
     }
     else{
       p <- p + geom_segment(data = var,
-                            aes(x = 0, y = 0, xend = x, yend = y),
-                            arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
+                aes(x = 0, y = 0, xend = x, yend = y),
+                arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
+      
       if(lab.var) p <- p + geom_text(data = var, aes(textpos_x,textpos_y),
                                      label = var$name, color=col.var, 
                                      size = labelsize, hjust=0.8, vjust=0) 
     }
   }
   
-  # Add supplementary quantitative variables
-  quanti_coord <- X$quanti.sup$coord
-  if(!is.null(quanti_coord) & !hide.quanti){
-    quanti_coord <- as.data.frame(quanti_coord[, axes, drop=FALSE])*r*0.7
-    colnames(quanti_coord) <- c("x", "y")
-    p <- p + geom_segment(data = quanti_coord,
-                          aes(x = 0, y = 0, xend = x, yend = y),
-                          arrow = arrow(length = unit(0.2, 'cm')), color=col.quanti.sup, linetype=2)
-    
-    if(lab.quanti)
-      p <- p + geom_text(data = quanti_coord, aes(x,y),
-                         label = rownames(quanti_coord), color=col.quanti.sup, 
-                         size = labelsize, hjust=0.8, vjust=0) 
+  # # Add supplementary quantitative variables
+  # Available only in FactoMineR
+  if(inherits(X, 'PCA')){
+    quanti_coord <- X$quanti.sup$coord
+    if(!is.null(quanti_coord) & !hide.quanti){
+      quanti_coord <- as.data.frame(quanti_coord[, axes, drop=FALSE])*r*0.7
+      colnames(quanti_coord) <- c("x", "y")
+      p <- p + geom_segment(data = quanti_coord,
+              aes(x = 0, y = 0, xend = x, yend = y),
+              arrow = arrow(length = unit(0.2, 'cm')), color=col.quanti.sup, linetype=2)
+      
+      if(lab.quanti)
+        p <- p + geom_text(data = quanti_coord, aes(x,y),
+                 label = rownames(quanti_coord), color=col.quanti.sup, 
+                 size = labelsize, hjust=0.8, vjust=0) 
+    }
   }
+  
   p+labs(title=title)
 }
 
