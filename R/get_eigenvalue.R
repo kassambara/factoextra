@@ -26,7 +26,7 @@ get_eigenvalue<-function(X){
   
   # stats package
   else if(inherits(X, 'prcomp') | inherits(X, 'princomp')){
-    eig <- (res.pca$sdev)^2
+    eig <- (X$sdev)^2
     variance <- eig*100/sum(eig)
     cumvar <- cumsum(variance)
     eig <- data.frame(eigenvalue = eig, variance = variance, 

@@ -1,6 +1,15 @@
+#' @include get_pca_var.R
+#' @include get_eigenvalue.R
+#' 
 #' Visualizing Principal Component Analysis Variables using ggplot2
 #' 
-#' @param X an object of class PCA (from FactoMineR package).
+#' @description
+#' This function can be used to visualize the output several PCA functions
+#'  including PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+#'  dudi.pca() from ade4 package.
+#' 
+#' @param X an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+#'  dudi and pca (ade4).
 #' @param axes a numeric vector of length 2 specifying the component to be plotted.
 #' @param label a character vector specifying the elements to be labelled.
 #'  Default value is "all". Allowed values are "none" or the combination of c("var", "quanti.sup").
@@ -42,38 +51,42 @@
 #'  
 #'  p + theme_classic()
 #'  }
+#'  
+#'  @export fviz_pca_var
+#'  
 fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70", autolab = FALSE)
 {
   library("ggplot2")
-  library("FactoMineR")
+#   library("FactoMineR")
   
-  eig <- X$eig[,2]
-  var <- data.frame(X$var$coord[, axes, drop=FALSE])
+  eig.df <- get_eigenvalue(X)
+  pca.var <- get_pca_var(X)
+  scale.unit <- .get_scale_unit(X)
+  
+  eig <- eig.df[,2]
+  var <- data.frame(pca.var$coord[, axes, drop=FALSE])
   colnames(var)<- c("x", "y")
   
-  title <- "Variables graph"
-  xlab = paste0("Dim.", axes[1], " (", round(eig[axes[1]],1), "%)") 
-  ylab = paste0("Dim.", axes[2], " (", round(eig[axes[2]], 1),"%)")
-  scale.unit <- X$call$scale.unit
+  title <- "Variables factor map - PCA"
+  xlab = paste0("PC", axes[1], " (", round(eig[axes[1]],1), "%)") 
+  ylab = paste0("PC", axes[2], " (", round(eig[axes[2]], 1),"%)")
   
-  cos2 <- apply(X$var$cos2[, axes], 1, sum)
-  coord <- apply(X$var$coord[, axes]^2, 1, sum)
-  contrib <- X$var$contrib[, axes]
-  eig <- X$eig[,axes]
+  cos2 <- apply(pca.var$cos2[, axes], 1, sum)
+  coord <- apply(pca.var$coord[, axes]^2, 1, sum) # same as cos2
+  contrib <- pca.var$contrib[, axes]
+  eig <- eig.df[,axes]
   contrib <- contrib[,1]*eig[1,1] +  contrib[,2]*eig[2,1] 
   
   # Find the best position for labels to avoid overlap
   textpos <-var[, c("x", "y")]
-  if(autolab){
-    autopos <- autoLab(var$x, var$y, labels =rownames(var), doPlot=FALSE)
-    textpos$x <- autopos$x
-    textpos$y <- autopos$y
-  }
+#   if(autolab){
+#     autopos <- autoLab(var$x, var$y, labels =rownames(var), doPlot=FALSE)
+#     textpos$x <- autopos$x
+#     textpos$y <- autopos$y
+#   }
   
-  if(label[1]=="all" | "var" %in% label) addlabels =TRUE
-  else addlabels=FALSE
   
   var <- cbind.data.frame(name = rownames(var), 
                           textpos_x = textpos$x, textpos_y = textpos$y,
@@ -91,61 +104,103 @@ fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
   if(scale.unit){
     theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
     circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
-    p <- ggplot(data = circle, aes(xcircle, ycircle)) + geom_path(color=col.circle)
+    p <- ggplot(data = circle, aes(xcircle, ycircle)) + geom_path(color=col.circle)+
+      geom_hline(yintercept = 0, linetype="dashed")+
+      geom_vline(xintercept = 0, linetype="dashed")    
   }
   else p <- ggplot()
   
   if(!hide.var){
+    
+    # The color and the transparency of variables are automatically controlled by
+    # their cos2, contrib, coord, "x" or "y" coordinates
     if(col.var %in% c("cos2","contrib", "coord", "x", "y") &
          alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
     {
       p <- p + geom_segment(data = var,
-                            aes_string(x = 0, y = 0, xend = 'x', yend = 'y', 
-                                       color=col.var, alpha=alpha.var),
-                            arrow = arrow(length = unit(0.2, 'cm')))
+                aes_string(x = 0, y = 0, xend = 'x', yend = 'y', 
+                           color=col.var, alpha=alpha.var),
+                arrow = arrow(length = unit(0.2, 'cm')))
+      
       if(lab.var) p <- p + geom_text(data = var, 
-                                     aes_string('textpos_x','textpos_y', label = 'name', 
-                                                color=col.var, alpha=alpha.var), size = labelsize)
+                           aes_string('textpos_x','textpos_y', label = 'name', 
+                              color=col.var, alpha=alpha.var), size = labelsize)
     }
+    # Only the color is controlled automatically
     else if(col.var %in% c("cos2","contrib", "coord", "x", "y")){
       p <- p + geom_segment(data = var,
-                            aes_string(x = 0, y = 0, xend = 'x', yend = 'y', color=col.var),
-                            arrow = arrow(length = unit(0.2, 'cm')), alpha = alpha.var)
+              aes_string(x = 0, y = 0, xend = 'x', yend = 'y', color=col.var),
+              arrow = arrow(length = unit(0.2, 'cm')), alpha = alpha.var)
+      
       if(lab.var) p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y', color=col.var),
                                      label = var$name,  size = labelsize, alpha=alpha.var)
     }
+    # Only the transparency is controlled automatically
     else if(alpha.var %in% c("cos2","contrib", "coord", "x", "y")){
       p <- p + geom_segment(data = var,
-                            aes_string(x = 0, y = 0, xend = 'x', yend = 'y', alpha=alpha.var),
-                            arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
-      if(lab.var)p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y', alpha=alpha.var, label ='name'),
-                                    size = labelsize, color=col.var)
+                aes_string(x = 0, y = 0, xend = 'x', yend = 'y', alpha=alpha.var),
+                arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
+      
+      if(lab.var)p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y',
+                          alpha=alpha.var, label ='name'),
+                          size = labelsize, color=col.var)
     }
+    
     else{
       p <- p + geom_segment(data = var,
-                            aes(x = 0, y = 0, xend = x, yend = y),
-                            arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
+                aes(x = 0, y = 0, xend = x, yend = y),
+                arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
       if(lab.var) p <- p + geom_text(data = var, aes(textpos_x,textpos_y),
-                                     label = var$name, color=col.var, 
-                                     size = labelsize, hjust=0.8, vjust=0) 
+                           label = var$name, color=col.var, 
+                           size = labelsize, hjust=0.8, vjust=0) 
     }
   }
   
   # Add supplementary quantitative variables
-  quanti_coord <- X$quanti.sup$coord
-  if(!is.null(quanti_coord) & !hide.quanti){
-    quanti_coord <- as.data.frame(quanti_coord[, axes, drop=FALSE])
-    colnames(quanti_coord) <- c("x", "y")
-    p <- p + geom_segment(data = quanti_coord,
-                          aes(x = 0, y = 0, xend = x, yend = y),
-                          arrow = arrow(length = unit(0.2, 'cm')), color=col.quanti.sup, linetype=2)
-    
-    if(lab.quanti)
-      p <- p + geom_text(data = quanti_coord, aes(x,y),
-                         label = rownames(quanti_coord), color=col.quanti.sup, 
-                         size = labelsize, hjust=0.8, vjust=0) 
+  # Available only in FactoMineR
+  if(inherits(X, 'PCA')){
+    quanti_coord <- X$quanti.sup$coord
+    if(!is.null(quanti_coord) & !hide.quanti){
+      quanti_coord <- as.data.frame(quanti_coord[, axes, drop=FALSE])
+      colnames(quanti_coord) <- c("x", "y")
+      p <- p + geom_segment(data = quanti_coord,
+                aes(x = 0, y = 0, xend = x, yend = y),
+                arrow = arrow(length = unit(0.2, 'cm')), color=col.quanti.sup, linetype=2)
+      
+      if(lab.quanti)
+        p <- p + geom_text(data = quanti_coord, aes(x,y),
+                 label = rownames(quanti_coord), color=col.quanti.sup, 
+                 size = labelsize, hjust=0.8, vjust=0) 
+    }
   }
   
-  p <- p+ labs(title = title, x = xlab, y = ylab)+ coord_equal() 
+  p <- p+ labs(title = title, x = xlab, y = ylab)
   p 
 }
+
+
+# X : an object of class PCA, princomp, prcomp, dudi
+# Return TRUE if the data are scaled to unit variance
+.get_scale_unit <-function(X){
+  scale_unit <- FALSE
+  if(inherits(X, 'PCA')) scale_unit <- X$call$scale.unit
+  else if(inherits(X, "prcomp" )) {
+    scale_unit <- X$scale
+    if(is.numeric(scale_unit)) scale_unit = TRUE
+  }
+  else if(inherits(X, "princomp")){
+    scale_unit <- X$scale
+    if(length(unique(scale_unit))>1) scale_unit <- TRUE
+    else scale_unit = FALSE
+  }
+  else if(inherits(X, 'pca') & inherits(X, 'dudi')){
+    scale_unit <- X$norm
+    if(length(unique(scale_unit))>1) scale_unit <- TRUE
+    else scale_unit = FALSE
+  }
+  else stop("Error in .get_scale_unit function : can't handle an object of class ",
+            class(X))
+ 
+  scale_unit
+}
+

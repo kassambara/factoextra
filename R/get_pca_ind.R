@@ -1,0 +1,79 @@
+#' Extract the results for the individuals after a principal component analysis
+#' 
+#' @description
+#' Ectract all the results for the active individuals from a principal component analysis output.
+#'  This output contains individuals coordinates, square cosine and contributions.
+#'  The allowed PCA outputs are the ones from FactoMineR (PCA),
+#'  stats (princomp() and prcomp()), ade4 (dudi.pca()) packages.
+#' @param res.pca an object of class PCA (from FactoMineR);
+#'  prcomp and princomp (from stats package); pca, dudi (dudi.pca, from adea4 package).
+#'  @param data the original data used for the pca. 
+#'   This argument is required only when res.pca is not from FactoMineR.
+#'   It's used to calculate the cos2 of the individuals.
+#' @return a list of matrices containing all the results for the active individuals including : 
+#' \item{coord}{coordinates for the individuals}
+#' \item{cos2}{cos2 for the individuals}
+#' \item{contrib}{contributions of the individuals}
+#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#' @references http://www.sthda.com
+#' @examples
+#' \donttest{
+#'  res.pca <- princomp(iris[, -5])
+#'  ind <- get_pca_ind(res.pca)
+#'  
+#'  head(ind$coord)
+#'  
+#'  head(ind$cos2)
+#'  
+#'  head(ind$contrib)
+#'  }
+#'  
+#'  
+get_pca_ind<-function(res.pca, data = NULL){
+  
+  # FactoMineR package
+  if(inherits(res.pca, 'PCA')) ind <- res.pca$ind
+  
+  # stats package
+  else if(inherits(res.pca, 'princomp')){   
+    ind.coord <- res.pca$scores
+  }
+  
+  else stop("An object of class : ", class(res.pca), 
+            " can't be handled by the function get_pca_ind()")
+  
+  # Compute the coordinates, the cos2 and contributions
+  # of individuals
+  if(inherits(res.pca, 'princomp')){   
+    
+    if(is.null(data)) stop("The argument data is NULL. ",
+                    "The original data used for the pca analysis are required.")
+      
+    # Compute the square of the distance between an individual and the
+    # center of gravity
+    center <- res.pca$center
+    scale<- res.pca$scale
+    getdistance <- function(ind_row, center, scale){
+      return(sum(((ind_row-center)/scale)^2))
+    }
+    d2 <- apply(data,1,getdistance, center, scale)
+    
+    # Compute the cos2
+    cos2 <- function(ind.coord, d2){return(ind.coord^2/d2)}
+    ind.cos2 <- apply(ind.coord, 2, cos2, d2)
+    
+    # Individual contributions 
+    contrib <- function(ind.coord, comp.sdev, n.ind){
+      100*(1/n.ind)*ind.coord^2/comp.sdev^2
+    }
+    ind.contrib <- t(apply(ind.coord,1, contrib, res.pca$sdev, nrow(ind.coord)))
+    
+    colnames(ind.coord) <- colnames(ind.cos2) <-
+      colnames(ind.contrib) <- paste0("Dim ", 1:ncol(ind.coord)) 
+    
+    # individuals coord, cos2 and contrib
+   ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
+  }
+  
+  ind
+}

@@ -20,8 +20,10 @@ VignetteBuilder: knitr
 URL: htt://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
+    'get_pca_ind.R'
+    'get_eigenvalue.R'
     'fviz_pca_ind.R'
     'fviz_pca_biplot.R'
+    'get_pca_var.R'
     'fviz_pca_var.R'
-    'get_eigenvalue.R'
     'fviz_screeplot.R'
