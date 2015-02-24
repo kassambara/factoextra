@@ -14,10 +14,14 @@
 #' @param invisible a character value specifying the elements to be hidden on the plot.
 #'  Default value is "none". Allowed values are the combination of c("ind", "ind.sup", "quali").
 #' @param labelsize font size for the labels
-#' @param habillage specify the qualitative variable (by its index or name) to be used for
-#'  coloring individuals by groups. Default value is "none".
+#' @param habillage an optional factor variable for coloring
+#'  the observations by groups. Default value is "none".
+#'  If X is an PCA object from FactoMineR package, habillage can also specify
+#'  the supplementary qualitative variable (by its index or name) to be used for
+#'  coloring individuals by groups (see ?PCA in FactoMineR). 
 #' @param addEllipses logical value.
 #'  If TRUE, draw ellipses around the individuals when habillage != "none".
+#'  @param ellipse.level the size of the concentration ellipse in normal probability
 #' @param col.ind color for individuals. The default value is "black".
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals are automatically controlled by their qualities ("cos2"),
@@ -30,10 +34,8 @@
 #'  In this case, the transparency for individuals colors are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
-#' @param autolab logical value. If TRUE, the best positions for labels are calculated to avoid overlapping.
-#'  This can be time-consuming if there are many variables.
 #' @param ... optional arguments to be passed to the function get_pca_ind().
-#'  This can includes the agument data (the original data used for pca) 
+#'  This can includes the argument data (the original data used for pca) 
 #'  which is required when X is not from FactoMineR.
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -65,11 +67,10 @@
 fviz_pca_ind <- function(X,  axes = c(1,2), 
                  label = "all", invisible="none", labelsize=4, 
                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                 col.ind = "black", col.ind.sup = "blue", alpha.ind =1, autolab=FALSE, ...)
+                 col.ind = "black", col.ind.sup = "blue", alpha.ind =1, ...)
 {
   library("ggplot2")
   library("grid")
-  #library("FactoMineR")
   
   eig.df <- get_eigenvalue(X)
   pca.ind <- get_pca_ind(X, ...)
@@ -90,11 +91,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2),
   
   # Find the best positions for labels to avoid overlap
   textpos <-ind[, c("x", "y")]
-#   if(autolab){
-#     autopos <- autoLab(ind$x, ind$y, labels =rownames(ind), doPlot=FALSE)
-#     textpos$x <- autopos$x
-#     textpos$y <- autopos$y
-#   }
   
   # data frame to be used for plotting
   ind <- cbind.data.frame(name = rownames(ind), 
@@ -214,49 +210,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2),
     }
       
     
-    # X is from FactoMineR outputs
-#     if(inherits(X, "PCA")){
-#       data <- X$call$X
-#       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
-#       else name.quali <- habillage
-#       ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
-#       colnames(ind)[1]<-name.quali
-#       ind[, 1]<-as.factor(ind[,1])
-#      
-#       
-#       if(!hide.quali){
-#         # Plot quali.sup 
-#         # extract only the levels of interest (when multiple quali.sup are used)
-#         #       quali.levels <- levels(ind[, name.quali])
-#         #       quali.levels <- c(quali.levels, paste0(name.quali, " ", quali.levels ))
-#         #       quali.levels <- as.character(intersect(rownames(X$quali.sup$coord), quali.levels))
-#         #       
-#         #       coord_quali.sup <- X$quali.sup$coord[quali.levels, axes]
-#         coord_quali.sup <- X$quali.sup$coord[, axes]
-#         colnames( coord_quali.sup) <-c("x", "y")
-#         coord_quali.sup <- cbind.data.frame(n = rownames(coord_quali.sup), coord_quali.sup)
-#         colnames(coord_quali.sup)[1] <- name.quali
-#         coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
-#         p <- p + geom_point(data=coord_quali.sup, aes_string('x', 'y', color=name.quali, shape=name.quali),
-#                             size=4)
-#         if(lab.quali)
-#           p <- p + geom_text(data=coord_quali.sup, 
-#                              aes_string('x', 'y', color=name.quali),
-#                              label=rownames(coord_quali.sup),
-#                              size=5, vjust=-1)
-#         
-#         if(addEllipses){
-#           aa <- cbind.data.frame(data[rownames(X$ind$coord), name.quali], X$ind$coord)
-#           ell<-coord.ellipse(aa,bary=TRUE) 
-#           ell <- ell$res
-#           colnames(ell)<-c(name.quali, "x", "y")
-#           ell[, 1]<-as.factor(ell[,1])
-#           p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
-#         }
-#       }
-#       
-#     } #end inherits pca
-    
   }
  
 # Add supplementary quantitative individuals
@@ -293,10 +246,18 @@ if(inherits(X, 'PCA')){
 }
 
 
-# Compute the concentration ellipse
-# x a numeric vector, matrix or data.frame
-# y : optional numeric vector. y is not required when x
-# is a matrix or data.frame
+#+++++++++++++++++++++
+# Helper functions
+#+++++++++++++++++++++
+
+#+++++++++++
+# .get_ellipse() : Compute the concentration ellipse of the points
+#+++++++++++
+# x : the coordinates of points. It can be a numeric vector, matrix or data.frame
+# y : optional y coordinates of points. y is not required when x
+  # is a matrix or data.frame
+# result is a data.frame containing the x and y coordinates of
+  # the ellipse. Columns are x, y
 .get_ellipse <- function(x, y=NULL, ellipse.level = 0.95) {
   if(class(x)%in% c("matrix", "data.frame")){
     y <- x[,2]
@@ -310,10 +271,17 @@ if(inherits(X, 'PCA')){
   data.frame(sweep(circle %*% chol(sigma) * t, 2, mu, FUN = '+'))
 }
 
-# x a numeric vector, matrix or data.frame
-# y : optional numeric vector. y is not required when x
-# groups is a factor
+#+++++++++++
+# .get_ellipse() : Compute the concentration ellipse of the points by groups
+#+++++++++++
+# x : the coordinates of points. It can be a numeric vector, matrix or data.frame
+# y : optional y coordinates of points. y is not required when x is a matrix or data.frame
+# groups  : a factor variable
+
+# result is a data.frame containing the x and y coordinates of
+# the ellipse by groups. Columns are : groups, x, y
 .get_ellipse_by_groups <-function(x, y=NULL, groups, ellipse.level = 0.95){
+  
   if(class(x)%in% c("matrix", "data.frame")){
     y <- x[,2]
     x <- x[,1]
