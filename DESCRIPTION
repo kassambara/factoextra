@@ -9,11 +9,9 @@ Description: Provide easy to use functions to visualize FactoMineR PCA, CA and
     MCA outputs using ggplot2
 License: GPL-3
 Depends:
-    FactoMineR,
     ggplot2,
     grid
 Imports:
-    FactoMineR,
     ggplot2,
     grid
 VignetteBuilder: knitr
