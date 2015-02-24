@@ -22,7 +22,8 @@
 #'  var
 #'  }
 #'  
-#'  
+#' @export get_pca_var
+#' 
 get_pca_var<-function(res.pca){
   
   # FactoMineR package
@@ -57,6 +58,21 @@ get_pca_var<-function(res.pca){
     # Variable coord, cor, cos2 and contrib
    var = list(coord = var.coord, cor = var.cor, cos2 = var.cos2, contrib = var.contrib)
   }
-  
+  class(var)<-'pca_var'
   var
 }
+
+# Print method for PCA variables
+print.pca_var<-function(x){
+  if(!inherits(x, "pca_var"))
+    stop("Can't handle data of class ", clas(x))
+  cat("Principal Component Analysis Results for variables\n",
+      "===================================================\n")
+  res <- array(data="", dim=c(4,2), dimnames=list(1:4, c("Name", "Description")))
+  res[1, ] <- c("$coord", "Coordinates for the variables")
+  res[2, ] <- c("$cor", "Correlations between variables and dimensions")
+  res[3, ] <- c("$cos2", "Cos2 for the variables")
+  res[4, ] <- c("$contrib", "contributions of the variables")
+  print(res[1:4,])
+}
+  
