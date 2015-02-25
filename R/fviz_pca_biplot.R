@@ -40,6 +40,9 @@
 #' @param ... optional arguments to be passed to the function get_pca_ind().
 #' This can includes the argument data (the original data used for pca) 
 #' which is required when X is not from FactoMineR.
+#' @param data the original data used for the pca. 
+#' This argument is required only when X is not from FactoMineR.
+#' It's used to calculate the cos2 of the individuals.
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -49,10 +52,10 @@
 #'  library("FactoMineR")
 #'  data(decathlon)
 #'  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
-#'  fviz_pca_biplot(res.pca, autolab=TRUE)
+#'  fviz_pca_biplot(res.pca)
 #'  
 #'  # Use habillage
-#'  p <- fviz_pca_biplot(res.pca, autolab=TRUE, habillage=13, label=c("var", "quanti.sup"))
+#'  p <- fviz_pca_biplot(res.pca, habillage=13, label=c("var", "quanti.sup"))
 #'  p
 #'  
 #'  # Change the theme
@@ -65,14 +68,28 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                   col.var="steelblue", alpha.var=1, col.quanti.sup="blue",
-                  col.circle ="grey70", ...)
+                  col.circle ="grey70", data = NULL, ...)
 {
   
   library("ggplot2")
   library("grid")
   
+  # The original data is required to compute the cos2
+  # of individuals
+  if(inherits(X, 'princomp')){     
+    if(is.null(data)) { 
+      data.name <- readline(
+        paste0("The original data used during the PCA analysis are required. ",
+               "What's the name of the object data ? : ")
+      )
+      data <- eval(parse(text=data.name))
+      if(is.null(data)) stop("The argument data is NULL. ",
+                             "The original data used for the pca analysis are required.")
+    }
+  }
+  
   eig.df <- get_eigenvalue(X)
-  pca.ind <- get_pca_ind(X, ...)
+  pca.ind <- get_pca_ind(X, data = data)
   pca.var <- get_pca_var(X)
   scale.unit <- .get_scale_unit(X)
   
@@ -103,11 +120,6 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
   
   # Find the best position for labels to avoid overlap
   textpos <-var[, c("x", "y")]
-  if(autolab){
-    autopos <- autoLab(var$x, var$y, labels =rownames(var))
-    textpos$x <- autopos$x
-    textpos$y <- autopos$y
-  }
   
   var <- cbind.data.frame(name = rownames(var), 
                           textpos_x = textpos$x, textpos_y = textpos$y,
@@ -124,7 +136,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
   p <- fviz_pca_ind(X,  axes = axes, label = label, invisible=invisible,
           labelsize=labelsize, 
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-          habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level)
+          habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
+          data = data)
   
   
   if(!hide.var){
