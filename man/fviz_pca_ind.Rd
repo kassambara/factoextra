@@ -2,6 +2,7 @@
 % Please edit documentation in R/fviz_pca_ind.R
 \name{fviz_pca_ind}
 \alias{fviz_pca_ind}
+\title{Visualizing Principal Component Analysis Individuals using ggplot2}
 \usage{
 fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, habillage = "none",
@@ -61,6 +62,9 @@ which is required when X is not from FactoMineR or adea4 packages.}
 }
 \value{
 a ggplot2 plot
+}
+\description{
+Visualizing Principal Component Analysis Individuals using ggplot2
 }
 \examples{
 \donttest{

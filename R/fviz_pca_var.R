@@ -1,6 +1,7 @@
 #' @include get_pca_var.R
 #' @include get_eigenvalue.R
-#' 
+NULL
+
 #' Visualizing Principal Component Analysis Variables using ggplot2
 #' 
 #' @description

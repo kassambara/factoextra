@@ -2,6 +2,7 @@
 % Please edit documentation in R/fviz_pca_var.R
 \name{fviz_pca_var}
 \alias{fviz_pca_var}
+\title{Visualizing Principal Component Analysis Variables using ggplot2}
 \usage{
 fviz_pca_var(X, axes = c(1, 2), label = "all", invisible = "none",
   labelsize = 4, col.var = "black", alpha.var = 1,
