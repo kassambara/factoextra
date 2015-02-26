@@ -2,17 +2,20 @@
 % Please edit documentation in R/fviz_pca_ind.R
 \name{fviz_pca_ind}
 \alias{fviz_pca_ind}
-\title{Visualizing Principal Component Analysis Individuals using ggplot2}
 \usage{
-fviz_pca_ind(X, axes = c(1, 2), label = "all", invisible = "none",
-  labelsize = 4, habillage = "none", addEllipses = FALSE,
-  col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
-  autolab = FALSE)
+fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
+  invisible = "none", labelsize = 4, habillage = "none",
+  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
+  col.ind.sup = "blue", alpha.ind = 1, ...)
 }
 \arguments{
 \item{X}{an object of class PCA (from FactoMineR package).}
 
 \item{axes}{a numeric vector of length 2 specifying the component to be plotted.}
+
+\item{geom}{a character specifying the geometry to be used for the graph.
+Allowed values are "point" (to show only points),
+"text" to show only labels or c("point", "text") to show both types.}
 
 \item{label}{a character vector specifying the elements to be labelled.
 Default value is "all".
@@ -26,11 +29,16 @@ Default value is "none". Allowed values are the combination of c("ind", "ind.sup
 
 \item{labelsize}{font size for the labels}
 
-\item{habillage}{specify the qualitative variable (by its index or name) to be used for
-coloring individuals by groups. Default value is "none".}
+\item{habillage}{an optional factor variable for coloring
+the observations by groups. Default value is "none".
+If X is an PCA object from FactoMineR package, habillage can also specify
+the supplementary qualitative variable (by its index or name) to be used for
+coloring individuals by groups (see ?PCA in FactoMineR).}
 
 \item{addEllipses}{logical value.
 If TRUE, draw ellipses around the individuals when habillage != "none".}
+
+\item{ellipse.level}{the size of the concentration ellipse in normal probability}
 
 \item{col.ind}{color for individuals. The default value is "black".
 Possible values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -47,14 +55,12 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
-\item{autolab}{logical value. If TRUE, the best positions for labels are calculated to avoid overlapping.
- This can be time-consuming if there are many variables.}
+\item{...}{optional arguments to be passed to the function get_pca_ind().
+This can includes the argument data (the original data used for pca)
+which is required when X is not from FactoMineR or adea4 packages.}
 }
 \value{
 a ggplot2 plot
-}
-\description{
-Visualizing Principal Component Analysis Individuals using ggplot2
 }
 \examples{
 \donttest{

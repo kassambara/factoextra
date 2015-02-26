@@ -4,16 +4,21 @@
 \alias{fviz_pca_biplot}
 \title{Biplot of Principal Component Analysis Individuals and Variables using ggplot2}
 \usage{
-fviz_pca_biplot(X, axes = c(1, 2), label = "all", invisible = "none",
-  labelsize = 4, habillage = "none", addEllipses = FALSE,
-  col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
-  col.var = "steelblue", alpha.var = 1, col.quanti.sup = "blue",
-  col.circle = "grey70", autolab = FALSE)
+fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
+  label = "all", invisible = "none", labelsize = 4, habillage = "none",
+  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
+  col.ind.sup = "blue", alpha.ind = 1, col.var = "steelblue",
+  alpha.var = 1, col.quanti.sup = "blue", col.circle = "grey70",
+  data = NULL, ...)
 }
 \arguments{
 \item{X}{an object of class PCA (from FactoMineR package).}
 
 \item{axes}{a numeric vector of length 2 specifying the component to be plotted.}
+
+\item{geom}{a character specifying the geometry to be used for the graph.
+Allowed values are "point" (to show only points),
+"text" to show only labels or c("point", "text") to show both types.}
 
 \item{label}{a character vector specifying the elements to be labelled.
 Default value is "all".
@@ -35,6 +40,8 @@ coloring individuals by groups. Default value is "none".}
 \item{addEllipses}{logical value.
 If TRUE, draw ellipses around the individuals when habillage != "none".}
 
+\item{ellipse.level}{the size of the concentration ellipse in normal probability}
+
 \item{col.ind,}{col.var color for individuals and variables, respectively.
 Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
@@ -55,8 +62,13 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 
 \item{col.circle}{a color for the correlation circle.}
 
-\item{autolab}{logical value. If TRUE, the best positions for labels are calculated to avoid overlapping.
- This can be time-consuming if there are many variables.}
+\item{data}{the original data used for the pca.
+This argument is required only when X is not from FactoMineR.
+It's used to calculate the cos2 of the individuals.}
+
+\item{...}{optional arguments to be passed to the function get_pca_ind().
+This can includes the argument data (the original data used for pca)
+which is required when X is not from FactoMineR.}
 }
 \value{
 a ggplot2 plot
@@ -69,10 +81,10 @@ Biplot of Principal Component Analysis Individuals and Variables using ggplot2
  library("FactoMineR")
  data(decathlon)
  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
- fviz_pca_biplot(res.pca, autolab=TRUE)
+ fviz_pca_biplot(res.pca)
 
  # Use habillage
- p <- fviz_pca_biplot(res.pca, autolab=TRUE, habillage=13, label=c("var", "quanti.sup"))
+ p <- fviz_pca_biplot(res.pca, habillage=13, label=c("var", "quanti.sup"))
  p
 
  # Change the theme

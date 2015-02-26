@@ -8,7 +8,7 @@ get_eigenvalue(X)
 }
 \arguments{
 \item{X}{Object of class PCA, MCA and CA (from FactoMineR);
- prcomp and princomp (from stats package); pca, dudi (dudi.pca, adea4 package)}
+ prcomp and princomp (from stats package); pca, dudi (dudi.pca, from adea4 package)}
 }
 \value{
 a data.frame containing 3 columns :

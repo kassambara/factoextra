@@ -24,4 +24,5 @@ Collate:
     'fviz_pca_ind.R'
     'fviz_pca_biplot.R'
     'fviz_pca_var.R'
+    'fviz_pca_predict.R'
     'fviz_screeplot.R'
