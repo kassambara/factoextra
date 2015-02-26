@@ -76,7 +76,7 @@ get_pca_ind<-function(res.pca, data = NULL){
     ind.contrib <- t(apply(ind.coord,1, contrib, res.pca$sdev, nrow(ind.coord)))
     
     colnames(ind.coord) <- colnames(ind.cos2) <-
-      colnames(ind.contrib) <- paste0("Dim ", 1:ncol(ind.coord)) 
+      colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
     
     # individuals coord, cos2 and contrib
    ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
