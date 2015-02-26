@@ -2,6 +2,7 @@
 % Please edit documentation in R/fviz_pca_predict.R
 \name{fviz_pca_predict}
 \alias{fviz_pca_predict}
+\title{Visualizing Principal Component Analysis Variables using ggplot2}
 \usage{
 fviz_pca_predict(res.pca, quanti.sup = NULL, axes = c(1, 2),
   label = "all", invisible = "none", labelsize = 4, col.var = "black",

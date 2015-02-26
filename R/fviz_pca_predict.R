@@ -3,7 +3,8 @@
 #' @include get_pca_ind.R
 #' @include fviz_pca_var.R
 #' @include fviz_pca_ind.R
-#' 
+NULL
+
 #' Visualizing Principal Component Analysis Variables using ggplot2
 #' 
 #' @description
