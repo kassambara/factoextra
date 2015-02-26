@@ -5,6 +5,9 @@
 #' 
 #' @param X an object of class PCA (from FactoMineR package).
 #' @param axes a numeric vector of length 2 specifying the component to be plotted.
+#' @param geom a character specifying the geometry to be used for the graph.
+#'  Allowed values are "point" (to show only points),
+#'  "text" to show only labels or c("point", "text") to show both types.
 #' @param label a character vector specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup", "quali").
@@ -36,7 +39,7 @@
 #'  To use this, make sure that habillage ="none".
 #' @param ... optional arguments to be passed to the function get_pca_ind().
 #'  This can includes the argument data (the original data used for pca) 
-#'  which is required when X is not from FactoMineR.
+#'  which is required when X is not from FactoMineR or adea4 packages.
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
@@ -64,13 +67,14 @@
 #'  
 #' @export fviz_pca_ind
 
-fviz_pca_ind <- function(X,  axes = c(1,2), 
+fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                  label = "all", invisible="none", labelsize=4, 
                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                  col.ind = "black", col.ind.sup = "blue", alpha.ind =1, ...)
 {
-  library("ggplot2")
-  library("grid")
+
+  if(length(intersect(geom, c("point", "text"))) == 0)
+    stop("The specified value(s) for the argument geom are not allowed ")
   
   eig.df <- get_eigenvalue(X)
   pca.ind <- get_pca_ind(X, ...)
@@ -111,46 +115,57 @@ fviz_pca_ind <- function(X,  axes = c(1,2),
   # No qualitative variable to color individuals
   if(habillage[1]=="none"){  
     
-    if(hide.ind) p <-ggplot()+geom_blank(data=ind, aes(x,y))
+    p <- ggplot() 
     
+    if(hide.ind) p <-ggplot()+geom_blank(data=ind, aes(x,y))
     # The color and the transparency of individuals are automatically controlled by
     # their cos2, contrib, coord, "x" or "y" coordinates
     else if(col.ind %in% c("cos2","contrib", "coord", "x", "y") &
          alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
       {
-      p <- ggplot() + geom_point(data = ind, 
-                      aes_string('x','y', color=col.ind, alpha=alpha.ind), shape=19)
-      
-      if(lab.ind) p <- p + geom_text(data = ind, 
-                           aes_string('textpos_x','textpos_y', label = 'name', 
-                           color=col.ind, alpha=alpha.ind), size = labelsize)
+        if("point" %in% geom) 
+          p <- p + geom_point(data = ind, 
+                   aes_string('x','y', color=col.ind, alpha=alpha.ind), shape=19)
+        
+        if(lab.ind & "text"%in% geom) 
+          p <- p + geom_text(data = ind, 
+          aes_string('textpos_x','textpos_y', label = 'name', 
+          color=col.ind, alpha=alpha.ind), size = labelsize)
     }
     # Only the color is controlled automatically
     else if(col.ind %in% c("cos2","contrib", "coord", "x", "y")){
       
-      p <- ggplot() + geom_point(data = ind, aes_string('x','y', color=col.ind),
-                      shape=19, alpha=alpha.ind)
+      if("point" %in% geom) 
+        p <- p + geom_point(data = ind, aes_string('x','y', color=col.ind),
+                  shape=19, alpha=alpha.ind)
       
-      if(lab.ind) p <- p + geom_text(data = ind,
-                           aes_string('textpos_x','textpos_y', color=col.ind),
-                           label = ind$name,  size = labelsize, alpha=alpha.ind)
-    }
+      if(lab.ind & "text" %in% geom) 
+        p <- p + geom_text(data = ind,
+             aes_string('textpos_x','textpos_y', color=col.ind),
+             label = ind$name,  size = labelsize, alpha=alpha.ind)
+    }   
     # Only the transparency is controlled automatically
     else if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y")){
-      p <- ggplot() + geom_point(data = ind, 
-                      aes_string('x','y', alpha=alpha.ind), shape=19, color=col.ind)
       
-      if(lab.ind) p <- p + geom_text(data = ind, 
-                           aes_string('textpos_x','textpos_y', alpha=alpha.ind, label="name"),
-                          size = labelsize, color=col.ind)
+      if("point" %in% geom) 
+        p <- p + geom_point(data = ind, 
+                  aes_string('x','y', alpha=alpha.ind), shape=19, color=col.ind)
+      
+      if(lab.ind & "text" %in% geom) 
+        p <- p + geom_text(data = ind, 
+             aes_string('textpos_x','textpos_y', alpha=alpha.ind, label="name"),
+             size = labelsize, color=col.ind)
     }
     
     else{
-      p <- ggplot(data = ind, aes(x,y))+ 
-        geom_point(shape=19, color=col.ind)
+      p <- ggplot(data = ind, aes(x,y))
       
-      if(lab.ind) p <- p + geom_text(data = ind, aes(textpos_x,textpos_y), 
-                           color = col.ind, label = ind$name, size = labelsize)
+      if("point" %in% geom) 
+        p <- p + geom_point(shape=19, color=col.ind)
+      
+      if(lab.ind & "text" %in% geom) 
+        p <- p + geom_text(data = ind, aes(textpos_x,textpos_y), 
+                 color = col.ind, label = ind$name, size = labelsize)
     }
   }
 
@@ -182,11 +197,15 @@ fviz_pca_ind <- function(X,  axes = c(1,2),
     }
     
     if(!hide.ind) {
-      p <- p+geom_point(data = ind, 
-                        aes_string('x', 'y', color=name.quali, shape = name.quali))
-      if(lab.ind) p <- p + geom_text(data = ind, 
-                                     aes_string('textpos_x', 'textpos_y', label = 'name',
-                                                color=name.quali, shape = name.quali),  size = labelsize)
+      
+      if("point" %in% geom) 
+         p <- p+geom_point(data = ind, 
+              aes_string('x', 'y', color=name.quali, shape = name.quali))
+      
+      if(lab.ind & "text" %in% geom) 
+        p <- p + geom_text(data = ind, 
+                 aes_string('textpos_x', 'textpos_y', label = 'name',
+                 color=name.quali, shape = name.quali),  size = labelsize)
     }
     if(!hide.quali){   
       coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])
@@ -194,9 +213,10 @@ fviz_pca_ind <- function(X,  axes = c(1,2),
                                      coord_quali.sup)
       colnames(coord_quali.sup)[1] <- name.quali
       coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
-      p <- p + geom_point(data=coord_quali.sup,
+      if("point" %in% geom) 
+        p <- p + geom_point(data=coord_quali.sup,
               aes_string('x', 'y', color=name.quali, shape=name.quali), size=4)    
-      if(lab.quali)
+      if(lab.quali & "text" %in% geom)
         p <- p + geom_text(data=coord_quali.sup, 
                  aes_string('x', 'y', color=name.quali),
                  label=rownames(coord_quali.sup), size=5, vjust=-1)
@@ -216,14 +236,18 @@ fviz_pca_ind <- function(X,  axes = c(1,2),
 # Available only in FactoMineR
 if(inherits(X, 'PCA')){
   indsup_coord <- X$ind.sup$coord
+  
   if(!is.null(indsup_coord) & !hide.ind.sup){
     indsup_coord <- as.data.frame(indsup_coord[, axes, drop=FALSE])
     colnames(indsup_coord) <- c("x", "y")
-    p <- p + geom_point(data=indsup_coord, aes(x, y),
+    
+    if("point" %in% geom)
+     p <- p + geom_point(data=indsup_coord, aes(x, y),
                         shape=19, color=col.ind.sup)
-    if(lab.ind.sup) p <- p + geom_text(data = indsup_coord, aes(x,y),
-                                       label = rownames(indsup_coord), color=col.ind.sup, 
-                                       size = labelsize, hjust=0.8, vjust=0) 
+    if(lab.ind.sup & "text" %in% geom) 
+      p <- p + geom_text(data = indsup_coord, aes(x,y),
+               label = rownames(indsup_coord), color=col.ind.sup, 
+               size = labelsize, hjust=0.8, vjust=0) 
   }
 }
   
@@ -286,15 +310,14 @@ if(inherits(X, 'PCA')){
     y <- x[,2]
     x <- x[,1]
   }
-  
   groups <-as.factor(groups)
   levs <- levels(groups)
   len <- summary(groups) # number of cases per group
   d <- data.frame(x =x, y = y, groups=groups)
   result <- NULL
   for(i in 1:length(levs)){
-    res <- .get_ellipse(d[which(groups==levs[i]),], ellipse.level=ellipse.level)
-    res <- cbind.data.frame(group=rep(levs[i], len[levs[i]]), res)
+    res <- .get_ellipse(d[which(groups==levs[i]),, drop=FALSE], ellipse.level=ellipse.level)
+    res <- cbind.data.frame(group=rep(levs[i], nrow(res)), res)
     result <- rbind.data.frame(result,res)
   }
   result
