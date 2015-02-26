@@ -6,6 +6,9 @@
 #' 
 #' @param X an object of class PCA (from FactoMineR package).
 #' @param axes a numeric vector of length 2 specifying the component to be plotted.
+#' @param geom a character specifying the geometry to be used for the graph.
+#'  Allowed values are "point" (to show only points),
+#'  "text" to show only labels or c("point", "text") to show both types.
 #' @param label a character vector specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
@@ -64,7 +67,8 @@
 #'  p + theme_classic()
 #'  }
 #'  
-fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", labelsize=4,
+fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
+                  label = "all", invisible="none", labelsize=4,
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                   col.var="steelblue", alpha.var=1, col.quanti.sup="blue",
@@ -133,7 +137,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), label = "all", invisible="none", 
   if("quanti.sup" %in% invisible) hide.quanti =TRUE
   
   # Individuals
-  p <- fviz_pca_ind(X,  axes = axes, label = label, invisible=invisible,
+  p <- fviz_pca_ind(X,  axes = axes, geom = geom, label = label, invisible=invisible,
           labelsize=labelsize, 
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
