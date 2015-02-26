@@ -26,7 +26,6 @@ Maintainer: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
 \references{
 http://www.sthda.com
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
 \keyword{ package }
 \seealso{
 }
