@@ -29,8 +29,6 @@
 #'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
 #' @param col.circle a color for the correlation circle.
-#' @param autolab logical value. If TRUE, the best positions for labels are calculated to avoid overlapping.
-#'  This can be time-consuming if there are many variables.
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -56,10 +54,8 @@
 #'  
 fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
                          labelsize=4, col.var="black", alpha.var=1, 
-                         col.quanti.sup="blue", col.circle ="grey70", autolab = FALSE)
+                         col.quanti.sup="blue", col.circle ="grey70")
 {
-  library("ggplot2")
-#   library("FactoMineR")
   
   eig.df <- get_eigenvalue(X)
   pca.var <- get_pca_var(X)
@@ -79,14 +75,8 @@ fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
   eig <- eig.df[,axes]
   contrib <- contrib[,1]*eig[1,1] +  contrib[,2]*eig[2,1] 
   
-  # Find the best position for labels to avoid overlap
+  # Label positions
   textpos <-var[, c("x", "y")]
-#   if(autolab){
-#     autopos <- autoLab(var$x, var$y, labels =rownames(var), doPlot=FALSE)
-#     textpos$x <- autopos$x
-#     textpos$y <- autopos$y
-#   }
-  
   
   var <- cbind.data.frame(name = rownames(var), 
                           textpos_x = textpos$x, textpos_y = textpos$y,
