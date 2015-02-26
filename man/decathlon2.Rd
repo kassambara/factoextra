@@ -1,9 +1,7 @@
 \name{decathlon2}
 \alias{decathlon2}
 \docType{data}
-\title{
-Athletes' performance in decathlon
-}
+\title{Athletes' performance in decathlon}
 \description{
 Athletes' performance during two sporting meetings
 }
@@ -27,7 +25,6 @@ Athletes' performance during two sporting meetings
   }
 }
 \details{
-%%  ~~ If necessary, more details than the __description__ above ~~
 }
 \source{
 This data is a subset of decathlon data in FactoMineR package.
