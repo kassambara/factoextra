@@ -1,6 +1,6 @@
 #' @include get_pca_ind.R
 #' @include get_eigenvalue.R
-#' 
+NULL
 #' Visualizing Principal Component Analysis Individuals using ggplot2
 #' 
 #' @param X an object of class PCA (from FactoMineR package).
