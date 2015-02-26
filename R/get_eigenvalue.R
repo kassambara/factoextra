@@ -44,8 +44,8 @@ get_eigenvalue<-function(X){
   else stop("An object of class : ", class(X), 
             " can't be handled by the function get_eigenvalue()")
   
-  colnames(eig) <- c("eigenvalue", "percentage_of_variance", 
-                     "cumulative_percentage_of_variance")
+  colnames(eig) <- c("eigenvalue", "variance.percent", 
+                     "cumulative.variance.percent")
   
   rownames(eig) <- paste0("Dim ", 1:nrow(eig))
   
