@@ -42,7 +42,7 @@ get_pca_ind<-function(res.pca, data = NULL){
     data <- res.pca$tab
     data <- t(apply(data, 1, function(x){x*res.pca$norm} ))
     data <- t(apply(data, 1, function(x){x+res.pca$cent}))
-    ind <- .get_pca_ind_results(ind.coord, data, 
+    ind <- .get_pca_ind_results(ind.coord, data, res.pca$eig,
                                 res.pca$cent, res.pca$norm)
   }
   
@@ -59,7 +59,7 @@ get_pca_ind<-function(res.pca, data = NULL){
                              "The original data used for the pca analysis are required.")
     }
     
-    ind <- .get_pca_ind_results(ind.coord, data, 
+    ind <- .get_pca_ind_results(ind.coord, data, res.pca$sdev^2,
                                 res.pca$center, res.pca$sdev)
     
   }
@@ -93,7 +93,10 @@ print.pca_ind<-function(x){
 # pca.center, pca.scale : numeric vectors corresponding to the pca
 # center and scale respectively
 # data : the orignal data used during the pca analysis
-.get_pca_ind_results <- function(ind.coord, data, pca.center, pca.scale ){
+# eigenvalues : principal component eigenvalues
+.get_pca_ind_results <- function(ind.coord, data, eigenvalues, pca.center, pca.scale ){
+  
+  eigenvalues <- eigenvalues[ncol(ind.coord)]
   
   # Compute the square of the distance between an individual and the
   # center of gravity
@@ -107,15 +110,14 @@ print.pca_ind<-function(x){
   ind.cos2 <- apply(ind.coord, 2, cos2, d2)
   
   # Individual contributions 
-  contrib <- function(ind.coord, comp.sdev, n.ind){
-    100*(1/n.ind)*ind.coord^2/comp.sdev^2
+  contrib <- function(ind.coord, eigenvalues, n.ind){
+    100*(1/n.ind)*ind.coord^2/eigenvalues
   }
-  ind.contrib <- t(apply(ind.coord,1, contrib,  pca.scale, nrow(ind.coord)))
-  print(head(ind.contrib))
+  ind.contrib <- t(apply(ind.coord,1, contrib,  eigenvalues, nrow(ind.coord)))
   colnames(ind.coord) <- colnames(ind.cos2) <-
     colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
   
-  # individuals coord, cos2 and contrib
+  # Individuals coord, cos2 and contrib
   ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
   ind
 }
