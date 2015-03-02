@@ -38,6 +38,12 @@ get_pca_var<-function(res.pca){
     var.cor <- t(apply(res.pca$loadings, 1, var_cor_func, res.pca$sdev))
     var <- .get_pca_var_results(var.cor)
   }
+  else if(inherits(res.pca, 'prcomp')){
+    # Correlation of variables with the principal component
+    var_cor_func <- function(var.loadings, comp.sdev){var.loadings*comp.sdev}
+    var.cor <- t(apply(res.pca$rotation, 1, var_cor_func, res.pca$sdev))
+    var <- .get_pca_var_results(var.cor)
+  }
   else stop("An object of class : ", class(res.pca), 
             " can't be handled by the function get_pca_var()")
   class(var)<-'pca_var'

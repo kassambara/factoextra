@@ -60,8 +60,22 @@ get_pca_ind<-function(res.pca, data = NULL){
     }
     
     ind <- .get_pca_ind_results(ind.coord, data, res.pca$sdev^2,
-                                res.pca$center, res.pca$sdev)
+                                res.pca$center, res.pca$scale)
     
+  }
+  else if(inherits(res.pca, 'prcomp')){
+    ind.coord <- res.pca$x
+    if(is.null(data)) { 
+      data.name <- readline(
+        paste0("The original data used during the PCA analysis are required. ",
+               "What's the name of the object data ? : ")
+      )
+      data <- eval(parse(text=data.name))
+      if(is.null(data)) stop("The argument data is NULL. ",
+                             "The original data used for the pca analysis are required.")
+    }
+    ind <- .get_pca_ind_results(ind.coord, data, res.pca$sdev^2,
+                                res.pca$center, res.pca$scale)
   }
   else stop("An object of class : ", class(res.pca), 
             " can't be handled by the function get_pca_ind()")
@@ -97,6 +111,9 @@ print.pca_ind<-function(x){
 .get_pca_ind_results <- function(ind.coord, data, eigenvalues, pca.center, pca.scale ){
   
   eigenvalues <- eigenvalues[ncol(ind.coord)]
+  
+  if(pca.center[1] == FALSE) pca.center <- rep(0, ncol(data))
+  if(pca.scale[1] == FALSE) pca.scale <- rep(1, ncol(data))
   
   # Compute the square of the distance between an individual and the
   # center of gravity
