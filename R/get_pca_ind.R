@@ -35,52 +35,36 @@ get_pca_ind<-function(res.pca, data = NULL){
   # FactoMineR package
   if(inherits(res.pca, 'PCA')) ind <- res.pca$ind
   
-  # stats package
-  else if(inherits(res.pca, 'princomp')){   
-    ind.coord <- res.pca$scores
+  # ade4 package
+  else if(inherits(res.pca, 'pca') & inherits(res.pca, 'dudi')){  
+    ind.coord <- res.pca$li
+    # get the original data
+    data <- res.pca$tab
+    data <- t(apply(data, 1, function(x){x*res.pca$norm} ))
+    data <- t(apply(data, 1, function(x){x+res.pca$cent}))
+    ind <- .get_pca_ind_results(ind.coord, data, 
+                                res.pca$cent, res.pca$norm)
   }
   
-  else stop("An object of class : ", class(res.pca), 
-            " can't be handled by the function get_pca_ind()")
-  
-  # Compute the coordinates, the cos2 and contributions
-  # of individuals
-  if(inherits(res.pca, 'princomp')){     
+  # stats package
+  else if(inherits(res.pca, 'princomp')){  
+    ind.coord <- res.pca$scores
     if(is.null(data)) { 
       data.name <- readline(
         paste0("The original data used during the PCA analysis are required. ",
                "What's the name of the object data ? : ")
-        )
+      )
       data <- eval(parse(text=data.name))
       if(is.null(data)) stop("The argument data is NULL. ",
-           "The original data used for the pca analysis are required.")
+                             "The original data used for the pca analysis are required.")
     }
-      
-    # Compute the square of the distance between an individual and the
-    # center of gravity
-    center <- res.pca$center
-    scale<- res.pca$scale
-    getdistance <- function(ind_row, center, scale){
-      return(sum(((ind_row-center)/scale)^2))
-    }
-    d2 <- apply(data,1,getdistance, center, scale)
     
-    # Compute the cos2
-    cos2 <- function(ind.coord, d2){return(ind.coord^2/d2)}
-    ind.cos2 <- apply(ind.coord, 2, cos2, d2)
+    ind <- .get_pca_ind_results(ind.coord, data, 
+                                res.pca$center, res.pca$sdev)
     
-    # Individual contributions 
-    contrib <- function(ind.coord, comp.sdev, n.ind){
-      100*(1/n.ind)*ind.coord^2/comp.sdev^2
-    }
-    ind.contrib <- t(apply(ind.coord,1, contrib, res.pca$sdev, nrow(ind.coord)))
-    
-    colnames(ind.coord) <- colnames(ind.cos2) <-
-      colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
-    
-    # individuals coord, cos2 and contrib
-   ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
   }
+  else stop("An object of class : ", class(res.pca), 
+            " can't be handled by the function get_pca_ind()")
   
   class(ind)<-"pca_ind"
   
@@ -98,4 +82,40 @@ print.pca_ind<-function(x){
   res[2, ] <- c("$cos2", "Cos2 for the individuals")
   res[3, ] <- c("$contrib", "contributions of the individuals")
   print(res[1:3,])
+}
+
+
+# Helper functions
+#++++++++++++++++++++
+
+# compute all the results for individuals : coord, cor, cos2, contrib
+# ind.coord : coordinates of variables on the principal component
+# pca.center, pca.scale : numeric vectors corresponding to the pca
+# center and scale respectively
+# data : the orignal data used during the pca analysis
+.get_pca_ind_results <- function(ind.coord, data, pca.center, pca.scale ){
+  
+  # Compute the square of the distance between an individual and the
+  # center of gravity
+  getdistance <- function(ind_row, center, scale){
+    return(sum(((ind_row-center)/scale)^2))
+  }
+  d2 <- apply(data, 1,getdistance, pca.center, pca.scale)
+  
+  # Compute the cos2
+  cos2 <- function(ind.coord, d2){return(ind.coord^2/d2)}
+  ind.cos2 <- apply(ind.coord, 2, cos2, d2)
+  
+  # Individual contributions 
+  contrib <- function(ind.coord, comp.sdev, n.ind){
+    100*(1/n.ind)*ind.coord^2/comp.sdev^2
+  }
+  ind.contrib <- t(apply(ind.coord,1, contrib,  pca.scale, nrow(ind.coord)))
+  print(head(ind.contrib))
+  colnames(ind.coord) <- colnames(ind.cos2) <-
+    colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
+  
+  # individuals coord, cos2 and contrib
+  ind = list(coord = ind.coord,  cos2 = ind.cos2, contrib = ind.contrib)
+  ind
 }
