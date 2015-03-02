@@ -25,42 +25,25 @@
 #' @export get_pca_var
 #' 
 get_pca_var<-function(res.pca){
-  
   # FactoMineR package
   if(inherits(res.pca, 'PCA')) var <- res.pca$var
-  
+  # ade4 package
+  else if(inherits(res.pca, 'pca') & inherits(res.pca, 'dudi')){
+    var <- .get_pca_var_results(res.pca$co)
+  }
   # stats package
   else if(inherits(res.pca, 'princomp')){   
     # Correlation of variables with the principal component
     var_cor_func <- function(var.loadings, comp.sdev){var.loadings*comp.sdev}
     var.cor <- t(apply(res.pca$loadings, 1, var_cor_func, res.pca$sdev))
+    var <- .get_pca_var_results(var.cor)
   }
-  
   else stop("An object of class : ", class(res.pca), 
             " can't be handled by the function get_pca_var()")
-  
-  # Compute the coordinates, the cos2 and contributions
-  # of variables
-  if(inherits(res.pca, 'princomp')){  
-    
-    var.coord <- var.cor # variable coordinates
-    var.cos2 <- var.cor^2 # variable qualities 
-    
-    # variable contributions (in percent)
-    # var.cos2*100/total Cos2 of the component
-    comp.cos2 <- apply(var.cos2, 2, sum)
-    contrib <- function(var.cos2, comp.cos2){var.cos2*100/comp.cos2}
-    var.contrib <- t(apply(var.cos2,1, contrib, comp.cos2))
-    
-    colnames(var.coord) <- colnames(var.cor) <- colnames(var.cos2) <-
-      colnames(var.contrib) <- paste0("Dim ", 1:ncol(var.coord)) 
-    
-    # Variable coord, cor, cos2 and contrib
-   var = list(coord = var.coord, cor = var.cor, cos2 = var.cos2, contrib = var.contrib)
-  }
   class(var)<-'pca_var'
   var
 }
+
 
 # Print method for PCA variables
 print.pca_var<-function(x){
@@ -75,4 +58,26 @@ print.pca_var<-function(x){
   res[4, ] <- c("$contrib", "contributions of the variables")
   print(res[1:4,])
 }
+
+
+# compute all the results for variables : coord, cor, cos2, contrib
+# var.coord : coordinates of variables on the principal component
+.get_pca_var_results <- function(var.coord){
+  
+  var.cor <- var.coord # correlation
+  var.cos2 <- var.cor^2 # variable qualities 
+  
+  # variable contributions (in percent)
+  # var.cos2*100/total Cos2 of the component
+  comp.cos2 <- apply(var.cos2, 2, sum)
+  contrib <- function(var.cos2, comp.cos2){var.cos2*100/comp.cos2}
+  var.contrib <- t(apply(var.cos2,1, contrib, comp.cos2))
+  
+  colnames(var.coord) <- colnames(var.cor) <- colnames(var.cos2) <-
+    colnames(var.contrib) <- paste0("Dim.", 1:ncol(var.coord)) 
+  
+  # Variable coord, cor, cos2 and contrib
+  list(coord = var.coord, cor = var.cor, cos2 = var.cos2, contrib = var.contrib)
+}
+
   
