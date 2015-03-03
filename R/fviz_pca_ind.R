@@ -2,10 +2,16 @@
 #' @include get_eigenvalue.R
 NULL
 
-#' Visualizing Principal Component Analysis Individuals using ggplot2
+#' Graph of individuals - Principal Component Analysis
 #' 
-#' @param X an object of class PCA (from FactoMineR package).
-#' @param axes a numeric vector of length 2 specifying the component to be plotted.
+#' @description
+#' This function can be used to visualize individual factor maps from the output of several PCA functions : 
+#' PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+#'  dudi.pca() from ade4 package.
+#'  
+#' @param X an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+#'  dudi and pca (ade4).
+#' @param axes a numeric vector of length 2 specifying the components to be plotted.
 #' @param geom a character specifying the geometry to be used for the graph.
 #'  Allowed values are "point" (to show only points),
 #'  "text" to show only labels or c("point", "text") to show both types.
@@ -13,7 +19,7 @@ NULL
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup", "quali").
 #'  "ind" can be used to label only active individuals.
-#'  "ind.sup" if for supplementary individuals.
+#'  "ind.sup" is for supplementary individuals.
 #'  "quali" is for supplementary qualitative variables.
 #' @param invisible a character value specifying the elements to be hidden on the plot.
 #'  Default value is "none". Allowed values are the combination of c("ind", "ind.sup", "quali").
@@ -46,24 +52,19 @@ NULL
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#'  library("FactoMineR")
-#'  data(decathlon)
-#'  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
-#'  fviz_pca_ind(res.pca, autolab=TRUE)
+#' data(iris)
+#' # Principal component analysis
+#' res.pca <- princomp(iris[, -5],  cor = TRUE)
+#' 
+#' # Default plot
+#' fviz_pca_ind(res.pca, data = iris[, -5])
+#' 
+#' # Remove the points from the graph
+#' fviz_pca_ind(res.pca, data = iris[, -5], geom="text")
 #'  
-#'  # Use habillage
-#'  fviz_pca_ind(res.pca, autolab=TRUE, habillage=13)
-#'  
-#'  # Change the color by contrib
-#'  p <- fviz_pca_ind(res.pca, col.ind ="contrib")
-#'  p
-#'  # Change the color
-#'  p + scale_color_gradient2(low ="blue", mid="white", high="red", midpoint=40)
-#'  
-#'  # Change the theme
-#'  p + theme_minimal()
-#'  
-#'  p + theme_classic()
+#'  # Color individuals by groups
+#'  fviz_pca_ind(res.pca, data = iris[, -5], label="none",
+#'  habillage=iris$Species, addEllipses=TRUE, ellipse.level=0.95)
 #'  }
 #'  
 #' @export fviz_pca_ind
@@ -220,7 +221,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       if(lab.quali & "text" %in% geom)
         p <- p + geom_text(data=coord_quali.sup, 
                  aes_string('x', 'y', color=name.quali),
-                 label=rownames(coord_quali.sup), size=5, vjust=-1)
+                 label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
     }
     if(addEllipses){
       ell <- .get_ellipse_by_groups(ind$x, ind$y,
