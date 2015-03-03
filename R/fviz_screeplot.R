@@ -32,6 +32,8 @@ NULL
 #' # Change theme
 #' fviz_screeplot(res.pca) + theme_minimal()
 #'  }
+#'  
+#' @export
 fviz_screeplot<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                          barfill="steelblue", barcolor="steelblue", linecolor = "black",
                          ncp=5, addlabels=FALSE, ...)

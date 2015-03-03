@@ -64,8 +64,7 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle.
-#'}
+\item{col.circle}{a color for the correlation circle.}
 
 \item{data}{the original data used for the PCA.
 This argument is required only when X is not from FactoMineR or ade4 packages.

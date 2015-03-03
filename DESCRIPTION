@@ -8,13 +8,15 @@ Maintainer: Alboukadel kassambara <alboukadel.kassambara@gmail.com>
 Description: Provide some easy-to-use functions to visualize the output of
     several PCA functions : PCA() from FactoMineR package; prcomp() and
     princomp() from stats package; dudi.pca() from ade4 package.
-License: GPL-3
+License: GPL-2
+LazyData: true
 Depends:
     ggplot2,
     grid
 Imports:
     ggplot2,
     grid
+Suggests: ggplot2, knitr
 VignetteBuilder: knitr
 URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues

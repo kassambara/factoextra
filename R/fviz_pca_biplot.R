@@ -1,7 +1,5 @@
-#' @include fviz_pca_ind.R
-#' @include get_pca_var.R
+#' @include fviz_pca_ind.R get_pca_var.R
  NULL
-
 #' Biplot of individuals and variables - Principal Component Analysis
 #' 
 #' @description
@@ -49,7 +47,7 @@
 #'  To use this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
 #' @param col.circle a color for the correlation circle.
-#' #' @param data the original data used for the PCA. 
+#' @param data the original data used for the PCA. 
 #' This argument is required only when X is not from FactoMineR or ade4 packages.
 #' It's used to calculate the cos2 of the individuals.
 #' @param ... optional arguments to be passed to the function get_pca_ind().
@@ -78,7 +76,7 @@
 #' habillage=iris$Species, addEllipses=TRUE, ellipse.level=0.95)
 #' 
 #'  }
-#'  
+#' @export
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   label = "all", invisible="none", labelsize=4,
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,

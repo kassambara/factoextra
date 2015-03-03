@@ -18,7 +18,7 @@
 #'  eig <- get_eigenvalue(res.pca)
 #'  head(eig)
 #'  }
-#'  
+#' @export
 get_eigenvalue<-function(X){
   
   # FactoMineR package

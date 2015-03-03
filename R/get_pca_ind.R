@@ -28,8 +28,7 @@
 #'  head(ind$contrib)
 #'  }
 #'  
-#' @export get_pca_ind
-#' 
+#' @export
 get_pca_ind<-function(res.pca, data = NULL){
   
   # FactoMineR package

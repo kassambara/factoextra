@@ -22,8 +22,7 @@
 #'  var
 #'  }
 #'  
-#' @export get_pca_var
-#' 
+#' @export 
 get_pca_var<-function(res.pca){
   # FactoMineR package
   if(inherits(res.pca, 'PCA')) var <- res.pca$var

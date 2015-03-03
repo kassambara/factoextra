@@ -1,7 +1,5 @@
-#' @include get_pca_var.R
-#' @include get_eigenvalue.R
+#' @include get_pca_var.R get_eigenvalue.R
 NULL
-
 #' Graph of variables - Principal Component Analysis
 #' 
 #' @description
@@ -59,14 +57,12 @@ NULL
 #' fviz_pca_var(res.pca, alpha.var="contrib")+
 #'    theme_minimal()
 #'  }
-#'  
-#'  @export fviz_pca_var
-#'  
+#'  @export 
 fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70")
 {
-  
+  library("ggplot2")
   eig.df <- get_eigenvalue(X)
   pca.var <- get_pca_var(X)
   scale.unit <- .get_scale_unit(X)
