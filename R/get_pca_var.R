@@ -17,7 +17,7 @@
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#'  res.pca <- princomp(iris[, -5])
+#'  res.pca <- iris[, -5]
 #'  var <- get_pca_var(res.pca)
 #'  var
 #'  }

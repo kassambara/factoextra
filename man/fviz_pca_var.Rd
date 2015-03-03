@@ -52,17 +52,22 @@ PCA() from FactoMineR package; prcomp() and princomp() from stats package;
 data(iris)
 # Principal component analysis
 res.pca <- princomp(iris[, -5],  cor = TRUE)
+
 # Default plot
 fviz_pca_var(res.pca)
+
 # Change color and theme
 fviz_pca_var(res.pca, col.var="steelblue")+
  theme_minimal()
+
 # Control variable colors using their contribution
 fviz_pca_var(res.pca, col.var="contrib")
+
 # Change the gradient color
 fviz_pca_var(res.pca, col.var="contrib")+
  scale_color_gradient2(low="blue", mid="white",
            high="red", midpoint=55)+theme_bw()
+
 # Control the transparency of variables using their contribution
 fviz_pca_var(res.pca, alpha.var="contrib")+
    theme_minimal()

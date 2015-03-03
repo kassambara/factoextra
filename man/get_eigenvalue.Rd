@@ -21,7 +21,7 @@ and stats (prcomp, princomp functions) packages are allowed.
 }
 \examples{
 \donttest{
- res.pca <- prcomp(iris[, -5])
+ res.pca <- princomp(iris[, -5],  cor = TRUE)
  eig <- get_eigenvalue(res.pca)
  head(eig)
  }

@@ -26,7 +26,7 @@ Ectract all the results for the active variables from a principal component anal
 }
 \examples{
 \donttest{
- res.pca <- princomp(iris[, -5])
+ res.pca <- iris[, -5]
  var <- get_pca_var(res.pca)
  var
  }

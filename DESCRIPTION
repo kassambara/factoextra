@@ -1,12 +1,13 @@
 Package: factoextra
 Type: Package
-Title: Visualization of FactoMineR outputs (PCA, CA, MCA) using ggplot2
+Title: Visualization of principal component analysis results
 Version: 1.0.0
 Date: 2015-02-21
 Author: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
 Maintainer: Alboukadel kassambara <alboukadel.kassambara@gmail.com>
-Description: Provide easy to use functions to visualize FactoMineR PCA, CA and
-    MCA outputs using ggplot2
+Description: Provide some easy-to-use functions to visualize the output of
+    several PCA functions : PCA() from FactoMineR package; prcomp() and
+    princomp() from stats package; dudi.pca() from ade4 package.
 License: GPL-3
 Depends:
     ggplot2,
@@ -15,7 +16,7 @@ Imports:
     ggplot2,
     grid
 VignetteBuilder: knitr
-URL: htt://www.sthda.com
+URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
     'get_pca_var.R'

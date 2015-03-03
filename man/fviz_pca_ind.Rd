@@ -38,7 +38,7 @@ the supplementary qualitative variable (by its index or name) to be used for
 coloring individuals by groups (see ?PCA in FactoMineR).}
 
 \item{addEllipses}{logical value.
-If TRUE, draw ellipses around the individuals when habillage != "none".}
+If TRUE, draws ellipses around the individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal probability}
 

@@ -36,6 +36,6 @@ This data is a subset of decathlon data in FactoMineR package.
 data(decathlon2)
 decathlon.active <- decathlon[1:23, 1:10]
 res.pca <- princomp(decathlon.active)
-fviz_pca_biplot(res.pca)
+fviz_pca_biplot(res.pca, data = decathlon.active)
 }
 \keyword{datasets}

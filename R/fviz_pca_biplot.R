@@ -61,19 +61,22 @@
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#'  library("FactoMineR")
-#'  data(decathlon)
-#'  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
-#'  fviz_pca_biplot(res.pca)
-#'  
-#'  # Use habillage
-#'  p <- fviz_pca_biplot(res.pca, habillage=13, label=c("var", "quanti.sup"))
-#'  p
-#'  
-#'  # Change the theme
-#'  p + theme_minimal()
-#'  
-#'  p + theme_classic()
+#' data(iris)
+#'
+#' # Principal component analysis
+#' res.pca <- princomp(iris[, -5],  cor = TRUE)
+#' # biplot
+#' fviz_pca_biplot(res.pca, data = iris[, -5])
+#' # Keep only the labels for variables
+#' fviz_pca_biplot(res.pca, data = iris[, -5], label ="var")
+#'# Control automatically the color of individuals using the cos2
+#' # cos2 = the quality of the individuals on the factor map
+#' fviz_pca_biplot(res.pca, data = iris[, -5], label ="var",
+#'               col.ind="cos2") 
+#' # change the color by groups, ellipses
+#' fviz_pca_biplot(res.pca, data = iris[, -5], label="var",
+#' habillage=iris$Species, addEllipses=TRUE, ellipse.level=0.95)
+#' 
 #'  }
 #'  
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),

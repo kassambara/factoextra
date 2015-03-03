@@ -39,10 +39,13 @@ Plot the variances/eigenvalues against the number of dimensions
 \donttest{
 data(iris)
 res.pca <- princomp(iris[, -5],  cor = TRUE)
+
 # Scree plot
 fviz_screeplot(res.pca, addlabels=TRUE)
+
 # Use only barplot
 fviz_screeplot(res.pca, geom="bar", width=0.8)
+
 # Change theme
 fviz_screeplot(res.pca) + theme_minimal()
  }

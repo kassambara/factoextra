@@ -28,8 +28,8 @@ Ectract all the results for the active individuals from a principal component an
 }
 \examples{
 \donttest{
- res.pca <- princomp(iris[, -5])
- ind <- get_pca_ind(res.pca)
+ res.pca <- princomp(iris[, -5],  cor = TRUE)
+ ind <- get_pca_ind(res.pca, data = iris[, -5])
 
  head(ind$coord)
 

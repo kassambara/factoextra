@@ -25,7 +25,7 @@ Allowed values are "point" (to show only points),
 Default value is "all".
 Allowed values are "none" or the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
 "ind" can be used to label only active individuals.
-"ind.sup" if for supplementary individuals.
+"ind.sup" is for supplementary individuals.
 "quali" is for supplementary qualitative variables. "var" is for active variables.
 "quanti.sup" is for quantitative supplementary variables.}
 
@@ -35,15 +35,18 @@ Allowed values are the combination of c("ind", "ind.sup", "quali", "var", "quant
 
 \item{labelsize}{font size for the labels}
 
-\item{habillage}{specify the qualitative variable (by its index or name) to be used for
-coloring individuals by groups. Default value is "none".}
+\item{habillage}{an optional factor variable for coloring
+the observations by groups. Default value is "none".
+If X is an PCA object from FactoMineR package, habillage can also specify
+the supplementary qualitative variable (by its index or name) to be used for
+coloring individuals by groups (see ?PCA in FactoMineR).}
 
 \item{addEllipses}{logical value.
 If TRUE, draws ellipses around the individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal probability}
 
-\item{col.ind,}{col.var color for individuals and variables, respectively.
+\item{col.ind,col.var}{color for individuals and variables, respectively.
 Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
 contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
@@ -51,25 +54,26 @@ To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="n
 
 \item{col.ind.sup}{color for supplementary individuals}
 
-\item{alpha.ind,}{alpha.var controls the transparency of
+\item{alpha.ind,alpha.var}{controls the transparency of
  individual and variable colors, respectively.
 The value can variate from 0 (total transparency) to 1 (no transparency).
 Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the transparency for individuals/variables colors are automatically controlled by their qualities ("cos2"),
+ In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle.}
+\item{col.circle}{a color for the correlation circle.
+#'}
 
 \item{data}{the original data used for the PCA.
-This argument is required only when X is not from FactoMineR.
+This argument is required only when X is not from FactoMineR or ade4 packages.
 It's used to calculate the cos2 of the individuals.}
 
 \item{...}{optional arguments to be passed to the function get_pca_ind().
 This can include the argument data (the original data used for pca)
-which is required when X is not from FactoMineR.}
+which is required when X is not from FactoMineR or ade4 packages.}
 }
 \value{
 a ggplot2 plot
@@ -81,19 +85,22 @@ PCA() from FactoMineR package; prcomp() and princomp() from stats package;
 }
 \examples{
 \donttest{
- library("FactoMineR")
- data(decathlon)
- res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
- fviz_pca_biplot(res.pca)
+data(iris)
 
- # Use habillage
- p <- fviz_pca_biplot(res.pca, habillage=13, label=c("var", "quanti.sup"))
- p
+# Principal component analysis
+res.pca <- princomp(iris[, -5],  cor = TRUE)
+# biplot
+fviz_pca_biplot(res.pca, data = iris[, -5])
+# Keep only the labels for variables
+fviz_pca_biplot(res.pca, data = iris[, -5], label ="var")
+# Control automatically the color of individuals using the cos2
+# cos2 = the quality of the individuals on the factor map
+fviz_pca_biplot(res.pca, data = iris[, -5], label ="var",
+              col.ind="cos2")
+# change the color by groups, ellipses
+fviz_pca_biplot(res.pca, data = iris[, -5], label="var",
+habillage=iris$Species, addEllipses=TRUE, ellipse.level=0.95)
 
- # Change the theme
- p + theme_minimal()
-
- p + theme_classic()
  }
 }
 \author{
