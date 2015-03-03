@@ -2,47 +2,49 @@
 % Please edit documentation in R/fviz_screeplot.R
 \name{fviz_screeplot}
 \alias{fviz_screeplot}
-\title{Screeplot : Plots the variances/eigenvalues against the number of dimensions}
+\title{Plot the variances/eigenvalues against the number of dimensions}
 \usage{
 fviz_screeplot(X, choice = c("variance", "eigenvalue"), geom = c("bar",
   "line"), barfill = "steelblue", barcolor = "steelblue",
   linecolor = "black", ncp = 5, addlabels = FALSE, ...)
 }
 \arguments{
-\item{X}{Object of class PCA, MCA, CA (from FactoMineR)}
+\item{X}{an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+dudi and pca (ade4)}
 
-\item{choice}{Character specifing the type of the data to be plotted.
+\item{choice}{a text specifyinng the type of the data to be plotted.
 Allowed values are "variance" or "eigenvalue"}
 
-\item{geom}{Character specifying the geometry to be used for the graph.
+\item{geom}{a text specifying the geometry to be used for the graph.
 Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to use both type}
 
-\item{barfill}{Fill color for bar plot}
+\item{barfill}{fill color for bar plot}
 
-\item{barcolor}{Outline color for bar plot}
+\item{barcolor}{outline color for bar plot}
 
-\item{linecolor}{Color for line plot (when geom contains "line")}
+\item{linecolor}{color for line plot (when geom contains "line")}
 
-\item{ncp}{Numeric value specifing the number of components to be shown}
+\item{ncp}{a numeric value specifying the number of components to be shown}
 
-\item{addlabels}{Logical value. If TRUE, labels are added at the top of bars or points
+\item{addlabels}{logical value. If TRUE, labels are added at the top of bars or points
  showing the information retained by each dimension}
 }
 \value{
 a ggplot2 plot
 }
 \description{
-Screeplot : Plots the variances/eigenvalues against the number of dimensions
+Plot the variances/eigenvalues against the number of dimensions
 }
 \examples{
 \donttest{
- library("FactoMineR")
- data(decathlon)
- res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
- fviz_screeplot(res.pca)
-
- # Add labels
- fviz_screeplot(res.pca, addlabels=TRUE)
+data(iris)
+res.pca <- princomp(iris[, -5],  cor = TRUE)
+# Scree plot
+fviz_screeplot(res.pca, addlabels=TRUE)
+# Use only barplot
+fviz_screeplot(res.pca, geom="bar", width=0.8)
+# Change theme
+fviz_screeplot(res.pca) + theme_minimal()
  }
 }
 \author{

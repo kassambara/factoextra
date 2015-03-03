@@ -2,10 +2,16 @@
 #' @include get_pca_var.R
  NULL
 
-#' Biplot of Principal Component Analysis Individuals and Variables using ggplot2
+#' Biplot of individuals and variables - Principal Component Analysis
 #' 
-#' @param X an object of class PCA (from FactoMineR package).
-#' @param axes a numeric vector of length 2 specifying the component to be plotted.
+#' @description
+#' This function can be used to visualize a biplot of individuals and variables from the output of several PCA functions : 
+#' PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+#'  dudi.pca() from ade4 package.
+#'  
+#' @param X an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+#'  dudi and pca (ade4).
+#' @param axes a numeric vector of length 2 specifying the components to be plotted.
 #' @param geom a character specifying the geometry to be used for the graph.
 #'  Allowed values are "point" (to show only points),
 #'  "text" to show only labels or c("point", "text") to show both types.
@@ -13,39 +19,42 @@
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
 #'  "ind" can be used to label only active individuals.
-#'  "ind.sup" if for supplementary individuals.
+#'  "ind.sup" is for supplementary individuals.
 #'  "quali" is for supplementary qualitative variables. "var" is for active variables.
 #'  "quanti.sup" is for quantitative supplementary variables.
 #' @param invisible a character value specifying the elements to be hidden on the plot.
 #'  Default value is "none".
 #'  Allowed values are the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
 #' @param labelsize font size for the labels
-#' @param habillage specify the qualitative variable (by its index or name) to be used for
-#'  coloring individuals by groups. Default value is "none".
+#' @param habillage an optional factor variable for coloring
+#'  the observations by groups. Default value is "none".
+#'  If X is an PCA object from FactoMineR package, habillage can also specify
+#'  the supplementary qualitative variable (by its index or name) to be used for
+#'  coloring individuals by groups (see ?PCA in FactoMineR). 
 #' @param addEllipses logical value.
-#'  If TRUE, draw ellipses around the individuals when habillage != "none".
+#'  If TRUE, draws ellipses around the individuals when habillage != "none".
 #' @param ellipse.level the size of the concentration ellipse in normal probability
-#' @param col.ind, col.var color for individuals and variables, respectively.
+#' @param col.ind,col.var color for individuals and variables, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
 #'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
 #' @param col.ind.sup color for supplementary individuals
-#' @param alpha.ind, alpha.var controls the transparency of
+#' @param alpha.ind,alpha.var controls the transparency of
 #'  individual and variable colors, respectively.
 #' The value can variate from 0 (total transparency) to 1 (no transparency).
 #' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the transparency for individuals/variables colors are automatically controlled by their qualities ("cos2"),
+#'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
 #' @param col.circle a color for the correlation circle.
-#' @param ... optional arguments to be passed to the function get_pca_ind().
-#' This can includes the argument data (the original data used for pca) 
-#' which is required when X is not from FactoMineR.
-#' @param data the original data used for the pca. 
-#' This argument is required only when X is not from FactoMineR.
+#' #' @param data the original data used for the PCA. 
+#' This argument is required only when X is not from FactoMineR or ade4 packages.
 #' It's used to calculate the cos2 of the individuals.
+#' @param ... optional arguments to be passed to the function get_pca_ind().
+#' This can include the argument data (the original data used for pca) 
+#' which is required when X is not from FactoMineR or ade4 packages.
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}

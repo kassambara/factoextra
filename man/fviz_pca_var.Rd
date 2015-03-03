@@ -2,7 +2,7 @@
 % Please edit documentation in R/fviz_pca_var.R
 \name{fviz_pca_var}
 \alias{fviz_pca_var}
-\title{Visualizing Principal Component Analysis Variables using ggplot2}
+\title{Graph of variables - Principal Component Analysis}
 \usage{
 fviz_pca_var(X, axes = c(1, 2), label = "all", invisible = "none",
   labelsize = 4, col.var = "black", alpha.var = 1,
@@ -43,25 +43,29 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 a ggplot2 plot
 }
 \description{
-This function can be used to visualize the output several PCA functions
- including PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+This function can be used to visualize variable factor maps from the output of several PCA functions :
+PCA() from FactoMineR package; prcomp() and princomp() from stats package;
  dudi.pca() from ade4 package.
 }
 \examples{
 \donttest{
- library("FactoMineR")
- data(decathlon)
- res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
- fviz_pca_var(res.pca, col.var="contrib")
-
- # Change the color
- p <- fviz_pca_var(res.pca, col.var="contrib")
- p + scale_color_gradient2(low ="blue", mid="white", high="red", midpoint=40)
-
- # Change the theme
- p + theme_minimal()
-
- p + theme_classic()
+data(iris)
+# Principal component analysis
+res.pca <- princomp(iris[, -5],  cor = TRUE)
+# Default plot
+fviz_pca_var(res.pca)
+# Change color and theme
+fviz_pca_var(res.pca, col.var="steelblue")+
+ theme_minimal()
+# Control variable colors using their contribution
+fviz_pca_var(res.pca, col.var="contrib")
+# Change the gradient color
+fviz_pca_var(res.pca, col.var="contrib")+
+ scale_color_gradient2(low="blue", mid="white",
+           high="red", midpoint=55)+theme_bw()
+# Control the transparency of variables using their contribution
+fviz_pca_var(res.pca, alpha.var="contrib")+
+   theme_minimal()
  }
 }
 \author{

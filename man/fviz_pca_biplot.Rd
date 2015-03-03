@@ -2,7 +2,7 @@
 % Please edit documentation in R/fviz_pca_biplot.R
 \name{fviz_pca_biplot}
 \alias{fviz_pca_biplot}
-\title{Biplot of Principal Component Analysis Individuals and Variables using ggplot2}
+\title{Biplot of individuals and variables - Principal Component Analysis}
 \usage{
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, habillage = "none",
@@ -12,9 +12,10 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   data = NULL, ...)
 }
 \arguments{
-\item{X}{an object of class PCA (from FactoMineR package).}
+\item{X}{an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+dudi and pca (ade4).}
 
-\item{axes}{a numeric vector of length 2 specifying the component to be plotted.}
+\item{axes}{a numeric vector of length 2 specifying the components to be plotted.}
 
 \item{geom}{a character specifying the geometry to be used for the graph.
 Allowed values are "point" (to show only points),
@@ -38,7 +39,7 @@ Allowed values are the combination of c("ind", "ind.sup", "quali", "var", "quant
 coloring individuals by groups. Default value is "none".}
 
 \item{addEllipses}{logical value.
-If TRUE, draw ellipses around the individuals when habillage != "none".}
+If TRUE, draws ellipses around the individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal probability}
 
@@ -62,19 +63,21 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 
 \item{col.circle}{a color for the correlation circle.}
 
-\item{data}{the original data used for the pca.
+\item{data}{the original data used for the PCA.
 This argument is required only when X is not from FactoMineR.
 It's used to calculate the cos2 of the individuals.}
 
 \item{...}{optional arguments to be passed to the function get_pca_ind().
-This can includes the argument data (the original data used for pca)
+This can include the argument data (the original data used for pca)
 which is required when X is not from FactoMineR.}
 }
 \value{
 a ggplot2 plot
 }
 \description{
-Biplot of Principal Component Analysis Individuals and Variables using ggplot2
+This function can be used to visualize a biplot of individuals and variables from the output of several PCA functions :
+PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+ dudi.pca() from ade4 package.
 }
 \examples{
 \donttest{

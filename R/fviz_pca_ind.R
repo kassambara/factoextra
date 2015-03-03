@@ -30,7 +30,7 @@ NULL
 #'  the supplementary qualitative variable (by its index or name) to be used for
 #'  coloring individuals by groups (see ?PCA in FactoMineR). 
 #' @param addEllipses logical value.
-#'  If TRUE, draw ellipses around the individuals when habillage != "none".
+#'  If TRUE, draws ellipses around the individuals when habillage != "none".
 #'  @param ellipse.level the size of the concentration ellipse in normal probability
 #' @param col.ind color for individuals. The default value is "black".
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -144,7 +144,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       if(lab.ind & "text" %in% geom) 
         p <- p + geom_text(data = ind,
              aes_string('textpos_x','textpos_y', color=col.ind),
-             label = ind$name,  size = labelsize, alpha=alpha.ind)
+             label = ind$name,  size = labelsize, alpha=alpha.ind, vjust = -0.7)
     }   
     # Only the transparency is controlled automatically
     else if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y")){
@@ -156,7 +156,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       if(lab.ind & "text" %in% geom) 
         p <- p + geom_text(data = ind, 
              aes_string('textpos_x','textpos_y', alpha=alpha.ind, label="name"),
-             size = labelsize, color=col.ind)
+             size = labelsize, color=col.ind, vjust = -0.7)
     }
     
     else{
@@ -167,7 +167,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       
       if(lab.ind & "text" %in% geom) 
         p <- p + geom_text(data = ind, aes(textpos_x,textpos_y), 
-                 color = col.ind, label = ind$name, size = labelsize)
+                 color = col.ind, label = ind$name, size = labelsize, vjust = -0.7)
     }
   }
 
@@ -207,7 +207,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       if(lab.ind & "text" %in% geom) 
         p <- p + geom_text(data = ind, 
                  aes_string('textpos_x', 'textpos_y', label = 'name',
-                 color=name.quali, shape = name.quali),  size = labelsize)
+                 color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
     }
     if(!hide.quali){   
       coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])

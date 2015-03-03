@@ -2,7 +2,7 @@
 % Please edit documentation in R/fviz_pca_ind.R
 \name{fviz_pca_ind}
 \alias{fviz_pca_ind}
-\title{Visualizing Principal Component Analysis Individuals using ggplot2}
+\title{Graph of individuals - Principal Component Analysis}
 \usage{
 fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, habillage = "none",
@@ -10,9 +10,10 @@ fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   col.ind.sup = "blue", alpha.ind = 1, ...)
 }
 \arguments{
-\item{X}{an object of class PCA (from FactoMineR package).}
+\item{X}{an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+dudi and pca (ade4).}
 
-\item{axes}{a numeric vector of length 2 specifying the component to be plotted.}
+\item{axes}{a numeric vector of length 2 specifying the components to be plotted.}
 
 \item{geom}{a character specifying the geometry to be used for the graph.
 Allowed values are "point" (to show only points),
@@ -22,7 +23,7 @@ Allowed values are "point" (to show only points),
 Default value is "all".
 Allowed values are "none" or the combination of c("ind", "ind.sup", "quali").
 "ind" can be used to label only active individuals.
-"ind.sup" if for supplementary individuals.
+"ind.sup" is for supplementary individuals.
 "quali" is for supplementary qualitative variables.}
 
 \item{invisible}{a character value specifying the elements to be hidden on the plot.
@@ -64,28 +65,25 @@ which is required when X is not from FactoMineR or adea4 packages.}
 a ggplot2 plot
 }
 \description{
-Visualizing Principal Component Analysis Individuals using ggplot2
+This function can be used to visualize individual factor maps from the output of several PCA functions :
+PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+ dudi.pca() from ade4 package.
 }
 \examples{
 \donttest{
- library("FactoMineR")
- data(decathlon)
- res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
- fviz_pca_ind(res.pca, autolab=TRUE)
+data(iris)
+# Principal component analysis
+res.pca <- princomp(iris[, -5],  cor = TRUE)
 
- # Use habillage
- fviz_pca_ind(res.pca, autolab=TRUE, habillage=13)
+# Default plot
+fviz_pca_ind(res.pca, data = iris[, -5])
 
- # Change the color by contrib
- p <- fviz_pca_ind(res.pca, col.ind ="contrib")
- p
- # Change the color
- p + scale_color_gradient2(low ="blue", mid="white", high="red", midpoint=40)
+# Remove the points from the graph
+fviz_pca_ind(res.pca, data = iris[, -5], geom="text")
 
- # Change the theme
- p + theme_minimal()
-
- p + theme_classic()
+ # Color individuals by groups
+ fviz_pca_ind(res.pca, data = iris[, -5], label="none",
+ habillage=iris$Species, addEllipses=TRUE, ellipse.level=0.95)
  }
 }
 \author{
