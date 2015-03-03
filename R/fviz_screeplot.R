@@ -1,17 +1,18 @@
 #' @include get_eigenvalue.R
 NULL
-#' Screeplot : Plots the variances/eigenvalues against the number of dimensions
+#' Plot the variances/eigenvalues against the number of dimensions
 #' 
-#' @param X Object of class PCA, MCA, CA (from FactoMineR)
-#' @param choice Character specifing the type of the data to be plotted.
+#' @param X an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+#'  dudi and pca (ade4)
+#' @param choice a text specifyinng the type of the data to be plotted.
 #'  Allowed values are "variance" or "eigenvalue"
-#' @param geom Character specifying the geometry to be used for the graph.
+#' @param geom a text specifying the geometry to be used for the graph.
 #'  Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to use both type
-#' @param barfill Fill color for bar plot
-#' @param barcolor Outline color for bar plot
-#' @param linecolor Color for line plot (when geom contains "line")
-#' @param ncp Numeric value specifing the number of components to be shown
-#' @param addlabels Logical value. If TRUE, labels are added at the top of bars or points
+#' @param barfill fill color for bar plot
+#' @param barcolor outline color for bar plot
+#' @param linecolor color for line plot (when geom contains "line")
+#' @param ncp a numeric value specifying the number of components to be shown
+#' @param addlabels logical value. If TRUE, labels are added at the top of bars or points
 #'  showing the information retained by each dimension
 #'  
 #' @return a ggplot2 plot
@@ -19,13 +20,14 @@ NULL
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#'  library("FactoMineR")
-#'  data(decathlon)
-#'  res.pca <- PCA(decathlon, quanti.sup = 11:12, quali.sup=13, graph = FALSE)
-#'  fviz_screeplot(res.pca)
-#'  
-#'  # Add labels
-#'  fviz_screeplot(res.pca, addlabels=TRUE)
+#' data(iris)
+#' res.pca <- princomp(iris[, -5],  cor = TRUE)
+#' # Scree plot
+#' fviz_screeplot(res.pca, addlabels=TRUE)
+#' # Use only barplot
+#' fviz_screeplot(res.pca, geom="bar", width=0.8)
+#' # Change theme
+#' fviz_screeplot(res.pca) + theme_minimal()
 #'  }
 fviz_screeplot<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                          barfill="steelblue", barcolor="steelblue", linecolor = "black",
