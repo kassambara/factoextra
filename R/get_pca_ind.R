@@ -110,7 +110,7 @@ print.pca_ind<-function(x){
 # eigenvalues : principal component eigenvalues
 .get_pca_ind_results <- function(ind.coord, data, eigenvalues, pca.center, pca.scale ){
   
-  eigenvalues <- eigenvalues[ncol(ind.coord)]
+  eigenvalues <- eigenvalues[1:ncol(ind.coord)]
   
   if(pca.center[1] == FALSE) pca.center <- rep(0, ncol(data))
   if(pca.scale[1] == FALSE) pca.scale <- rep(1, ncol(data))
