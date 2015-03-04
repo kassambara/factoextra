@@ -1,4 +1,4 @@
-factoextra : Visualization of principal component analysis results
+factoextra : Visualization of the outputs of a multivariate analysis
 ===========
 
 factoextra provides some easy-to-use functions to visualize the output of several PCA functions : PCA() from FactoMineR package; prcomp() and princomp() from stats package; dudi.pca() from ade4 package.

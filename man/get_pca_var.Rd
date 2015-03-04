@@ -26,9 +26,15 @@ Ectract all the results for the active variables from a principal component anal
 }
 \examples{
 \donttest{
- res.pca <- iris[, -5]
+ data(iris)
+ res.pca <- princomp(iris[, -5],  cor = TRUE)
  var <- get_pca_var(res.pca)
- var
+
+ head(var$coord)
+
+ head(var$cos2)
+
+ head(var$contrib)
  }
 }
 \author{

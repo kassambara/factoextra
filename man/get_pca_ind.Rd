@@ -28,6 +28,7 @@ Ectract all the results for the active individuals from a principal component an
 }
 \examples{
 \donttest{
+ data(iris)
  res.pca <- princomp(iris[, -5],  cor = TRUE)
  ind <- get_pca_ind(res.pca, data = iris[, -5])
 

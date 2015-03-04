@@ -21,6 +21,7 @@ PCA() from FactoMineR package; prcomp() and princomp() from stats package;
 }
 \examples{
 \donttest{
+ data(iris)
  res.pca <- princomp(iris[, -5],  cor = TRUE)
  eig <- get_eigenvalue(res.pca)
  head(eig)

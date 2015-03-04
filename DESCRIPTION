@@ -1,6 +1,6 @@
 Package: factoextra
 Type: Package
-Title: Visualization of principal component analysis results
+Title: Visualization of the outputs of a multivariate analysis
 Version: 1.0.0
 Date: 2015-02-21
 Author: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
