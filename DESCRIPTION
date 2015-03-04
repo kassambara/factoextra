@@ -16,7 +16,9 @@ Depends:
 Imports:
     ggplot2,
     grid
-Suggests: ggplot2, knitr
+Suggests:
+    ggplot2,
+    knitr
 VignetteBuilder: knitr
 URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues

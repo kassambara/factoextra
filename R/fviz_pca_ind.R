@@ -72,7 +72,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                  col.ind = "black", col.ind.sup = "blue", alpha.ind =1, ...)
 {
 
-  library("ggplot2")
   if(length(intersect(geom, c("point", "text"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
   

@@ -38,7 +38,6 @@ fviz_screeplot<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "l
                          barfill="steelblue", barcolor="steelblue", linecolor = "black",
                          ncp=5, addlabels=FALSE, ...)
 {
-  library("ggplot2")
   
   eig <- get_eigenvalue(X)
   eig <-eig[1:min(ncp, nrow(eig)), , drop=FALSE]

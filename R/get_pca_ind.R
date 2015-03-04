@@ -1,14 +1,14 @@
-#' Extract the results for the individuals after a principal component analysis
+#' Extract the results for the individuals - Principal component analysis
 #' 
 #' @description
-#' Ectract all the results for the active individuals from a principal component analysis output.
-#'  This output contains individuals coordinates, square cosine and contributions.
+#' Ectract all the results for the active individuals from a principal component analysis outputs.
+#'  The output contains individuals coordinates, square cosine and contributions.
 #'  The allowed PCA outputs are the ones from FactoMineR (PCA),
 #'  stats (princomp() and prcomp()), ade4 (dudi.pca()) packages.
 #' @param res.pca an object of class PCA (from FactoMineR);
 #'  prcomp and princomp (from stats package); pca, dudi (dudi.pca, from adea4 package).
-#'  @param data the original data used for the pca. 
-#'   This argument is required only when res.pca is not from FactoMineR.
+#'  @param data the original data used for the PCA. 
+#'   This argument is required only when res.pca is not from FactoMineR or ade4.
 #'   It's used to calculate the cos2 of the individuals.
 #' @return a list of matrices containing all the results for the active individuals including : 
 #' \item{coord}{coordinates for the individuals}
@@ -18,6 +18,7 @@
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
+#'  data(iris)
 #'  res.pca <- princomp(iris[, -5],  cor = TRUE)
 #'  ind <- get_pca_ind(res.pca, data = iris[, -5])
 #'  
@@ -127,9 +128,9 @@ print.pca_ind<-function(x){
   
   # Individual contributions 
   contrib <- function(ind.coord, eigenvalues, n.ind){
-    100*(1/n.ind)*ind.coord^2/eigenvalues
+    100*(1/n.ind)*(ind.coord^2/eigenvalues)
   }
-  ind.contrib <- t(apply(ind.coord,1, contrib,  eigenvalues, nrow(ind.coord)))
+  ind.contrib <- t(apply(ind.coord, 1, contrib,  eigenvalues, nrow(ind.coord)))
   colnames(ind.coord) <- colnames(ind.cos2) <-
     colnames(ind.contrib) <- paste0("Dim.", 1:ncol(ind.coord)) 
   

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_pca_ind.R
 \name{get_pca_ind}
 \alias{get_pca_ind}
-\title{Extract the results for the individuals after a principal component analysis}
+\title{Extract the results for the individuals - Principal component analysis}
 \usage{
 get_pca_ind(res.pca, data = NULL)
 }
@@ -10,8 +10,8 @@ get_pca_ind(res.pca, data = NULL)
 \item{res.pca}{an object of class PCA (from FactoMineR);
 prcomp and princomp (from stats package); pca, dudi (dudi.pca, from adea4 package).}
 
-\item{data}{the original data used for the pca.
-This argument is required only when res.pca is not from FactoMineR.
+\item{data}{the original data used for the PCA.
+This argument is required only when res.pca is not from FactoMineR or ade4.
 It's used to calculate the cos2 of the individuals.}
 }
 \value{
@@ -21,8 +21,8 @@ a list of matrices containing all the results for the active individuals includi
 \item{contrib}{contributions of the individuals}
 }
 \description{
-Ectract all the results for the active individuals from a principal component analysis output.
- This output contains individuals coordinates, square cosine and contributions.
+Ectract all the results for the active individuals from a principal component analysis outputs.
+ The output contains individuals coordinates, square cosine and contributions.
  The allowed PCA outputs are the ones from FactoMineR (PCA),
  stats (princomp() and prcomp()), ade4 (dudi.pca()) packages.
 }

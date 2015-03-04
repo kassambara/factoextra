@@ -1,8 +1,8 @@
-#' Extract the results for the variables after a principal component analysis
+#' Extract the results for variables - principal component analysis
 #' 
 #' @description
-#' Ectract all the results for the active variables from a principal component analysis output.
-#'  This output contains variable coordinates,
+#' Ectract all the results for the active variables from a principal component analysis outputs.
+#'  The output contains variable coordinates,
 #'  correlation between variables and axes, square cosine and contributions.
 #'  The allowed PCA outputs are the ones from FactoMineR (PCA),
 #'  stats (princomp() and prcomp()), ade4 (dudi.pca()) packages.
@@ -17,9 +17,15 @@
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#'  res.pca <- iris[, -5]
+#'  data(iris)
+#'  res.pca <- princomp(iris[, -5],  cor = TRUE)
 #'  var <- get_pca_var(res.pca)
-#'  var
+#'  
+#'  head(var$coord)
+#'  
+#'  head(var$cos2)
+#'  
+#'  head(var$contrib)
 #'  }
 #'  
 #' @export 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_pca_var.R
 \name{get_pca_var}
 \alias{get_pca_var}
-\title{Extract the results for the variables after a principal component analysis}
+\title{Extract the results for variables - principal component analysis}
 \usage{
 get_pca_var(res.pca)
 }
@@ -18,8 +18,8 @@ a list of matrices containing all the results for the active variables including
 \item{contrib}{contributions of the variables}
 }
 \description{
-Ectract all the results for the active variables from a principal component analysis output.
- This output contains variable coordinates,
+Ectract all the results for the active variables from a principal component analysis outputs.
+ The output contains variable coordinates,
  correlation between variables and axes, square cosine and contributions.
  The allowed PCA outputs are the ones from FactoMineR (PCA),
  stats (princomp() and prcomp()), ade4 (dudi.pca()) packages.

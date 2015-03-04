@@ -1,11 +1,11 @@
-#' Extract eigenvalues/variances after factor analysis
+#' Extract eigenvalues/variances - Principal Component Analysis
 #' 
 #' @description
-#' Ectract eigenvalues/variances from the results of different PCA, MCA and CA functions in R.
-#' Results from FactoMineR (PCA, MCA, CA functions), ade4 (dudi.pca function) 
-#' and stats (prcomp, princomp functions) packages are allowed.
-#' @param X Object of class PCA, MCA and CA (from FactoMineR);
-#'  prcomp and princomp (from stats package); pca, dudi (dudi.pca, from adea4 package)
+#' Ectract eigenvalues/variances from the results of several PCA functions : 
+#' PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+#'  dudi.pca() from ade4 package.
+#' @param X an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+#'  dudi and pca (ade4).
 #'  
 #' @return a data.frame containing 3 columns :
 #'  eigenvalue, percentage of variance and cumulative percentage of variance.
@@ -14,6 +14,7 @@
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
+#'  data(iris)
 #'  res.pca <- princomp(iris[, -5],  cor = TRUE)
 #'  eig <- get_eigenvalue(res.pca)
 #'  head(eig)

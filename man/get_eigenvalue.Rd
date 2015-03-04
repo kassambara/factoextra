@@ -2,22 +2,22 @@
 % Please edit documentation in R/get_eigenvalue.R
 \name{get_eigenvalue}
 \alias{get_eigenvalue}
-\title{Extract eigenvalues/variances after factor analysis}
+\title{Extract eigenvalues/variances - Principal Component Analysis}
 \usage{
 get_eigenvalue(X)
 }
 \arguments{
-\item{X}{Object of class PCA, MCA and CA (from FactoMineR);
- prcomp and princomp (from stats package); pca, dudi (dudi.pca, from adea4 package)}
+\item{X}{an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
+ dudi and pca (ade4).}
 }
 \value{
 a data.frame containing 3 columns :
  eigenvalue, percentage of variance and cumulative percentage of variance.
 }
 \description{
-Ectract eigenvalues/variances from the results of different PCA, MCA and CA functions in R.
-Results from FactoMineR (PCA, MCA, CA functions), ade4 (dudi.pca function)
-and stats (prcomp, princomp functions) packages are allowed.
+Ectract eigenvalues/variances from the results of several PCA functions :
+PCA() from FactoMineR package; prcomp() and princomp() from stats package;
+ dudi.pca() from ade4 package.
 }
 \examples{
 \donttest{

@@ -84,10 +84,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   col.var="steelblue", alpha.var=1, col.quanti.sup="blue",
                   col.circle ="grey70", data = NULL, ...)
 {
-  
-  library("ggplot2")
-  library("grid")
-  
+ 
   # The original data is required to compute the cos2
   # of individuals
   if(inherits(X, 'princomp')){     
