@@ -58,17 +58,13 @@ NULL
 #'    theme_minimal()
 #'  }
 #'  @export 
-fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
-                         labelsize=4, col.var="black", alpha.var=1, 
-                         col.quanti.sup="blue", col.circle ="grey70")
+fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=c(1,2),
+                             fill="steelblue", color = "steelblue", ....)
 {
   
-  eig.df <- get_eigenvalue(X)
   pca.var <- get_pca_var(X)
-  scale.unit <- .get_scale_unit(X)
   
-  eig <- eig.df[,2]
-  var <- data.frame(pca.var$coord[, axes, drop=FALSE])
+  var <- data.frame(pca.var$contrib[, axes, drop=FALSE])
   colnames(var)<- c("x", "y")
   
   title <- "Variables factor map - PCA"
@@ -79,7 +75,7 @@ fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
   coord <- apply(pca.var$coord[, axes]^2, 1, sum) # same as cos2
   contrib <- pca.var$contrib[, axes]
   eig <- eig.df[,axes]
-  contrib <- apply(pca.var$contrib[, axes], 1, sum)
+  contrib <- contrib[,1]*eig[1,1] +  contrib[,2]*eig[2,1] 
   
   # Label positions
   textpos <-var[, c("x", "y")]
