@@ -88,7 +88,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   cos2 <- apply(pca.ind$cos2[, axes], 1, sum, na.rm=TRUE)
   coord <- apply(pca.ind$coord[, axes]^2, 1, sum, na.rm=TRUE)
-  contrib <- pca.ind$contrib[, axes]
   eig <- eig.df[,axes]
   contrib <- apply(pca.ind$contrib[, axes], 1, sum, na.rm=TRUE)
   
