@@ -1,198 +1,87 @@
-#' @include get_pca_var.R get_eigenvalue.R
+#' @include get_pca_var.R get_pca_ind.R
 NULL
-#' Graph of variables - Principal Component Analysis
+#' Contributions of variables/individuals - Principal Component Analysis
 #' 
 #' @description
-#' This function can be used to visualize variable factor maps from the output of several PCA functions : 
+#' This function can be used to visualize the contributions of variables/individuals from the output of several PCA functions : 
 #' PCA() from FactoMineR package; prcomp() and princomp() from stats package;
 #'  dudi.pca() from ade4 package.
 #' 
 #' @param X an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
 #'  dudi and pca (ade4).
-#' @param axes a numeric vector of length 2 specifying the component to be plotted.
-#' @param label a character vector specifying the elements to be labelled.
-#'  Default value is "all". Allowed values are "none" or the combination of c("var", "quanti.sup").
-#'  "var" can be used to label only active variables.
-#'  "quanti.sup" can be used to label only quantitative supplementary variables.
-#' @param invisible a character value specifying the elements to be hidden on the plot.
-#'  Default value is "none". Allowed values are the combination of c("var", "quanti.sup").
-#' @param labelsize font size for the labels
-#' @param col.var color for variables. The default value is "black".
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the colors for variables are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y")
-#' @param alpha.var controls the transparency of colors.
-#' The value can variate from 0 (total transparency) to 1 (no transparency).
-#' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the transparency for variable colors are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
-#' @param col.quanti.sup a color for the quantitative supplementary variables.
-#' @param col.circle a color for the correlation circle.
+#'  @param choice allowed values are "var" (for variable contributions) or "ind" 
+#'  for the contribution of individuals
+#' @param axes a numeric vector specifying the component(s) of interest.
+#' @param fill a fill color for the bar plot
+#' @param color an outline color the bar plot
+#' @param sortcontrib a string specifying whether the contributions should be sorted. 
+#' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending)
+#' @param top a numeric value specifing the top contributing elements to be shown
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#' data(iris)
+#' data(decathlon2)
+#' decathlon2.active <- decathlon2[1:23, 1:10]
 #' # Principal component analysis
-#' res.pca <- princomp(iris[, -5],  cor = TRUE)
+#' res.pca <- princomp(decathlon2.active,  cor = TRUE)
 #' 
-#' # Default plot
-#' fviz_pca_var(res.pca)
+#' # variable contributions on axis 1
+#' fviz_pca_contrib(res.pca, choice="var", axes = 1 )
+#' # sorting
+#' fviz_pca_contrib(res.pca, choice="var", axes = 1, sort = "asc" )
 #' 
-#' # Change color and theme
-#' fviz_pca_var(res.pca, col.var="steelblue")+
-#'  theme_minimal()
-#'  
-#' # Control variable colors using their contribution
-#' fviz_pca_var(res.pca, col.var="contrib")
+#' variable contributions on axis 2
+#' fviz_pca_contrib(res.pca, choice="var", axes = 2, sort = "asc" )
 #' 
-#' # Change the gradient color
-#' fviz_pca_var(res.pca, col.var="contrib")+
-#'  scale_color_gradient2(low="blue", mid="white", 
-#'            high="red", midpoint=55)+theme_bw()
-#'            
-#' # Control the transparency of variables using their contribution
-#' fviz_pca_var(res.pca, alpha.var="contrib")+
-#'    theme_minimal()
+#' # Contributions of individuals on axis 1
+#' fviz_pca_contrib(res.pca, choice="var", axes = 1, sort = "asc" )
 #'  }
 #'  @export 
-fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=c(1,2),
-                             fill="steelblue", color = "steelblue", ....)
+fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
+                   fill="steelblue", color = "steelblue", 
+                   sortcontrib = c("none", "desc", "asc"), top = Inf,...)
 {
   
-  pca.var <- get_pca_var(X)
-  
-  var <- data.frame(pca.var$contrib[, axes, drop=FALSE])
-  colnames(var)<- c("x", "y")
-  
-  title <- "Variables factor map - PCA"
-  xlab = paste0("PC", axes[1], " (", round(eig[axes[1]],1), "%)") 
-  ylab = paste0("PC", axes[2], " (", round(eig[axes[2]], 1),"%)")
-  
-  cos2 <- apply(pca.var$cos2[, axes], 1, sum)
-  coord <- apply(pca.var$coord[, axes]^2, 1, sum) # same as cos2
-  contrib <- pca.var$contrib[, axes]
-  eig <- eig.df[,axes]
-  contrib <- contrib[,1]*eig[1,1] +  contrib[,2]*eig[2,1] 
-  
-  # Label positions
-  textpos <-var[, c("x", "y")]
-  
-  var <- cbind.data.frame(name = rownames(var), 
-                          textpos_x = textpos$x, textpos_y = textpos$y,
-                          var, cos2 = cos2, contrib = contrib, coord=coord)
-  
-  
-  lab.var <- lab.quanti <- FALSE
-  if(label[1]=="all" | "var" %in% label) lab.var =TRUE
-  if(label[1]=="all" | "quanti.sup" %in% label) lab.quanti =TRUE
-  hide.var <- hide.quanti <- FALSE
-  if("var" %in% invisible) hide.var =TRUE
-  if("quanti.sup" %in% invisible) hide.quanti =TRUE
-  
-  # Draw correlation circle
-  if(scale.unit){
-    theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-    circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
-    p <- ggplot(data = circle, aes(xcircle, ycircle)) + geom_path(color=col.circle)+
-      geom_hline(yintercept = 0, linetype="dashed")+
-      geom_vline(xintercept = 0, linetype="dashed")    
+  if(choice[1]=="var") {
+    pca.contrib <- get_pca_var(X)$contrib
+    title <- paste0("Contribution of variables on PC-", paste(axes, collapse="-"))
   }
-  else p <- ggplot()
+  else if(choice[1]=="ind"){
+    pca.contrib <- get_pca_ind(X)$contrib
+    title <- paste0("Contribution of individuals on PC-", paste(axes, collapse="-"))
+  }
+  # Theorical contribution of each variables
+  theo_contrib <- 100/nrow(pca.contrib)
   
-  if(!hide.var){
+  # Extract contribution
+  if(length(axes) > 1) contrib <- apply(pca.contrib[, axes], 1, sum)
+  else contrib <- pca.contrib[, axes]
+  
+  # top contributing elements
+  if(top!=Inf & top < length(contrib)){
+    top_element <- names(sort(contrib, decreasing=TRUE)[1:top])
+    contrib <- contrib[top_element]
+  }
+  # sorting
+  if(sortcontrib[1]=="desc") contrib <- sort(contrib, decreasing = TRUE)
+  else if(sortcontrib[1]=="asc") contrib <- sort(contrib, decreasing = FALSE)
     
-    # The color and the transparency of variables are automatically controlled by
-    # their cos2, contrib, coord, "x" or "y" coordinates
-    if(col.var %in% c("cos2","contrib", "coord", "x", "y") &
-         alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    {
-      p <- p + geom_segment(data = var,
-                aes_string(x = 0, y = 0, xend = 'x', yend = 'y', 
-                           color=col.var, alpha=alpha.var),
-                arrow = arrow(length = unit(0.2, 'cm')))
-      
-      if(lab.var) p <- p + geom_text(data = var, 
-                           aes_string('textpos_x','textpos_y', label = 'name', 
-                              color=col.var, alpha=alpha.var), size = labelsize)
-    }
-    # Only the color is controlled automatically
-    else if(col.var %in% c("cos2","contrib", "coord", "x", "y")){
-      p <- p + geom_segment(data = var,
-              aes_string(x = 0, y = 0, xend = 'x', yend = 'y', color=col.var),
-              arrow = arrow(length = unit(0.2, 'cm')), alpha = alpha.var)
-      
-      if(lab.var) p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y', color=col.var),
-                                     label = var$name,  size = labelsize, alpha=alpha.var)
-    }
-    # Only the transparency is controlled automatically
-    else if(alpha.var %in% c("cos2","contrib", "coord", "x", "y")){
-      p <- p + geom_segment(data = var,
-                aes_string(x = 0, y = 0, xend = 'x', yend = 'y', alpha=alpha.var),
-                arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
-      
-      if(lab.var)p <- p + geom_text(data = var, aes_string('textpos_x','textpos_y',
-                          alpha=alpha.var, label ='name'),
-                          size = labelsize, color=col.var)
-    }
-    
-    else{
-      p <- p + geom_segment(data = var,
-                aes(x = 0, y = 0, xend = x, yend = y),
-                arrow = arrow(length = unit(0.2, 'cm')), color=col.var)
-      if(lab.var) p <- p + geom_text(data = var, aes(textpos_x,textpos_y),
-                           label = var$name, color=col.var, 
-                           size = labelsize, hjust=0.8, vjust=0) 
-    }
-  }
+  # Contribution data frame
+  pca.contrib <- cbind.data.frame(name = factor(names(contrib), levels = names(contrib)), 
+                                  contrib = contrib)
   
-  # Add supplementary quantitative variables
-  # Available only in FactoMineR
-  if(inherits(X, 'PCA')){
-    quanti_coord <- X$quanti.sup$coord
-    if(!is.null(quanti_coord) & !hide.quanti){
-      quanti_coord <- as.data.frame(quanti_coord[, axes, drop=FALSE])
-      colnames(quanti_coord) <- c("x", "y")
-      p <- p + geom_segment(data = quanti_coord,
-                aes(x = 0, y = 0, xend = x, yend = y),
-                arrow = arrow(length = unit(0.2, 'cm')), color=col.quanti.sup, linetype=2)
-      
-      if(lab.quanti)
-        p <- p + geom_text(data = quanti_coord, aes(x,y),
-                 label = rownames(quanti_coord), color=col.quanti.sup, 
-                 size = labelsize, hjust=0.8, vjust=0) 
-    }
-  }
+  xlab = ""
+  ylab = "Contributions (%)"
   
-  p <- p+ labs(title = title, x = xlab, y = ylab)
+  p <- ggplot(pca.contrib, aes(name, contrib)) + 
+    geom_bar(stat="identity", fill=fill, color = color,...) + 
+    geom_hline(yintercept=theo_contrib, linetype=2, color="red")+
+    theme(axis.text.x = element_text(angle=45))+
+    labs(title = title, x = xlab, y = ylab)
+  
   p 
-}
-
-
-# X : an object of class PCA, princomp, prcomp, dudi
-# Return TRUE if the data are scaled to unit variance
-.get_scale_unit <-function(X){
-  scale_unit <- FALSE
-  if(inherits(X, 'PCA')) scale_unit <- X$call$scale.unit
-  else if(inherits(X, "prcomp" )) {
-    scale_unit <- X$scale
-    if(is.numeric(scale_unit)) scale_unit = TRUE
-  }
-  else if(inherits(X, "princomp")){
-    scale_unit <- X$scale
-    if(length(unique(scale_unit))>1) scale_unit <- TRUE
-    else scale_unit = FALSE
-  }
-  else if(inherits(X, 'pca') & inherits(X, 'dudi')){
-    scale_unit <- X$norm
-    if(length(unique(scale_unit))>1) scale_unit <- TRUE
-    else scale_unit = FALSE
-  }
-  else stop("Error in .get_scale_unit function : can't handle an object of class ",
-            class(X))
- 
-  scale_unit
 }
 
