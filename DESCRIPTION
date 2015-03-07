@@ -1,7 +1,7 @@
 Package: factoextra
 Type: Package
 Title: Visualization of the outputs of a multivariate analysis
-Version: 1.0.0
+Version: 1.0.1
 Date: 2015-02-21
 Author: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
 Maintainer: Alboukadel kassambara <alboukadel.kassambara@gmail.com>
@@ -28,5 +28,6 @@ Collate:
     'get_eigenvalue.R'
     'fviz_pca_ind.R'
     'fviz_pca_biplot.R'
+    'fviz_pca_contrib.R'
     'fviz_pca_var.R'
     'fviz_screeplot.R'
