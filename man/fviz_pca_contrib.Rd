@@ -19,7 +19,7 @@ for the contribution of individuals}
 
 \item{fill}{a fill color for the bar plot}
 
-\item{color}{an outline color the bar plot}
+\item{color}{an outline color for the bar plot}
 
 \item{sortcontrib}{a string specifying whether the contributions should be sorted.
 Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending)}
@@ -27,7 +27,7 @@ Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for des
 \item{top}{a numeric value specifing the top contributing elements to be shown}
 
 \item{...}{optional arguments to be passed to the function get_pca_ind().
- This can includes the argument data (the original data used for pca)
+ This can includes the argument data (the original data used for the PCA)
  which is required when X is not from FactoMineR or adea4 packages.}
 }
 \value{
@@ -46,15 +46,15 @@ decathlon2.active <- decathlon2[1:23, 1:10]
 res.pca <- princomp(decathlon2.active,  cor = TRUE)
 
 # variable contributions on axis 1
-fviz_pca_contrib(res.pca, choice="var", axes = 1 )
+fviz_pca_contrib(res.pca, choice="var", axes = 1, data = decathlon2.active )
 # sorting
-fviz_pca_contrib(res.pca, choice="var", axes = 1)
+fviz_pca_contrib(res.pca, choice="var", axes = 1, sort ="asc", data = decathlon2.active)
 
 variable contributions on axis 2
-fviz_pca_contrib(res.pca, choice="var", axes = 2)
+fviz_pca_contrib(res.pca, choice="var", axes = 2, data = decathlon2.active)
 
 # Contributions of individuals on axis 1
-fviz_pca_contrib(res.pca, choice="var", axes = 1)
+fviz_pca_contrib(res.pca, choice="ind", axes = 1, data = decathlon2.active)
  }
 }
 \author{
