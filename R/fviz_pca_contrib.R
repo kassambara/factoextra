@@ -88,7 +88,6 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
   # Contribution data frame
   pca.contrib <- cbind.data.frame(name = factor(names(contrib), levels = names(contrib)), 
                                   contrib = contrib)
-  print(head(pca.contrib))
   xlab = ""
   ylab = "Contributions (%)"
   
