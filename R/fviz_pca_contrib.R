@@ -92,7 +92,7 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
   xlab = ""
   ylab = "Contributions (%)"
   
-  p <- ggplot(pca.contrib, aes_string(name, contrib)) + 
+  p <- ggplot(pca.contrib, aes(name, contrib)) + 
     geom_bar(stat="identity", fill=fill, color = color) + 
     geom_hline(yintercept=theo_contrib, linetype=2, color="red")+
     labs(title = title, y = ylab)+
