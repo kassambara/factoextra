@@ -46,14 +46,15 @@ decathlon2.active <- decathlon2[1:23, 1:10]
 res.pca <- princomp(decathlon2.active,  cor = TRUE)
 
 # variable contributions on axis 1
-fviz_pca_contrib(res.pca, choice="var", axes = 1, data = decathlon2.active )
+fviz_pca_contrib(res.pca, choice="var", axes = 1 )
 # sorting
-fviz_pca_contrib(res.pca, choice="var", axes = 1, sort ="asc", data = decathlon2.active)
+fviz_pca_contrib(res.pca, choice="var", axes = 1, sort ="asc")
 
 variable contributions on axis 2
-fviz_pca_contrib(res.pca, choice="var", axes = 2, data = decathlon2.active)
+fviz_pca_contrib(res.pca, choice="var", axes = 2)
 
 # Contributions of individuals on axis 1
+# the argument data is required when res.pca is from princomp or prcomp
 fviz_pca_contrib(res.pca, choice="ind", axes = 1, data = decathlon2.active)
  }
 }
