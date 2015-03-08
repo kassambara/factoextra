@@ -34,13 +34,13 @@ NULL
 #' # variable contributions on axis 1
 #' fviz_pca_contrib(res.pca, choice="var", axes = 1 )
 #' # sorting
-#' fviz_pca_contrib(res.pca, choice="var", axes = 1, sort = "asc" )
+#' fviz_pca_contrib(res.pca, choice="var", axes = 1)
 #' 
 #' variable contributions on axis 2
-#' fviz_pca_contrib(res.pca, choice="var", axes = 2, sort = "asc" )
+#' fviz_pca_contrib(res.pca, choice="var", axes = 2)
 #' 
 #' # Contributions of individuals on axis 1
-#' fviz_pca_contrib(res.pca, choice="var", axes = 1, sort = "asc" )
+#' fviz_pca_contrib(res.pca, choice="var", axes = 1)
 #'  }
 #'  @export 
 fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
