@@ -45,7 +45,7 @@ NULL
 #'  @export 
 fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
                    fill="steelblue", color = "steelblue", 
-                   sortcontrib = c("none", "desc", "asc"), top = Inf,...)
+                   sortcontrib = c("desc", "asc", "none"), top = Inf,...)
 {
   
   if(choice[1]=="var") {
@@ -94,8 +94,9 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
   p <- ggplot(pca.contrib, aes(name, contrib)) + 
     geom_bar(stat="identity", fill=fill, color = color,...) + 
     geom_hline(yintercept=theo_contrib, linetype=2, color="red")+
-    theme(axis.text.x = element_text(angle=45))+
-    labs(title = title, x = xlab, y = ylab)
+    labs(title = title, y = ylab)+
+    theme(axis.text.x = element_text(angle=45), axis.title.x = element_blank())
+    
   
   p 
 }
