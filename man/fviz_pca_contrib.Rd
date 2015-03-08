@@ -5,8 +5,8 @@
 \title{Contributions of variables/individuals - Principal Component Analysis}
 \usage{
 fviz_pca_contrib(X, choice = c("var", "ind"), axes = 1,
-  fill = "steelblue", color = "steelblue", sortcontrib = c("none", "desc",
-  "asc"), top = Inf, ...)
+  fill = "steelblue", color = "steelblue", sortcontrib = c("desc", "asc",
+  "none"), top = Inf, ...)
 }
 \arguments{
 \item{X}{an object of class PCA (FactoMineR); prcomp (stats); princomp (stats);
