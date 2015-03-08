@@ -53,12 +53,24 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
     pca.contrib <- get_pca_ind(X)$contrib
     title <- paste0("Contribution of individuals on PC-", paste(axes, collapse="-"))
   }
-  # Theorical contribution of each variables
-  theo_contrib <- 100/nrow(pca.contrib)
   
   # Extract contribution
-  if(length(axes) > 1) contrib <- apply(pca.contrib[, axes], 1, sum)
-  else contrib <- pca.contrib[, axes]
+  if(length(axes) > 1) {
+    eig <- get_eigenvalue(X)[axes,1]
+    contrib <- pca.contrib[, axes]
+    # Adjust variable contributions by the PC eigenvalues
+    contrib <- t(apply(contrib, 1, 
+                    function(var.contrib, pc.eig){var.contrib*pc.eig},
+                    eig))
+    contrib <-apply(contrib, 1, sum)
+    # Theorical contribution of each variables
+    theo_contrib <- sum((100/nrow(pca.contrib))*eig)
+  }
+  else{
+    contrib <- pca.contrib[, axes]
+    # Theorical contribution of each variables
+    theo_contrib <- 100/nrow(pca.contrib)
+  }
   
   # top contributing elements
   if(top!=Inf & top < length(contrib)){

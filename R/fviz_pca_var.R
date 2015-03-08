@@ -77,8 +77,8 @@ fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
   
   cos2 <- apply(pca.var$cos2[, axes], 1, sum)
   coord <- apply(pca.var$coord[, axes]^2, 1, sum) # same as cos2
-  eig <- eig.df[,axes]
-  contrib <- apply(pca.var$contrib[, axes], 1, sum)
+  contrib <- pca.var$contrib[, axes]
+  contrib <- contrib[,1]*eig.df[axes[1],1] +  contrib[,2]*eig.df[axes[2],1]
   
   # Label positions
   textpos <-var[, c("x", "y")]

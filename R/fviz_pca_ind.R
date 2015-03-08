@@ -88,8 +88,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   cos2 <- apply(pca.ind$cos2[, axes], 1, sum, na.rm=TRUE)
   coord <- apply(pca.ind$coord[, axes]^2, 1, sum, na.rm=TRUE)
-  eig <- eig.df[,axes]
-  contrib <- apply(pca.ind$contrib[, axes], 1, sum, na.rm=TRUE)
+  contrib <- pca.ind$contrib[, axes]
+  contrib <- contrib[,1]*eig.df[axes[1],1] + contrib[,2]*eig.df[axes[2],1] 
   
   # Find the best positions for labels to avoid overlap
   textpos <-ind[, c("x", "y")]
