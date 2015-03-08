@@ -47,7 +47,7 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
                    fill="steelblue", color = "steelblue", 
                    sortcontrib = c("desc", "asc", "none"), top = Inf,...)
 {
-  
+
   if(choice[1]=="var") {
     pca.contrib <- get_pca_var(X)$contrib
     title <- paste0("Contribution of variables on PC-", paste(axes, collapse="-"))

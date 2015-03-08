@@ -62,7 +62,6 @@ fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70")
 {
-  
   eig.df <- get_eigenvalue(X)
   pca.var <- get_pca_var(X)
   scale.unit <- .get_scale_unit(X)
