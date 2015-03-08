@@ -27,7 +27,9 @@ Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to
 \item{ncp}{a numeric value specifying the number of components to be shown}
 
 \item{addlabels}{logical value. If TRUE, labels are added at the top of bars or points
- showing the information retained by each dimension}
+showing the information retained by each dimension}
+
+\item{...}{optional arguments to be passed to the function geom_bar(), geom_line() or geom_text()}
 }
 \value{
 a ggplot2 plot

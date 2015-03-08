@@ -17,6 +17,9 @@ NULL
 #' @param sortcontrib a string specifying whether the contributions should be sorted. 
 #' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending)
 #' @param top a numeric value specifing the top contributing elements to be shown
+#' @param ... optional arguments to be passed to the function get_pca_ind().
+#'  This can includes the argument data (the original data used for pca) 
+#'  which is required when X is not from FactoMineR or adea4 packages.
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -50,7 +53,7 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
     title <- paste0("Contribution of variables on PC-", paste(axes, collapse="-"))
   }
   else if(choice[1]=="ind"){
-    pca.contrib <- get_pca_ind(X)$contrib
+    pca.contrib <- get_pca_ind(X, ...)$contrib
     title <- paste0("Contribution of individuals on PC-", paste(axes, collapse="-"))
   }
   

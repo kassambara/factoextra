@@ -14,6 +14,7 @@ NULL
 #' @param ncp a numeric value specifying the number of components to be shown
 #' @param addlabels logical value. If TRUE, labels are added at the top of bars or points
 #'  showing the information retained by each dimension
+#'  @param ... optional arguments to be passed to the functions geom_bar(), geom_line() or geom_text()
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}

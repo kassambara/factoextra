@@ -25,6 +25,10 @@ for the contribution of individuals}
 Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending)}
 
 \item{top}{a numeric value specifing the top contributing elements to be shown}
+
+\item{...}{optional arguments to be passed to the function get_pca_ind().
+ This can includes the argument data (the original data used for pca)
+ which is required when X is not from FactoMineR or adea4 packages.}
 }
 \value{
 a ggplot2 plot
