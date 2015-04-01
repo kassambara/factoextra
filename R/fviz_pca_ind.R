@@ -78,6 +78,11 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   eig.df <- get_eigenvalue(X)
   pca.ind <- get_pca_ind(X, ...)
   
+  if(max(axes) > ncol(pca.ind$coord))
+    stop("The value of the argument axes is incorrect. ",
+         "The mumber of axes in the data is: ", ncol(pca.ind$coord), 
+         ". Please try again with axes between 1 - ", ncol(pca.ind$coord))
+  
   eig <- eig.df[,2]
   ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
   colnames(ind)<- c("x", "y")
