@@ -103,6 +103,11 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   pca.var <- get_pca_var(X)
   scale.unit <- .get_scale_unit(X)
   
+  if(max(axes) > ncol(pca.ind$coord))
+    stop("The value of the argument axes is incorrect. ",
+         "The mumber of axes in the data is: ", ncol(pca.ind$coord), 
+         ". Please try again with axes between 1 - ", ncol(pca.ind$coord))
+    
   ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
   colnames(ind)<- c("x", "y")
   
@@ -117,7 +122,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   cos2 <- apply(pca.var$cos2[, axes], 1, sum)
   coord <- apply(pca.var$coord[, axes]^2, 1, sum)
   contrib <- pca.var$contrib[, axes]
-  eig <- eig.df[,axes]
+  eig <- eig.df[axes,, drop=FALSE]
   contrib <- contrib[,1]*eig[1,1] +  contrib[,2]*eig[2,1] 
   
   # rescale variable coordinates
