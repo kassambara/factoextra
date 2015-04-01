@@ -58,6 +58,11 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
     title <- paste0("Contribution of individuals on PC-", paste(axes, collapse="-"))
   }
   
+  if(max(axes) > ncol(pca.contrib))
+    stop("The value of the argument axes is incorrect. ",
+         "The mumber of axes in the data is: ", ncol(pca.contrib ), 
+         ". Please try again with axes between 1 - ", ncol(pca.contrib))
+  
   # Extract contribution
   if(length(axes) > 1) {
     eig <- get_eigenvalue(X)[axes,1]
