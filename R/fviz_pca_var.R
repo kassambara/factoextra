@@ -66,6 +66,11 @@ fviz_pca_var <- function(X, axes=c(1,2), label="all",  invisible ="none",
   pca.var <- get_pca_var(X)
   scale.unit <- .get_scale_unit(X)
   
+  if(max(axes) > ncol(pca.var$coord))
+    stop("The value of the argument axes is incorrect. ",
+         "The mumber of axes in the data is: ", ncol(pca.var$coord), 
+         ". Please try again with axes between 1 - ", ncol(pca.var$coord))
+  
   eig <- eig.df[,2]
   var <- data.frame(pca.var$coord[, axes, drop=FALSE])
   colnames(var)<- c("x", "y")
