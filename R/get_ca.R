@@ -10,7 +10,7 @@ NULL
 #' \item get_ca_row(): Extract the results for rows only
 #' \item get_ca_col(): Extract the results for columns only
 #' }
-#' @param res.ca an object of class CA[FactoMineR], ca[ca], coa[ade4];
+#' @param res.ca an object of class CA [FactoMineR], ca [ca], coa [ade4];
 #'  correspondence [MASS].
 #' @param element the element to subset from the output. Possible values are "row" or "col".
 #' @return a list of matrices containing the results for the active rows/columns including : 

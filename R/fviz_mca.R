@@ -37,7 +37,7 @@
 #' The value can variate from 0 (total transparency) to 1 (no transparency).
 #' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
+#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
 #' @param shape.ind,shape.var point shapes of individuals and variables
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
