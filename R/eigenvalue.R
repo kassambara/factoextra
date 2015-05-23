@@ -53,6 +53,9 @@
 #' # Add labels
 #' fviz_eig(res.pca, addlabels=TRUE)
 #' 
+#' # Change the y axis limits
+#' fviz_eig(res.pca, addlabels=TRUE, hjust = -0.3) +
+#'    ylim(0, 80)
 #' # Scree plot - Eigenvalues
 #' fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
 #' 
