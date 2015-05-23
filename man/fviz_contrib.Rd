@@ -28,7 +28,7 @@ dudi, pca, coa and acm [ade4]; ca [ca package].}
 \item{sort.val}{a string specifying whether the value should be sorted.
 Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).}
 
-\item{top}{a numeric value specifing the number of top elements to be shown.}
+\item{top}{a numeric value specifying the number of top elements to be shown.}
 
 \item{sortcontrib}{see the argument sort.val}
 

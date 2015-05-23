@@ -15,7 +15,7 @@ NULL
 #' @param color an outline color for the bar plot.
 #' @param sort.val a string specifying whether the value should be sorted. 
 #' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).
-#' @param top a numeric value specifing the number of top elements to be shown.
+#' @param top a numeric value specifying the number of top elements to be shown.
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}

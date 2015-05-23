@@ -65,7 +65,7 @@ the combination of c("row", "row.sup","col", "col.sup").}
 The default values are "red" and "blue", respectively.
 Allowed values include also : "cos2", "contrib", "coord", "x" or "y".
  In this case, the colors for row/column variables are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2+y^2, "coord"), x values("x") or y values("y")}
+ contributions ("contrib"), coordinates (x^2 + y^2, "coord"), x values("x") or y values("y")}
 
 \item{col.col.sup,col.row.sup}{colors for the supplementary column and row points, respectively.}
 
@@ -178,7 +178,7 @@ fviz_ca_row(res.ca, col.row="contrib") +
 fviz_ca_row(res.ca, alpha.row="contrib") +
      theme_minimal()
 
-# Select and visualize rows with cos2 >= 0.4
+# Select and visualize rows with cos2 > 0.5
 fviz_ca_row(res.ca, select.row = list(cos2 = 0.5))
 # Select the top 7 according to the cos2
 fviz_ca_row(res.ca, select.row = list(cos2 = 7))
