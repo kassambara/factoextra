@@ -1,0 +1,42 @@
+factoextra 1.0.2
+--------------------------------------------------
+
+NEW FEATURES
+   
+
+* Visualization of Correspondence Analysis outputs from different R packages (FactoMineR, ca, ade4, MASS)
+- fviz_ca_row()
+- fviz_ca_col()
+- fviz_ca_biplot()
+
+* Extract results from CA output
+- get_ca_row()
+- get_ca_col()
+- get_ca()
+
+* Visualize the cos2 and the contributions of rows/columns. The functions can handle the output of PCA, CA and MCA
+- fviz_cos2()
+- fviz_contrib()
+
+* Sumarize the results of PCA, CA, MCA
+- facto_summarize()
+
+
+DEPRECATED FUNCTION
+
+* fviz_pca_contrib() is dreprecated -> use fviz_contrib()
+ 
+
+MINOR CHANGING
+
+* fviz_add: "text" are included in the allowed values for the argument geom
+* fviz_screeplot: the X parameter can be also an object of class ca [ca], coa [ade4], correspondence [MASS]
+* get_eigenvalue: X parameters and description changed
+* get_pca_ind: the argument data are no longer required
+
+factoextra 1.0.1
+----------------------------------
+
+FEATURES
+
+* Easy to use functions to extract and visualize the output of principal component analysis.

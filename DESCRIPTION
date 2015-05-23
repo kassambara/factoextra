@@ -1,34 +1,42 @@
 Package: factoextra
 Type: Package
-Title: Visualization of the outputs of a multivariate analysis
-Version: 1.0.1
+Title: Extract and Visualize the results of PCA, CA and MCA
+Version: 1.0.2
 Date: 2015-02-21
-Author: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
-Maintainer: Alboukadel kassambara <alboukadel.kassambara@gmail.com>
-Description: Provide some easy-to-use functions to visualize the output of
-    several PCA functions : PCA() from FactoMineR package; prcomp() and
-    princomp() from stats package; dudi.pca() from ade4 package.
+Authors@R: c(
+    person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"))
+Description: factoextra provides some easy-to-use functions to extract and visualize the
+    output of PCA (Principal Component Analysis), CA (Correspondence Analysis)
+    and MCA (Multiple Correspondence Analysis) functions from several packages
+    : PCA, CA, MCA [FactoMineR]; prcomp and princomp [stats]; dudi.pca,
+    dudi.coa, dudi.acm [ade4]; ca [ca]; corresp [MASS]. Ggplot2 plotting system
+    is used.
 License: GPL-2
 LazyData: true
 Depends:
     ggplot2,
     grid
-Imports:
-    ggplot2,
-    grid
 Suggests:
-    ggplot2,
+    ade4,
+    ca,
+    FactoMineR,
+    stats,
+    MASS,
     knitr
 VignetteBuilder: knitr
 URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
+    'eigenvalue.R'
+    'utilities.R'
+    'print.factoextra.R'
+    'get_pca.R'
+    'facto_summarize.R'
     'fviz_add.R'
-    'get_pca_var.R'
-    'get_pca_ind.R'
-    'get_eigenvalue.R'
-    'fviz_pca_ind.R'
-    'fviz_pca_biplot.R'
-    'fviz_pca_contrib.R'
-    'fviz_pca_var.R'
-    'fviz_screeplot.R'
+    'fviz_ca.R'
+    'fviz_contrib.R'
+    'fviz_cos2.R'
+    'get_mca.R'
+    'fviz_mca.R'
+    'fviz_pca.R'
+    'get_ca.R'

@@ -5,8 +5,8 @@
 \title{Add supplementary data to a plot}
 \usage{
 fviz_add(ggp, df, axes = c(1, 2), geom = c("point", "arrow"),
-  color = "blue", addlabel = TRUE, labelsize = 4, shape = 19,
-  linetype = "dashed")
+  color = "blue", addlabel = TRUE, labelsize = 4, pointsize = 2,
+  shape = 19, linetype = "dashed")
 }
 \arguments{
 \item{ggp}{a ggplot2 plot.}
@@ -16,13 +16,15 @@ fviz_add(ggp, df, axes = c(1, 2), geom = c("point", "arrow"),
 \item{axes}{a numeric vector of length 2 specifying the components to be plotted.}
 
 \item{geom}{a character specifying the geometry to be used for the graph
-Allowed values are "point" or "arrow"}
+Allowed values are "point" or "arrow" or "text"}
 
 \item{color}{the color to be used}
 
 \item{addlabel}{a logical value. If TRUE, labels are added}
 
 \item{labelsize}{the size of labels. Default value is 4}
+
+\item{pointsize}{the size of points}
 
 \item{shape}{point shape when geom ="point"}
 
@@ -36,6 +38,20 @@ Add supplementary data to a plot
 }
 \examples{
 \donttest{
+# Principal component analysis
+data(decathlon2)
+decathlon2.active <- decathlon2[1:23, 1:10]
+res.pca <- prcomp(decathlon2.active,  scale = TRUE)
+
+# Visualize variables
+p <- fviz_pca_var(res.pca)
+print(p)
+
+# Add supplementary variables
+coord <- data.frame(PC1 = c(-0.7, 0.9), PC2 = c(0.25, -0.07))
+rownames(coord) <- c("Rank", "Points")
+print(coord)
+fviz_add(p, coord, color ="blue", geom="arrow")
  }
 }
 \author{

@@ -1,7 +1,8 @@
-factoextra : Visualization of the outputs of a multivariate analysis
+factoextra : Extract and Visualize the results of PCA, CA and MCA
 ===========
 
-factoextra provides some easy-to-use functions to visualize the output of several PCA functions : PCA() from FactoMineR package; prcomp() and princomp() from stats package; dudi.pca() from ade4 package.
+factoextra provides some easy-to-use functions to extract and visualize the output of PCA (Principal Component Analysis), CA (Correspondence Analysis) and MCA (Multiple Correspondence Analysis) functions from several packages : PCA, CA, MCA [FactoMineR]; prcomp and princomp [stats]; dudi.pca, dudi.coa, dudi.acm [ade4]; ca [ca]; corresp [MASS]. Ggplot2 plotting system is used.
+
 
 ## Installation
     

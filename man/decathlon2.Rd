@@ -24,13 +24,8 @@ Athletes' performance during two sporting meetings
     \item{\code{Competition}}{a factor with levels \code{Decastar} \code{OlympicG}}
   }
 }
-\details{
-}
 \source{
 This data is a subset of decathlon data in FactoMineR package.
-}
-\references{
-%%  ~~ possibly secondary sources and usages ~~
 }
 \examples{
 data(decathlon2)
