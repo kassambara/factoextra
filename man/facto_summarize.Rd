@@ -22,10 +22,12 @@ for axes 1 and 2.}
 
 \item{select}{a selection of variables. Allowed values are NULL or a list containing the arguments
  name, cos2 or contrib. Default is list(name = NULL, cos2 = NULL, contrib = NULL):
- - name: is a character vector containing variable names to be selected
- - cos2: if cos2 is in [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected.
+ \itemize{
+ \item name: is a character vector containing variable names to be selected
+ \item cos2: if cos2 is in [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected.
   if cos2 > 1, ex: 5, then the top 5 variables with the highest cos2 are selected
-- contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest cos2 are selected.}
+\item contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest cos2 are selected.
+ }}
 }
 \value{
 A data frame containing the (total) coord, cos2 and the contribution for the axes.
@@ -36,8 +38,8 @@ Correspondence Analysis (CA) and
 Multiple Correspondence Analysis (MCA) functions from several packages.
 }
 \details{
-If length(axes) > 1, then the columns contrib and cos2 correspond to the total contrib and total cos2
- of the axes. In this case, the column coord is calculated as x^2 + y2 + ...+; x, y, ... are the coordinates of
+If length(axes) > 1, then the columns contrib and cos2 correspond to the total contributions and total cos2
+ of the axes. In this case, the column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the coordinates of
  the points on the specified axes.
 }
 \examples{
@@ -48,7 +50,7 @@ data(decathlon2)
 decathlon2.active <- decathlon2[1:23, 1:10]
 res.pca <- prcomp(decathlon2.active,  scale = TRUE)
 
-# summarize variables on axes 1:2
+# Summarize variables on axes 1:2
 facto_summarize(res.pca, "var", axes = 1:2)[,-1]
 # Select the top 5 contributing variables
 facto_summarize(res.pca, "var", axes = 1:2,
@@ -81,7 +83,7 @@ library(FactoMineR)
 data(poison)
 res.mca <- MCA(poison, quanti.sup = 1:2,
               quali.sup = 3:4, graph=FALSE)
-# summarize variables on axes 1:2
+# Summarize variables on axes 1:2
 res <- facto_summarize(res.mca, "var", axes = 1:2)
 head(res)
 # Summarize individuals on axes 1:2
