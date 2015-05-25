@@ -13,7 +13,7 @@ get_ca_col(res.ca)
 get_ca_row(res.ca)
 }
 \arguments{
-\item{res.ca}{an object of class CA[FactoMineR], ca[ca], coa[ade4];
+\item{res.ca}{an object of class CA [FactoMineR], ca [ca], coa [ade4];
 correspondence [MASS].}
 
 \item{element}{the element to subset from the output. Possible values are "row" or "col".}

@@ -174,7 +174,8 @@ p + scale_color_brewer(palette="Paired") +
      theme_minimal()
 p + scale_color_brewer(palette="Set1") +
      theme_minimal()
-
+# Change color manually
+p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))
 # Select and visualize individuals with cos2 >= 0.96
 fviz_pca_ind(res.pca, select.ind = list(cos2 = 0.96))
 # Select the top 20 according to the cos2

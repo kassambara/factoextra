@@ -72,7 +72,7 @@ If TRUE, draws ellipses around the individuals when habillage != "none".}
 \item{col.ind,col.var}{color for individuals and variables, respectively.
 Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
-contributions ("contrib"), coordinates (x^2+y2, "coord"), x values("x") or y values("y").
+contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
