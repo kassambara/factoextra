@@ -153,7 +153,7 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   
   title <- "Scree plot"
   xlab <- "Dimensions"
-  ylab <- "Percentage of variances"
+  ylab <- "Percentage of explained variances"
   
   choice <- choice[1]
   if(choice=="eigenvalue") {
