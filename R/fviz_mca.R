@@ -56,6 +56,12 @@
 #' @param arrows Vector of two logicals specifying if the plot should contain
 #'  points (FALSE, default) or arrows (TRUE).
 #'  First value sets the rows and the second value sets the columns.
+#' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
+#' It's a list containing the objects width and height (i.e jitter = list(width, height)). 
+#' \itemize{
+#' \item width: degree of jitter in x direction
+#' \item height: degree of jitter in y direction
+#' }
 #' @details The default plot of MCA is a "symmetric" plot in which both rows and 
 #' columns are in principal coordinates. In this situation, it's not possible 
 #' to interpret the distance between row points and column points. To overcome this 
@@ -225,7 +231,8 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                          shape.ind = 19,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         map ="symmetric", ...)
+                         map ="symmetric",
+                         jitter = list(width = NULL, height = NULL), ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -240,6 +247,9 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   # scale ind coords according to the type of map
   ind <- .scale_ca(ind, res.ca = X,  element = "ind", 
                    type = map, axes = axes)
+  
+  # jitter to reduce overplotting
+  ind <- .jitter(ind, jitter)
   
   # Selection
   ind.all <- ind
@@ -361,7 +371,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
                          labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
                          col.quanti.sup="blue",  col.quali.sup = "darkgreen", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         map ="symmetric")
+                         map ="symmetric", jitter = list(width = NULL, height = NULL))
 {
   
   # data frame to be used for plotting
@@ -372,6 +382,8 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
   # scale coords according to the type of map
   var <- .scale_ca(var, res.ca = X,  element = "var", 
                    type = map, axes = axes)
+  
+  var <- .jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -434,7 +446,8 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   shape.ind = 19, shape.var = 17, 
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  map ="symmetric", arrows = c(FALSE, FALSE), ...)
+                  map ="symmetric", arrows = c(FALSE, FALSE), 
+                  jitter = list(width = NULL, height = NULL), ...)
 {
   
   # data frame to be used for plotting
@@ -445,6 +458,8 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   # scale coords according to the type of map
   var <- .scale_ca(var, res.ca = X,  element = "var", 
                    type = map, axes = axes)
+  
+  var <-.jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -467,7 +482,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           shape.ind=shape.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind)
+          select.ind = select.ind, jitter = jitter)
     
   # geometry for variable
   geom2 <- geom
