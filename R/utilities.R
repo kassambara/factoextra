@@ -125,7 +125,7 @@ NULL
 
 # Scale row coordinates depending on the map type
 #++++++++++++++++++++++
-## row.res, data an output of facto_summarize containing the
+## row.res, data: an output of facto_summarize containing the
 # name, x, y, coord,... of the row variables
 ## res.ca an object of class CA, MCA
 ## type: a character string specifying the map type. 
@@ -515,7 +515,7 @@ NULL
 #  "text" to show only labels or c("point", "text") to show both types.
 .ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black",  alpha = 1,
                        alpha.limits = NULL, shape = 19, pointsize = 2, 
-                       geom=c("point", "text"), lab = TRUE, labelsize = 4 )
+                       geom=c("point", "text"), lab = TRUE, labelsize = 4, ...)
   {
   
   data <- as.data.frame(data)
@@ -694,6 +694,30 @@ NULL
   return(p)
 }
 
+
+# Points jitter, to reduce overploting
+# data : a result from facto_summarize containing the x and y coordinates of points
+# jitter: a vector of length 2 containing the width and the height of jitter
+.jitter <- function(data, jitter = list(width = NULL, height = NULL)){
+  
+  if(!is.null(data)){
+    if(!is.null(jitter$width)){
+      width <- abs(jitter$width)
+      set.seed(1234)
+      xjit <- runif(nrow(data), min = -width, max = width)
+      data$x <- data$x + xjit
+    }
+    
+    if(!is.null(jitter$height)){
+      height <- abs(jitter$height)
+      set.seed(12345)
+      yjit <- runif(nrow(data), min = -height, max = height)
+      data$y <- data$y + yjit
+    }
+  }
+  
+  return(data)
+}
 
 
 # Finih a plot
