@@ -185,6 +185,8 @@ fviz_mca_ind(res.mca, geom="point", pointsize = 4)
 # Change point color and theme
 fviz_mca_ind(res.mca, col.ind = "blue")+
    theme_minimal()
+# Reduce overplotting
+fviz_mca_ind(res.mca, jitter = list(width = 0.2, height = 0.2))
 
 # Control automatically the color of individuals
 # using the cos2 or the contributions
