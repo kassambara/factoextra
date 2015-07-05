@@ -51,6 +51,12 @@ NULL
 #' @param arrows Vector of two logicals specifying if the plot should contain
 #'  points (FALSE, default) or arrows (TRUE).
 #'  First value sets the rows and the second value sets the columns.
+#' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
+#' It's a list containing the objects width and height (i.e jitter = list(width, height)). 
+#' \itemize{
+#' \item width: degree of jitter in x direction
+#' \item height: degree of jitter in y direction
+#' }
 #' @param ... optional arguments.
 #' @details The default plot of CA is a "symmetric" plot in which both rows and 
 #' columns are in principal coordinates. In this situation, it's not possible 
@@ -203,7 +209,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric",
-                       ...)
+                       jitter = list(width = NULL, height = NULL),...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -218,6 +224,9 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
   # scale row coords according to the type of map
   row <- .scale_ca(row, res.ca = X,  element = "row", 
                    type = map, axes = axes)
+  
+  # jitter to reduce overplotting
+  row <- .jitter(row, jitter)
   
   row.all <- row
   if(!is.null(select.row)) row <- .select(row, select.row)
@@ -269,7 +278,8 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
                        label = "all", invisible="none", labelsize=4, pointsize = 2,
                        col.col ="red", col.col.sup="darkred",  alpha.col = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric", ...)
+                       map ="symmetric",
+                       jitter = list(width = NULL, height = NULL), ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -284,6 +294,9 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
   # scale coords according to the type of map
   col <- .scale_ca(col, res.ca = X,  element = "col", 
                    type = map, axes = axes)
+  
+  # jitter to reduce overplotting
+  col <- .jitter(col, jitter)
   
   col.all <- col
   if(!is.null(select.col)) col <- .select(col, select.col)
@@ -339,7 +352,8 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric", arrows = c(FALSE, FALSE),  ...)
+                       map ="symmetric", arrows = c(FALSE, FALSE), 
+                       jitter = list(width = NULL, height = NULL), ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -355,6 +369,8 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
   col <- .scale_ca(col, res.ca = X,  element = "col", 
                    type = map, axes = axes)
   
+  # jitter to reduce overplotting
+  col <- .jitter(col, jitter)
   
   col.all <- col
   if(!is.null(select.col)) col <- .select(col, select.col)
@@ -373,7 +389,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
         geom=geom2,
         label = label, invisible = invisible, labelsize=labelsize, pointsize = pointsize,
         col.row =col.row, col.row.sup=col.row.sup,  alpha.row = alpha.row, select.row = select.row,
-        map = map)
+        map = map, jitter = jitter)
   
   
   # geom for columns

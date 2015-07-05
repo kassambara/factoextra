@@ -62,6 +62,12 @@
 #' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
 #' \item contrib: if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 #' }
+#' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
+#' It's a list containing the objects width and height (i.e jitter = list(width, height)). 
+#' \itemize{
+#' \item width: degree of jitter in x direction
+#' \item height: degree of jitter in y direction
+#' }
 #' @param ... Arguments to be passed to the function fviz_pca_biplot().
 #'  
 #' @return a ggplot2 plot
@@ -208,7 +214,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          label = "all", invisible="none", labelsize=4, pointsize = 2,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
-                         select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+                         select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
+                         jitter = list(width = NULL, height = NULL),...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -219,6 +226,9 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   ind <- facto_summarize(X, element = "ind", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(ind)[2:3] <-  c("x", "y")
+  
+  # jitter to reduce overplotting
+  ind <- .jitter(ind, jitter)
   
   # Selection
   ind.all <- ind
@@ -335,7 +345,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          label="all",  invisible ="none",
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70",
-                         select.var = list(name = NULL, cos2 = NULL, contrib = NULL))
+                         select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         jitter = list(width = NULL, height = NULL))
 {
   
   scale.unit <- .get_scale_unit(X)
@@ -344,6 +355,9 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
+  
+  # jitter to reduce overplotting
+  var <- .jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -407,7 +421,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   col.var="steelblue",  alpha.var=1, col.quanti.sup="blue",
                   col.circle ="grey70", 
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),...)
+                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                  jitter = list(width = NULL, height = NULL), ...)
 {
   
   scale.unit <- .get_scale_unit(X)
@@ -416,6 +431,9 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
+  
+  # jitter to reduce overplotting
+  var <- .jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -445,7 +463,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
           labelsize=labelsize, pointsize = pointsize,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind)
+          select.ind = select.ind, jitter = jitter)
 
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
