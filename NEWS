@@ -1,3 +1,14 @@
+factoextra 1.0.3
+
+NEW FEATURES
+
+* The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() in order to reduce overplotting of points and texts
+
+
+MINOR CHANGING
+
+* Require R >= 3.1.0
+
 factoextra 1.0.2
 --------------------------------------------------
 
@@ -33,6 +44,7 @@ MINOR CHANGING
 * fviz_screeplot: the X parameter can be also an object of class ca [ca], coa [ade4], correspondence [MASS]
 * get_eigenvalue: X parameters and description changed
 * get_pca_ind: the argument data are no longer required
+
 
 factoextra 1.0.1
 ----------------------------------
