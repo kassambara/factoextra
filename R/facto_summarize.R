@@ -143,7 +143,9 @@ facto_summarize <- function(X, element,
     res <- cbind(res, contrib = contrib)
   }
   
-  res <- cbind.data.frame(name =rownames(elmt$coord), res)
+  name <- rownames(elmt$coord)
+  if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
+  res <- cbind.data.frame(name = name, res)
   if(!is.null(select)) res <- .select(res, select)
   res 
 }
