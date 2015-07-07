@@ -57,8 +57,9 @@
 #'  points (FALSE, default) or arrows (TRUE).
 #'  First value sets the rows and the second value sets the columns.
 #' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
-#' It's a list containing the objects width and height (i.e jitter = list(width, height)). 
+#' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
 #' \itemize{
+#' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
 #' \item width: degree of jitter in x direction
 #' \item height: degree of jitter in y direction
 #' }
@@ -234,7 +235,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          shape.ind = 19,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          map ="symmetric",
-                         jitter = list(width = NULL, height = NULL), ...)
+                         jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -249,9 +250,6 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   # scale ind coords according to the type of map
   ind <- .scale_ca(ind, res.ca = X,  element = "ind", 
                    type = map, axes = axes)
-  
-  # jitter to reduce overplotting
-  ind <- .jitter(ind, jitter)
   
   # Selection
   ind.all <- ind
@@ -273,7 +271,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          col=col.ind,  alpha = alpha.ind, 
                          alpha.limits = alpha.limits, shape = shape.ind, 
                          geom = geom, lab = lab$ind, labelsize = labelsize,
-                         pointsize = pointsize)
+                         pointsize = pointsize, jitter = jitter)
   }
   # qualitative variable is used to color the individuals
   else{
@@ -303,12 +301,24 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     
     if(!hide$ind) {
       
+      label_coord <- ind
+      # jittering
+      if(jitter$what %in% c("both", "b")){
+        label_coord <- ind <- .jitter(ind, jitter)
+      }
+      else if(jitter$what %in% c("point", "p")){
+        ind <- .jitter(ind, jitter)
+      }
+      else if(jitter$what %in% c("label", "l")){
+        label_coord <- .jitter(label_coord, jitter)
+      }
+      
       if("point" %in% geom) 
         p <- p+geom_point(data = ind, 
                           aes_string('x', 'y', color=name.quali, shape = name.quali),
                           pointsize = pointsize)
       if(lab$ind & "text" %in% geom) 
-        p <- p + geom_text(data = ind, 
+        p <- p + geom_text(data = label_coord, 
                            aes_string('x', 'y', label = 'name',
                                       color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
     }
@@ -353,7 +363,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     if(!is.null(ind_sup)){
       p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom) )
+                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom), jitter = jitter )
     }  
   }
   
@@ -373,7 +383,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
                          labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
                          col.quanti.sup="blue",  col.quali.sup = "darkgreen", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         map ="symmetric", jitter = list(width = NULL, height = NULL))
+                         map ="symmetric", jitter = list(what = "label", width = NULL, height = NULL))
 {
   
   # data frame to be used for plotting
@@ -385,7 +395,6 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
   var <- .scale_ca(var, res.ca = X,  element = "var", 
                    type = map, axes = axes)
   
-  var <- .jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -407,7 +416,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
                    alpha.limits = alpha.limits, 
                    geom = geom, shape = shape.var,
                    lab = lab$var, labelsize = labelsize,
-                   pointsize = pointsize)
+                   pointsize = pointsize, jitter = jitter)
   }
   
   
@@ -425,7 +434,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
       p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.quali.sup, shape = shape.var,
                     labelsize = labelsize, addlabel = (lab$quali.sup),
-                    pointsize = pointsize)
+                    pointsize = pointsize, jitter = jitter)
     }  
     
   }
@@ -449,7 +458,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                   map ="symmetric", arrows = c(FALSE, FALSE), 
-                  jitter = list(width = NULL, height = NULL), ...)
+                  jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
   # data frame to be used for plotting
@@ -460,8 +469,6 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   # scale coords according to the type of map
   var <- .scale_ca(var, res.ca = X,  element = "var", 
                    type = map, axes = axes)
-  
-  var <-.jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -495,7 +502,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                    col=col.var,  alpha = alpha.var, 
                    alpha.limits = alpha.limits, 
                    geom =  geom2, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize, pointsize = pointsize)
+                   lab = lab$var, labelsize = labelsize, pointsize = pointsize, jitter = jitter)
   }
   
   # Add supplementary qualitative variable categories
@@ -511,7 +518,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     if(!is.null(quali_sup)){
       p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom2,
                     color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup), pointsize = pointsize )
+                    labelsize = labelsize, addlabel = (lab$quali.sup), pointsize = pointsize, jitter = jitter )
     }  
     
   }

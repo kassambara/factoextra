@@ -52,8 +52,9 @@ NULL
 #'  points (FALSE, default) or arrows (TRUE).
 #'  First value sets the rows and the second value sets the columns.
 #' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
-#' It's a list containing the objects width and height (i.e jitter = list(width, height)). 
+#' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
 #' \itemize{
+#' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
 #' \item width: degree of jitter in x direction
 #' \item height: degree of jitter in y direction
 #' }
@@ -209,7 +210,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric",
-                       jitter = list(width = NULL, height = NULL),...)
+                       jitter = list(what = "label", width = NULL, height = NULL),...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -224,9 +225,6 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
   # scale row coords according to the type of map
   row <- .scale_ca(row, res.ca = X,  element = "row", 
                    type = map, axes = axes)
-  
-  # jitter to reduce overplotting
-  row <- .jitter(row, jitter)
   
   row.all <- row
   if(!is.null(select.row)) row <- .select(row, select.row)
@@ -245,7 +243,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
                        col=col.row,  alpha = alpha.row, 
                        alpha.limits = alpha.limits, shape = shape.row, 
                        geom = geom, lab = lab$row, labelsize = labelsize,
-                       pointsize = pointsize)
+                       pointsize = pointsize, jitter = jitter)
   
   # Add supplementary rows
   if(inherits(X, c('CA', 'ca')) & !hide$row.sup){
@@ -261,7 +259,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
       p <- fviz_add(p, df = row_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.row.sup, shape = shape.row,
                     labelsize = labelsize, addlabel = (lab$row.sup & "text" %in% geom),
-                    pointsize = pointsize)
+                    pointsize = pointsize, jitter = jitter)
       
     }   
   } 
@@ -279,7 +277,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
                        col.col ="red", col.col.sup="darkred",  alpha.col = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric",
-                       jitter = list(width = NULL, height = NULL), ...)
+                       jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -294,9 +292,6 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
   # scale coords according to the type of map
   col <- .scale_ca(col, res.ca = X,  element = "col", 
                    type = map, axes = axes)
-  
-  # jitter to reduce overplotting
-  col <- .jitter(col, jitter)
   
   col.all <- col
   if(!is.null(select.col)) col <- .select(col, select.col)
@@ -315,7 +310,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
                        col=col.col,  alpha = alpha.col, 
                        alpha.limits = alpha.limits, shape = shape.col, 
                        geom = geom, lab = lab$col, labelsize = labelsize,
-                       pointsize = pointsize)
+                       pointsize = pointsize, jitter = jitter)
   
   # Add supplementary cols
   if(inherits(X, c('CA', 'ca')) & !hide$col.sup ){
@@ -331,7 +326,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
       p <- fviz_add(p, df = col_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.col.sup, shape = shape.col,
                     labelsize = labelsize, addlabel = (lab$col.sup & "text" %in% geom),
-                    pointsize = pointsize)
+                    pointsize = pointsize, jitter = jitter)
     }   
   } 
   
@@ -353,7 +348,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric", arrows = c(FALSE, FALSE), 
-                       jitter = list(width = NULL, height = NULL), ...)
+                       jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -368,9 +363,6 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
   # scale row coords according to the type of map
   col <- .scale_ca(col, res.ca = X,  element = "col", 
                    type = map, axes = axes)
-  
-  # jitter to reduce overplotting
-  col <- .jitter(col, jitter)
   
   col.all <- col
   if(!is.null(select.col)) col <- .select(col, select.col)
@@ -401,7 +393,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
                     col=col.col,  alpha = alpha.col, 
                     alpha.limits = alpha.limits, shape = shape.col, 
                     geom = geom2, lab = lab$col, labelsize = labelsize,
-                    pointsize = pointsize)
+                    pointsize = pointsize, jitter = jitter)
   }
     
   # Add supplementary cols
@@ -417,7 +409,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
       p <- fviz_add(p, df = col_sup[, 2:3, drop = FALSE], geom = geom2,
                     color = col.col.sup, shape = shape.col,
                     labelsize = labelsize, addlabel = (lab$col.sup & "text" %in% geom),
-                    pointsize = pointsize)
+                    pointsize = pointsize, jitter = jitter)
     }   
   }    
       

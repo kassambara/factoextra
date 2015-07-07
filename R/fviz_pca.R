@@ -63,8 +63,9 @@
 #' \item contrib: if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 #' }
 #' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
-#' It's a list containing the objects width and height (i.e jitter = list(width, height)). 
+#' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
 #' \itemize{
+#' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
 #' \item width: degree of jitter in x direction
 #' \item height: degree of jitter in y direction
 #' }
@@ -215,7 +216,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
-                         jitter = list(width = NULL, height = NULL),...)
+                         jitter = list(what = "label", width = NULL, height = NULL),...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -226,9 +227,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   ind <- facto_summarize(X, element = "ind", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(ind)[2:3] <-  c("x", "y")
-  
-  # jitter to reduce overplotting
-  ind <- .jitter(ind, jitter)
   
   # Selection
   ind.all <- ind
@@ -250,7 +248,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          col=col.ind,  alpha = alpha.ind, 
                          alpha.limits = alpha.limits, shape = 19, 
                          geom = geom, lab = lab$ind, labelsize = labelsize,
-                         pointsize = pointsize)
+                         pointsize = pointsize, jitter = jitter)
   }
   
   # qualitative variable is used to color the individuals
@@ -279,12 +277,26 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
     
     if(!hide$ind) {   
+      
+      
+      label_coord <- ind
+      # jittering
+      if(jitter$what %in% c("both", "b")){
+        label_coord <- ind <- .jitter(ind, jitter)
+      }
+      else if(jitter$what %in% c("point", "p")){
+        ind <- .jitter(ind, jitter)
+      }
+      else if(jitter$what %in% c("label", "l")){
+        label_coord <- .jitter(label_coord, jitter)
+      }
+      
       if("point" %in% geom) 
         p <- p+geom_point(data = ind, 
                           aes_string('x', 'y', color=name.quali, shape = name.quali),
                           size = pointsize)
       if(lab$ind & "text" %in% geom) 
-        p <- p + geom_text(data = ind, 
+        p <- p + geom_text(data = label_coord, 
                            aes_string('x', 'y', label = 'name',
                                       color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
     }
@@ -325,7 +337,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     if(!is.null(ind_sup)){
       p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom) )
+                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom) , jitter = jitter)
     }  
   }
   
@@ -346,7 +358,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         jitter = list(width = NULL, height = NULL))
+                         jitter = list(what = "label", width = NULL, height = NULL))
 {
   
   scale.unit <- .get_scale_unit(X)
@@ -355,9 +367,6 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
-  
-  # jitter to reduce overplotting
-  var <- .jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -387,7 +396,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                    col=col.var,  alpha = alpha.var, 
                    alpha.limits = alpha.limits, 
                    geom =  geom,
-                   lab = lab$var, labelsize = labelsize)
+                   lab = lab$var, labelsize = labelsize, jitter = jitter)
   }
   
   # Add supplementary quantitative variables
@@ -400,7 +409,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     if(!is.null(quanti_sup)){
       p <- fviz_add(p, df = quanti_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.quanti.sup, linetype = 2,
-                    labelsize = labelsize, addlabel = (lab$quanti) )
+                    labelsize = labelsize, addlabel = (lab$quanti), jitter = jitter )
     }  
     
   }
@@ -422,7 +431,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   col.circle ="grey70", 
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  jitter = list(width = NULL, height = NULL), ...)
+                  jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
   scale.unit <- .get_scale_unit(X)
@@ -431,9 +440,6 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
-  
-  # jitter to reduce overplotting
-  var <- .jitter(var, jitter)
   
   # Selection
   var.all <- var
@@ -470,7 +476,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                    col=col.var,  alpha = alpha.var, 
                    alpha.limits = alpha.limits, 
                    geom =  c("arrow", "text"),
-                   lab = lab$var, labelsize = labelsize)
+                   lab = lab$var, labelsize = labelsize, jitter = jitter)
   }
   
   # Add supplementary quantitative variables
@@ -482,7 +488,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     if(!is.null(quanti_sup)){
       p <- fviz_add(p, df = quanti_sup[, 2:3, drop = FALSE]*r*0.7, geom = c("arrow", "text"),
                     color = col.quanti.sup, linetype = 2,
-                    labelsize = labelsize, addlabel = (lab$quanti) )
+                    labelsize = labelsize, addlabel = (lab$quanti), jitter = jitter )
     }  
   }
   p+labs(title="Biplot of variables and individuals")
