@@ -513,12 +513,27 @@ NULL
 ## geom: a character specifying the geometry to be used for the graph.
 #  Allowed values are the combination of c("point", "arrow", "text"). Use "point" (to show only points),
 #  "text" to show only labels or c("point", "text") to show both types.
+## jitter: to avoid overplotting. Possible values for what are "label", "point", "both"
+# it's possible to use also the shortcut "l", "p", "b".
 .ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black",  alpha = 1,
                        alpha.limits = NULL, shape = 19, pointsize = 2, 
-                       geom=c("point", "text"), lab = TRUE, labelsize = 4, ...)
+                       geom=c("point", "text"), lab = TRUE, labelsize = 4, 
+                       jitter = list(what = "label", width = NULL, height = NULL), ...)
   {
   
   data <- as.data.frame(data)
+  label_coord <- data
+  
+  # jittering
+  if(jitter$what %in% c("both", "b")){
+    label_coord <- data <- .jitter(data, jitter)
+  }
+  else if(jitter$what %in% c("point", "p")){
+    data <- .jitter(data, jitter)
+  }
+  else if(jitter$what %in% c("label", "l")){
+    label_coord <- .jitter(label_coord, jitter)
+  }
   
 #   uvar = "xxx" # user variable used for coloring
 #   # Color is a factor variable (Groups)
@@ -557,7 +572,7 @@ NULL
                   arrow = grid::arrow(length = grid::unit(0.2, 'cm')))
   
     if(lab & "text"%in% geom) 
-      p <- p + geom_text(data = data, 
+      p <- p + geom_text(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -574,7 +589,7 @@ NULL
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), alpha = alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = data,
+      p <- p + geom_text(data = label_coord,
                          aes_string(x, y, color=col),
                          label = data$name,  size = labelsize, alpha=alpha, vjust = -0.7)
   }
@@ -592,7 +607,7 @@ NULL
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = data, 
+      p <- p + geom_text(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
                          size = labelsize, color=col, vjust = -0.7)
     
@@ -608,7 +623,7 @@ NULL
                             aes_string(x = 0, y = 0, xend = x, yend = y),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = data, aes_string(x,y), 
+      p <- p + geom_text(data = label_coord, aes_string(x,y), 
                          color = col, label = data$name, size = labelsize, vjust = -0.7)
   }
   
@@ -636,8 +651,23 @@ NULL
 .ggarrow <- function(p = NULL, data, x = 'x', y = 'y', col="black",  alpha = 1,
                        alpha.limits = NULL,
                        shape = "19", 
-                       geom=c("arrow", "text"), lab = TRUE, labelsize = 4 )
+                       geom=c("arrow", "text"), lab = TRUE, labelsize = 4,
+                       jitter = list(what = "label", width = NULL, height = NULL),... )
 {
+  
+  data <- as.data.frame(data)
+  label_coord <- data
+  
+  # jittering
+  if(jitter$what %in% c("both", "b")){
+    label_coord <- data <- .jitter(data, jitter)
+  }
+  else if(jitter$what %in% c("point", "p")){
+    data <- .jitter(data, jitter)
+  }
+  else if(jitter$what %in% c("label", "l")){
+    label_coord <- .jitter(label_coord, jitter)
+  }
   
   if(is.null(p)) p <- ggplot() 
   # The color and the transparency of variables are automatically controlled by
@@ -650,7 +680,7 @@ NULL
                           aes_string(x,y, color=col, alpha=alpha), shape=shape)
     
     if(lab & "text"%in% geom) 
-      p <- p + geom_text(data = data, 
+      p <- p + geom_text(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -663,7 +693,7 @@ NULL
                           shape=shape, alpha=alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = data,
+      p <- p + geom_text(data = label_coord,
                          aes_string(x, y, color=col),
                          label = data$name,  size = labelsize, alpha=alpha, vjust = -0.7)
   }
@@ -676,7 +706,7 @@ NULL
                           aes_string(x, y, alpha=alpha), shape=shape, color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = data, 
+      p <- p + geom_text(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
                          size = labelsize, color=col, vjust = -0.7)
     
@@ -687,7 +717,7 @@ NULL
     if("point" %in% geom) 
       p <- p + geom_point(data = data, aes(x, y), shape=shape, color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = data, aes_string(x,y), 
+      p <- p + geom_text(data = label_coord, aes_string(x,y), 
                          color = col, label = data$name, size = labelsize, vjust = -0.7)
   }
   
@@ -695,29 +725,33 @@ NULL
 }
 
 
+
 # Points jitter, to reduce overploting
 # data : a result from facto_summarize containing the x and y coordinates of points
-# jitter: a vector of length 2 containing the width and the height of jitter
-.jitter <- function(data, jitter = list(width = NULL, height = NULL)){
+# jitter: a vector of length 3 containing the width and the height of jitter and the 
+# element to be jittered ("label", "point", "both")
+.jitter <- function(data, jitter = list(what = "label", width = NULL, height = NULL)){
   
   if(!is.null(data)){
     if(!is.null(jitter$width)){
       width <- abs(jitter$width)
-      set.seed(1234)
+     set.seed(1234)
       xjit <- runif(nrow(data), min = -width, max = width)
-      data$x <- data$x + xjit
+      data$x <- data$x + ((xjit + rev(xjit))/2)
     }
     
     if(!is.null(jitter$height)){
       height <- abs(jitter$height)
-      set.seed(12345)
+       set.seed(12345)
       yjit <- runif(nrow(data), min = -height, max = height)
-      data$y <- data$y + yjit
+      data$y <- data$y + ((yjit + rev(yjit))/2)
     }
+    
   }
   
   return(data)
 }
+
 
 
 # Finih a plot
