@@ -13,13 +13,14 @@ fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
   addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
   col.ind.sup = "blue", alpha.ind = 1, select.ind = list(name = NULL, cos2
-  = NULL, contrib = NULL), jitter = list(width = NULL, height = NULL), ...)
+  = NULL, contrib = NULL), jitter = list(what = "label", width = NULL, height
+  = NULL), ...)
 
 fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", labelsize = 4, col.var = "black", alpha.var = 1,
   col.quanti.sup = "blue", col.circle = "grey70", select.var = list(name =
-  NULL, cos2 = NULL, contrib = NULL), jitter = list(width = NULL, height =
-  NULL))
+  NULL, cos2 = NULL, contrib = NULL), jitter = list(what = "label", width =
+  NULL, height = NULL))
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -28,7 +29,7 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.var = "steelblue", alpha.var = 1, col.quanti.sup = "blue",
   col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
   = NULL), select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(width = NULL, height = NULL), ...)
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats];
@@ -97,8 +98,9 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 }}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting.
-It's a list containing the objects width and height (i.e jitter = list(width, height)).
+It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
 \itemize{
+\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}

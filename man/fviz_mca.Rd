@@ -12,14 +12,15 @@ fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
   col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", jitter = list(width = NULL, height = NULL), ...)
+  map = "symmetric", jitter = list(what = "label", width = NULL, height =
+  NULL), ...)
 
 fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, col.var = "red",
   alpha.var = 1, shape.var = 17, col.quanti.sup = "blue",
   col.quali.sup = "darkgreen", select.var = list(name = NULL, cos2 = NULL,
-  contrib = NULL), map = "symmetric", jitter = list(width = NULL, height =
-  NULL))
+  contrib = NULL), map = "symmetric", jitter = list(what = "label", width =
+  NULL, height = NULL))
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -29,8 +30,8 @@ fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.quali.sup = "darkgreen", shape.ind = 19, shape.var = 17,
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", arrows = c(FALSE, FALSE), jitter = list(width = NULL,
-  height = NULL), ...)
+  map = "symmetric", arrows = c(FALSE, FALSE), jitter = list(what =
+  "label", width = NULL, height = NULL), ...)
 
 fviz_mca(X, ...)
 }
@@ -103,8 +104,9 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 "colgab", "rowgreen" and "colgreen". See details}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting.
-It's a list containing the objects width and height (i.e jitter = list(width, height)).
+It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
 \itemize{
+\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}

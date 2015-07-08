@@ -11,13 +11,15 @@ fviz_ca_row(X, axes = c(1, 2), shape.row = 19, geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.row = "blue", col.row.sup = "darkblue", alpha.row = 1,
   select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", jitter = list(width = NULL, height = NULL), ...)
+  map = "symmetric", jitter = list(what = "label", width = NULL, height =
+  NULL), ...)
 
 fviz_ca_col(X, axes = c(1, 2), shape.col = 17, geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.col = "red", col.col.sup = "darkred", alpha.col = 1,
   select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", jitter = list(width = NULL, height = NULL), ...)
+  map = "symmetric", jitter = list(what = "label", width = NULL, height =
+  NULL), ...)
 
 fviz_ca_biplot(X, axes = c(1, 2), shape.row = 19, shape.col = 17,
   geom = c("point", "text"), label = "all", invisible = "none",
@@ -26,7 +28,7 @@ fviz_ca_biplot(X, axes = c(1, 2), shape.row = 19, shape.col = 17,
   col.row.sup = "darkblue", alpha.row = 1, select.col = list(name = NULL,
   cos2 = NULL, contrib = NULL), select.row = list(name = NULL, cos2 = NULL,
   contrib = NULL), map = "symmetric", arrows = c(FALSE, FALSE),
-  jitter = list(width = NULL, height = NULL), ...)
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_ca(X, ...)
 }
@@ -61,8 +63,9 @@ the combination of c("row", "row.sup","col", "col.sup").}
 "colgab", "rowgreen" and "colgreen". See details}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting.
-It's a list containing the objects width and height (i.e jitter = list(width, height)).
+It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
 \itemize{
+\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}
