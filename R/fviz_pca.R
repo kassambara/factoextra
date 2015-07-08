@@ -223,6 +223,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     stop("The specified value(s) for the argument geom are not allowed ")
   if(length(axes) > 2) stop("axes should be of length 2")
   
+  if(is.null(jitter$what)) jitter$what <- "label"
+  
   # data frame to be used for plotting
   ind <- facto_summarize(X, element = "ind", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
@@ -361,6 +363,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          jitter = list(what = "label", width = NULL, height = NULL))
 {
   
+  if(is.null(jitter$what)) jitter$what <- "label"
+  
   scale.unit <- .get_scale_unit(X)
   
   # data frame to be used for plotting
@@ -433,6 +437,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
+  
+  if(is.null(jitter$what)) jitter$what <- "label"
   
   scale.unit <- .get_scale_unit(X)
   

@@ -242,6 +242,8 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     stop("The specified value(s) for the argument geom are not allowed ")
   if(length(axes) > 2) stop("axes should be of length 2")
   
+  if(is.null(jitter$what)) jitter$what <- "label"
+  
   # data frame to be used for plotting
   ind <- facto_summarize(X, element = "ind", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
@@ -386,6 +388,8 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
                          map ="symmetric", jitter = list(what = "label", width = NULL, height = NULL))
 {
   
+  if(is.null(jitter$what)) jitter$what <- "label"
+  
   # data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
@@ -460,6 +464,8 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   map ="symmetric", arrows = c(FALSE, FALSE), 
                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
+  
+  if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 

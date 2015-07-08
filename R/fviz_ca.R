@@ -217,6 +217,8 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
     stop("The specified value(s) for the argument geom are not allowed ")
   if(length(axes) > 2) stop("axes should be of length 2")
   
+  if(is.null(jitter$what)) jitter$what <- "label"
+  
   # data frame to be used for plotting
   row <- facto_summarize(X, element = "row", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
@@ -283,6 +285,8 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed")
   if(length(axes) > 2) stop("axes should be of length 2")
+  
+  if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   col <- facto_summarize(X, element = "col", 
@@ -354,6 +358,8 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
   if(length(axes) > 2) stop("axes should be of length 2")
+  
+  if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   col <- facto_summarize(X, element = "col", 
