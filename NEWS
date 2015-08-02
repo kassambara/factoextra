@@ -2,7 +2,8 @@ factoextra 1.0.3
 
 NEW FEATURES
 
-* The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() in order to reduce overplotting of points and texts
+* A new function fviz_cluster() has been added. This function can be used to visualize the outputs of clustering methods including kmeans(), pam(), clara(), fanny()
+* The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() and fviz_cluster() in order to reduce overplotting of points and texts
 
 
 MINOR CHANGING

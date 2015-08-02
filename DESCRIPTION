@@ -35,6 +35,7 @@ Collate:
     'facto_summarize.R'
     'fviz_add.R'
     'fviz_ca.R'
+    'fviz_cluster.R'
     'fviz_contrib.R'
     'fviz_cos2.R'
     'get_mca.R'
