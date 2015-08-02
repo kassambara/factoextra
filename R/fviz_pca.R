@@ -301,7 +301,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
         p <- p + geom_text(data = label_coord, 
                            aes_string('x', 'y', label = 'name',
                                       color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
-    }
+      }
     
     if(!hide$quali){   
       coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])
