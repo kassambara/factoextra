@@ -1,0 +1,7 @@
+load("/Users/kassambara/hubiC/Documents/R/MyPackages/factoextra/data/decathlon2.rda")
+ls()
+head(decathlon2)
+rownames(decathlon2)
+rownames(decathlon2) <- gsub("^\\s+|\\s+$", "", rownames(decathlon2))
+rownames(decathlon2)
+save(decathlon2, file="decathlon2.rda")

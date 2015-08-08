@@ -3,13 +3,13 @@
 #' Visualize clustering results
 #' @description 
 #' Draws a 2-dimensional cluster plot for visualizing the results of partitioning methods, 
-#' including kmeans, pam, clara and fanny. 
-#' Observations are represented by points in the plot, using principal components. 
+#' including kmeans [stats package]; pam, clara and fanny [cluster package]; and dbscan [fpc package]. 
+#' Observations are represented by points in the plot, using principal components if ncol(data) > 2. 
 #'An ellipse is drawn around each cluster.
 #' @param object an object of class "partition" created by the functions pam(), clara() or fanny() 
 #' in cluster package. It can be also an output of kmeans() function in stats package. In this case 
 #' the argument data is required.
-#' @param data the data that has been used for clustering. Required only when object is a class of kmeans.
+#' @param data the data that has been used for clustering. Required only when object is a class of kmeans or dbscan.
 #' @param stand logical value; if TRUE, data is standardized before principal component analysis
 #' @param geom a text specifying the geometry to be used for the graph. 
 #' Allowed values are the combination of c("point", "text"). 
@@ -31,6 +31,8 @@
 #' \item width: degree of jitter in x direction
 #' \item height: degree of jitter in y direction
 #' }
+#' @param outlier.color,outlier.shape: the color and the shape of outliers. 
+#' Outliers can be detected only in DBSCAN clustering.
 #' @param ... others arguments to be passed to the function ggplot2::autoplot()
 #' 
 #' @examples 
@@ -76,24 +78,42 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          frame.alpha = 0.2,
                          pointsize = 2, labelsize = 4, 
                          jitter = list(what = "label", width = NULL, height = NULL),
+                         outlier.color = "black", outlier.shape = 19,
                          ...){
   
   if(inherits(object, "partition")) data <- object$data
-  else if(inherits(object, "kmeans")){
-    if(is.null(data)) stop("data is required for plotting kmeans clusters")
+  else if(inherits(object, "kmeans") | inherits(object, "dbscan")){
+    if(is.null(data)) stop("data is required for plotting kmeans/dbscan clusters")
   } 
+  
   else stop("Can't handle an object of class ", class(object))
   if(stand) data <- scale(data)
   cluster <- as.factor(object$cluster)
   
-  # Data frame to be used for plotting
-  # If ncol(data) > 2 --> PCA
-  pca <- stats::prcomp(data, scale = FALSE, center = FALSE)
-  ind  <- facto_summarize(pca, element = "ind", result = "coord", axes = 1:2)
-  colnames(ind)[2:3] <-  c("x", "y")
-  label_coord <- ind
+  pca_performed <- FALSE
   
-  # plot
+  # Prepare the data for plotting
+  # ++++++++++++++++++++++++
+  # PCA is performed depending on the number of variables
+  if(inherits(data, c("matrix", "data.frame"))){
+    # ncol(data) > 2 --> PCA
+    if(ncol(data)>2){
+    pca <- stats::prcomp(data, scale = FALSE, center = FALSE)
+    ind  <- facto_summarize(pca, element = "ind", result = "coord", axes = 1:2)
+    pca_performed = TRUE
+    }
+    # PCA is not performed
+    else if(ncol(data) == 2){
+      ind <- as.data.frame(data)
+      ind <- cbind.data.frame(name = rownames(ind), ind)
+    }
+    colnames(ind)[2:3] <-  c("x", "y")
+    label_coord <- ind
+  }
+  else stop("A data of class ", class(data), " is not supported.")
+  
+  # Plot data and labels
+  # ++++++++++++++++++++++++
   label = FALSE
   if("text" %in% geom) label = TRUE
   if(!("point" %in% geom)) pointsize = 0
@@ -107,6 +127,25 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   plot.data <- cbind.data.frame(ind, cluster = cluster)
   label_coord <- cbind.data.frame(label_coord, cluster = cluster)
   
+  # IF DBSCAN: cluster 0 is outliers. We don't want to make ellipse around
+  # these observations. Let's remove them. They will be added to the plot later
+  is_outliers = FALSE
+  if(inherits(object, "dbscan")){
+    outliers <- which(cluster == 0)
+    if(length(outliers) > 0){
+      is_outliers = TRUE
+      outliers_data <- plot.data[outliers, , drop = FALSE]
+      outliers_labs <- label_coord[outliers, , drop = FALSE]
+      
+      ind <- ind[-outliers, , drop = FALSE]
+      cluster <- cluster[-outliers]
+      plot.data <- plot.data[-outliers, , drop = FALSE]
+      label_coord <- label_coord[-outliers, , drop = FALSE]
+    }
+  }
+  
+  # Plot
+  # ++++++++++++++++++++++++
   p <- ggplot()
   if("point" %in% geom) 
     p <- p+geom_point(data = plot.data , 
@@ -146,10 +185,23 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     }
   }
   
+  # Add outliers (can exist only in dbscan)
+  if(is_outliers)
+    p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
+                  pointsize, labelsize, geom)
+  
+  
   # Plot titles
-  eig <- get_eigenvalue(pca)[,2]
-  xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
-  ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
+  # ++++++++++++++++++++++++
+  if(pca_performed){
+    eig <- get_eigenvalue(pca)[,2]
+    xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
+    ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
+  }
+  else{
+    xlab <- colnames(data)[1]
+    ylab <- colnames(data)[2]
+  }
   p <- p + labs(title = "Cluster plot", x = xlab, y = ylab)
 
   p
@@ -172,5 +224,21 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   as.data.frame(res)
 }
 
+# Add outliers to cluster plot (for dbscan only)
+.add_outliers <-function(p, outliers_data, outliers_labs, 
+                         outlier.color = "black", outlier.shape = 19,
+                         pointsize = 2, labelsize = 4, geom = c("point", "text"))
+  {
+  
+  if("point" %in% geom) 
+    p <-  p + geom_point(data = outliers_data, 
+                      aes_string('x', 'y'),
+                      size = pointsize, color = outlier.color, shape = outlier.shape)
+  if("text" %in% geom)
+    p <- p + geom_text(data = outliers_labs, 
+                       aes_string('x', 'y', label = 'name'),  
+                       size = labelsize, vjust = -0.7, color = outlier.color, shape = outlier.shape)
+  return(p)
+}
 
 

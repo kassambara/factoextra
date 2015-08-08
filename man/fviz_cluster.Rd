@@ -7,14 +7,15 @@
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   show.clust.cent = TRUE, frame = TRUE, frame.type = "convex",
   frame.level = 0.95, frame.alpha = 0.2, pointsize = 2, labelsize = 4,
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+  jitter = list(what = "label", width = NULL, height = NULL),
+  outlier.color = "black", outlier.shape = 19, ...)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(), clara() or fanny()
 in cluster package. It can be also an output of kmeans() function in stats package. In this case
 the argument data is required.}
 
-\item{data}{the data that has been used for clustering. Required only when object is a class of kmeans.}
+\item{data}{the data that has been used for clustering. Required only when object is a class of kmeans or dbscan.}
 
 \item{stand}{logical value; if TRUE, data is standardized before principal component analysis}
 
@@ -47,12 +48,15 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item height: degree of jitter in y direction
 }}
 
+\item{outlier.color,outlier.shape:}{the color and the shape of outliers.
+Outliers can be detected only in DBSCAN clustering.}
+
 \item{...}{others arguments to be passed to the function ggplot2::autoplot()}
 }
 \description{
 Draws a 2-dimensional cluster plot for visualizing the results of partitioning methods,
-including kmeans, pam, clara and fanny.
-Observations are represented by points in the plot, using principal components.
+including kmeans [stats package]; pam, clara and fanny [cluster package]; and dbscan [fpc package].
+Observations are represented by points in the plot, using principal components if ncol(data) > 2.
 An ellipse is drawn around each cluster.
 }
 \examples{
