@@ -20,6 +20,7 @@ Depends:
 Suggests:
     ade4,
     ca,
+    cluster,
     FactoMineR,
     stats,
     MASS,
