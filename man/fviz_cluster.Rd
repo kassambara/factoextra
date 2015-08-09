@@ -12,8 +12,9 @@ fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(), clara() or fanny()
-in cluster package. It can be also an output of kmeans() function in stats package. In this case
-the argument data is required.}
+in cluster package; "kmeans" [in stats package]; "dbscan" [in fpc package]; "Mclust" [in mclust].
+Possible value are also any list object with data and cluster components
+(e.g.: object = list(data = mydata, cluster = myclust)).}
 
 \item{data}{the data that has been used for clustering. Required only when object is a class of kmeans or dbscan.}
 
@@ -55,7 +56,8 @@ Outliers can be detected only in DBSCAN clustering.}
 }
 \description{
 Draws a 2-dimensional cluster plot for visualizing the results of partitioning methods,
-including kmeans [stats package]; pam, clara and fanny [cluster package]; and dbscan [fpc package].
+including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package];
+Mclust [mclust package].
 Observations are represented by points in the plot, using principal components if ncol(data) > 2.
 An ellipse is drawn around each cluster.
 }

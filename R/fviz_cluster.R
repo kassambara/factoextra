@@ -3,12 +3,14 @@
 #' Visualize clustering results
 #' @description 
 #' Draws a 2-dimensional cluster plot for visualizing the results of partitioning methods, 
-#' including kmeans [stats package]; pam, clara and fanny [cluster package]; and dbscan [fpc package]. 
+#' including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package]; 
+#' Mclust [mclust package]. 
 #' Observations are represented by points in the plot, using principal components if ncol(data) > 2. 
 #'An ellipse is drawn around each cluster.
 #' @param object an object of class "partition" created by the functions pam(), clara() or fanny() 
-#' in cluster package. It can be also an output of kmeans() function in stats package. In this case 
-#' the argument data is required.
+#' in cluster package; "kmeans" [in stats package]; "dbscan" [in fpc package]; "Mclust" [in mclust]. 
+#' Possible value are also any list object with data and cluster components 
+#' (e.g.: object = list(data = mydata, cluster = myclust)).
 #' @param data the data that has been used for clustering. Required only when object is a class of kmeans or dbscan.
 #' @param stand logical value; if TRUE, data is standardized before principal component analysis
 #' @param geom a text specifying the geometry to be used for the graph. 
@@ -80,12 +82,22 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          jitter = list(what = "label", width = NULL, height = NULL),
                          outlier.color = "black", outlier.shape = 19,
                          ...){
-  
+  # object from cluster package
   if(inherits(object, "partition")) data <- object$data
+  # Object from kmeans (stats package)
   else if(inherits(object, "kmeans") | inherits(object, "dbscan")){
     if(is.null(data)) stop("data is required for plotting kmeans/dbscan clusters")
   } 
-  
+  # Object from mclust package
+  else if(inherits(object, "Mclust")) {
+    object$cluster <- object$classification
+    data <- object$data
+  }
+  # Any obects containing data and cluster elements
+  else if(!is.null(object$data) & !is.null(object$cluster)){
+    data <- object$data
+    cluster <- object$cluster
+  }
   else stop("Can't handle an object of class ", class(object))
   if(stand) data <- scale(data)
   cluster <- as.factor(object$cluster)
