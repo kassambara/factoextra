@@ -6,7 +6,11 @@
 #' including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package]; 
 #' Mclust [mclust package]. 
 #' Observations are represented by points in the plot, using principal components if ncol(data) > 2. 
-#'An ellipse is drawn around each cluster.
+#'An ellipse is drawn around each cluster.\cr\cr
+#' \itemize{
+#' \item{fviz_cluster(): Draws the result of partitioning methods}
+#' \item{fviz_silhouette(): Draws the result of silhouette() [cluster package]}
+#' }
 #' @param object an object of class "partition" created by the functions pam(), clara() or fanny() 
 #' in cluster package; "kmeans" [in stats package]; "dbscan" [in fpc package]; "Mclust" [in mclust]. 
 #' Possible value are also any list object with data and cluster components 
@@ -37,6 +41,9 @@
 #' Outliers can be detected only in DBSCAN clustering.
 #' @param ... others arguments to be passed to the function ggplot2::autoplot()
 #' 
+#' @return 
+#' a ggplot2 plot
+#' 
 #' @examples 
 #' \donttest{
 #' set.seed(123)
@@ -46,6 +53,10 @@
 #' 
 #' # Visualize kmeans clustering
 #' fviz_cluster(km.res, USArrests)
+#' # Silhouette plot for k-means clusters
+#' library(cluster)
+#' sil <- silhouette(km.res$cluster, dist(scale(USArrests)))
+#' fviz_silhouette(sil)
 #' 
 #' # Visualize pam clustering
 #' data("iris")
@@ -71,7 +82,14 @@
 #'  scale_color_brewer(palette = "Set2")+
 #'  scale_fill_brewer(palette = "Set2") +
 #'  theme_minimal()
+#'  
+#'  # Silhouette plot of pam clusters
+#'  library(cluster)
+#'  fviz_silhouette(silhouette(pam.res))
 #' }
+#' 
+#' @name fviz_cluster
+#' @rdname fviz_cluster
 #' @export
 fviz_cluster <- function(object, data = NULL, stand = TRUE, 
                          geom = c("point", "text"), 
@@ -219,6 +237,41 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   p
 }
 
+#' @param sil.obj an object of class silhouette [from cluster package]
+#' @param label logical value. If true, x axis tick labels are shown
+#' @param print.summary logical value. If true a summary of cluster silhouettes are printed 
+#' @rdname fviz_cluster
+#' @export
+fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE){
+  df <- as.data.frame(sil.obj[, 1:3])
+  # order by cluster and by sil_width
+  df <- df[order(df$cluster, -df$sil_width), ]
+  df$name <- as.factor(1:nrow(df))
+  df$cluster <- as.factor(df$cluster)
+  mapping <- aes_string(x = "name", y = "sil_width", 
+                        color = "cluster", fill = "cluster")
+  p <- ggplot(df, mapping) +
+    geom_bar(stat = "identity") +
+    labs(y = "Silhouette width Si", x = "",
+         title = paste0("Clusters silhouette plot ",
+                        "\n Average silhouette width: ", 
+                        round(mean(df$sil_width), 2)))+
+    ggplot2::ylim(c(NA, 1))
+  # Labels
+  if(!label) p <- p + theme(axis.text.x = element_blank(), 
+                            axis.ticks.x = element_blank())
+  else if(label)
+    p <- p + theme(axis.text.x = element_text(angle=45))
+  
+  # Print summary
+  ave <- tapply(df$sil_width, df$cluster, mean)
+  n <- tapply(df$cluster, df$cluster, length)
+  sil.sum <- data.frame(cluster = names(ave), size = n,
+                      ave.sil.width = round(ave,2))
+  if(print.summary) print(sil.sum)
+  
+  p
+}
 
 # Compute convex hull for each cluster
 # ++++++++++++++++++++++++++++++++

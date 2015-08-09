@@ -2,6 +2,7 @@
 % Please edit documentation in R/fviz_cluster.R
 \name{fviz_cluster}
 \alias{fviz_cluster}
+\alias{fviz_silhouette}
 \title{Visualize clustering results}
 \usage{
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
@@ -9,6 +10,8 @@ fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   frame.level = 0.95, frame.alpha = 0.2, pointsize = 2, labelsize = 4,
   jitter = list(what = "label", width = NULL, height = NULL),
   outlier.color = "black", outlier.shape = 19, ...)
+
+fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(), clara() or fanny()
@@ -53,13 +56,26 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 Outliers can be detected only in DBSCAN clustering.}
 
 \item{...}{others arguments to be passed to the function ggplot2::autoplot()}
+
+\item{sil.obj}{an object of class silhouette [from cluster package]}
+
+\item{label}{logical value. If true, x axis tick labels are shown}
+
+\item{print.summary}{logical value. If true a summary of cluster silhouettes are printed}
+}
+\value{
+a ggplot2 plot
 }
 \description{
 Draws a 2-dimensional cluster plot for visualizing the results of partitioning methods,
 including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package];
 Mclust [mclust package].
 Observations are represented by points in the plot, using principal components if ncol(data) > 2.
-An ellipse is drawn around each cluster.
+An ellipse is drawn around each cluster.\cr\cr
+\itemize{
+\item{fviz_cluster(): Draws the result of partitioning methods}
+\item{fviz_silhouette(): Draws the result of silhouette() [cluster package]}
+}
 }
 \examples{
 \donttest{
@@ -70,6 +86,10 @@ km.res <- kmeans(scale(USArrests), 4, nstart = 25)
 
 # Visualize kmeans clustering
 fviz_cluster(km.res, USArrests)
+# Silhouette plot for k-means clusters
+library(cluster)
+sil <- silhouette(km.res$cluster, dist(scale(USArrests)))
+fviz_silhouette(sil)
 
 # Visualize pam clustering
 data("iris")
@@ -95,6 +115,10 @@ fviz_cluster(pam.res) +
  scale_color_brewer(palette = "Set2")+
  scale_fill_brewer(palette = "Set2") +
  theme_minimal()
+
+ # Silhouette plot of pam clusters
+ library(cluster)
+ fviz_silhouette(silhouette(pam.res))
 }
 }
 
