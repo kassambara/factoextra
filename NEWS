@@ -2,7 +2,8 @@ factoextra 1.0.3
 
 NEW FEATURES
 
-* A new function fviz_cluster() has been added. This function can be used to visualize the outputs of clustering methods including kmeans(), pam(), clara(), fanny()
+* fviz_cluster() added. This function can be used to visualize the outputs of clustering methods including:  kmeans() [stats package]; pam(), clara(), fanny() [cluster package]; dbscan() [fpc package]; Mclust() [mclust package].
+* fviz_silhouette() added. Draws the result of cluster silhouette analyses computed using the function silhouette()[cluster package] 
 * The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() and fviz_cluster() in order to reduce overplotting of points and texts
 
 
