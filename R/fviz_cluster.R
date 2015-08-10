@@ -416,10 +416,13 @@ fviz_gap_stat <- function(gap_stat){
   k <- length(gap)
   k = if (any(decr)) which.max(decr) else k
   
+
   df <- as.data.frame(gap_stat$Tab)
   df$clusters <- as.factor(1:nrow(df))
+  df$ymin <- gap-se
+  df$ymax <- gap + se
   p <- ggplot(df, aes_string( x = "clusters", y = "gap", group = 1)) +
-    ggplot2::geom_errorbar(aes(ymin=gap-se, ymax=gap+se), width=.2)+
+    ggplot2::geom_errorbar(aes_string(ymin="ymin", ymax="ymax"), width=.2)+
     geom_point() +
     geom_line() +
     geom_vline(xintercept = k, linetype=2)+
