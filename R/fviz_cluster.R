@@ -408,7 +408,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
       if(method == "silhouette") ylab <- "Average silhouette width"
       
       p <- ggplot(df, aes_string( x = "clusters", y = "y", group = 1)) +
-        geom_point() +
+        geom_point(color = linecolor) +
         geom_line(color = linecolor) +
         labs(y = ylab, x = "Number of clusters k",
              title = "Otimal number of clusters")
@@ -423,7 +423,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
 #' @param gap_stat an object of class "clusGap" returned by the 
 #' function clusGap() [in cluster package]
 #' @export
-fviz_gap_stat <- function(gap_stat){
+fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue"){
   if(!inherits(gap_stat, "clusGap"))
     stop("Only an object of class clusGap is allowed. (cluster package)")
   # first local max
@@ -439,10 +439,10 @@ fviz_gap_stat <- function(gap_stat){
   df$ymin <- gap-se
   df$ymax <- gap + se
   p <- ggplot(df, aes_string( x = "clusters", y = "gap", group = 1)) +
-    ggplot2::geom_errorbar(aes_string(ymin="ymin", ymax="ymax"), width=.2)+
-    geom_point() +
-    geom_line() +
-    geom_vline(xintercept = k, linetype=2)+
+    ggplot2::geom_errorbar(aes_string(ymin="ymin", ymax="ymax"), width=.2, color = linecolor)+
+    geom_point(color = linecolor) +
+    geom_line(color = linecolor) +
+    geom_vline(xintercept = k, linetype=2, color = linecolor)+
     labs(y = "Gap statistic (k)", x = "Number of clusters k",
          title = "Otimal number of clusters")
   p
@@ -564,8 +564,8 @@ hcut <- function(x, k = 1, diss = NULL, hc_method = "complete"){
     }
     p <- ggplot(best_nc, aes_string(x= "Number_clusters")) + 
       ggplot2::geom_histogram(fill = barfill, color = barcolor)+
-      labs(xlab = "Number of clusters k",
-           main = paste0("Optimal number of clusters - k = ", names(which.max(ss)) ))
+      labs(x = "Number of clusters k", y = "Frequency among all indices",
+           title = paste0("Optimal number of clusters - k = ", names(which.max(ss)) ))
     
     return(p)
   }

@@ -21,7 +21,7 @@ fviz_nbclust(x, FUNcluster = NULL, method = c("silhouette", "wss"),
   barcolor = "steelblue", linecolor = "steelblue", print.summary = TRUE,
   ...)
 
-fviz_gap_stat(gap_stat)
+fviz_gap_stat(gap_stat, linecolor = "steelblue")
 
 hcut(x, k = 1, diss = NULL, hc_method = "complete")
 }
