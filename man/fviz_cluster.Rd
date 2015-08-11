@@ -16,8 +16,10 @@ fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
 
 fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE)
 
-fviz_nbclust(x, FUNcluster, method = c("silhouette", "wss"), diss = NULL,
-  k.max = 10, ...)
+fviz_nbclust(x, FUNcluster = NULL, method = c("silhouette", "wss"),
+  diss = NULL, k.max = 10, barfill = "steelblue",
+  barcolor = "steelblue", linecolor = "steelblue", print.summary = TRUE,
+  ...)
 
 fviz_gap_stat(gap_stat)
 
@@ -69,14 +71,17 @@ Outliers can be detected only in DBSCAN clustering.}
 
 \item{label}{logical value. If true, x axis tick labels are shown}
 
-\item{print.summary}{logical value. If true a summary of cluster silhouettes are printed}
+\item{print.summary}{logical value. If true a summary of cluster silhouettes are printed in
+fviz_silhouette(); or the optimal number of clusters are printed in fviz_nbclust().}
 
-\item{x}{numeric matrix or data frame}
+\item{x}{numeric matrix or data frame. In the function fviz_nbclust(), x can be the
+results of the function NbClust().}
 
 \item{FUNcluster}{a partitioning function which accepts as first argument
 a (data) matrix like x, second argument, say k, k >= 2, the number of clusters desired,
 and returns a list with a component named cluster which contains the grouping
-of observations. For example, kmeans, pam, clara, fanny, ...}
+of observations. For example, kmeans, pam, clara, fanny, .... This is not required when x is
+an output of the function NbClust().}
 
 \item{method}{the method to be used for estimating the optimal number of clusters.
 Possible values are "silhouette" (for average silhouette width)
@@ -87,6 +92,10 @@ Used to compute the average silhouette width of clusters,
 the within sum of square and hierarchical clustering. If NULL, dist(x) is computed with the default method = "euclidean"}
 
 \item{k.max}{the maximum number of clusters to consider, must be at least two}
+
+\item{barfill,barcolor}{fill color and outline color for bars}
+
+\item{linecolor}{color for lines}
 
 \item{...}{optionally further arguments for FUNcluster()}
 

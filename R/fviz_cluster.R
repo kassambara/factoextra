@@ -310,7 +310,8 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
 #' @rdname fviz_cluster
 #' @param sil.obj an object of class silhouette [from cluster package]
 #' @param label logical value. If true, x axis tick labels are shown
-#' @param print.summary logical value. If true a summary of cluster silhouettes are printed 
+#' @param print.summary logical value. If true a summary of cluster silhouettes are printed in 
+#' fviz_silhouette(); or the optimal number of clusters are printed in fviz_nbclust().
 #' @rdname fviz_cluster
 #' @export
 fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE){
@@ -346,60 +347,76 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE){
 
 
 #' @rdname fviz_cluster
-#' @param x numeric matrix or data frame
+#' @param x numeric matrix or data frame. In the function fviz_nbclust(), x can be the 
+#' results of the function NbClust(). 
 #' @param method the method to be used for estimating the optimal number of clusters. 
 #' Possible values are "silhouette" (for average silhouette width) 
 #' and "wss" (for total within sum of square)
 #' @param FUNcluster a partitioning function which accepts as first argument 
 #' a (data) matrix like x, second argument, say k, k >= 2, the number of clusters desired, 
 #' and returns a list with a component named cluster which contains the grouping 
-#' of observations. For example, kmeans, pam, clara, fanny, ...
+#' of observations. For example, kmeans, pam, clara, fanny, .... This is not required when x is 
+#' an output of the function NbClust().
 #' @param diss dist object as produced by dist(), i.e.: diss = dist(x, method = "euclidean"). 
 #' Used to compute the average silhouette width of clusters,
 #' the within sum of square and hierarchical clustering. If NULL, dist(x) is computed with the default method = "euclidean"
 #' @param k.max the maximum number of clusters to consider, must be at least two
+#' @param barfill,barcolor fill color and outline color for bars
+#' @param linecolor color for lines
 #' @param ... optionally further arguments for FUNcluster()
 #' @export
-fviz_nbclust <- function (x, FUNcluster, method = c("silhouette", "wss"),
-                          diss = NULL, k.max = 10, ...) 
+fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
+                          diss = NULL, k.max = 10, 
+                          barfill="steelblue", barcolor="steelblue", 
+                          linecolor = "steelblue", print.summary = TRUE,  ...) 
   {
-  stopifnot(is.function(FUNcluster), length(dim(x)) == 2, k.max >= 
-              2, (n <- nrow(x)) >= 1, ncol(x) >= 1)
   
-  if (is.data.frame(x)) x <- as.matrix(x)
-  if(is.null(diss)) diss <- dist(x)
-  method <- method[1]
+  if(k.max < 2) stop("k.max must bet > = 2")
   
-  v <- rep(0, k.max)
-  if(method == "silhouette"){
-    for(i in 2:k.max){
-      clust <- FUNcluster(x, i, ...)
-      v[i] <- .get_ave_sil_width(diss, clust$cluster)
-    }
+  # x is an object created by the function NbClust() [NbClust package]
+  if(inherits(x, "list") & "Best.nc" %in% names(x)){
+      best_nc <- x$Best.nc
+      if(class(best_nc) == "numeric") print(best_nc)
+      else if(class(best_nc) == "matrix") 
+        .viz_NbClust(x, print.summary, barfill, barcolor)
   }
-  else if(method == "wss"){
-    for(i in 1:k.max){
-      clust <- FUNcluster(x, i, ...)
-      v[i] <- .get_withinSS(diss, clust$cluster)
-    }
+  else if(is.null(FUNcluster)) stop(" The argument FUNcluster is required. ",
+                                    "Possible values are kmeans, pam, hcut, clara, ...")
+  else{
+
+      if (is.data.frame(x)) x <- as.matrix(x)
+      if(is.null(diss)) diss <- dist(x)
+      method <- method[1]
+      
+      v <- rep(0, k.max)
+      if(method == "silhouette"){
+        for(i in 2:k.max){
+          clust <- FUNcluster(x, i, ...)
+          v[i] <- .get_ave_sil_width(diss, clust$cluster)
+        }
+      }
+      else if(method == "wss"){
+        for(i in 1:k.max){
+          clust <- FUNcluster(x, i, ...)
+          v[i] <- .get_withinSS(diss, clust$cluster)
+        }
+      }
+      
+      df <- data.frame(clusters = as.factor(1:k.max), y = v)
+      
+      ylab <- "Total Within Sum of Square"
+      if(method == "silhouette") ylab <- "Average silhouette width"
+      
+      p <- ggplot(df, aes_string( x = "clusters", y = "y", group = 1)) +
+        geom_point() +
+        geom_line(color = linecolor) +
+        labs(y = ylab, x = "Number of clusters k",
+             title = "Otimal number of clusters")
+      
+      if(method == "silhouette") 
+        p <- p + geom_vline(xintercept = which.max(v), linetype=2, color = linecolor)
+      return(p)
   }
-  #v <- v[-1]
-  
-  df <- data.frame(clusters = as.factor(1:k.max), y = v)
-  
-  ylab <- "Total Within Sum of Square"
-  if(method == "silhouette") ylab <- "Average silhouette width"
-  
-  p <- ggplot(df, aes_string( x = "clusters", y = "y", group = 1)) +
-    geom_point() +
-    geom_line() +
-    labs(y = ylab, x = "Number of clusters k",
-         title = "Otimal number of clusters")
-  
-  if(method == "silhouette") 
-    p <- p + geom_vline(xintercept = which.max(v), linetype=2)
-    
-  p
 }
 
 #' @rdname fviz_cluster
@@ -522,4 +539,34 @@ hcut <- function(x, k = 1, diss = NULL, hc_method = "complete"){
   return(p)
 }
 
-
+# Visualization of the output returned by the function
+# NbClust()
+# x : an object generated by the function NbClust()
+.viz_NbClust <- function(x, print.summary = TRUE,
+                         barfill = "steelblue", barcolor = "steelblue")
+  {
+     best_nc <- x$Best.nc
+    if(class(best_nc) == "numeric") print(best_nc)
+     else if(class(best_nc) == "matrix"){
+    best_nc <- as.data.frame(t(best_nc))
+    best_nc$Number_clusters <- as.factor(best_nc$Number_clusters)
+    
+    # Summary
+    if(print.summary){
+      ss <- summary(best_nc$Number_clusters)
+      cat ("Among all indices: \n===================\n")
+      for(i in 1 :length(ss)){
+        cat("*", ss[i], "proposed ", names(ss)[i], "as the best number of clusters\n" )
+      }
+      cat("\nConclusion\n=========================\n")
+      cat("* Accoridng to the majority rule, the best number of clusters is ",
+          names(which.max(ss)),  ".\n\n")
+    }
+    p <- ggplot(best_nc, aes_string(x= "Number_clusters")) + 
+      ggplot2::geom_histogram(fill = barfill, color = barcolor)+
+      labs(xlab = "Number of clusters k",
+           main = paste0("Optimal number of clusters - k = ", names(which.max(ss)) ))
+    
+    return(p)
+  }
+}
