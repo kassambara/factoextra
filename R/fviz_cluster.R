@@ -428,8 +428,8 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
 #' \item "globalmax": simply corresponds to the global maximum, i.e., is which.max(gap)
 #' \item "firstmax": gives the location of the first local maximum
 #' \item "Tibs2001SEmax": uses the criterion, Tibshirani et al (2001) proposed: 
-#' "the smallest k such that gap(k) ≥ gap(k+1) - s_{k+1}". 
-#' It's also possible to use "the smallest k such that gap(k) ≥ gap(k+1) - SE.factor*s_{k+1}" 
+#' "the smallest k such that gap(k) >= gap(k+1) - s_{k+1}". 
+#' It's also possible to use "the smallest k such that gap(k) >= gap(k+1) - SE.factor*s_{k+1}" 
 #' where SE.factor is a numeric value which can be 1 (default), 2, 3, etc.
 #' \item see ?cluster::maxSE for more options
 #' }
