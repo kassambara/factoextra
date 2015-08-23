@@ -21,7 +21,8 @@ fviz_nbclust(x, FUNcluster = NULL, method = c("silhouette", "wss"),
   barcolor = "steelblue", linecolor = "steelblue", print.summary = TRUE,
   ...)
 
-fviz_gap_stat(gap_stat, linecolor = "steelblue")
+fviz_gap_stat(gap_stat, linecolor = "steelblue", maxSE = list(method =
+  "firstmax", SE.factor = 1))
 
 hcut(x, k = 1, diss = NULL, hc_method = "complete")
 }
@@ -101,6 +102,18 @@ the within sum of square and hierarchical clustering. If NULL, dist(x) is comput
 
 \item{gap_stat}{an object of class "clusGap" returned by the
 function clusGap() [in cluster package]}
+
+\item{maxSE}{a list containing the parameters (method and SE.factor) for determining the location of the maximum of the gap statistic
+(Read the documentation ?cluster::maxSE). Allowed values for maxSE$method include:
+\itemize{
+\item "globalmax": simply corresponds to the global maximum, i.e., is which.max(gap)
+\item "firstmax": gives the location of the first local maximum
+\item "Tibs2001SEmax": uses the criterion, Tibshirani et al (2001) proposed:
+"the smallest k such that gap(k) ≥ gap(k+1) - s_{k+1}".
+It's also possible to use "the smallest k such that gap(k) ≥ gap(k+1) - SE.factor*s_{k+1}"
+where SE.factor is a numeric value which can be 1 (default), 2, 3, etc.
+\item see ?cluster::maxSE for more options
+}}
 
 \item{k}{the number of clusters to be generated}
 

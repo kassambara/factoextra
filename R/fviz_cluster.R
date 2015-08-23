@@ -422,17 +422,32 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
 #' @rdname fviz_cluster
 #' @param gap_stat an object of class "clusGap" returned by the 
 #' function clusGap() [in cluster package]
+#' @param maxSE a list containing the parameters (method and SE.factor) for determining the location of the maximum of the gap statistic 
+#' (Read the documentation ?cluster::maxSE). Allowed values for maxSE$method include: 
+#' \itemize{
+#' \item "globalmax": simply corresponds to the global maximum, i.e., is which.max(gap)
+#' \item "firstmax": gives the location of the first local maximum
+#' \item "Tibs2001SEmax": uses the criterion, Tibshirani et al (2001) proposed: 
+#' "the smallest k such that gap(k) ≥ gap(k+1) - s_{k+1}". 
+#' It's also possible to use "the smallest k such that gap(k) ≥ gap(k+1) - SE.factor*s_{k+1}" 
+#' where SE.factor is a numeric value which can be 1 (default), 2, 3, etc.
+#' \item see ?cluster::maxSE for more options
+#' }
+#' 
+#'  
 #' @export
-fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue"){
+fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
+                          maxSE = list(method = "firstmax", SE.factor = 1)){
   if(!inherits(gap_stat, "clusGap"))
     stop("Only an object of class clusGap is allowed. (cluster package)")
   # first local max
   gap <- gap_stat$Tab[, "gap"]
   se <- gap_stat$Tab[, "SE.sim"]
   decr <- diff(gap) <= 0
-  k <- length(gap)
-  k = if (any(decr)) which.max(decr) else k
+  k <- .maxSE(gap, se, method = maxSE$method, SE.factor = maxSE$SE.factor)
   
+  #k <- length(gap)
+  #k = if (any(decr)) which.max(decr) else k
 
   df <- as.data.frame(gap_stat$Tab)
   df$clusters <- as.factor(1:nrow(df))
@@ -569,4 +584,38 @@ hcut <- function(x, k = 1, diss = NULL, hc_method = "complete"){
     
     return(p)
   }
+}
+
+
+#  Determines the location of the maximum of f see ?cluster::maxSE
+# +++++++++++++++++++++++++++++++++++++++++++
+# f: numeric vector containing the gap statistic
+# SE.f : standard error of the gap statistic
+# method : character string indicating how the “optimal” number of clusters, k^, 
+  # is computed from the gap statistics (and their standard deviations), 
+  # or more generally how the location k^ of the maximum of f[k] should be determined.
+# SE.factor:  Determining the optimal number of clusters, Tibshirani et al. proposed the “1 S.E.”-rule.
+.maxSE <- function (f, SE.f, method = c("firstSEmax", "Tibs2001SEmax", 
+                                        "globalSEmax", "firstmax", "globalmax"), SE.factor = 1) 
+{
+  method <- match.arg(method)
+  stopifnot((K <- length(f)) >= 1, K == length(SE.f), SE.f >= 
+              0, SE.factor >= 0)
+  fSE <- SE.factor * SE.f
+  switch(method, firstmax = {
+    decr <- diff(f) <= 0
+    if (any(decr)) which.max(decr) else K
+  }, globalmax = {
+    which.max(f)
+  }, Tibs2001SEmax = {
+    g.s <- f - fSE
+    if (any(mp <- f[-K] >= g.s[-1])) which.max(mp) else K
+  }, firstSEmax = {
+    decr <- diff(f) <= 0
+    nc <- if (any(decr)) which.max(decr) else K
+    if (any(mp <- f[seq_len(nc - 1)] >= f[nc] - fSE[nc])) which(mp)[1] else nc
+  }, globalSEmax = {
+    nc <- which.max(f)
+    if (any(mp <- f[seq_len(nc - 1)] >= f[nc] - fSE[nc])) which(mp)[1] else nc
+  })
 }
