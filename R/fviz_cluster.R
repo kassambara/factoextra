@@ -440,6 +440,12 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
                           maxSE = list(method = "firstmax", SE.factor = 1)){
   if(!inherits(gap_stat, "clusGap"))
     stop("Only an object of class clusGap is allowed. (cluster package)")
+  if(is.list(maxSE)){
+    if(is.null(maxSE$method)) maxSE$method = "firstmax"
+    if(is.null(maxSE$SE.factor)) maxSE$SE.factor = 1
+  }
+  else stop("The argument maxSE must be a list containing the parameters method and SE.factor")
+  
   # first local max
   gap <- gap_stat$Tab[, "gap"]
   se <- gap_stat$Tab[, "SE.sim"]
