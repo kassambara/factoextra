@@ -1,7 +1,7 @@
 Package: factoextra
 Type: Package
 Title: Extract and Visualize the results of PCA, CA and MCA
-Version: 1.0.2
+Version: 1.0.3
 Date: 2015-02-21
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"))

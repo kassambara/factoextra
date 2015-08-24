@@ -837,3 +837,38 @@ NULL
   hide
 }
 
+# Generate a data containing a cluster of any shapes
+# For comparison between dbscan and k-means
+.generate_multishapes <- function(){
+  # First circle (big)
+  set.seed(1234)
+  x <- matrix(rnorm(800, sd = 2), ncol=2)
+  y <- x/sqrt(rowSums(x^2))
+  y[,1] <- y[,1] + rnorm(400, 0, 0.1)
+  y[,2] <- y[,2] + rnorm(400, 0, 0.1)
+  x1 <- y[, 1]
+  y1 <- y[, 2]
+  # Second circle (small)
+  x2 <- x1/2.5
+  y2 <- y1/2.5
+  shape <- rep(c(1,2), each = 400)
+  # Line 1
+  x3 <- runif(100, min = -1.5, 0)
+  y3 <- rnorm(100, -2, 0.1)
+  shape <- c(shape, rep(3, 100))
+  # Line 2
+  x4 <- runif(100, min = -1.5, 0)
+  y4 <- rnorm(100, -3, 0.1)
+  shape <- c(shape, rep(4, 100))
+  # compact points
+  x6 <- rnorm(50, 1, 0.1)
+  y6 <- rnorm(50, -2.5, 0.1)
+  shape <- c(shape, rep(5, 50))
+  # noises/outliers
+  x5 <- runif(50, min = -1.5, 1.5)
+  y5 <- rnorm(50, -1, 1)
+  shape <- c(shape, rep(6, 50))
+  multishapes <- data.frame(x = c(x1, x2, x3, x4, x5, x6), y = c(y1, y2, y3, y4, y5, y6), shape = shape)
+  multishapes
+}
+
