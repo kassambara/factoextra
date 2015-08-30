@@ -5,7 +5,7 @@
 #' \itemize{
 #' \item{fviz_cluster(): Draws the result of partitioning methods 
 #' including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package]; 
-#' Mclust [mclust package]. 
+#' Mclust [mclust package]; HCPC [FactoMineR]. 
 #' Observations are represented by points in the plot, using principal components if ncol(data) > 2. 
 #' An ellipse is drawn around each cluster.}
 #' \item{fviz_silhouette(): Draws the result of silhouette() [cluster package]}
@@ -180,6 +180,11 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   else if(inherits(object, "Mclust")) {
     object$cluster <- object$classification
     data <- object$data
+  }
+  # HCPC in FactoMineR
+  else if(inherits(object, "HCPC")) {
+    data <- object$data.clust[, -ncol(object$data.clust), drop = FALSE]
+    object$cluster <- as.vector(object$data.clust$clust)
   }
   # Any obects containing data and cluster elements
   else if(!is.null(object$data) & !is.null(object$cluster)){
