@@ -130,7 +130,7 @@ where SE.factor is a numeric value which can be 1 (default), 2, 3, etc.
 \itemize{
 \item{fviz_cluster(): Draws the result of partitioning methods
 including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package];
-Mclust [mclust package]; HCPC [FactoMineR].
+Mclust [mclust package]; HCPC [FactoMineR]; hkmeans [factoextra].
 Observations are represented by points in the plot, using principal components if ncol(data) > 2.
 An ellipse is drawn around each cluster.}
 \item{fviz_silhouette(): Draws the result of silhouette() [cluster package]}

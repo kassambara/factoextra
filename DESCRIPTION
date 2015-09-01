@@ -43,3 +43,4 @@ Collate:
     'fviz_mca.R'
     'fviz_pca.R'
     'get_ca.R'
+    'hkmeans.R'
