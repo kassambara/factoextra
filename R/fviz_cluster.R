@@ -385,7 +385,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
       else if(class(best_nc) == "matrix") 
         .viz_NbClust(x, print.summary, barfill, barcolor)
   }
-  else if(is.null(FUNcluster)) stop(" The argument FUNcluster is required. ",
+  else if(is.null(FUNcluster)) stop("The argument FUNcluster is required. ",
                                     "Possible values are kmeans, pam, hcut, clara, ...")
   else{
 
@@ -416,7 +416,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
         geom_point(color = linecolor) +
         geom_line(color = linecolor) +
         labs(y = ylab, x = "Number of clusters k",
-             title = "Otimal number of clusters")
+             title = "Optimal number of clusters")
       
       if(method == "silhouette") 
         p <- p + geom_vline(xintercept = which.max(v), linetype=2, color = linecolor)
