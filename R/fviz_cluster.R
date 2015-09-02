@@ -323,7 +323,7 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE){
   df <- as.data.frame(sil.obj[, 1:3])
   # order by cluster and by sil_width
   df <- df[order(df$cluster, -df$sil_width), ]
-  if(!is.null(rownames(sil.obj))) df$nam <- rownames(df)
+  if(!is.null(rownames(df))) df$name <- factor(rownames(df), levels = rownames(df))
   else df$name <- as.factor(1:nrow(df))
   df$cluster <- as.factor(df$cluster)
   mapping <- aes_string(x = "name", y = "sil_width", 
