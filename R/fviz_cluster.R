@@ -376,7 +376,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss"),
                           barfill="steelblue", barcolor="steelblue", 
                           linecolor = "steelblue", print.summary = TRUE,  ...) 
   {
-  
+  set.seed(123)
   if(k.max < 2) stop("k.max must bet > = 2")
   
   # x is an object created by the function NbClust() [NbClust package]
