@@ -24,7 +24,8 @@ Suggests:
     FactoMineR,
     stats,
     MASS,
-    knitr
+    knitr,
+    reshape2
 VignetteBuilder: knitr
 URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues
@@ -43,4 +44,5 @@ Collate:
     'fviz_mca.R'
     'fviz_pca.R'
     'get_ca.R'
+    'get_clust_tendency.R'
     'hkmeans.R'
