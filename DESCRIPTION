@@ -17,27 +17,34 @@ Depends:
     R (>= 3.1.0),
     ggplot2,
     grid
+Imports:
+    cluster,
+    dendextend,
+    stats,
+    reshape2
 Suggests:
     ade4,
     ca,
-    cluster,
     FactoMineR,
-    stats,
     MASS,
-    knitr,
-    reshape2
+    knitr
 VignetteBuilder: knitr
 URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
+    'cluster_utilities.R'
     'eigenvalue.R'
     'utilities.R'
+    'dist.R'
+    'fviz_dend.R'
+    'hcut.R'
     'print.factoextra.R'
     'get_pca.R'
+    'fviz_cluster.R'
+    'eclust.R'
     'facto_summarize.R'
     'fviz_add.R'
     'fviz_ca.R'
-    'fviz_cluster.R'
     'fviz_contrib.R'
     'fviz_cos2.R'
     'get_mca.R'
