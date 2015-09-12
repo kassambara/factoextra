@@ -1,4 +1,4 @@
-#' @include utilities.R
+#' @include utilities.R dist.R
 NULL
 #' Assessing Clustering Tendency
 #' 
@@ -10,23 +10,29 @@ NULL
 #' variables, transpose the data before.
 #' @param n the number of points selected from sample space which is also the number of 
 #' points selected from the given sample(data).
-#' @param graph logical value; if TRUE the ordered dissimilarity image (ODI) is shown
-#' @param gradient a list containing two element specifying the colors for low and high values in 
-#'  the ordered dissimilarity image. 
+#' @param graph logical value; if TRUE the ordered dissimilarity image (ODI) is shown.
+#' @param gradient a list containing three elements specifying the colors for low, mid and high values in 
+#'  the ordered dissimilarity image. The element "mid" can take the value of NULL.
 #' @param seed an integer specifying the seed for random number generator. Specify seed for reproducible results.
 #' @return 
-#' A list containing the elements: \cr
-#' - hopkins_stat for Hopkins statistic value\cr
-#' - plot for ordered dissimilarity image\cr
+#' A list containing the elements: \cr\cr
+#' - hopkins_stat for Hopkins statistic value\cr\cr
+#' - plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).\cr
 #' 
 #' @examples 
 #' \donttest{
 #' data(iris)
+#' 
+#' # Clustering tendency
 #' get_clust_tendency(iris[,-5], 50)
+#' 
+#' # Customize the dissimilarity image
+#' fviz_dist(dist(iris[, -5]), 
+#'    gradient = list(low = "black", mid = NULL, high = "white"))
 #' }
 #' @export
 get_clust_tendency <- function(data, n, graph = TRUE,
-                               gradient = list(low = "black", high = "white"),
+                               gradient = list(low = "red", mid = "white", high = "blue"),
                                seed = 123) 
 {
   
@@ -43,18 +49,10 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   
   data <- na.omit(data)
   rownames(data) <- paste0("r", 1:nrow(data))
+  plot <- NULL
   if(graph){
-    # Visual assessment of clustering tendency
-    res.dist <- stats::dist(data)
-    res.hc <- stats::hclust(res.dist, method = "ward.D2")
-    res.dist <- as.matrix(res.dist)[res.hc$order, res.hc$order]
-    d <- reshape2::melt(res.dist)
-    plot <- ggplot(d, aes_string(x = "Var1", y = "Var2"))+ 
-      ggplot2::geom_tile(aes_string(fill="value")) + 
-      ggplot2::scale_fill_gradient(low=gradient$low, high=gradient$high)+
-      theme(axis.text = element_blank(), axis.ticks = element_blank(),
-            axis.title.x = element_blank(),
-            axis.title.y = element_blank())
+    plot <- fviz_dist(dist(data), order = TRUE, 
+                      show_labels = FALSE)
     print(plot)
   }
   

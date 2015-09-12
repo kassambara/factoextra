@@ -2,10 +2,10 @@
 % Please edit documentation in R/get_clust_tendency.R
 \name{get_clust_tendency}
 \alias{get_clust_tendency}
-\title{Assessing clustering tendency}
+\title{Assessing Clustering Tendency}
 \usage{
-get_clust_tendency(data, n, graph = TRUE, gradient = list(low = "black",
-  high = "white"), seed = 123)
+get_clust_tendency(data, n, graph = TRUE, gradient = list(low = "red", mid =
+  "white", high = "blue"), seed = 123)
 }
 \arguments{
 \item{data}{a numeric data frame or matrix. Columns are variables and rows are samples.
@@ -15,24 +15,33 @@ variables, transpose the data before.}
 \item{n}{the number of points selected from sample space which is also the number of
 points selected from the given sample(data).}
 
-\item{graph}{logical value; if TRUE the ordered dissimilarity image (ODI) is shown}
+\item{graph}{logical value; if TRUE the ordered dissimilarity image (ODI) is shown.}
 
-\item{gradient}{a list containing two element specifying the colors for low and high values in
-the ordered dissimilarity image.}
+\item{gradient}{a list containing three elements specifying the colors for low, mid and high values in
+the ordered dissimilarity image. The element "mid" can take the value of NULL.}
 
 \item{seed}{an integer specifying the seed for random number generator. Specify seed for reproducible results.}
 }
 \value{
-A list containing the element "hopkins_stat" for Hopkins statistic value
+A list containing the elements: \cr\cr
+- hopkins_stat for Hopkins statistic value\cr\cr
+- plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).\cr
 }
 \description{
 Assess clustering tendency using Hopkins' statistic and visual approach.
-An ordered dissimilarity image (ODI) is shown. Objects belonging to the same cluster are displayed in consecutive order.
+An ordered dissimilarity image (ODI) is shown. Objects belonging to the same cluster are displayed in consecutive order
+using hierarchical clustering.
 }
 \examples{
 \donttest{
 data(iris)
+
+# Clustering tendency
 get_clust_tendency(iris[,-5], 50)
+
+# Customize the dissimilarity image
+fviz_dist(dist(iris[, -5]),
+   gradient = list(low = "black", mid = NULL, high = "white"))
 }
 }
 
