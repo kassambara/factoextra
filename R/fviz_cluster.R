@@ -272,7 +272,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
       p <- p+geom_point(data = plot.data , 
                         aes_string('x', 'y', color="cluster", shape = "cluster"),
                         size = pointsize) +
-        scale_shape_manual(values=1:ngroups, labels = levels(plot.data$cluster)) 
+        ggplot2::scale_shape_manual(values=1:ngroups, labels = levels(plot.data$cluster)) 
         
   }
   
