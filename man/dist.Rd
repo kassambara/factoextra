@@ -8,8 +8,8 @@
 \usage{
 get_dist(x, method = "euclidean", stand = FALSE, ...)
 
-fviz_dist(dist.obj, order = TRUE, show_labels = TRUE, gradient = list(low
-  = "red", mid = "white", high = "blue"))
+fviz_dist(dist.obj, order = TRUE, show_labels = TRUE, lab_size = 0.9,
+  gradient = list(low = "red", mid = "white", high = "blue"))
 }
 \arguments{
 \item{x}{a numeric matrix or a data frame.}
@@ -29,6 +29,8 @@ dividing by the variable's standard deviation.}
 \item{order}{logical value. if TRUE the ordered dissimilarity image (ODI) is shown.}
 
 \item{show_labels}{logical value. If TRUE, the labels are displayed.}
+
+\item{lab_size}{the size of labels.}
 
 \item{gradient}{a list containing three elements specifying the colors for low, mid and high values in
 the ordered dissimilarity image. The element "mid" can take the value of NULL.}
