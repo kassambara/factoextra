@@ -50,7 +50,7 @@ get_dist <- function(x, method = "euclidean",  stand = FALSE, ...){
 #'  the ordered dissimilarity image. The element "mid" can take the value of NULL.
 #' @rdname dist
 #' @export
-fviz_dist<- function(dist.obj, order = TRUE, show_labels = TRUE, lab_size = 0.9,        
+fviz_dist<- function(dist.obj, order = TRUE, show_labels = TRUE, lab_size = NULL,        
                      gradient = list(low = "red", mid = "white", high = "blue")
                      )
 {

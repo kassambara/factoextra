@@ -8,7 +8,7 @@
 \usage{
 get_dist(x, method = "euclidean", stand = FALSE, ...)
 
-fviz_dist(dist.obj, order = TRUE, show_labels = TRUE, lab_size = 0.9,
+fviz_dist(dist.obj, order = TRUE, show_labels = TRUE, lab_size = NULL,
   gradient = list(low = "red", mid = "white", high = "blue"))
 }
 \arguments{
