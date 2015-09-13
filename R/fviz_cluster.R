@@ -259,11 +259,23 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   
   # Plot
   # ++++++++++++++++++++++++
+  ngroups <- length(levels(plot.data$cluster))
   p <- ggplot()
   if("point" %in% geom) 
+  {
+    if(ngroups <= 6){
     p <- p+geom_point(data = plot.data , 
                       aes_string('x', 'y', color="cluster", shape = "cluster"),
                       size = pointsize)
+    }
+    else 
+      p <- p+geom_point(data = plot.data , 
+                        aes_string('x', 'y', color="cluster", shape = "cluster"),
+                        size = pointsize) +
+        scale_shape_manual(values=1:ngroups, labels = levels(plot.data$cluster)) 
+        
+  }
+  
   if("text" %in% geom)
     p <- p + geom_text(data = label_coord, 
                        aes_string('x', 'y', label = 'name', color="cluster"),  
