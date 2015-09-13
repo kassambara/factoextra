@@ -25,7 +25,7 @@ NULL
 #' @param verbose logical value. If TRUE, the result of progress is printed.
 #' @param seed integer used for seeding the random number generator.
 #' @param ... other arguments to be passed to FUNcluster.
-#' @return an object of class "hcut" containing the result 
+#' @return Returns an object of class "eclust" containing the result 
 #' of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). \cr
 #' It includes also:
 #' \itemize{
@@ -35,6 +35,8 @@ NULL
 #' \item size: the size of clusters
 #' \item data: a matrix containing the original or the standardized data (if stand = TRUE)
 #' }
+#' The "eclust" class has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
+#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, \code{\link{fviz_cluster}}
 #' @examples 
 #' \donttest{
 #' # Load and scale data
@@ -81,6 +83,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   if(!inherits(data, c("matrix", "data.frame")) ) graph = FALSE
   else if(ncol(data)< 2) graph = FALSE
       
+  gap_stat <- NULL
   # Partitioning clustering
   # ++++++++++++++++++++++++++++++
   clust <- list()
@@ -90,6 +93,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
       gap <- .gap_stat(x, fun_clust, k.max = k.max, nboot = nboot,
                        gap_maxSE = gap_maxSE, verbose = verbose, ...)
       k <- gap$k
+      gap_stat <- gap$stat
     }
     clust <- fun_clust(x, k, ...)
     
@@ -112,6 +116,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
       gap <- .gap_stat(x, fun_clust, k.max = k.max, nboot = nboot,
                        gap_maxSE = gap_maxSE, verbose = verbose, diss = res.dist)
       k <- gap$k
+      gap_stat <- gap$stat
     }
     res.hc <- hcut(res.dist, k, hc_func = FUNcluster, hc_method = hc_method )
     clust <- res.hc
@@ -120,6 +125,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   
   clust$nbclust <- k
   clust$data <- x
+  clust$gap_stat <- gap_stat
   class(clust) <- c(class(clust), "eclust")
   clust
 }

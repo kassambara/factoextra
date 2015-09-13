@@ -49,7 +49,7 @@ using gap statistic.}
 \item{...}{other arguments to be passed to FUNcluster.}
 }
 \value{
-an object of class "hcut" containing the result
+Returns an object of class "eclust" containing the result
 of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). \cr
 It includes also:
 \itemize{
@@ -59,6 +59,7 @@ It includes also:
 \item size: the size of clusters
 \item data: a matrix containing the original or the standardized data (if stand = TRUE)
 }
+The "eclust" class has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
 }
 \description{
 Visual enhancement of clustering analysis
@@ -83,5 +84,8 @@ res.km$nbclust
  fviz_dend(res.hc) # dendrogam
  fviz_silhouette(res.hc) # silhouette plot
 }
+}
+\seealso{
+\code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, \code{\link{fviz_cluster}}
 }
 
