@@ -55,7 +55,10 @@ It includes also:
 \itemize{
 \item cluster: the cluster assignement of observations after cutting the tree
 \item nbclust: the number of clusters
-\item silinfo: the silhouette information of observations
+\item silinfo: the silhouette information of observations,
+including $widths (silhouette width values of each observation),
+$clus.avg.widths (average silhouette width of each cluster) and
+$avg.width (average width of all clusters)
 \item size: the size of clusters
 \item data: a matrix containing the original or the standardized data (if stand = TRUE)
 }
