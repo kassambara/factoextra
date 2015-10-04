@@ -6,6 +6,7 @@
 #' @param k the number of groups for cutting the tree.
 #' @param k_colors a vector containing colors to be used for the groups. 
 #' It should contains k number of colors. 
+#' @param show_labels a logical value. If TRUE, leaf labels are shown. Default value is TRUE.
 #' @param color_labels_by_k logical value. If TRUE, labels are colored automatically by group when k != NULL.
 #' @param type type of plot. Allowed values are one of "rectangle" or "triangle"
 #' @param rect logical value specifying whether to add a rectangle around groups. Used only when k != NULL.
@@ -46,7 +47,7 @@
 #' 
 #' }
 #' @export
-fviz_dend <- function(x, k = NULL, k_colors = NULL, color_labels_by_k = FALSE,
+fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_labels_by_k = FALSE,
                       type = c("rectangle", "triangle"),
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, 
                       cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height", ...)
@@ -67,7 +68,10 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, color_labels_by_k = FALSE,
     if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = k_colors)
   }
   
-  plot(dend,  type = type[1], xlab = xlab, ylab = ylab, main = main, ...)
+  leaflab <- ifelse(show_labels, "perpendicular", "none")
+  
+  plot(dend,  type = type[1], xlab = xlab, ylab = ylab, main = main,
+       leaflab = leaflab,...)
   if(rect & !is.null(k))
     dendextend::rect.dendrogram(dend, k=k, border = rect_border, 
                                 lty = rect_lty, lwd = rect_lwd)

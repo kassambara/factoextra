@@ -4,10 +4,11 @@
 \alias{fviz_dend}
 \title{Enhanced visualization of dendrogram}
 \usage{
-fviz_dend(x, k = NULL, k_colors = NULL, color_labels_by_k = FALSE,
-  type = c("rectangle", "triangle"), rect = FALSE, rect_border = "gray",
-  rect_lty = 2, rect_lwd = 1.5, cex = 0.8, main = "Cluster Dendrogram",
-  xlab = "", ylab = "Height", ...)
+fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
+  color_labels_by_k = FALSE, type = c("rectangle", "triangle"),
+  rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5,
+  cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height",
+  ...)
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana or hcut.}
@@ -16,6 +17,8 @@ fviz_dend(x, k = NULL, k_colors = NULL, color_labels_by_k = FALSE,
 
 \item{k_colors}{a vector containing colors to be used for the groups.
 It should contains k number of colors.}
+
+\item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default value is TRUE.}
 
 \item{color_labels_by_k}{logical value. If TRUE, labels are colored automatically by group when k != NULL.}
 
