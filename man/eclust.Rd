@@ -17,7 +17,8 @@ eclust(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes",
 Abbreviation is allowed.}
 
 \item{k}{the number of clusters to be generated. If NULL, the gap statistic is used to estimate the appropriate
-number of clusters.}
+number of clusters. In the case of kmeans, k can be either the number of clusters,
+or a set of initial (distinct) cluster centers.}
 
 \item{k.max}{the maximum number of clusters to consider, must be at least two.}
 
