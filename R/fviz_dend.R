@@ -8,6 +8,7 @@
 #' It should contains k number of colors. 
 #' @param show_labels a logical value. If TRUE, leaf labels are shown. Default value is TRUE.
 #' @param color_labels_by_k logical value. If TRUE, labels are colored automatically by group when k != NULL.
+#' @param label_cols a vector containing the colors for labels. 
 #' @param type type of plot. Allowed values are one of "rectangle" or "triangle"
 #' @param rect logical value specifying whether to add a rectangle around groups. Used only when k != NULL.
 #' @param rect_border,rect_lty,rect_lwd border color, line type and line width for rectangles
@@ -44,10 +45,18 @@
 #' # Customized color for groups
 #' fviz_dend(res.hc, k = 4, 
 #'  k_colors = c("#1B9E77", "#D95F02", "#7570B3", "#E7298A"))
+#'  
+#'  
+#'  # Color labels using k-means clusters
+#'  km.clust <- kmeans(df, 4)$cluster
+#'  fviz_dend(res.hc, k = 4, 
+#'    k_colors = c("blue", "green3", "red", "black"),
+#'    label_cols =  km.clust[res.hc$order], cex = 0.6)
 #' 
 #' }
 #' @export
 fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_labels_by_k = FALSE,
+                      label_cols = NULL,
                       type = c("rectangle", "triangle"),
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, 
                       cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height", ...)
@@ -67,6 +76,9 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
     dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = k_colors)
     if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = k_colors)
   }
+  if(!is.null(label_cols)){
+    dend <- dendextend::set(dend, "labels_col", label_cols) 
+  }
   
   leaflab <- ifelse(show_labels, "perpendicular", "none")
   
@@ -75,4 +87,5 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   if(rect & !is.null(k))
     dendextend::rect.dendrogram(dend, k=k, border = rect_border, 
                                 lty = rect_lty, lwd = rect_lwd)
+  
 }
