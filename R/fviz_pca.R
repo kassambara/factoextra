@@ -294,9 +294,9 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       }
       
       if("point" %in% geom) 
-        p <- p+geom_point(data = ind, 
-                          aes_string('x', 'y', color=name.quali, shape = name.quali),
-                          size = pointsize)
+          p <- p+geom_point(data = ind, 
+                            aes_string('x', 'y', color=name.quali, shape = name.quali),
+                            size = pointsize)
       if(lab$ind & "text" %in% geom) 
         p <- p + geom_text(data = label_coord, 
                            aes_string('x', 'y', label = 'name',
@@ -311,9 +311,11 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
       
       if("point" %in% geom) 
+      {
         p <- p + geom_point(data=coord_quali.sup,
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
-                            size=pointsize*2)    
+                            size=pointsize*2) 
+      }
       if(lab$quali & "text" %in% geom)
         p <- p + geom_text(data=coord_quali.sup, 
                            aes_string('x', 'y', color=name.quali),
