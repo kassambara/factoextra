@@ -2,7 +2,7 @@
 #' 
 #' @description 
 #' Enhanced visualization of dendrogram.
-#' @param x an object of class dendrogram, hclust, agnes, diana or hcut.
+#' @param x an object of class dendrogram, hclust, agnes, diana, hcut or hkmeans.
 #' @param k the number of groups for cutting the tree.
 #' @param k_colors a vector containing colors to be used for the groups. 
 #' It should contains k number of colors. 
@@ -65,6 +65,10 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   if(inherits(x, "hcut")){
     k <- x$nbclust
     dend <- as.dendrogram(x)
+  }
+  else if(inherits(x, "hkmeans")){
+    k <- length(unique(x$cluster))
+    dend <- as.dendrogram(x$hclust)
   }
   else if(inherits(x, c("hclust", "agnes", "diana"))) dend <- as.dendrogram(x)
   else if(inherits(x, "dendrogram")) dend <- x

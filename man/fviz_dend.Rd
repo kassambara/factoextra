@@ -11,7 +11,7 @@ fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
   ylab = "Height", ...)
 }
 \arguments{
-\item{x}{an object of class dendrogram, hclust, agnes, diana or hcut.}
+\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or hkmeans.}
 
 \item{k}{the number of groups for cutting the tree.}
 
