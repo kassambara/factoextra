@@ -43,7 +43,7 @@ NULL
 #' \item name is a character vector containing column/row names to be drawn
 #' \item cos2 if cos2 is in [0, 1], ex: 0.6, then columns/rows with a cos2 > 0.6 are drawn. 
 #' if cos2 > 1, ex: 5, then the top 5 columns/rows with the highest cos2 are drawn.
-#' \item contrib if contrib > 1, ex: 5,  then the top 5 columns/rows with the highest cos2 are drawn
+#' \item contrib if contrib > 1, ex: 5,  then the top 5 columns/rows with the highest contrib are drawn
 #' }
 #' @param map character string specifying the map type. Allowed options include: 
 #' "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
@@ -123,16 +123,16 @@ NULL
 #' # Gradient color
 #' fviz_ca_row(res.ca, col.row="cos2") + 
 #'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=0.5)
+#'       high="red", midpoint=0.5, space = "Lab")
 #' # Change the theme and use only points
 #' fviz_ca_row(res.ca, col.row="cos2", geom = "point") + 
 #'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=0.4)+ theme_minimal()
+#'       high="red", midpoint=0.4, space = "Lab")+ theme_minimal()
 #'       
 #' # Color by the contributions   
 #' fviz_ca_row(res.ca, col.row="contrib") + 
 #'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=10)
+#'       high="red", midpoint=10, space = "Lab")
 #'       
 #' # Control the transparency of the color by the
 #' # contributions
@@ -161,7 +161,7 @@ NULL
 #' # Control colors using their contributions
 #' fviz_ca_col(res.ca, col.col = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue", 
-#'            high = "red", midpoint = 25) +
+#'            high = "red", midpoint = 25, space = "Lab") +
 #'  theme_minimal()          
 #' # Control the transparency of variables using their contributions
 #' fviz_ca_col(res.ca, alpha.col = "contrib") +

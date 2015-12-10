@@ -96,7 +96,7 @@ Allowed values are NULL or a list containing the arguments name, cos2 or contrib
 \item name is a character vector containing individuals/variables to be drawn
 \item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn.
 if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
+\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest contrib are drawn
 }}
 
 \item{map}{character string specifying the map type. Allowed options include:
@@ -197,16 +197,16 @@ fviz_mca_ind(res.mca, col.ind="cos2")
 # Gradient color
 fviz_mca_ind(res.mca, col.ind="cos2") +
       scale_color_gradient2(low="white", mid="blue",
-      high="red", midpoint=0.4)
+      high="red", midpoint=0.4, space = "Lab")
 # Change the theme and use only points
 fviz_mca_ind(res.mca, col.ind="cos2", geom = "point") +
       scale_color_gradient2(low="white", mid="blue",
-      high="red", midpoint=0.4)+ theme_minimal()
+      high="red", midpoint=0.4, space = "Lab")+ theme_minimal()
 
 # Color by the contributions
 fviz_mca_ind(res.mca, col.ind="contrib") +
       scale_color_gradient2(low="white", mid="blue",
-      high="red", midpoint=1.5)
+      high="red", midpoint=1.5, space = "Lab")
 
 # Control the transparency of the color by the
 # contributions
@@ -250,7 +250,7 @@ fviz_mca_var(res.mca, col.var="steelblue")+
 # Control variable colors using their contributions
 fviz_mca_var(res.mca, col.var = "contrib")+
  scale_color_gradient2(low = "white", mid = "blue",
-           high = "red", midpoint = 2) +
+           high = "red", midpoint = 2, space = "Lab") +
  theme_minimal()
 # Control the transparency of variables using their contributions
 fviz_mca_var(res.mca, alpha.var = "contrib") +
