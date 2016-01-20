@@ -17,11 +17,12 @@ NULL
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 element_blank
+#' @importFrom ggrepel geom_text_repel
 #' @importFrom grid arrow
 #' @importFrom grid unit
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
-# X: an output of factor analysis (PCA, CA, MCA) 
+# X: an output of factor analysis (PCA, CA, MCA, MFA) 
 # from different packages (FactoMineR, ade4, ....) 
 .get_facto_class <- function(X){
   if(inherits(X, c('PCA', 'princomp', 'prcomp')))
@@ -30,24 +31,25 @@ NULL
     facto_class ="PCA"
   else if(inherits(X, c("CA", "ca", "coa", "correspondence"))) facto_class="CA"
   else if(inherits(X, c("MCA", "acm"))) facto_class = "MCA"
+  else if(inherits(X, c("MFA", "mfa"))) facto_class = "MFA"
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
 
 # Get the result for supplementary points
 #++++++++++++++++++++++++++
-## X: an output of factor analysis (PCA, CA, MCA) 
+## X: an output of factor analysis (PCA, CA, MCA, MFA) 
 ## element possible values are "row.sup", "col.sup" (CA);
-# quanti, ind.sup (PCA); quali.sup (MCA)
+# quanti, ind.sup (PCA); quali.sup (MCA); quanti.var.sup, quali.var.sup (MFA)
 ## result the result tobe extracted for the element. Possible values are
-#  the combination of c("cos2", "contrib", "coord")
+#  the combination of c("cos2", "coord")
 ## axes a numeric vector specifying the axes of interest. Default values are 1:2
 ##  for axes 1 and 2
 ## select: a selection of variables. See the function .select()
 .get_supp <- function(X, element = NULL, axes = 1:2, 
                       result = c("coord", "cos2"), select = NULL){
   
-  if(inherits(X, c("CA", "PCA", "MCA"))) {
+  if(inherits(X, c("CA", "PCA", "MCA", "MFA"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -572,7 +574,7 @@ NULL
                   arrow = grid::arrow(length = grid::unit(0.2, 'cm')))
   
     if(lab & "text"%in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -589,9 +591,9 @@ NULL
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), alpha = alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord,
+      p <- p + geom_text_repel(data = label_coord,
                          aes_string(x, y, color=col),
-                         label = data$name,  size = labelsize, alpha=alpha, vjust = -0.7)
+                         label = data$name,  size = labelsize, alpha=alpha)
   }
   
   # Only the transparency is controlled automatically
@@ -607,9 +609,9 @@ NULL
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
-                         size = labelsize, color=col, vjust = -0.7)
+                         size = labelsize, color=col)
     
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
@@ -623,8 +625,8 @@ NULL
                             aes_string(x = 0, y = 0, xend = x, yend = y),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, aes_string(x,y), 
-                         color = col, label = data$name, size = labelsize, vjust = -0.7)
+      p <- p + geom_text_repel(data = label_coord, aes_string(x,y), 
+                         color = col, label = data$name, size = labelsize)
   }
   
   return(p)
@@ -680,7 +682,7 @@ NULL
                           aes_string(x,y, color=col, alpha=alpha), shape=shape)
     
     if(lab & "text"%in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -693,9 +695,9 @@ NULL
                           shape=shape, alpha=alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord,
+      p <- p + geom_text_repel(data = label_coord,
                          aes_string(x, y, color=col),
-                         label = data$name,  size = labelsize, alpha=alpha, vjust = -0.7)
+                         label = data$name,  size = labelsize, alpha=alpha)
   }
   
   # Only the transparency is controlled automatically
@@ -706,9 +708,9 @@ NULL
                           aes_string(x, y, alpha=alpha), shape=shape, color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
-                         size = labelsize, color=col, vjust = -0.7)
+                         size = labelsize, color=col)
     
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
@@ -717,8 +719,8 @@ NULL
     if("point" %in% geom) 
       p <- p + geom_point(data = data, aes(x, y), shape=shape, color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, aes_string(x,y), 
-                         color = col, label = data$name, size = labelsize, vjust = -0.7)
+      p <- p + geom_text_repel(data = label_coord, aes_string(x,y), 
+                         color = col, label = data$name, size = labelsize)
   }
   
   return(p)

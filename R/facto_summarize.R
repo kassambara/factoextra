@@ -4,12 +4,12 @@ NULL
 #' 
 #' @description
 #'  Subset and summarize the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA) and 
-#' Multiple Correspondence Analysis (MCA) functions from several packages.
-#' @param X an object of class PCA, CA and MCA [FactoMineR]; prcomp and princomp [stats]; 
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and
+#' Multiple Factor Analysis (MFA) functions from several packages.
+#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
 #'  dudi, pca, coa and acm [ade4]; ca [ca package].
 #' @param element the element to subset from the output. Possible values are
-#'  "row" or "col" for CA; "var" or "ind" for PCA and MCA
+#'  "row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA
 #' @param result the result to be extracted for the element. Possible values are
 #'  the combination of c("cos2", "contrib", "coord")
 #' @param axes a numeric vector specifying the axes of interest. Default values are 1:2
@@ -27,6 +27,7 @@ NULL
 #'  of the axes. In this case, the column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the coordinates of
 #'  the points on the specified axes.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#' @author Fabian Mundt \email{f.mundt@inventionate.de}
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
@@ -76,6 +77,10 @@ NULL
 #' res <- facto_summarize(res.mca, "ind", axes = 1:2)
 #' head(res)
 #' 
+#' # Multiple factor Analysis
+#' # +++++++++++++++++++++++++++++++++
+#' library(FactoMineR)
+#' 
 #'  }
 #' @export 
 facto_summarize <- function(X, element,
@@ -84,8 +89,8 @@ facto_summarize <- function(X, element,
                             
   { 
   # check element
-  if(!element %in% c("row", "col", "var", "ind"))
-    stop('Te argument element should be one of "row", "col", "var", "ind"')
+  if(!element %in% c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"))
+    stop('Te argument element should be one of "row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"')
   
   # check and get the classe of X
   facto_class <- .get_facto_class(X)
@@ -104,6 +109,13 @@ facto_summarize <- function(X, element,
     if(element %in% c("var", "col")) elmt<- get_mca_var(X)
     else if(element %in% c("ind", "row")) elmt <- get_mca_ind(X)
   }
+  else if (facto_class == "MFA") {
+  if (element %in% c("quanti.var", "col")) elmt <- get_mfa_quanti_var(X)
+  else if (element %in% c("quali.var", "col")) elmt <- get_mfa_quali_var(X)
+  else if (element %in% c("group", "col")) elmt <- get_mfa_group(X)
+  else if (element %in% c("partial.axes","col")) elmt <- get_mfa_partial_axes(X) 
+  else if (element %in% c("ind", "row")) elmt <- get_mfa_ind(X)
+}
   
   
   # check axes

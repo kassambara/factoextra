@@ -22,7 +22,9 @@ Imports:
     cluster,
     dendextend,
     stats,
-    reshape2
+    reshape2,
+    ggrepel,
+    Hmisc
 Suggests:
     ade4,
     ca,
@@ -50,7 +52,10 @@ Collate:
     'fviz_cos2.R'
     'get_mca.R'
     'fviz_mca.R'
+    'get_mfa.R'
+    'fviz_mfa.R'
     'fviz_pca.R'
     'get_ca.R'
     'get_clust_tendency.R'
     'hkmeans.R'
+RoxygenNote: 5.0.1
