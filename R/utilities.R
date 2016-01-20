@@ -398,6 +398,14 @@ NULL
     title <- paste0(varname, " of variables to Dim-", paste(axes, collapse="-"))
   else if(element=="ind")
     title <- paste0(varname, " of individuals to Dim-", paste(axes, collapse="-"))
+  else if(element=="quanti.var")
+    title <- paste0(varname, " of quantitive variables to Dim-", paste(axes, collapse="-"))
+  else if(element=="quali.var")
+    title <- paste0(varname, " of qualitive variables to Dim-", paste(axes, collapse="-"))
+  else if(element=="group")
+    title <- paste0(varname, " of groups to Dim-", paste(axes, collapse="-"))
+  else if(element=="partial.axes")
+    title <- paste0(varname, " of partial axes to Dim-", paste(axes, collapse="-"))
   
   return(title)
 }
@@ -482,8 +490,10 @@ NULL
   else if(sort.value[1]=="asc") x <- sort(x, decreasing = FALSE)
   # bar names
   if(is.null(names(x))) names(x) <- 1:length(x)
+  
   #data frame for ggplot2
   d <- cbind.data.frame(name = factor(names(x), levels = names(x)), val = x)
+  
   # plot
   p <- ggplot(d, aes_string("name", "val")) + 
     geom_bar(stat="identity", fill=fill, color = color) +

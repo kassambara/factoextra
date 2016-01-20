@@ -5,8 +5,8 @@ NULL
 #' @description
 #' This function can be used to visualize the quality of representation (cos2) of rows/columns 
 #' from the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA) and 
-#' Multiple Correspondence Analysis (MCA) functions.
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) 
+#' and Multiple Factor Analysis (MFA) functions.
 #' @param ... not used
 #' @inheritParams fviz_cos2
 #' @details
@@ -81,17 +81,17 @@ NULL
 #'  
 #'  }
 #'  @export 
-fviz_contrib <- function(X, choice = c("row", "col", "var", "ind"), axes=1,
+fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"), axes=1,
                    fill="steelblue", color = "steelblue",  
                    sort.val = c("desc", "asc", "none"), top = Inf)
 {
 
   title <- .build_title(choice[1], "Contribution", axes)
+  print(title)
 
   dd <- facto_summarize(X, element = choice, result = "contrib", axes = axes)
   contrib <- dd$contrib
   names(contrib) <-rownames(dd)
-  
   # expected Average contribution 
   theo_contrib <- 100/length(contrib)
   if(length(axes) > 1) {
