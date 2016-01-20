@@ -649,9 +649,9 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
-  var <- facto_summarize(X, element = "partial.axes",
+  partial.axes <- facto_summarize(X, element = "partial.axes",
                          result = c("coord", "contrib"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
+  colnames(partial.axes)[2:3] <-  c("x", "y")
   
   
   # scale coords according to the type of map
@@ -659,8 +659,8 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   #                  type = map, axes = axes)
   
   # Selection
-  var.all <- var
-  if(!is.null(select.axes)) var <- .select(var, select.axes)
+  partial.axes.all <- partial.axes
+  if(!is.null(select.axes)) partial.axes <- .select(partial.axes, select.axes)
   
   # elements to be labelled or hidden
   lab <- .label(label)
@@ -668,7 +668,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   
   alpha.limits <- NULL
   if(alpha.axes %in% c("contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.axes])
+    alpha.limits = range(partial.axes.all[, alpha.axes])
   
   # Draw correlation circle
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
@@ -683,11 +683,11 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   
   if(!hide$partial.axes){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
+    p <-.ggscatter(p = p, data = partial.axes, x = 'x', y = 'y',
                    col=col.axes,  alpha = alpha.axes,
                    alpha.limits = alpha.limits,
                    geom =  geom2, lab = lab$var, labelsize = labelsize, 
-                   pointsize = pointsize, jitter = jitter)
+                   pointsize = pointsize, jitter = jitter, repel = FALSE)
   }
   
   p + labs(title="MFA - Partial Axes Representations")
