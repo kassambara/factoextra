@@ -529,13 +529,12 @@ NULL
 # it's possible to use also the shortcut "l", "p", "b".
 .ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black",  alpha = 1,
                        alpha.limits = NULL, shape = 19, pointsize = 2, 
-                       geom=c("point", "text"), lab = TRUE, labelsize = 4, 
+                       geom=c("point", "text"), lab = TRUE, labelsize = 4, repel = TRUE,
                        jitter = list(what = "label", width = NULL, height = NULL), ...)
   {
   
   data <- as.data.frame(data)
   label_coord <- data
-  
   # jittering
   if(jitter$what %in% c("both", "b")){
     label_coord <- data <- .jitter(data, jitter)
@@ -582,9 +581,9 @@ NULL
       p <- p + geom_segment(data = data,
                   aes_string(x = 0, y = 0, xend = x, yend = y, color=col, alpha=alpha),
                   arrow = grid::arrow(length = grid::unit(0.2, 'cm')))
-  
+    print(label_coord$name)
     if(lab & "text"%in% geom) 
-      p <- p + geom_text_repel(data = label_coord, 
+      p <- p + ggrepel::geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -601,7 +600,7 @@ NULL
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), alpha = alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text_repel(data = label_coord,
+      p <- p + ggrepel::geom_text_repel(data = label_coord,
                          aes_string(x, y, color=col),
                          label = data$name,  size = labelsize, alpha=alpha)
   }
@@ -635,8 +634,13 @@ NULL
                             aes_string(x = 0, y = 0, xend = x, yend = y),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text_repel(data = label_coord, aes_string(x,y), 
-                         color = col, label = data$name, size = labelsize)
+      if(repel) {
+        p <- p + ggrepel::geom_text_repel(data = label_coord, mapping = aes_string(x,y), 
+                                          color = col, label = data$name, size = labelsize)
+      } else {
+        p <- p + geom_text(data = label_coord, mapping = aes_string(x,y), 
+                           color = col, label = data$name, size = labelsize, nudge_y = -0.015)
+     }
   }
   
   return(p)
@@ -796,16 +800,23 @@ NULL
 ## Returns a list 
 .label <- function(label){
   lab  <- list()
-  # var - PCA, MCA
+  # var - PCA, MCA, MFA
   lab$var <- lab$quanti <- lab$quali.sup <- FALSE
   if(label[1]=="all" | "var" %in% label) lab$var =TRUE
   if(label[1]=="all" | "quanti.sup" %in% label) lab$quanti =TRUE
   if(label[1]=="all" | "quali.sup" %in% label) lab$quali.sup =TRUE
-  # ind - PCA, MCA
+  # ind - PCA, MCA, MFA
   lab$ind <- lab$ind.sup <- lab$quali <- FALSE
   if(label[1]=="all" | "ind" %in% label) lab$ind =TRUE
   if(label[1]=="all" | "ind.sup" %in% label) lab$ind.sup =TRUE
   if(label[1]=="all" | "quali" %in% label) lab$quali =TRUE
+  # group - MFA
+  lab$group <- lab$group.sup <- FALSE
+  if(label[1]=="all" | "group" %in% label) lab$group =TRUE
+  if(label[1]=="all" | "group.sup" %in% label) lab$group.sup =TRUE
+  # partial.axes - MFA
+  lab$partial.axes <- FALSE
+  if(label[1]=="all" | "partial.axes" %in% label) lab$partial.axes =TRUE
   # row - ca
   lab$row <- lab$row.sup <- FALSE
   if(label[1]=="all" | "row" %in% label) lab$row =TRUE
@@ -827,32 +838,23 @@ NULL
 ## Returns a list 
 .hide <- function(invisible){
   hide  <- list()
-  # var - PCA, MCA
+  # var - PCA, MCA, MFA
   hide$var <- hide$quanti <- hide$quali.sup <- FALSE
   if("var" %in% invisible) hide$var =TRUE
   if("quanti.sup" %in% invisible) hide$quanti =TRUE
   if("quali.sup" %in% invisible) hide$quali.sup = TRUE
-  # ind - PCA, MCA
+  # ind - PCA, MCA, MFA
   hide$ind <- hide$ind.sup <- hide$quali <- FALSE
   if("ind" %in% invisible) hide$ind =TRUE
   if("ind.sup" %in% invisible) hide$ind.sup =TRUE
   if("quali" %in% invisible) hide$quali =TRUE
-  # quanti.var - MFA
-  hide$quanti.var <- hide$quanti.var.sup <- FALSE
-  if("quanti.var" %in% invisible) hide$quanti.var =TRUE
-  if("quanti.var.sup" %in% invisible) hide$quanti.var.sup =TRUE
-  # quali.var <-  MFA
-  hide$quali.var <- hide$quali.var.sup <- FALSE
-  if("quali.var" %in% invisible) hide$quali.var =TRUE
-  if("quali.var.sup" %in% invisible) hide$quali.var.sup =TRUE
   # group - MFA
   hide$group <- hide$group.sup <- FALSE
   if("group" %in% invisible) hide$group =TRUE
   if("group.sup" %in% invisible) hide$group.sup =TRUE
   # partial.axes - MFA
-  hide$partial.axes <- hide$partial.axes.sup <- FALSE
+  hide$partial.axes <- FALSE
   if("partial.axes" %in% invisible) hide$partial.axes =TRUE
-  if("partial.axes.sup" %in% invisible) hide$partial.axes.sup =TRUE
   # row - ca
   hide$row <- hide$row.sup <- FALSE
   if("row" %in% invisible) hide$row =TRUE

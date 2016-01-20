@@ -262,7 +262,11 @@ NULL
 #'                
 #' # Graph of groups (correlation square)
 #' # ++++++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_group(res.mfa, )
+#' fviz_mfa_group(res.mfa)
+#' 
+#' #' # Graph of partial axes
+#' # ++++++++++++++++++++++++++++++++++++++++
+#' fviz_mfa_axes(res.mfa)
 #'
 #'  }
 #' @name fviz_mfa
@@ -583,6 +587,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
 
 #' @rdname fviz_mfa
 #' @export
+#' PROBELM LÖSEN, DASS DIE LABELS NICHT IMMER KORREKT ERSCHEINEN
 fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
                            col.group="blue",  col.group.sup = "darkgreen",
@@ -594,13 +599,13 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
   if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
-  var <- facto_summarize(X, element = "group",
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
+  group <- facto_summarize(X, element = "group",
+                           result = c("coord", "contrib", "cos2"), axes = axes)
+  colnames(group)[2:3] <-  c("x", "y")
   
   # Selection
-  var.all <- var
-  if(!is.null(select.group)) var <- .select(var, select.group)
+  group.all <- group
+  if(!is.null(select.group)) group <- .select(group, select.group)
   
   # elements to be labelled or hidden
   lab <- .label(label)
@@ -608,18 +613,18 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
   
   alpha.limits <- NULL
   if(alpha.group %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.group])
+    alpha.limits = range(group.all[, alpha.group])
   
   p <- ggplot()
   
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
-               col=col.group,  alpha = alpha.group,
-               alpha.limits = alpha.limits,
-               geom = geom, shape = shape.group,
-               lab = lab$var, labelsize = labelsize,
-               pointsize = pointsize, jitter = jitter)
-    
+  if(!hide$group){
+    p <-.ggscatter(p = p, data = group, x = 'x', y = 'y',
+                   col=col.group,  alpha = alpha.group,
+                   alpha.limits = alpha.limits,
+                   geom = geom, shape = shape.group,
+                   lab = lab$group, labelsize = labelsize,
+                   pointsize = pointsize, jitter = jitter,
+                   repel = FALSE)
   }
   
   # Set fix dimensions
@@ -634,13 +639,8 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
 #' @export
 fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                           label = "all", invisible="none", labelsize=4, pointsize = 2,
-                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                          col.var="red", alpha.var=1, col.quanti.sup="blue",
-                          col.quali.sup = "darkgreen",  col.circle ="grey70",
-                          shape.ind = 19, shape.var = 17,
-                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                          col.axes="red", alpha.axes=1, col.circle ="grey70",
+                          select.axes = list(name = NULL, contrib = NULL),
                           # map ="symmetric",
                           arrows = c(FALSE, FALSE),
                           jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -660,15 +660,15 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   
   # Selection
   var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
+  if(!is.null(select.axes)) var <- .select(var, select.axes)
   
   # elements to be labelled or hidden
   lab <- .label(label)
   hide <- .hide(invisible)
   
   alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
+  if(alpha.axes %in% c("contrib", "coord", "x", "y"))
+    alpha.limits = range(var.all[, alpha.axes])
   
   # Draw correlation circle
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
@@ -682,16 +682,17 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   geom2 <- geom
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   
-  if(!hide$var){
+  if(!hide$partial.axes){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
-                   col=col.var,  alpha = alpha.var,
+                   col=col.axes,  alpha = alpha.axes,
                    alpha.limits = alpha.limits,
-                   geom =  geom2, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize, pointsize = pointsize, jitter = jitter)
+                   geom =  geom2, lab = lab$var, labelsize = labelsize, 
+                   pointsize = pointsize, jitter = jitter)
   }
   
   p + labs(title="MFA - Partial Axes Representations")
 }
+
 
 #' @rdname fviz_mfa
 #' @export
@@ -778,6 +779,10 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   }
   p+labs(title="MFA factor map - Biplot")
 }
+
+
+# STARPLOT HINZUFÜGEN ALS OPTION
+# fviz_mfa_ind_starplot
 
 #' @rdname fviz_mfa
 #' @export
