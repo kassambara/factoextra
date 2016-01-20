@@ -5,7 +5,8 @@ NULL
 #' @param FUNcluster a clustering function including "kmeans", "pam", "clara", "fanny", "hclust", "agnes" and "diana". 
 #' Abbreviation is allowed.
 #' @param k the number of clusters to be generated. If NULL, the gap statistic is used to estimate the appropriate 
-#' number of clusters.
+#' number of clusters. In the case of kmeans, k can be either the number of clusters, 
+#' or a set of initial (distinct) cluster centers.
 #' @param k.max the maximum number of clusters to consider, must be at least two.
 #' @param stand logical value; default is FALSE. If TRUE, then the data will be standardized using the function scale(). 
 #' Measurements are standardized for each variable (column), by subtracting the variable's mean value and 
@@ -31,7 +32,10 @@ NULL
 #' \itemize{
 #' \item cluster: the cluster assignement of observations after cutting the tree
 #' \item nbclust: the number of clusters
-#' \item silinfo: the silhouette information of observations
+#' \item silinfo: the silhouette information of observations,  
+#' including $widths (silhouette width values of each observation), 
+#' $clus.avg.widths (average silhouette width of each cluster) and 
+#' $avg.width (average width of all clusters)
 #' \item size: the size of clusters
 #' \item data: a matrix containing the original or the standardized data (if stand = TRUE)
 #' }
@@ -96,6 +100,8 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
       gap_stat <- gap$stat
     }
     clust <- fun_clust(x, k, ...)
+    
+    if(inherits(k, c("matrix", "data.frame"))) k <- nrow(k) # cluster centers are provided as k
     
     # Plot
     if(graph) {

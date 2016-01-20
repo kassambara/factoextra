@@ -9,7 +9,7 @@ hcut(x, k = 2, isdiss = inherits(x, "dist"), hc_func = c("hclust",
   stand = FALSE, graph = FALSE, ...)
 }
 \arguments{
-\item{x}{a numeric matrix or data frame.}
+\item{x}{a numeric matrix, numeric data frame or a dissimilarity matrix.}
 
 \item{k}{the number of clusters to be generated.}
 

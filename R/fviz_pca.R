@@ -60,7 +60,7 @@
 #' \item name: is a character vector containing individuals/variables to be drawn
 #' \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn. 
 #' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-#' \item contrib: if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
+#' \item contrib: if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest contrib are drawn
 #' }
 #' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
 #' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
@@ -108,16 +108,16 @@
 #' # Gradient color
 #' fviz_pca_ind(res.pca, col.ind="cos2") + 
 #'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=0.6)
+#'       high="red", midpoint=0.6, space = "Lab")
 #' # Change the theme and use only points
 #' fviz_pca_ind(res.pca, col.ind="cos2", geom = "point") + 
 #'       scale_color_gradient2(low="blue", mid="white", 
-#'       high="red", midpoint=0.6)+ theme_minimal()
+#'       high="red", midpoint=0.6, space = "Lab")+ theme_minimal()
 #'       
 #' # Color by the contributions   
 #' fviz_pca_ind(res.pca, col.ind="contrib") + 
 #'       scale_color_gradient2(low="blue", mid="white", 
-#'       high="red", midpoint=4)
+#'       high="red", midpoint=4, space = "Lab")
 #'       
 #' # Control the transparency of the color by the
 #' # contributions
@@ -164,7 +164,7 @@
 #' # Control variable colors using their contributions
 #' fviz_pca_var(res.pca, col.var="contrib")+
 #'  scale_color_gradient2(low="white", mid="blue", 
-#'            high="red", midpoint=96) +
+#'            high="red", midpoint=96, space = "Lab") +
 #'  theme_minimal()          
 #' # Control the transparency of variables using their contributions
 #' fviz_pca_var(res.pca, alpha.var="contrib") +
@@ -294,9 +294,9 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       }
       
       if("point" %in% geom) 
-        p <- p+geom_point(data = ind, 
-                          aes_string('x', 'y', color=name.quali, shape = name.quali),
-                          size = pointsize)
+          p <- p+geom_point(data = ind, 
+                            aes_string('x', 'y', color=name.quali, shape = name.quali),
+                            size = pointsize)
       if(lab$ind & "text" %in% geom) 
         p <- p + geom_text(data = label_coord, 
                            aes_string('x', 'y', label = 'name',
@@ -311,9 +311,11 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
       
       if("point" %in% geom) 
+      {
         p <- p + geom_point(data=coord_quali.sup,
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
-                            size=pointsize*2)    
+                            size=pointsize*2) 
+      }
       if(lab$quali & "text" %in% geom)
         p <- p + geom_text(data=coord_quali.sup, 
                            aes_string('x', 'y', color=name.quali),
@@ -389,7 +391,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
     circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
     p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
-      geom_path(color=col.circle)+
+      geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
       geom_hline(yintercept = 0, linetype="dashed")+
       geom_vline(xintercept = 0, linetype="dashed")    
   }

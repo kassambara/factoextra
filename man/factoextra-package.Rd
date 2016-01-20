@@ -43,17 +43,17 @@ get_eig(res.pca)
 # Visualize eigenvalues/variances
 fviz_eig(res.pca)
 # Add labels, change theme
-fviz_screeplot(res.pca,  addlabels=TRUE, hjust = -0.3) + 
+fviz_screeplot(res.pca,  addlabels=TRUE, hjust = -0.3) +
     theme_minimal()
-    
+
 # Graph of variables
 fviz_pca_var(res.pca)
 # Control variable colors using their contributions
 # Use gradient color
 fviz_pca_var(res.pca, col.var="contrib")+
-scale_color_gradient2(low="white", mid="blue", 
+scale_color_gradient2(low="white", mid="blue",
       high="red", midpoint = 96) + theme_minimal()
-      
+
 # Graph of individuals
 fviz_pca_ind(res.pca)
 # Color by groups and add ellipse

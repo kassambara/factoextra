@@ -4,20 +4,25 @@
 \alias{fviz_dend}
 \title{Enhanced visualization of dendrogram}
 \usage{
-fviz_dend(x, k = NULL, k_colors = NULL, color_labels_by_k = FALSE,
-  type = c("rectangle", "triangle"), rect = FALSE, rect_border = "gray",
-  rect_lty = 2, rect_lwd = 1.5, cex = 0.8, main = "Cluster Dendrogram",
-  xlab = "", ylab = "Height", ...)
+fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
+  color_labels_by_k = FALSE, label_cols = NULL, type = c("rectangle",
+  "triangle"), rect = FALSE, rect_border = "gray", rect_lty = 2,
+  rect_lwd = 1.5, cex = 0.8, main = "Cluster Dendrogram", xlab = "",
+  ylab = "Height", ...)
 }
 \arguments{
-\item{x}{an object of class dendrogram, hclust, agnes, diana or hcut.}
+\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or hkmeans.}
 
 \item{k}{the number of groups for cutting the tree.}
 
 \item{k_colors}{a vector containing colors to be used for the groups.
 It should contains k number of colors.}
 
+\item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default value is TRUE.}
+
 \item{color_labels_by_k}{logical value. If TRUE, labels are colored automatically by group when k != NULL.}
+
+\item{label_cols}{a vector containing the colors for labels.}
 
 \item{type}{type of plot. Allowed values are one of "rectangle" or "triangle"}
 
@@ -64,6 +69,13 @@ rect_border = 2:5, rect_lty = 1)
 # Customized color for groups
 fviz_dend(res.hc, k = 4,
  k_colors = c("#1B9E77", "#D95F02", "#7570B3", "#E7298A"))
+
+
+ # Color labels using k-means clusters
+ km.clust <- kmeans(df, 4)$cluster
+ fviz_dend(res.hc, k = 4,
+   k_colors = c("blue", "green3", "red", "black"),
+   label_cols =  km.clust[res.hc$order], cex = 0.6)
 
 }
 }

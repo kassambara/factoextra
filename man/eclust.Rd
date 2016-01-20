@@ -17,7 +17,8 @@ eclust(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes",
 Abbreviation is allowed.}
 
 \item{k}{the number of clusters to be generated. If NULL, the gap statistic is used to estimate the appropriate
-number of clusters.}
+number of clusters. In the case of kmeans, k can be either the number of clusters,
+or a set of initial (distinct) cluster centers.}
 
 \item{k.max}{the maximum number of clusters to consider, must be at least two.}
 
@@ -55,7 +56,10 @@ It includes also:
 \itemize{
 \item cluster: the cluster assignement of observations after cutting the tree
 \item nbclust: the number of clusters
-\item silinfo: the silhouette information of observations
+\item silinfo: the silhouette information of observations,
+including $widths (silhouette width values of each observation),
+$clus.avg.widths (average silhouette width of each cluster) and
+$avg.width (average width of all clusters)
 \item size: the size of clusters
 \item data: a matrix containing the original or the standardized data (if stand = TRUE)
 }

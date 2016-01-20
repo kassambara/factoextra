@@ -5,7 +5,7 @@ NULL
 #' @description 
 #' Computes hierarchical clustering (hclust, agnes, diana) and cut the tree into k clusters. It also accepts 
 #' correlation based distance measure methods such as "pearson", "spearman" and "kendall".
-#' @param x a numeric matrix or data frame.
+#' @param x a numeric matrix, numeric data frame or a dissimilarity matrix.
 #' @param k the number of clusters to be generated.
 #' @param hc_method the agglomeration method to be used (?hclust) for hclust() and agnes(): 
 #' "ward.D", "ward.D2", "single", "complete", "average", ...
@@ -66,7 +66,7 @@ hcut <- function(x, k = 2, isdiss = inherits(x, "dist"),
   hc_func <- match.arg(hc_func)
   hc_func <- hc_func[1]
   
-  x <- get_dist(x, method = hc_metric)
+  if(!isdiss) x <- get_dist(x, method = hc_metric)
   
   
   if(hc_func == "hclust") hc <- stats::hclust(x, method = hc_method)
