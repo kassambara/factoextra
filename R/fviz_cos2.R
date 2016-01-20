@@ -5,9 +5,9 @@ NULL
 #' @description
 #' This function can be used to visualize the quality of representation (cos2) of rows/columns 
 #' from the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA) and 
-#' Multiple Correspondence Analysis (MCA) functions.
-#' @param X an object of class PCA, CA and MCA [FactoMineR]; prcomp and princomp [stats]; 
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and 
+#' Multiple Factor Analysis (MFA) functions.
+#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
 #'  dudi, pca, coa and acm [ade4]; ca [ca package].
 #' @param choice allowed values are "row" and "col" for CA;  "var" and "ind" for PCA or MCA
 #' @param axes a numeric vector specifying the dimension(s) of interest.
@@ -81,7 +81,7 @@ NULL
 #' fviz_cos2(res.mca, choice ="var", axes = 1)
 #'  }
 #'  @export 
-fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind"), axes=1,
+fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group"), axes=1,
                    fill="steelblue", color = "steelblue",  
                    sort.val = c("desc", "asc", "none"), top = Inf)
 {
@@ -90,6 +90,7 @@ fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind"), axes=1,
   
    dd <- facto_summarize(X, element = choice, result = "cos2", axes = axes)
    cos2 <- dd$cos2
+   print(cos2)
    names(cos2) <-rownames(dd)
   p <- .ggbarplot(cos2, fill =fill, color = color,
                   sort.value = sort.val, top = top,
