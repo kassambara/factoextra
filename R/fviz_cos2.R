@@ -90,7 +90,7 @@ fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "q
   
    dd <- facto_summarize(X, element = choice, result = "cos2", axes = axes)
    cos2 <- dd$cos2
-   print(cos2)
+   
    names(cos2) <-rownames(dd)
   p <- .ggbarplot(cos2, fill =fill, color = color,
                   sort.value = sort.val, top = top,

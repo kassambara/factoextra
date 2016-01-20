@@ -87,11 +87,11 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
 {
 
   title <- .build_title(choice[1], "Contribution", axes)
-  print(title)
 
   dd <- facto_summarize(X, element = choice, result = "contrib", axes = axes)
   contrib <- dd$contrib
   names(contrib) <-rownames(dd)
+  
   # expected Average contribution 
   theo_contrib <- 100/length(contrib)
   if(length(axes) > 1) {
