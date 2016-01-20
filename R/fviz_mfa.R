@@ -175,33 +175,67 @@ NULL
 #' select.ind = list(name = c("44", "38", "53",  "39")))
 #'
 #'
-#' # Graph of variable categories
-#' # ++++++++++++++++++++++++++++
+#' # Graph of qantitative variable categories
+#' # ++++++++++++++++++++++++++++++++++++++++
+#' data(wine)
+#' res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
+#'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
+#'                num.group.sup=c(1,6), graph=FALSE)
 #' # Default plot
-#' fviz_mcf_var(res.mfa)
+#' fviz_mfa_qanti_var(res.mfa)
 #' # Change color and theme
-#' fviz_mfa_var(res.mfa, col.var="steelblue")+
+#' fviz_mfa_quanti_var(res.mfa, col.var="steelblue")+
 #'  theme_minimal()
 #'
 #' # Control variable colors using their contributions
-#' fviz_mfa_var(res.mfa, col.var = "contrib")+
+#' fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
 #'            high = "red", midpoint = 2) +
 #'  theme_minimal()
 #' # Control the transparency of variables using their contributions
-#' fviz_mfa_var(res.mfa, alpha.var = "contrib") +
+#' fviz_mfa_quanti_var(res.mfa, alpha.var = "contrib") +
 #'    theme_minimal()
 #'
 #' # Select and visualize categories with cos2 >= 0.4
-#' fviz_mfa_var(res.mfa, select.var = list(cos2 = 0.4))
+#' fviz_mfa_quanti_var(res.mfa, select.var = list(cos2 = 0.4))
 #' # Select the top 10 contributing variable categories
-#' fviz_mfa_var(res.mfa, select.var = list(contrib = 10))
+#' fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
 #' # Select by names
-#' fviz_mfa_var(res.mfa,
-#'  select.var= list(name = c("Courg_n", "Fever_y", "Fever_n")))
+#' fviz_mfa_quanti_var(res.mfa,
+#'  select.var= list(name =  c("Spice.before.shaking", "Aroma.intensity")))
+#'  
+#' # Graph of categorical variable categories
+#' # ++++++++++++++++++++++++++++++++++++++++
+#' data(poison)
+#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+#'                name.group=c("desc","desc2","symptom","eat"),
+#'                num.group.sup=1:2, graph=FALSE)
 #'
-#' # biplot
-#' # ++++++++++++++++++++++++++
+#' # Default plot
+#' fviz_mfa_quali_var(res.mfa)
+#' # Change color and theme
+#' fviz_mfa_quali_var(res.mfa, col.var="steelblue")+
+#'  theme_minimal()
+#'
+#' # Control variable colors using their contributions
+#' fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
+#'  scale_color_gradient2(low = "white", mid = "blue",
+#'            high = "red", midpoint = 2) +
+#'  theme_minimal()
+#' # Control the transparency of variables using their contributions
+#' fviz_mfa_quali_var(res.mfa, alpha.var = "contrib") +
+#'    theme_minimal()
+#'
+#' # Select and visualize categories with cos2 >= 0.4
+#' fviz_mfa_quali_var(res.mfa, select.var = list(cos2 = 0.4))
+#' # Select the top 10 contributing variable categories
+#' fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
+#' # Select by names
+#' fviz_mfa_quali_var(res.mfa,
+#'  select.var= list(name =  c("Cheese_y", "Nausea_n", "Courg_y")))
+#'
+#' # Biplot of categorical variable categories and individuals
+#' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #' fviz_mfa_quali_biplot(res.mfa)
 #' # Keep only the labels for variable categories
 #' fviz_mfa_quali_biplot(res.mfa, label ="var")
@@ -215,6 +249,7 @@ NULL
 #' fviz_mfa_quali_biplot(res.mfa, label ="var", col.ind="cos2") +
 #'        theme_minimal()
 #' # Change the color by groups, add ellipses
+#' grp <- as.factor(poison[, "Vomiting"])
 #' fviz_mfa_quali_biplot(res.mfa, label="var", col.var ="blue",
 #'    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) +
 #'    theme_minimal()
@@ -224,6 +259,10 @@ NULL
 #' fviz_mfa_quali_biplot(res.mfa,
 #'                select.ind = list(contrib = 30),
 #'                select.var = list(contrib = 10))
+#'                
+#' # Graph of groups (correlation square)
+#' # ++++++++++++++++++++++++++++++++++++++++
+#' fviz_mfa_group(res.mfa, )
 #'
 #'  }
 #' @name fviz_mfa
@@ -544,10 +583,10 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"),
+fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
-                           col.quanti.sup="blue",  col.quali.sup = "darkgreen",
-                           select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+                           col.group="blue",  col.group.sup = "darkgreen",
+                           select.group = list(name = NULL, cos2 = NULL, contrib = NULL),
                            # map ="symmetric", 
                            jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
@@ -561,16 +600,26 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Selection
   var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
+  if(!is.null(select.group)) var <- .select(var, select.group)
   
   # elements to be labelled or hidden
   lab <- .label(label)
   hide <- .hide(invisible)
   
+  alpha.limits <- NULL
+  if(alpha.group %in% c("cos2","contrib", "coord", "x", "y"))
+    alpha.limits = range(var.all[, alpha.group])
+  
   p <- ggplot()
   
   if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y')
+    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
+               col=col.group,  alpha = alpha.group,
+               alpha.limits = alpha.limits,
+               geom = geom, shape = shape.group,
+               lab = lab$var, labelsize = labelsize,
+               pointsize = pointsize, jitter = jitter)
+    
   }
   
   # Set fix dimensions

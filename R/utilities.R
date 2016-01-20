@@ -837,6 +837,22 @@ NULL
   if("ind" %in% invisible) hide$ind =TRUE
   if("ind.sup" %in% invisible) hide$ind.sup =TRUE
   if("quali" %in% invisible) hide$quali =TRUE
+  # quanti.var - MFA
+  hide$quanti.var <- hide$quanti.var.sup <- FALSE
+  if("quanti.var" %in% invisible) hide$quanti.var =TRUE
+  if("quanti.var.sup" %in% invisible) hide$quanti.var.sup =TRUE
+  # quali.var <-  MFA
+  hide$quali.var <- hide$quali.var.sup <- FALSE
+  if("quali.var" %in% invisible) hide$quali.var =TRUE
+  if("quali.var.sup" %in% invisible) hide$quali.var.sup =TRUE
+  # group - MFA
+  hide$group <- hide$group.sup <- FALSE
+  if("group" %in% invisible) hide$group =TRUE
+  if("group.sup" %in% invisible) hide$group.sup =TRUE
+  # partial.axes - MFA
+  hide$partial.axes <- hide$partial.axes.sup <- FALSE
+  if("partial.axes" %in% invisible) hide$partial.axes =TRUE
+  if("partial.axes.sup" %in% invisible) hide$partial.axes.sup =TRUE
   # row - ca
   hide$row <- hide$row.sup <- FALSE
   if("row" %in% invisible) hide$row =TRUE
