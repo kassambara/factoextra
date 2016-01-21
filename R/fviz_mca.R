@@ -318,7 +318,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       if("point" %in% geom) 
         p <- p+geom_point(data = ind, 
                           aes_string('x', 'y', color=name.quali, shape = name.quali),
-                          pointsize = pointsize)
+                          size = pointsize)
       if(lab$ind & "text" %in% geom) 
         p <- p + geom_text(data = label_coord, 
                            aes_string('x', 'y', label = 'name',
