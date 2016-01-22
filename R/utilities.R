@@ -527,10 +527,11 @@ NULL
 #  "text" to show only labels or c("point", "text") to show both types.
 ## jitter: to avoid overplotting. Possible values for what are "label", "point", "both"
 # it's possible to use also the shortcut "l", "p", "b".
-.ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black",  alpha = 1,
+.ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black", alpha = 1, 
                        alpha.limits = NULL, shape = 19, pointsize = 2, 
                        geom=c("point", "text"), lab = TRUE, labelsize = 4, repel = TRUE,
-                       jitter = list(what = "label", width = NULL, height = NULL), ...)
+                       jitter = list(what = "label", width = NULL, height = NULL),
+                       data.partial = NULL, col.partial = "black", linesize = 0.5, ...)
   {
   
   data <- as.data.frame(data)
@@ -565,18 +566,29 @@ NULL
 #     stop("The argument col is incorrect.")
 #   }
   
- 
-  
   if(is.null(p)) p <- ggplot() 
   # The color and the transparency of variables are automatically controlled by
   # their cos2, contrib,  "x" or "y" coordinates
   if(col %in% c("cos2","contrib", "coord", "x", "y") &
             alpha %in% c("cos2","contrib", "coord", "x", "y"))
   {
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', colour = col.partial, 
+                                       shape = 'group.name', alpha = alpha), 
+                            size = pointsize)
+        # Partial segments
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         colour = col.partial, linetype = 'group.name', alpha = alpha), 
+                              size = linesize)
+      }
       p <- p + geom_point(data = data, 
                           aes_string(x,y, color=col, alpha=alpha),
                           shape=shape, size = pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                   aes_string(x = 0, y = 0, xend = x, yend = y, color=col, alpha=alpha),
@@ -590,10 +602,22 @@ NULL
   }
   # Only the color is controlled automatically
   else if(col %in% c("cos2","contrib", "coord", "x", "y")){
-    
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', colour = col.partial, 
+                                       shape = 'group.name'), 
+                            alpha = alpha, size = pointsize)
+        # Partial segments
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         colour = col.partial, linetype = 'group.name'),
+                              alpha = alpha, size = linesize)
+      }
       p <- p + geom_point(data = data, aes_string(x,y, color=col),
                           shape=shape, alpha=alpha, size=pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                             aes_string(x = 0, y = 0, xend = x, yend = y, color=col),
@@ -607,11 +631,23 @@ NULL
   
   # Only the transparency is controlled automatically
   else if(alpha %in% c("cos2","contrib", "coord", "x", "y")){
-    
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', alpha = alpha, 
+                                       shape = 'group.name'), 
+                            colour = col.partial, size = pointsize)
+        # Partial segments
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         alpha = alpha, linetype = 'group.name'), 
+                              colour = col.partial, size = linesize)
+      }
       p <- p + geom_point(data = data, 
                           aes_string(x, y, alpha=alpha), 
                           shape=shape, color=col, size = pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                             aes_string(x = 0, y = 0, xend = x, yend = y, alpha=alpha),
@@ -626,9 +662,20 @@ NULL
   }
   
   else{
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', shape = 'group.name'), 
+                            colour = col.partial, size = pointsize)
+        # Partial segments
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         linetype = 'group.name'), colour = col.partial, size = linesize)
+      } 
       p <- p + geom_point(data = data, aes_string(x, y),
                           shape=shape, color=col, size = pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                             aes_string(x = 0, y = 0, xend = x, yend = y),

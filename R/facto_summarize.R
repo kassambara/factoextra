@@ -155,9 +155,24 @@ facto_summarize <- function(X, element,
     res <- cbind(res, contrib = contrib)
   }
   
+  # 4.Extract the coordinates x, y and coord partial
+  if("coord.partial" %in% result){
+    dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE])
+    # groupnames 
+    groupnames <- data.frame(do.call('rbind', strsplit(as.character(rownames(dd)), '.', fixed = TRUE)))
+    colnames(groupnames) <- c("name", "group.name")
+    coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+    res.partial <- data.frame(groupnames, dd, coord.partial)
+  }
+  
   name <- rownames(elmt$coord)
   if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
   res <- cbind.data.frame(name = name, res)
   if(!is.null(select)) res <- .select(res, select)
-  res 
+  
+  if("coord.partial" %in% result){
+  res = list(res = res, res.partial = res.partial)
+  }
+
+  res
 }
