@@ -446,8 +446,12 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
                                 repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
 {
   # Check if there are quantitative variables.
-  if(Hmisc::`%nin%`("c", X$call$type[-X$call$num.group.sup])) 
-    if(Hmisc::`%nin%`("s", X$call$type[-X$call$num.group.sup])) 
+  if(!is.null(X$call$num.group.sup))
+    group.all <- X$call$type[-X$call$num.group.sup]
+  else
+    group.all <- X$call$type
+  if(Hmisc::`%nin%`("c", group.all)) 
+    if(Hmisc::`%nin%`("s", group.all)) 
       stop("There are no quantitative variables to plot.")
   
   
@@ -532,8 +536,13 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
 {
   
   # Check if there are qualitative variables.
-  if(Hmisc::`%nin%`("n", X$call$type[-X$call$num.group.sup])) 
+  if(!is.null(X$call$num.group.sup))
+    group.all <- X$call$type[-X$call$num.group.sup]
+  else
+    group.all <- X$call$type
+  if(Hmisc::`%nin%`("n", group.all)) 
       stop("There are no qualitative variables to plot.")
+  
   
   if(is.null(jitter$what)) jitter$what <- "label"
   
@@ -613,7 +622,11 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 {
   
   # Check if there are qualitative variables.
-  if(Hmisc::`%nin%`("n", X$call$type[-X$call$num.group.sup])) 
+  if(!is.null(X$call$num.group.sup))
+    group.all <- X$call$type[-X$call$num.group.sup]
+  else
+    group.all <- X$call$type
+  if(Hmisc::`%nin%`("n", group.all)) 
     stop("There are no qualitative variables to plot.")
   
   if(is.null(jitter$what)) jitter$what <- "label"
