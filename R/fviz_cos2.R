@@ -79,6 +79,21 @@ NULL
 #' fviz_cos2(res.mca, choice ="ind", axes = 1, top = 20)
 #' # Visualize variable categorie cos2 on axes 1
 #' fviz_cos2(res.mca, choice ="var", axes = 1)
+#' 
+#' # Multiple Factor Analysis
+#' # ++++++++++++++++++++++++
+#' library(FactoMineR)
+#' data(poison)
+#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+#'                name.group=c("desc","desc2","symptom","eat"),
+#'                num.group.sup=1:2, graph=FALSE)
+#' # Visualize individual cos2 on axes 1
+#' fviz_cos2(res.mfa, choice ="ind", axes = 1)
+#' # Select the top 20
+#' fviz_cos2(res.mfa, choice ="ind", axes = 1, top = 20)
+#' # Visualize catecorical variable categorie cos2 on axes 1
+#' fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
+#'                
 #'  }
 #'  @export 
 fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group"), axes=1,

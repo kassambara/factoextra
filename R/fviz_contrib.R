@@ -79,8 +79,8 @@ NULL
 #' # Visualize variable categorie contributions on axes 1
 #' fviz_contrib(res.mca, choice ="var", axes = 1)
 #' 
-#' # Multiple factor Analysis
-#' # +++++++++++++++++++++++++++++++++
+#' # Multiple Factor Analysis
+#' # ++++++++++++++++++++++++
 #' library(FactoMineR)
 #' data(poison)
 #' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
@@ -91,7 +91,7 @@ NULL
 #' fviz_contrib(res.mfa, choice ="ind", axes = 1)
 #' # Select the top 20
 #' fviz_contrib(res.mfa, choice ="ind", axes = 1, top = 20)
-#' # Visualize variable categorie contributions on axes 1
+#' # Visualize catecorical variable categorie contributions on axes 1
 #' fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
 #'  
 #'  }
