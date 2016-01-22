@@ -574,15 +574,15 @@ NULL
   {
     if("point" %in% geom) {
       if(!is.null(data.partial)) {
-        # Partial points
+        # Partial points - same colour as centrois
         p <- p + geom_point(data = data.partial,
-                            aes_string(x = 'x.partial', y = 'y.partial', colour = col.partial, 
+                            aes_string(x = 'x.partial', y = 'y.partial', colour = col, 
                                        shape = 'group.name', alpha = alpha), 
                             size = pointsize)
-        # Partial segments
+        # Partial segments - same colour as centrois
         p <- p + geom_segment(data = data.partial,
                               aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
-                                         colour = col.partial, linetype = 'group.name', alpha = alpha), 
+                                         colour = col, linetype = 'group.name', alpha = alpha), 
                               size = linesize)
       }
       p <- p + geom_point(data = data, 
@@ -604,15 +604,15 @@ NULL
   else if(col %in% c("cos2","contrib", "coord", "x", "y")){
     if("point" %in% geom) {
       if(!is.null(data.partial)) {
-        # Partial points
+        # Partial points - same colour as centrois
         p <- p + geom_point(data = data.partial,
-                            aes_string(x = 'x.partial', y = 'y.partial', colour = col.partial, 
+                            aes_string(x = 'x.partial', y = 'y.partial', colour = col, 
                                        shape = 'group.name'), 
                             alpha = alpha, size = pointsize)
-        # Partial segments
+        # Partial segments - same colour as centrois
         p <- p + geom_segment(data = data.partial,
                               aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
-                                         colour = col.partial, linetype = 'group.name'),
+                                         colour = col, linetype = 'group.name'),
                               alpha = alpha, size = linesize)
       }
       p <- p + geom_point(data = data, aes_string(x,y, color=col),
@@ -664,14 +664,29 @@ NULL
   else{
     if("point" %in% geom) {
       if(!is.null(data.partial)) {
-        # Partial points
-        p <- p + geom_point(data = data.partial,
-                            aes_string(x = 'x.partial', y = 'y.partial', shape = 'group.name'), 
-                            colour = col.partial, size = pointsize)
-        # Partial segments
-        p <- p + geom_segment(data = data.partial,
-                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
-                                         linetype = 'group.name'), colour = col.partial, size = linesize)
+        if(col.partial == 'group.name') {
+          # Partial points
+          p <- p + geom_point(data = data.partial,
+                              aes_string(x = 'x.partial', y = 'y.partial', colour = 'group.name',
+                                         shape = 'group.name'), 
+                              size = pointsize)
+          # Partial segments
+          p <- p + geom_segment(data = data.partial,
+                                aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                           linetype = 'group.name', colour = 'group.name'), 
+                                size = linesize)
+          # Remove legend title
+          p <- p + theme(legend.title=element_blank()) + guides(shape = FALSE, linetype = FALSE)
+        } else {
+          # Partial points
+          p <- p + geom_point(data = data.partial,
+                              aes_string(x = 'x.partial', y = 'y.partial', shape = 'group.name'), 
+                              colour = col.partial, size = pointsize)
+          # Partial segments
+          p <- p + geom_segment(data = data.partial,
+                                aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                           linetype = 'group.name'), colour = col.partial, size = linesize) 
+        }
       } 
       p <- p + geom_point(data = data, aes_string(x, y),
                           shape=shape, color=col, size = pointsize)
