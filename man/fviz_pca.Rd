@@ -9,27 +9,28 @@
 \usage{
 fviz_pca(X, ...)
 
-fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
-  col.ind.sup = "blue", alpha.ind = 1, select.ind = list(name = NULL, cos2
-  = NULL, contrib = NULL), jitter = list(what = "label", width = NULL, height
-  = NULL), ...)
+fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
+  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
+  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
+  col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
-  invisible = "none", labelsize = 4, col.var = "black", alpha.var = 1,
-  col.quanti.sup = "blue", col.circle = "grey70", select.var = list(name =
-  NULL, cos2 = NULL, contrib = NULL), jitter = list(what = "label", width =
-  NULL, height = NULL))
+  invisible = "none", repel = FALSE, labelsize = 4, col.var = "black",
+  alpha.var = 1, col.quanti.sup = "blue", col.circle = "grey70",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  jitter = list(what = "label", width = NULL, height = NULL))
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
   col.var = "steelblue", alpha.var = 1, col.quanti.sup = "blue",
-  col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+  col.circle = "grey70", repel = FALSE, select.var = list(name = NULL,
+  cos2 = NULL, contrib = NULL), select.ind = list(name = NULL, cos2 = NULL,
+  contrib = NULL), jitter = list(what = "label", width = NULL, height = NULL),
+  ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats];
@@ -43,6 +44,8 @@ dudi and pca [ade4].}
 Allowed values are the combination of c("point", "arrow", "text"). 
 Use "point" (to show only points); 
 "text" to show only labels; c("point", "text") or c("arrow", "text") to show both types.}
+
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
 
 \item{label}{a text specifying the elements to be labelled.
 Default value is "all".

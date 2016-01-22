@@ -15,20 +15,21 @@ fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
   addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
   col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+  repel = FALSE, select.ind = list(name = NULL, cos2 = NULL, contrib =
+  NULL), jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_mfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.var = "red", alpha.var = 1, shape.var = 17,
   col.quanti.sup = "blue", col.quali.sup = "darkgreen",
   col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), jitter = list(what = "label", width = NULL, height = NULL))
+  = NULL), repel = FALSE, jitter = list(what = "label", width = NULL, height
+  = NULL))
 
 fviz_mfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen",
+  col.quanti.sup = "blue", col.quali.sup = "darkgreen", repel = FALSE,
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   jitter = list(what = "label", width = NULL, height = NULL))
 
@@ -40,31 +41,31 @@ fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.quali.sup = "darkgreen", shape.ind = 19, shape.var = 17,
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  arrows = c(FALSE, FALSE), jitter = list(what = "label", width = NULL,
-  height = NULL), ...)
+  arrows = c(FALSE, FALSE), repel = FALSE, jitter = list(what = "label",
+  width = NULL, height = NULL), ...)
 
 fviz_mfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", legend.partial.title = NULL,
-  labelsize = 4, pointsize = 2, linesize = 0.5, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
-  col.ind.sup = "darkblue", col.partial = "black", alpha.ind = 1,
-  shape.ind = 19, alpha.partial = 1, select.ind = list(name = NULL, cos2 =
-  NULL, contrib = NULL), select.partial = list(name = NULL, cos2 = NULL,
-  contrib = NULL), jitter = list(what = "label", width = NULL, height = NULL),
-  ...)
+  labelsize = 4, pointsize = 2, linesize = 0.5, repel = FALSE,
+  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
+  col.ind = "black", col.ind.sup = "darkblue", col.partial = "black",
+  alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_mfa_group(X, axes = c(1, 2), geom = c("point", "text"),
   alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
   labelsize = 4, pointsize = 2, col.group = "blue",
-  col.group.sup = "darkgreen", select.group = list(name = NULL, cos2 = NULL,
-  contrib = NULL), jitter = list(what = "label", width = NULL, height = NULL),
-  ...)
+  col.group.sup = "darkgreen", repel = FALSE, select.group = list(name =
+  NULL, cos2 = NULL, contrib = NULL), jitter = list(what = "label", width =
+  NULL, height = NULL), ...)
 
 fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, col.axes = "red",
   alpha.axes = 1, col.circle = "grey70", select.axes = list(name = NULL,
-  contrib = NULL), arrows = c(FALSE, FALSE), jitter = list(what = "label",
-  width = NULL, height = NULL), ...)
+  contrib = NULL), arrows = c(FALSE, FALSE), repel = FALSE,
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_mfa(X, ...)
 }
@@ -124,6 +125,8 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 
 \item{shape.ind, shape.var, }{shape.group, shape.axes point shapes of individuals, variables, groups and axes}
 
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
+
 \item{select.ind, }{select.partial, select.var, select.group, select.axes a selection of individuals/partial individuals/
 variables/groups/axes to be drawn.
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
@@ -136,7 +139,6 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
-Otherwise you can use ggrepel for an elegant solution. TODO: ADD FUNCTIONALITY FOR TEXT ONLY!!! 
 \itemize{
 \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
 \item width: degree of jitter in x direction
