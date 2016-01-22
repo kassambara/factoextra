@@ -38,6 +38,7 @@ NULL
 #' as for the arguments col.col and col.row.
 #' @param col.col.sup,col.row.sup colors for the supplementary column and row points, respectively.
 #' @param select.col,select.row a selection of columns/rows to be drawn. 
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
 #' \itemize{
 #' \item name is a character vector containing column/row names to be drawn
@@ -209,7 +210,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
                        label = "all", invisible="none", labelsize=4, pointsize = 2,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric",
+                       map ="symmetric", repel = FALSE,
                        jitter = list(what = "label", width = NULL, height = NULL),...)
 {
   
@@ -242,7 +243,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
   p <- ggplot() 
   if(hide$row) p <-ggplot()+geom_blank(data=row, aes_string("x","y"))
   else p <- .ggscatter(data = row, x = 'x', y = 'y', 
-                       col=col.row,  alpha = alpha.row, 
+                       col=col.row,  alpha = alpha.row, repel = repel,
                        alpha.limits = alpha.limits, shape = shape.row, 
                        geom = geom, lab = lab$row, labelsize = labelsize,
                        pointsize = pointsize, jitter = jitter)
@@ -278,7 +279,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
                        label = "all", invisible="none", labelsize=4, pointsize = 2,
                        col.col ="red", col.col.sup="darkred",  alpha.col = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric",
+                       map ="symmetric", repel = FALSE,
                        jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -311,7 +312,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
   p <- ggplot() 
   if(hide$col) p <-ggplot()+geom_blank(data=col, aes_string("x","y"))
   else p <- .ggscatter(data = col, x = 'x', y = 'y', 
-                       col=col.col,  alpha = alpha.col, 
+                       col=col.col,  alpha = alpha.col, repel = repel,
                        alpha.limits = alpha.limits, shape = shape.col, 
                        geom = geom, lab = lab$col, labelsize = labelsize,
                        pointsize = pointsize, jitter = jitter)
@@ -351,7 +352,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric", arrows = c(FALSE, FALSE), 
+                       map ="symmetric", arrows = c(FALSE, FALSE), repel = FALSE,
                        jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -396,7 +397,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
   
   if(!hide$col){
     p <- .ggscatter(p = p, data = col, x = 'x', y = 'y', 
-                    col=col.col,  alpha = alpha.col, 
+                    col=col.col,  alpha = alpha.col, repel = repel,
                     alpha.limits = alpha.limits, shape = shape.col, 
                     geom = geom2, lab = lab$col, labelsize = labelsize,
                     pointsize = pointsize, jitter = jitter)

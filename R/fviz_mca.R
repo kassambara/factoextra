@@ -42,6 +42,7 @@
 #' @param shape.ind,shape.var point shapes of individuals and variables
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param select.ind,select.var a selection of individuals/variables to be drawn. 
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
 #' \itemize{
 #' \item name is a character vector containing individuals/variables to be drawn
