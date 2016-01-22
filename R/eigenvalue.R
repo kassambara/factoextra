@@ -119,7 +119,7 @@ NULL
 get_eig<-function(X){
   
   # FactoMineR package
-  if(inherits(X, c('PCA', 'CA', 'MCA', 'MFA'))) eig <- X$eig
+  if(inherits(X, c('PCA', 'CA', 'MCA', 'MFA', 'sPCA', 'sCA', 'sMCA', 'sMFA'))) eig <- X$eig
   else{
     # stats package
     if(inherits(X, 'prcomp') | inherits(X, 'princomp')) eig <- (X$sdev)^2

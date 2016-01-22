@@ -25,13 +25,13 @@ NULL
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
 # from different packages (FactoMineR, ade4, ....) 
 .get_facto_class <- function(X){
-  if(inherits(X, c('PCA', 'princomp', 'prcomp')))
+  if(inherits(X, c('PCA', 'sPCA', 'princomp', 'prcomp')))
     facto_class ="PCA"
   else if(inherits(X, 'pca') & inherits(X, 'dudi'))
     facto_class ="PCA"
-  else if(inherits(X, c("CA", "ca", "coa", "correspondence"))) facto_class="CA"
-  else if(inherits(X, c("MCA", "acm"))) facto_class = "MCA"
-  else if(inherits(X, c("MFA", "mfa"))) facto_class = "MFA"
+  else if(inherits(X, c("CA", "sCA", "ca", "coa", "correspondence"))) facto_class="CA"
+  else if(inherits(X, c("MCA", "sMCA", "acm"))) facto_class = "MCA"
+  else if(inherits(X, c("MFA", "sMFA","mfa"))) facto_class = "MFA"
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
@@ -48,8 +48,7 @@ NULL
 ## select: a selection of variables. See the function .select()
 .get_supp <- function(X, element = NULL, axes = 1:2, 
                       result = c("coord", "cos2"), select = NULL){
-  
-  if(inherits(X, c("CA", "PCA", "MCA", "MFA"))) {
+  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "sCA", "sPCA", "sMCA", "sMFA"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -313,7 +312,6 @@ NULL
 # res.ca : CA object
 # element: possible values are "row" or "col"
 .get_ca_mass <- function(res.ca, element){
-  
   if(inherits(res.ca, "ca")){
     if(element == "row"){
     mass <- res.ca$rowmass
@@ -325,7 +323,7 @@ NULL
     }
   }
   # FactoMiner
-  else if(inherits(res.ca, c("CA", "MCA"))){
+  else if(inherits(res.ca, c("CA", "MCA", "sCA", "sMCA"))){
     if(element %in% c("row", "ind")) mass <- res.ca$call$marge.row
     else if(element %in% c("col", "var")) mass <- res.ca$call$marge.col
     
@@ -593,7 +591,6 @@ NULL
       p <- p + geom_segment(data = data,
                   aes_string(x = 0, y = 0, xend = x, yend = y, color=col, alpha=alpha),
                   arrow = grid::arrow(length = grid::unit(0.2, 'cm')))
-    print(label_coord$name)
     if(lab & "text"%in% geom) 
       p <- p + ggrepel::geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 

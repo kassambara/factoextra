@@ -229,7 +229,7 @@
 #' @export 
 fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          label = "all", invisible="none", 
-                         labelsize=4, pointsize = 2,
+                         labelsize=4, pointsize = 2, repel = FALSE,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                          shape.ind = 19,
@@ -270,7 +270,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     p <- ggplot() 
     if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
     else p <- .ggscatter(data = ind, x = 'x', y = 'y', 
-                         col=col.ind,  alpha = alpha.ind, 
+                         col=col.ind,  alpha = alpha.ind, repel = repel,
                          alpha.limits = alpha.limits, shape = shape.ind, 
                          geom = geom, lab = lab$ind, labelsize = labelsize,
                          pointsize = pointsize, jitter = jitter)
@@ -292,7 +292,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       ind[, 1]<-as.factor(ind[,1])
     }
     # X is from FactoMineR outputs
-    else if(inherits(X, "MCA")){
+    else if(inherits(X, c("MCA", "sMCA"))){
       data <- X$call$X
       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
       else name.quali <- habillage 
@@ -354,7 +354,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Add supplementary quantitative individuals
   # Available only in FactoMineR
-  if(inherits(X, 'MCA') & !hide$ind.sup){
+  if(inherits(X, c('MCA', 'sMCA')) & !hide$ind.sup){
     ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
                          select = select.ind)
     if(!is.null(ind_sup)) {
@@ -383,7 +383,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #' @export 
 fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
                          labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
-                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", 
+                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                          map ="symmetric", jitter = list(what = "label", width = NULL, height = NULL))
 {
@@ -417,7 +417,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
                    col=col.var,  alpha = alpha.var, 
-                   alpha.limits = alpha.limits, 
+                   alpha.limits = alpha.limits, repel = repel,
                    geom = geom, shape = shape.var,
                    lab = lab$var, labelsize = labelsize,
                    pointsize = pointsize, jitter = jitter)
@@ -426,7 +426,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
   
   # Add supplementary qualitative variable categories
   # Available only in FactoMineR
-  if(inherits(X, 'MCA') & !hide$quali.sup ){
+  if(inherits(X, c('MCA', 'sMCA')) & !hide$quali.sup ){
     quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
                             select = select.var)
     if(!is.null(quali_sup)){
@@ -457,7 +457,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                   col.var="red", alpha.var=1, col.quanti.sup="blue",
-                  col.quali.sup = "darkgreen", 
+                  col.quali.sup = "darkgreen", repel = FALSE,
                   shape.ind = 19, shape.var = 17, 
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -506,14 +506,14 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
                    col=col.var,  alpha = alpha.var, 
-                   alpha.limits = alpha.limits, 
+                   alpha.limits = alpha.limits, repel = repel,
                    geom =  geom2, shape = shape.var,
                    lab = lab$var, labelsize = labelsize, pointsize = pointsize, jitter = jitter)
   }
   
   # Add supplementary qualitative variable categories
   # Available only in FactoMineR
-  if(inherits(X, 'MCA') & !hide$quali.sup ){
+  if(inherits(X, c('MCA', 'sMCA')) & !hide$quali.sup ){
     quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
                            select = select.var)
     if(!is.null(quali_sup)){
@@ -601,8 +601,3 @@ fviz_mca <- function(X, ...){
     y = tapply(y, groups, mean)
   )
 }
-
-
-
-
-

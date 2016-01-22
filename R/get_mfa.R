@@ -72,7 +72,7 @@ get_mfa <- function(res.mfa, element = c("ind", "quanti.var", "quali.var", "grou
 #' @export
 get_mfa_ind <- function(res.mfa){
   # FactoMineR package
-  if(inherits(res.mfa, "MFA")) ind <- res.mfa$ind
+  if(inherits(res.mfa, c("MFA", "sMFA"))) ind <- res.mfa$ind
   # @todo ade4 Support muss noch eingebaut werden!
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_ind()")
@@ -86,7 +86,7 @@ get_mfa_quanti_var <- function(res.mfa){
   # FactoMineR package
   # @todo Eventuell abfangen, wenn keine Variablen vorhanden sind. FactoMineR generiert die Listen nur, wenn entsprechenden Datensätze vorhanden sind.
   if(is.null(res.mfa$quanti.var)) stop("There are no quantitative variables in this MFA.")
-  else if(inherits(res.mfa, "MFA")) quanti_vars <- res.mfa$quanti.var
+  else if(inherits(res.mfa, c("MFA", "sMFA"))) quanti_vars <- res.mfa$quanti.var
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_quanti_var()")
   class(quanti_vars)<-c("factoextra", "mfa_quanti_var")
@@ -98,7 +98,7 @@ get_mfa_quanti_var <- function(res.mfa){
 get_mfa_quali_var <- function(res.mfa){
   # FactoMineR package
   if(is.null(res.mfa$quali.var)) stop("There are no qualitative variables in this MFA.")
-  if(inherits(res.mfa, "MFA")) quali_vars <- res.mfa$quali.var
+  if(inherits(res.mfa, c("MFA", "sMFA"))) quali_vars <- res.mfa$quali.var
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_quali_var()")
   class(quali_vars)<-c("factoextra", "mfa_quali_var")
@@ -120,7 +120,7 @@ get_mfa_group <- function(res.mfa){
 #' @export
 get_mfa_partial_axes <- function(res.mfa){
   # FactoMineR package
-  if(inherits(res.mfa, "MFA")) partial_axes <- res.mfa$partial.axes
+  if(inherits(res.mfa, c("MFA", "sMFA"))) partial_axes <- res.mfa$partial.axes
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_partial_axes()")
   class(partial_axes)<-c("factoextra", "mfa_partial_axes")
