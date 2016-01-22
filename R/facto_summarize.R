@@ -27,7 +27,6 @@ NULL
 #'  of the axes. In this case, the column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the coordinates of
 #'  the points on the specified axes.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @author Fabian Mundt \email{f.mundt@inventionate.de}
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
