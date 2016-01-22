@@ -41,8 +41,8 @@
 #'  To use this, make sure that habillage ="none".
 #' @param shape.ind,shape.var point shapes of individuals and variables
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
-#' @param select.ind,select.var a selection of individuals/variables to be drawn. 
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
+#' @param select.ind,select.var a selection of individuals/variables to be drawn. 
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
 #' \itemize{
 #' \item name is a character vector containing individuals/variables to be drawn
@@ -320,10 +320,16 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
         p <- p+geom_point(data = ind, 
                           aes_string('x', 'y', color=name.quali, shape = name.quali),
                           pointsize = pointsize)
-      if(lab$ind & "text" %in% geom) 
-        p <- p + geom_text(data = label_coord, 
-                           aes_string('x', 'y', label = 'name',
-                                      color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
+      if(lab$ind & "text" %in% geom) {
+        if(repel)
+          p <- p + ggrepel::geom_text_repel(data = label_coord, 
+                                            aes_string('x', 'y', label = 'name',
+                                                       color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
+        else
+          p <- p + geom_text(data = label_coord, 
+                             aes_string('x', 'y', label = 'name',
+                                        color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
+      }
     }
     
     if(!hide$quali){   
@@ -337,10 +343,16 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
         p <- p + geom_point(data=coord_quali.sup,
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
                             size=pointsize*2)    
-      if(lab$quali & "text" %in% geom)
-        p <- p + geom_text(data=coord_quali.sup, 
-                           aes_string('x', 'y', color=name.quali),
-                           label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
+      if(lab$quali & "text" %in% geom) {
+        if(repel)
+          p <- p + ggrepel::geom_text_repel(data=coord_quali.sup, 
+                                            aes_string('x', 'y', color=name.quali),
+                                            label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
+        else 
+          p <- p + geom_text(data=coord_quali.sup, 
+                             aes_string('x', 'y', color=name.quali),
+                             label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
+      }
     }
     if(addEllipses){
       ell <- .get_ellipse_by_groups(ind$x, ind$y,

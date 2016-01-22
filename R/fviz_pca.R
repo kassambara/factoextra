@@ -54,6 +54,7 @@
 #'  To use this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
 #' @param col.circle a color for the correlation circle.
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
 #' @param select.ind,select.var a selection of individuals/variables to be drawn. 
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
 #' \itemize{
@@ -211,7 +212,7 @@ fviz_pca <- function(X, ...){
 
 #' @rdname fviz_pca 
 #' @export 
-fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
+fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
                          label = "all", invisible="none", labelsize=4, pointsize = 2,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
@@ -247,7 +248,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     p <- ggplot() 
     if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
     else p <- .ggscatter(data = ind, x = 'x', y = 'y', 
-                         col=col.ind,  alpha = alpha.ind, 
+                         col=col.ind,  alpha = alpha.ind, repel = repel,
                          alpha.limits = alpha.limits, shape = 19, 
                          geom = geom, lab = lab$ind, labelsize = labelsize,
                          pointsize = pointsize, jitter = jitter)
@@ -297,10 +298,16 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
           p <- p+geom_point(data = ind, 
                             aes_string('x', 'y', color=name.quali, shape = name.quali),
                             size = pointsize)
-      if(lab$ind & "text" %in% geom) 
-        p <- p + geom_text(data = label_coord, 
-                           aes_string('x', 'y', label = 'name',
-                                      color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
+      if(lab$ind & "text" %in% geom) {
+        if(repel)
+          p <- p +ggrepel::geom_text_repel(data = label_coord, 
+                             aes_string('x', 'y', label = 'name',
+                                        color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
+        else
+          p <- p + geom_text(data = label_coord, 
+                             aes_string('x', 'y', label = 'name',
+                                        color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
+      }
       }
     
     if(!hide$quali){   
@@ -316,10 +323,16 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
                             size=pointsize*2) 
       }
-      if(lab$quali & "text" %in% geom)
-        p <- p + geom_text(data=coord_quali.sup, 
-                           aes_string('x', 'y', color=name.quali),
-                           label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
+      if(lab$quali & "text" %in% geom) {
+        if(repel)
+          p <- p + ggrepel::geom_text_repel(data=coord_quali.sup, 
+                             aes_string('x', 'y', color=name.quali),
+                             label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
+        else
+          p <- p + geom_text(data=coord_quali.sup, 
+                             aes_string('x', 'y', color=name.quali),
+                             label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
+      }
     }
     if(addEllipses){
       ell <- .get_ellipse_by_groups(ind$x, ind$y,
@@ -358,7 +371,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #' @rdname fviz_pca
 #' @export 
 fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), 
-                         label="all",  invisible ="none",
+                         label="all",  invisible ="none", repel = FALSE,
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -401,7 +414,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
                    col=col.var,  alpha = alpha.var, 
                    alpha.limits = alpha.limits, 
-                   geom =  geom,
+                   geom =  geom, repel = repel,
                    lab = lab$var, labelsize = labelsize, jitter = jitter)
   }
   
@@ -434,7 +447,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                   col.var="steelblue",  alpha.var=1, col.quanti.sup="blue",
-                  col.circle ="grey70", 
+                  col.circle ="grey70", repel = FALSE,
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                   jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -483,7 +496,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
                    col=col.var,  alpha = alpha.var, 
                    alpha.limits = alpha.limits, 
-                   geom =  c("arrow", "text"),
+                   geom =  c("arrow", "text"), repel = repel,
                    lab = lab$var, labelsize = labelsize, jitter = jitter)
   }
   

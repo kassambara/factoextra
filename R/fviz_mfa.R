@@ -59,9 +59,9 @@ NULL
 #' @param arrows Vector of two logicals specifying if the plot should contain
 #'  points (FALSE, default) or arrows (TRUE).
 #'  First value sets the rows and the second value sets the columns.
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
 #' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
 #' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
-#' Otherwise you can use ggrepel for an elegant solution. TODO: ADD FUNCTIONALITY FOR TEXT ONLY!!! 
 #' \itemize{
 #' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
 #' \item width: degree of jitter in x direction
@@ -277,7 +277,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          labelsize=4, pointsize = 2,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                         shape.ind = 19,
+                         shape.ind = 19, repel = FALSE,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          # map ="symmetric",
                          jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -315,7 +315,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     p <- ggplot()
     if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
     else p <- .ggscatter(data = ind, x = 'x', y = 'y',
-                         col=col.ind,  alpha = alpha.ind,
+                         col=col.ind,  alpha = alpha.ind, repel = repel,
                          alpha.limits = alpha.limits, shape = shape.ind,
                          geom = geom, lab = lab$ind, labelsize = labelsize,
                          pointsize = pointsize, jitter = jitter)
@@ -364,10 +364,16 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
         p <- p+geom_point(data = ind,
                           aes_string('x', 'y', color=name.quali, shape = name.quali),
                           size = pointsize)
-      if(lab$ind & "text" %in% geom)
-        p <- p + ggrepel::geom_text_repel(data = label_coord,
-                           aes_string('x', 'y', label = 'name',
-                                      color=name.quali, shape = name.quali),  size = labelsize)
+      if(lab$ind & "text" %in% geom) {
+        if(repel)
+          p <- p + ggrepel::geom_text_repel(data = label_coord,
+                                            aes_string('x', 'y', label = 'name',
+                                                       color=name.quali, shape = name.quali),  size = labelsize)
+        else
+          p <- p + geom_text(data = label_coord,
+                             aes_string('x', 'y', label = 'name',
+                                        color=name.quali, shape = name.quali),  size = labelsize)
+      }
     }
     
     if(!hide$quali){
@@ -381,10 +387,16 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
         p <- p + geom_point(data=coord_quali.sup,
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
                             size=pointsize*2)
-      if(lab$quali & "text" %in% geom)
-        p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
-                           aes_string('x', 'y', color=name.quali),
-                           label=rownames(coord_quali.sup), size=labelsize)
+      if(lab$quali & "text" %in% geom) {
+       if(repel)
+         p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
+                                           aes_string('x', 'y', color=name.quali),
+                                           label=rownames(coord_quali.sup), size=labelsize)
+       else
+         p <- p + geom_text(data=coord_quali.sup,
+                            aes_string('x', 'y', color=name.quali),
+                            label=rownames(coord_quali.sup), size=labelsize)
+      }
     }
     if(addEllipses){
       ell <- .get_ellipse_by_groups(ind$x, ind$y,
@@ -430,8 +442,8 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
                                 labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                 col.quanti.sup="blue",  col.quali.sup = "darkgreen", col.circle = "grey70",
                                 select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                # map ="symmetric",
-                                jitter = list(what = "label", width = NULL, height = NULL))
+                                # map ="symmetric", 
+                                repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
 {
   # Check if there are quantitative variables.
   if(Hmisc::`%nin%`("c", X$call$type[-X$call$num.group.sup])) 
@@ -476,7 +488,7 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
                    col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits,
+                   alpha.limits = alpha.limits, repel = repel,
                    geom = geom, shape = shape.var,
                    lab = lab$var, labelsize = labelsize,
                    pointsize = pointsize, jitter = jitter)
@@ -513,7 +525,7 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
 #' @export
 fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
                                labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
-                               col.quanti.sup="blue",  col.quali.sup = "darkgreen",
+                               col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
                                select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                                # map ="symmetric", 
                                jitter = list(what = "label", width = NULL, height = NULL))
@@ -552,7 +564,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
                    col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits,
+                   alpha.limits = alpha.limits, repel = repel,
                    geom = geom, shape = shape.var,
                    lab = lab$var, labelsize = labelsize,
                    pointsize = pointsize, jitter = jitter)
@@ -596,7 +608,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   # map ="symmetric", 
-                                  arrows = c(FALSE, FALSE),
+                                  arrows = c(FALSE, FALSE), repel = FALSE,
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -645,7 +657,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
                    col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits,
+                   alpha.limits = alpha.limits, repel = repel,
                    geom =  geom2, shape = shape.var,
                    lab = lab$var, labelsize = labelsize, pointsize = pointsize, jitter = jitter)
   }
@@ -675,7 +687,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #' @export
 fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   label = "all", invisible="none", legend.partial.title = NULL,
-                                  labelsize=4, pointsize = 2, linesize = 0.5,
+                                  labelsize=4, pointsize = 2, linesize = 0.5, repel = FALSE,
                                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                                   col.ind = "black", col.ind.sup = "darkblue", col.partial = "black",
                                   alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
@@ -735,7 +747,7 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     else {
       p <- .ggscatter(data = ind, data.partial = ind.partial, x = 'x', y = 'y',
                       col=col.ind,  alpha = alpha.ind, col.partial = col.partial,
-                      alpha.limits = alpha.limits, shape = shape.ind,
+                      alpha.limits = alpha.limits, shape = shape.ind, repel = repel,
                       geom = geom, lab = lab$ind, labelsize = labelsize,
                       pointsize = pointsize, jitter = jitter, linesize = linesize)
     }
@@ -799,10 +811,16 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                           aes_string('x', 'y', color=name.quali, shape = name.quali),
                           size = pointsize)
       }
-      if(lab$ind & "text" %in% geom)
-        p <- p + ggrepel::geom_text_repel(data = label_coord,
-                                          aes_string('x', 'y', label = 'name',
-                                                     color=name.quali, shape = name.quali),  size = labelsize)
+      if(lab$ind & "text" %in% geom) {
+       if(repel)
+         p <- p + ggrepel::geom_text_repel(data = label_coord,
+                                           aes_string('x', 'y', label = 'name',
+                                                      color=name.quali, shape = name.quali),  size = labelsize)
+       else
+         p <- p + geom_text(data = label_coord,
+                            aes_string('x', 'y', label = 'name',
+                                       color=name.quali, shape = name.quali),  size = labelsize)
+      }
     }
     
     if(!hide$quali){
@@ -816,10 +834,16 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
         p <- p + geom_point(data=coord_quali.sup,
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
                             size=pointsize*2)
-      if(lab$quali & "text" %in% geom)
-        p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
-                                          aes_string('x', 'y', color=name.quali),
-                                          label=rownames(coord_quali.sup), size=labelsize)
+      if(lab$quali & "text" %in% geom) {
+       if(repel)
+         p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
+                                           aes_string('x', 'y', color=name.quali),
+                                           label=rownames(coord_quali.sup), size=labelsize)
+       else
+         p <- p + geom_text(data=coord_quali.sup,
+                            aes_string('x', 'y', color=name.quali),
+                            label=rownames(coord_quali.sup), size=labelsize)
+      }
     }
     if(addEllipses){
       ell <- .get_ellipse_by_groups(ind$x, ind$y,
@@ -867,7 +891,7 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #' @export
 fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
-                           col.group="blue",  col.group.sup = "darkgreen",
+                           col.group="blue",  col.group.sup = "darkgreen", repel = FALSE,
                            select.group = list(name = NULL, cos2 = NULL, contrib = NULL),
                            # map ="symmetric", 
                            jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -901,7 +925,7 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
                    geom = geom, shape = shape.group,
                    lab = lab$group, labelsize = labelsize,
                    pointsize = pointsize, jitter = jitter,
-                   repel = FALSE)
+                   repel = repel)
   }
   
   # Set fix dimensions
@@ -919,7 +943,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                           col.axes="red", alpha.axes=1, col.circle ="grey70",
                           select.axes = list(name = NULL, contrib = NULL),
                           # map ="symmetric",
-                          arrows = c(FALSE, FALSE),
+                          arrows = c(FALSE, FALSE), repel = FALSE,
                           jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -964,7 +988,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                    col=col.axes,  alpha = alpha.axes,
                    alpha.limits = alpha.limits,
                    geom =  geom2, lab = lab$var, labelsize = labelsize, 
-                   pointsize = pointsize, jitter = jitter, repel = FALSE)
+                   pointsize = pointsize, jitter = jitter, repel = repel)
   }
   
   p + labs(title="MFA - Partial Axes Representations")
