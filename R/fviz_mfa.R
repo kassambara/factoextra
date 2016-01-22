@@ -6,15 +6,16 @@ NULL
 #' Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 #' \itemize{
 #' \item{fviz_mfa_ind(): Graph of individuals}
+#' \item{fviz_mfa_ind_starplot(): Star graph of individuals}
 #' \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
 #' \item{fviz_mfa_quali_var(): Graph of qualitative variables}
+#' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
 #' \item{fviz_mfa_group(): Graph of the groups representation}
 #' \item{fviz_mfa_axes(): Graph of partial axes}
-#' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-#' \item{fviz_mfa(): An alias of fviz_mca_biplot()}
+#' \item{fviz_mfa(): An alias of fviz_mfa_ind_starplot()}
 #' }
 #' @param X an object of class MFA [FactoMineR].
-#' #@inheritParams fviz_mca
+#' @inheritParams fviz_mca
 #' @param label a text specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -30,21 +31,23 @@ NULL
 #'  the observations by groups. Default value is "none".
 #'  If X is an MFA object from FactoMineR package, habillage can also specify
 #'  the index of the factor variable in the data.
-#' @param col.ind,col.var color for individuals and variables, respectively.
+#' @param col.ind, col.partial, col.var, col.group, col.axes color for individuals, partial individuals, variables, 
+#' groups and axes, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
-#' @param alpha.ind,alpha.var controls the transparency of
-#'  individual and variable colors, respectively.
+#' @param alpha.ind, alpha.partial, alpha.var, alpha.group, alpha.axes controls the transparency of
+#'  individual, partial individual, variable, group and axes colors, respectively.
 #' The value can variate from 0 (total transparency) to 1 (no transparency).
 #' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
-#' @param shape.ind,shape.var point shapes of individuals and variables
+#' @param shape.ind,shape.var, shape.group, shape.axes point shapes of individuals, variables, groups and axes
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
-#' @param select.ind,select.var a selection of individuals/variables to be drawn.
+#' @param select.ind, select.partial, select.var, select.group, select.axes a selection of individuals/partial individuals/
+#' variables/groups/axes to be drawn.
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
 #' \itemize{
 #' \item name is a character vector containing individuals/variables to be drawn
@@ -63,29 +66,6 @@ NULL
 #' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
 #' \item width: degree of jitter in x direction
 #' \item height: degree of jitter in y direction
-#' }
-#' @details The default plot of MFA is a "symmetric" plot in which both rows and
-#' columns are in principal coordinates. In this situation, it's not possible
-#' to interpret the distance between row points and column points. To overcome this
-#' problem, the simplest way is to make an asymmetric plot. This means that,
-#' the column profiles must be presented in row space or vice-versa.
-#' The allowed options for the argument map are:
-#' \itemize{
-#' \item "rowprincipal" or "colprincipal": asymmetric plots with either rows in principal
-#' coordinates and columns in standard coordinates, or vice versa.
-#' These plots preserve row metric or column metric respectively.
-#' \item "symbiplot": Both rows and columns are scaled to have variances
-#' equal to the singular values (square roots of eigenvalues),
-#' which gives a symmetric biplot but does not preserve row or column metrics.
-#' \item "rowgab" or "colgab": Asymmetric maps, proposed by Gabriel & Odoroff (1990),
-#' with rows (respectively, columns) in
-#' principal coordinates and columns (respectively, rows) in standard coordinates
-#' multiplied by the mass of the corresponding point.
-#' \item "rowgreen" or "colgreen": The so-called contribution biplots
-#' showing visually the most contributing points (Greenacre 2006b).
-#' These are similar to "rowgab" and "colgab" except that the points
-#' in standard coordinates are multiplied by the square root of the corresponding masses,
-#' giving reconstructions of the standardized residuals.
 #' }
 #'
 #' @return a ggplot2 plot
@@ -885,7 +865,6 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 
 #' @rdname fviz_mfa
 #' @export
-#' PROBELM LÖSEN, DASS DIE LABELS NICHT IMMER KORREKT ERSCHEINEN
 fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
                            col.group="blue",  col.group.sup = "darkgreen",
@@ -995,9 +974,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
 #' @rdname fviz_mfa
 #' @export
 fviz_mfa <- function(X, ...){
-  fviz_mfa_ind(X, ...)
-  fviz_mfa_quanti_var(X, ...)
-  fviz_mfa_quali_var(X, ...)
+  fviz_mfa_ind_starplot(X, ...)
 }
 
 

@@ -93,13 +93,20 @@ head(res)
 # Multiple factor Analysis
 # +++++++++++++++++++++++++++++++++
 library(FactoMineR)
-
+data(poison)
+res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+               name.group=c("desc","desc2","symptom","eat"),
+               num.group.sup=1:2, graph=FALSE)
+# Summarize categorcial variables on axes 1:2
+res <- facto_summarize(res.mfa, "quali.var", axes = 1:2)
+head(res)
+# Summarize individuals on axes 1:2
+res <- facto_summarize(res.mfa, "ind", axes = 1:2)
+head(res)
  }
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-
-Fabian Mundt \email{f.mundt@inventionate.de}
 }
 \references{
 http://www.sthda.com

@@ -5,16 +5,16 @@
 \alias{fviz_pca_contrib}
 \title{Visualize the contributions of row/column elements}
 \usage{
-fviz_contrib(X, choice = c("row", "col", "var", "ind"), axes = 1,
-  fill = "steelblue", color = "steelblue", sort.val = c("desc", "asc",
-  "none"), top = Inf)
+fviz_contrib(X, choice = c("row", "col", "var", "ind", "quanti.var",
+  "quali.var", "group", "partial.axes"), axes = 1, fill = "steelblue",
+  color = "steelblue", sort.val = c("desc", "asc", "none"), top = Inf)
 
 fviz_pca_contrib(X, choice = c("var", "ind"), axes = 1,
   fill = "steelblue", color = "steelblue", sortcontrib = c("desc", "asc",
   "none"), top = Inf, ...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA and MCA [FactoMineR]; prcomp and princomp [stats]; 
+\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
 dudi, pca, coa and acm [ade4]; ca [ca package].}
 
 \item{choice}{allowed values are "row" and "col" for CA;  "var" and "ind" for PCA or MCA}
@@ -40,8 +40,8 @@ a ggplot2 plot
 \description{
 This function can be used to visualize the quality of representation (cos2) of rows/columns 
 from the results of Principal Component Analysis (PCA), 
-Correspondence Analysis (CA) and 
-Multiple Correspondence Analysis (MCA) functions.
+Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) 
+and Multiple Factor Analysis (MFA) functions.
 }
 \details{
 The function fviz_contrib() creates a barplot of row/column contributions. 
@@ -113,6 +113,21 @@ fviz_contrib(res.mca, choice ="ind", axes = 1)
 fviz_contrib(res.mca, choice ="ind", axes = 1, top = 20)
 # Visualize variable categorie contributions on axes 1
 fviz_contrib(res.mca, choice ="var", axes = 1)
+
+# Multiple Factor Analysis
+# ++++++++++++++++++++++++
+library(FactoMineR)
+data(poison)
+res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+               name.group=c("desc","desc2","symptom","eat"),
+               num.group.sup=1:2, graph=FALSE)
+              
+# Visualize individual contributions on axes 1
+fviz_contrib(res.mfa, choice ="ind", axes = 1)
+# Select the top 20
+fviz_contrib(res.mfa, choice ="ind", axes = 1, top = 20)
+# Visualize catecorical variable categorie contributions on axes 1
+fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
  
  }
  @export 

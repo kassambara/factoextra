@@ -5,6 +5,7 @@
 \alias{fviz_mfa_axes}
 \alias{fviz_mfa_group}
 \alias{fviz_mfa_ind}
+\alias{fviz_mfa_ind_starplot}
 \alias{fviz_mfa_quali_biplot}
 \alias{fviz_mfa_quali_var}
 \alias{fviz_mfa_quanti_var}
@@ -31,23 +32,6 @@ fviz_mfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   jitter = list(what = "label", width = NULL, height = NULL))
 
-fviz_mfa_group(X, axes = c(1, 2), geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen",
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
-
-fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
-  col.ind.sup = "darkblue", alpha.ind = 1, col.var = "red",
-  alpha.var = 1, col.quanti.sup = "blue", col.quali.sup = "darkgreen",
-  col.circle = "grey70", shape.ind = 19, shape.var = 17,
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  arrows = c(FALSE, FALSE), jitter = list(what = "label", width = NULL,
-  height = NULL), ...)
-
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
@@ -59,11 +43,40 @@ fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   arrows = c(FALSE, FALSE), jitter = list(what = "label", width = NULL,
   height = NULL), ...)
 
+fviz_mfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
+  label = "all", invisible = "none", legend.partial.title = NULL,
+  labelsize = 4, pointsize = 2, linesize = 0.5, habillage = "none",
+  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
+  col.ind.sup = "darkblue", col.partial = "black", alpha.ind = 1,
+  shape.ind = 19, alpha.partial = 1, select.ind = list(name = NULL, cos2 =
+  NULL, contrib = NULL), select.partial = list(name = NULL, cos2 = NULL,
+  contrib = NULL), jitter = list(what = "label", width = NULL, height = NULL),
+  ...)
+
+fviz_mfa_group(X, axes = c(1, 2), geom = c("point", "text"),
+  alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
+  labelsize = 4, pointsize = 2, col.group = "blue",
+  col.group.sup = "darkgreen", select.group = list(name = NULL, cos2 = NULL,
+  contrib = NULL), jitter = list(what = "label", width = NULL, height = NULL),
+  ...)
+
+fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
+  invisible = "none", labelsize = 4, pointsize = 2, col.axes = "red",
+  alpha.axes = 1, col.circle = "grey70", select.axes = list(name = NULL,
+  contrib = NULL), arrows = c(FALSE, FALSE), jitter = list(what = "label",
+  width = NULL, height = NULL), ...)
+
 fviz_mfa(X, ...)
 }
 \arguments{
-\item{X}{an object of class MFA [FactoMineR].
-#@inheritParams fviz_mca}
+\item{X}{an object of class MFA [FactoMineR].}
+
+\item{axes}{a numeric vector of length 2 specifying the dimensions to be plotted.}
+
+\item{geom}{a text specifying the geometry to be used for the graph. 
+Allowed values are the combination of c("point", "arrow", "text"). 
+Use "point" (to show only points); 
+"text" to show only labels; c("point", "text") or c("arrow", "text") to show both types.}
 
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
@@ -78,28 +91,41 @@ fviz_mfa(X, ...)
 Default value is "none".
 Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
 
+\item{labelsize}{font size for the labels}
+
+\item{pointsize}{the size of points}
+
 \item{habillage}{an optional factor variable for coloring
 the observations by groups. Default value is "none".
 If X is an MFA object from FactoMineR package, habillage can also specify
 the index of the factor variable in the data.}
 
-\item{col.ind, col.var}{color for individuals and variables, respectively.
-Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
-contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+\item{addEllipses}{logical value.
+If TRUE, draws ellipses around the individuals when habillage != "none".}
 
-\item{alpha.ind, alpha.var}{controls the transparency of
- individual and variable colors, respectively.
+\item{ellipse.level}{the size of the concentration ellipse in normal probability}
+
+\item{col.ind, }{col.partial, col.var, col.group, col.axes color for individuals, partial individuals, variables, 
+groups and axes, respectively.
+ Possible values include also : "cos2", "contrib", "coord", "x" or "y".
+ In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
+ contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
+ To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+
+\item{col.ind.sup}{color for supplementary individuals}
+
+\item{alpha.ind, }{alpha.partial, alpha.var, alpha.group, alpha.axes controls the transparency of
+ individual, partial individual, variable, group and axes colors, respectively.
 The value can variate from 0 (total transparency) to 1 (no transparency).
 Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
-\item{shape.ind, shape.var}{point shapes of individuals and variables}
+\item{shape.ind, shape.var, }{shape.group, shape.axes point shapes of individuals, variables, groups and axes}
 
-\item{select.ind, select.var}{a selection of individuals/variables to be drawn.
+\item{select.ind, }{select.partial, select.var, select.group, select.axes a selection of individuals/partial individuals/
+variables/groups/axes to be drawn.
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
 \itemize{
 \item name is a character vector containing individuals/variables to be drawn
@@ -119,7 +145,30 @@ Otherwise you can use ggrepel for an elegant solution. TODO: ADD FUNCTIONALITY F
 
 \item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
 
+\item{col.var}{color for individuals and variables, respectively.
+Possible values include also : "cos2", "contrib", "coord", "x" or "y".
+In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
+contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
+To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+
+\item{alpha.var}{controls the transparency of
+ individual and variable colors, respectively.
+The value can variate from 0 (total transparency) to 1 (no transparency).
+Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
+ In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
+ contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
+ To use this, make sure that habillage ="none".}
+
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
+
+\item{select.var}{a selection of individuals/variables to be drawn. 
+Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
+\itemize{
+\item name is a character vector containing individuals/variables to be drawn
+\item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn. 
+if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
+\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest contrib are drawn
+}}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).
@@ -132,37 +181,13 @@ a ggplot2 plot
 Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 \itemize{
 \item{fviz_mfa_ind(): Graph of individuals}
+\item{fviz_mfa_ind_starplot(): Star graph of individuals}
 \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
 \item{fviz_mfa_quali_var(): Graph of qualitative variables}
+\item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
 \item{fviz_mfa_group(): Graph of the groups representation}
 \item{fviz_mfa_axes(): Graph of partial axes}
-\item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-\item{fviz_mfa(): An alias of fviz_mca_biplot()}
-}
-}
-\details{
-The default plot of MFA is a "symmetric" plot in which both rows and
-columns are in principal coordinates. In this situation, it's not possible
-to interpret the distance between row points and column points. To overcome this
-problem, the simplest way is to make an asymmetric plot. This means that,
-the column profiles must be presented in row space or vice-versa.
-The allowed options for the argument map are:
-\itemize{
-\item "rowprincipal" or "colprincipal": asymmetric plots with either rows in principal
-coordinates and columns in standard coordinates, or vice versa.
-These plots preserve row metric or column metric respectively.
-\item "symbiplot": Both rows and columns are scaled to have variances
-equal to the singular values (square roots of eigenvalues),
-which gives a symmetric biplot but does not preserve row or column metrics.
-\item "rowgab" or "colgab": Asymmetric maps, proposed by Gabriel & Odoroff (1990),
-with rows (respectively, columns) in
-principal coordinates and columns (respectively, rows) in standard coordinates
-multiplied by the mass of the corresponding point.
-\item "rowgreen" or "colgreen": The so-called contribution biplots
-showing visually the most contributing points (Greenacre 2006b).
-These are similar to "rowgab" and "colgab" except that the points
-in standard coordinates are multiplied by the square root of the corresponding masses,
-giving reconstructions of the standardized residuals.
+\item{fviz_mfa(): An alias of fviz_mfa_ind_starplot()}
 }
 }
 \examples{
@@ -248,33 +273,67 @@ fviz_mfa_ind(res.mfa,
 select.ind = list(name = c("44", "38", "53",  "39")))
 
 
-# Graph of variable categories
-# ++++++++++++++++++++++++++++
+# Graph of qantitative variable categories
+# ++++++++++++++++++++++++++++++++++++++++
+data(wine)
+res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
+               ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
+               num.group.sup=c(1,6), graph=FALSE)
 # Default plot
-fviz_mcf_var(res.mfa)
+fviz_mfa_qanti_var(res.mfa)
 # Change color and theme
-fviz_mfa_var(res.mfa, col.var="steelblue")+
+fviz_mfa_quanti_var(res.mfa, col.var="steelblue")+
  theme_minimal()
 
 # Control variable colors using their contributions
-fviz_mfa_var(res.mfa, col.var = "contrib")+
+fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
  scale_color_gradient2(low = "white", mid = "blue",
            high = "red", midpoint = 2) +
  theme_minimal()
 # Control the transparency of variables using their contributions
-fviz_mfa_var(res.mfa, alpha.var = "contrib") +
+fviz_mfa_quanti_var(res.mfa, alpha.var = "contrib") +
    theme_minimal()
 
 # Select and visualize categories with cos2 >= 0.4
-fviz_mfa_var(res.mfa, select.var = list(cos2 = 0.4))
+fviz_mfa_quanti_var(res.mfa, select.var = list(cos2 = 0.4))
 # Select the top 10 contributing variable categories
-fviz_mfa_var(res.mfa, select.var = list(contrib = 10))
+fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
 # Select by names
-fviz_mfa_var(res.mfa,
- select.var= list(name = c("Courg_n", "Fever_y", "Fever_n")))
+fviz_mfa_quanti_var(res.mfa,
+ select.var= list(name =  c("Spice.before.shaking", "Aroma.intensity")))
+ 
+# Graph of categorical variable categories
+# ++++++++++++++++++++++++++++++++++++++++
+data(poison)
+res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+               name.group=c("desc","desc2","symptom","eat"),
+               num.group.sup=1:2, graph=FALSE)
 
-# biplot
-# ++++++++++++++++++++++++++
+# Default plot
+fviz_mfa_quali_var(res.mfa)
+# Change color and theme
+fviz_mfa_quali_var(res.mfa, col.var="steelblue")+
+ theme_minimal()
+
+# Control variable colors using their contributions
+fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
+ scale_color_gradient2(low = "white", mid = "blue",
+           high = "red", midpoint = 2) +
+ theme_minimal()
+# Control the transparency of variables using their contributions
+fviz_mfa_quali_var(res.mfa, alpha.var = "contrib") +
+   theme_minimal()
+
+# Select and visualize categories with cos2 >= 0.4
+fviz_mfa_quali_var(res.mfa, select.var = list(cos2 = 0.4))
+# Select the top 10 contributing variable categories
+fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
+# Select by names
+fviz_mfa_quali_var(res.mfa,
+ select.var= list(name =  c("Cheese_y", "Nausea_n", "Courg_y")))
+
+# Biplot of categorical variable categories and individuals
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 fviz_mfa_quali_biplot(res.mfa)
 # Keep only the labels for variable categories
 fviz_mfa_quali_biplot(res.mfa, label ="var")
@@ -288,6 +347,7 @@ fviz_mfa_quali_biplot(res.mfa, invisible ="ind")
 fviz_mfa_quali_biplot(res.mfa, label ="var", col.ind="cos2") +
        theme_minimal()
 # Change the color by groups, add ellipses
+grp <- as.factor(poison[, "Vomiting"])
 fviz_mfa_quali_biplot(res.mfa, label="var", col.var ="blue",
    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) +
    theme_minimal()
@@ -297,6 +357,34 @@ fviz_mfa_quali_biplot(res.mfa, label="var", col.var ="blue",
 fviz_mfa_quali_biplot(res.mfa,
                select.ind = list(contrib = 30),
                select.var = list(contrib = 10))
+               
+# Graph of partial individuals (starplot)
+# +++++++++++++++++++++++++++++++++++++++
+fviz_mfa_ind_starplot(res.mfa)
+
+# Select the partial points of the top 5
+# contributing individuals
+fviz_mfa_ind_starplot(res.mfa, 
+                      select.partial = list(contrib = 2)) 
+                      + theme_minimal()
+                      
+# Change colours of star segments
+fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
+                      col.partial = "group.name")
+                      + theme_minimal()
+
+fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
+                      col.partial = "group.name")
+                      + scale_color_brewer(palette = "Dark2")
+                      + theme_minimal()
+  
+# Graph of groups (correlation square)
+# ++++++++++++++++++++++++++++++++++++
+fviz_mfa_group(res.mfa)
+
+#' # Graph of partial axes
+# ++++++++++++++++++++++++
+fviz_mfa_axes(res.mfa)
 
  }
 }
