@@ -34,6 +34,7 @@ URL: http://www.sthda.com
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
     'cluster_utilities.R'
+    'decathlon2.R'
     'eigenvalue.R'
     'utilities.R'
     'dist.R'
@@ -54,4 +55,7 @@ Collate:
     'get_ca.R'
     'get_clust_tendency.R'
     'hkmeans.R'
+    'housetasks.R'
+    'multishapes.R'
+    'poison.R'
 RoxygenNote: 5.0.1
