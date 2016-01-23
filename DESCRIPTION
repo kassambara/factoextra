@@ -15,6 +15,7 @@ Description: Provides some easy-to-use functions to extract and
     [FactoMineR]; prcomp and princomp [stats]; dudi.pca, dudi.coa, dudi.acm [ade4];
     ca [ca]; corresp [MASS]. It contains also many functions for simplifying
     clustering analysis workflows. The ggplot2 plotting system is used. 
+    See http://www.sthda.com/english/wiki/factoextra for more information, documentation and examples.
 License: GPL-2
 LazyData: true
 Depends:
