@@ -80,7 +80,7 @@ NULL
 #' fviz_contrib(res.mca, choice ="var", axes = 1)
 #'  
 #'  }
-#'  @export 
+#' @export 
 fviz_contrib <- function(X, choice = c("row", "col", "var", "ind"), axes=1,
                    fill="steelblue", color = "steelblue",  
                    sort.val = c("desc", "asc", "none"), top = Inf)
