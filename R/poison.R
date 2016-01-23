@@ -5,7 +5,7 @@
 #'  symptoms and about what they ate.
 #'@name poison
 #'@docType data
-#'@usage data("poison)
+#'@usage data("poison")
 #'@format A data frame with 55 rows and 15 columns. 
 #'@source
 #'This data is from FactoMineR package.

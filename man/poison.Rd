@@ -9,7 +9,7 @@
 This data is from FactoMineR package.
 }
 \usage{
-data("poison)
+data("poison")
 }
 \description{
 This data is a result from a survey carried out on children of
