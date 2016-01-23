@@ -160,30 +160,29 @@ NULL
 #' # Graph of qantitative variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
 #' data(wine)
-#' res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
-#'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
-#'                num.group.sup=c(1,6), graph=FALSE)
+#' hierar <- list(c(2,5,3,10,9,2), c(4,2))
+#' res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
 #' # Default plot
-#' fviz_mfa_qanti_var(res.mfa)
+#' fviz_hmfa_quanti_var(res.hmfa)
 #' # Change color and theme
-#' fviz_mfa_quanti_var(res.mfa, col.var="steelblue")+
+#' fviz_hmfa_quanti_var(res.hmfa, col.var="steelblue")+
 #'  theme_minimal()
 #'
 #' # Control variable colors using their contributions
-#' fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
+#' fviz_hmfa_quanti_var(res.hmfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
 #'            high = "red", midpoint = 2) +
 #'  theme_minimal()
 #' # Control the transparency of variables using their contributions
-#' fviz_mfa_quanti_var(res.mfa, alpha.var = "contrib") +
+#' fviz_hmfa_quanti_var(res.hmfa, alpha.var = "contrib") +
 #'    theme_minimal()
 #'
 #' # Select and visualize categories with cos2 >= 0.4
-#' fviz_mfa_quanti_var(res.mfa, select.var = list(cos2 = 0.4))
+#' fviz_hmfa_quanti_var(res.hmfa, select.var = list(cos2 = 0.4))
 #' # Select the top 10 contributing variable categories
-#' fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
+#' fviz_hmfa_quanti_var(res.hmfa, select.var = list(contrib = 10))
 #' # Select by names
-#' fviz_mfa_quanti_var(res.mfa,
+#' fviz_hmfa_quanti_var(res.hmfa,
 #'  select.var= list(name =  c("Spice.before.shaking", "Aroma.intensity")))
 #'  
 #' # Graph of categorical variable categories
@@ -193,81 +192,76 @@ NULL
 #' res.hmfa <- HMFA(poison, H = hierar, type=c("s","n","n","n"), graph = FALSE)
 #'
 #' # Default plot
-#' fviz_mfa_quali_var(res.mfa)
+#' fviz_hmfa_quali_var(res.hmfa)
 #' # Change color and theme
-#' fviz_mfa_quali_var(res.mfa, col.var="steelblue")+
+#' fviz_hmfa_quali_var(res.hmfa, col.var="steelblue")+
 #'  theme_minimal()
 #'
 #' # Control variable colors using their contributions
-#' fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
+#' fviz_hmfa_quali_var(res.hmfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
 #'            high = "red", midpoint = 2) +
 #'  theme_minimal()
 #' # Control the transparency of variables using their contributions
-#' fviz_mfa_quali_var(res.mfa, alpha.var = "contrib") +
+#' fviz_hmfa_quali_var(res.hmfa, alpha.var = "contrib") +
 #'    theme_minimal()
 #'
-#' # Select and visualize categories with cos2 >= 0.4
-#' fviz_mfa_quali_var(res.mfa, select.var = list(cos2 = 0.4))
+#' # Select and visualize categories with cos2 are not supported!
 #' # Select the top 10 contributing variable categories
-#' fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
+#' fviz_hmfa_quali_var(res.hmfa, select.var = list(contrib = 10))
 #' # Select by names
-#' fviz_mfa_quali_var(res.mfa,
+#' fviz_hmfa_quali_var(res.hmfa,
 #'  select.var= list(name =  c("Cheese_y", "Nausea_n", "Courg_y")))
 #'
 #' # Biplot of categorical variable categories and individuals
 #' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_quali_biplot(res.mfa)
+#' fviz_hmfa_quali_biplot(res.hmfa)
 #' # Keep only the labels for variable categories
-#' fviz_mfa_quali_biplot(res.mfa, label ="var")
+#' fviz_hmfa_quali_biplot(res.hmfa, label ="var")
 #' # Keep only labels for individuals
-#' fviz_mfa_quali_biplot(res.mfa, label ="ind")
+#' fviz_hmfa_quali_biplot(res.hmfa, label ="ind")
 #' # Hide variable categories
-#' fviz_mfa_quali_biplot(res.mfa, invisible ="var")
+#' fviz_hmfa_quali_biplot(res.hmfa, invisible ="var")
 #' # Hide individuals
-#' fviz_mfa_quali_biplot(res.mfa, invisible ="ind")
+#' fviz_hmfa_quali_biplot(res.hmfa, invisible ="ind")
 #'# Control automatically the color of individuals using the cos2
-#' fviz_mfa_quali_biplot(res.mfa, label ="var", col.ind="cos2") +
+#' fviz_hmfa_quali_biplot(res.hmfa, label ="var", col.ind="cos2") +
 #'        theme_minimal()
 #' # Change the color by groups, add ellipses
 #' grp <- as.factor(poison[, "Vomiting"])
-#' fviz_mfa_quali_biplot(res.mfa, label="var", col.var ="blue",
+#' fviz_hmfa_quali_biplot(res.hmfa, label="var", col.var ="blue",
 #'    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) +
 #'    theme_minimal()
 #'
 #' # Select the top 30 contributing individuals
 #' # And the top 10 variables
-#' fviz_mfa_quali_biplot(res.mfa,
+#' fviz_hmfa_quali_biplot(res.hmfa,
 #'                select.ind = list(contrib = 30),
 #'                select.var = list(contrib = 10))
 #'                
 #' # Graph of partial individuals (starplot)
 #' # +++++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_ind_starplot(res.mfa)
+#' fviz_hmfa_ind_starplot(res.hmfa)
 #' 
 #' # Select the partial points of the top 5
 #' # contributing individuals
-#' fviz_mfa_ind_starplot(res.mfa, 
+#' fviz_hmfa_ind_starplot(res.hmfa, 
 #'                       select.partial = list(contrib = 2)) 
 #'                       + theme_minimal()
 #'                       
 #' # Change colours of star segments
-#' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
+#' fviz_hmfa_ind_starplot(res.hmfa, select.partial = list(contrib = 5), 
 #'                       col.partial = "group.name")
 #'                       + theme_minimal()
 #'
-#' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
+#' fviz_hmfa_ind_starplot(res.hmfa, select.partial = list(contrib = 5), 
 #'                       col.partial = "group.name")
 #'                       + scale_color_brewer(palette = "Dark2")
 #'                       + theme_minimal()
 #'   
 #' # Graph of groups (correlation square)
 #' # ++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_group(res.mfa)
-#' 
-#' #' # Graph of partial axes
-#' # ++++++++++++++++++++++++
-#' fviz_mfa_axes(res.mfa)
+#' fviz_hmfa_group(res.hmfa)
 #'
 #'  }
 #' @name fviz_hmfa
