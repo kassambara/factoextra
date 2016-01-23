@@ -36,7 +36,7 @@ Suggests:
     MASS,
     knitr
 VignetteBuilder: knitr
-URL: http://www.sthda.com
+URL: http://www.sthda.com/english/wiki/factoextra
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
     'cluster_utilities.R'
