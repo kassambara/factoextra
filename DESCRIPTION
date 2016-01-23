@@ -5,7 +5,7 @@ Version: 1.0.3.9000
 Date: 2015-02-21
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
-    person("Fabian", "Mundt", role = c("aut"), email = "mundt@ph-karlsruhe.de")
+    person("Fabian", "Mundt", role = c("aut"), email = "f.mundt@inventionate.de")
     )
 Description: Provides some easy-to-use functions to extract and
     visualize the output of multivariate data analyses, including PCA (Principal
