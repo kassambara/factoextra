@@ -10,7 +10,7 @@ Authors@R: c(
 Description: Provides some easy-to-use functions to extract and
     visualize the output of multivariate data analyses, including PCA (Principal
     Component Analysis), CA (Correspondence Analysis), MCA (Multiple
-    Correspondence Analysis), MFA (Multiple Factor Analysis), 
+    Correspondence Analysis), MFA (Multiple Factor Analysis) and
     HMFA (Hierarchical Multiple Factor Analysis) functions from several packages : PCA, CA, MCA, MFA, HMFA
     [FactoMineR]; prcomp and princomp [stats]; dudi.pca, dudi.coa, dudi.acm [ade4];
     ca [ca]; corresp [MASS]. It contains also many functions for simplifying
