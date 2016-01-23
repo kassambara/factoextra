@@ -14,7 +14,7 @@ NULL
 #' \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 #' }
 #' @param X an object of class HMFA [FactoMineR].
-#' @inheritParams fviz_hmca
+#' @inheritParams fviz_hmfa
 #' @param label a text specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -87,53 +87,55 @@ NULL
 #' # Graph of individuals
 #' # ++++++++++++++++++++
 #' # Default plot
-#' fviz_mfa_ind(res.mfa)
+#' fviz_hmfa_ind(res.hmfa)
 #' # Change title and axis labels
-#' fviz_mfa_ind(res.mfa) +
-#'  labs(title = "MFA", x = "Dim.1", y ="Dim.2" )
+#' fviz_hmfa_ind(res.hmfa) + 
+#' labs(title = "HMFA", x = "Dim.1", y ="Dim.2" )
 #' # Change axis limits by specifying the min and max
-#' fviz_mfa_ind(res.mfa) +
+#' fviz_hmfa_ind(res.hmfa) +
 #'    xlim(-0.8, 1.5) + ylim (-1.5, 1.5)
 #' # Use text only
-#' fviz_mfa_ind(res.mfa, geom = "text")
+#' fviz_hmfa_ind(res.hmfa, geom = "text")
 #' # Use points only
-#' fviz_mfa_ind(res.mfa, geom="point")
+#' fviz_hmfa_ind(res.hmfa, geom="point")
 #' # Change the size of points
-#' fviz_mfa_ind(res.mfa, geom="point", pointsize = 4)
+#' fviz_hmfa_ind(res.hmfa, geom="point", pointsize = 4)
 #' # Change point color and theme
-#' fviz_mfa_ind(res.mfa, col.ind = "blue")+
+#' fviz_hmfa_ind(res.hmfa, col.ind = "blue") +
 #'    theme_minimal()
 #' # Reduce overplotting
-#' fviz_mfa_ind(res.mfa, jitter = list(width = 0.2, height = 0.2))
+#' fviz_hmfa_ind(res.hmfa, jitter = list(width = 0.2, height = 0.2))
+#' # Use ggrepel
+#' fviz_hmfa_ind(res.hmfa, repel = TRUE)
 #'
 #' # Control automatically the color of individuals
 #' # using the cos2 or the contributions
 #' # cos2 = the quality of the individuals on the factor map
-#' fviz_mfa_ind(res.mfa, col.ind="cos2")
+#' fviz_hmfa_ind(res.hmfa, col.ind="cos2")
 #' # Gradient color
-#' fviz_mfa_ind(res.mfa, col.ind="cos2") +
+#' fviz_hmfa_ind(res.hmfa, col.ind="cos2") +
 #'       scale_color_gradient2(low="white", mid="blue",
 #'       high="red", midpoint=0.4)
 #' # Change the theme and use only points
-#' fviz_mfa_ind(res.mfa, col.ind="cos2", geom = "point") +
+#' fviz_hmfa_ind(res.hmfa, col.ind="cos2", geom = "point") +
 #'       scale_color_gradient2(low="white", mid="blue",
 #'       high="red", midpoint=0.4)+ theme_minimal()
 #'
 #' # Color by the contributions
-#' fviz_mfa_ind(res.mfa, col.ind="contrib") +
+#' fviz_hmfa_ind(res.hmfa, col.ind="contrib") +
 #'       scale_color_gradient2(low="white", mid="blue",
 #'       high="red", midpoint=1.5)
 #'
 #' # Control the transparency of the color by the
 #' # contributions
-#' fviz_mfa_ind(res.mfa, alpha.ind="contrib") +
+#' fviz_hmfa_ind(res.hmfa, alpha.ind="contrib") +
 #'      theme_minimal()
 #'
 #' # Color individuals by groups
-#' grp <- as.factor(poison.active[, "Vomiting"])
-#' fviz_mfa_ind(res.mfa, label="none", habillage=grp)
+#' grp <- as.factor(wine[,1)])
+#' fviz_hmfa_ind(res.hmfa, label="none", habillage=grp)
 #' # Add ellipses
-#' p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
+#' p <- fviz_hmfa_ind(res.hmfa, label="none", habillage=grp,
 #'              addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
 #' # Change group colors using RColorBrewer color palettes
@@ -145,14 +147,14 @@ NULL
 #'      theme_minimal()
 #'
 #' # Select and visualize individuals with cos2 >= 0.4
-#' fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 0.4))
+#' fviz_hmfa_ind(res.hmfa, select.ind = list(cos2 = 0.1))
 #' # Select the top 20 according to the cos2
-#' fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 20))
+#' fviz_hmfa_ind(res.hmfa, select.ind = list(cos2 = 20))
 #' # Select the top 20 contributing individuals
-#' fviz_mfa_ind(res.mfa, select.ind = list(contrib = 20))
+#' fviz_hmfa_ind(res.hmfa, select.ind = list(contrib = 20))
 #' # Select by names
-#' fviz_mfa_ind(res.mfa,
-#' select.ind = list(name = c("44", "38", "53",  "39")))
+#' fviz_hmfa_ind(res.hmfa,
+#' select.ind = list(name = c("1VAU", "1FON")))
 #'
 #'
 #' # Graph of qantitative variable categories
@@ -586,7 +588,7 @@ fviz_hmfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="
 }
 
 
-#' @rdname fviz_mfa
+#' @rdname fviz_hmfa
 #' @export
 fviz_hmfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   label = "all", invisible="none", labelsize=4, pointsize = 2,
@@ -667,6 +669,8 @@ fviz_hmfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   p+labs(title="HMFA factor map - Biplot")
 }
 
+#' @rdname fviz_hmfa
+#' @export
 fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), group.names = NULL,
                                   label = "all", invisible="none", legend.partial.title = NULL,
                                   labelsize=4, pointsize = 2, linesize = 0.5, repel = FALSE,

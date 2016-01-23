@@ -19,7 +19,7 @@ fviz_eig(X, choice = c("variance", "eigenvalue"), geom = c("bar", "line"),
 fviz_screeplot(...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
+\item{X}{an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and princomp [stats]; 
 dudi, pca, coa and acm [ade4]; ca and mjca [ca package].}
 
 \item{choice}{a text specifying the data to be plotted. 
@@ -52,8 +52,8 @@ retained by each dimension.}
 \description{
 Extracts and plots the eigenvalues/variances of the dimensions 
 from the results of Principal Component Analysis (PCA), 
-Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
-and Multiple Factor Analysis (MFA) functions.\cr\cr
+Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA),
+Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.\cr\cr
 \itemize{
 \item{get_eig(): Extract the eigenvalues/variances of the principal dimensions}
 \item{fviz_eig(): Plot the eigenvalues/variances against the number of dimensions}

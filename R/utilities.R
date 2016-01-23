@@ -653,7 +653,7 @@ NULL
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text_repel(data = label_coord, 
+      p <- p + ggrepel::geom_text_repel(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
                          size = labelsize, color=col)
     
@@ -757,7 +757,7 @@ NULL
                           aes_string(x,y, color=col, alpha=alpha), shape=shape)
     
     if(lab & "text"%in% geom) 
-      p <- p + geom_text_repel(data = label_coord, 
+      p <- p + ggrepel::geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -770,7 +770,7 @@ NULL
                           shape=shape, alpha=alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text_repel(data = label_coord,
+      p <- p + ggrepel::geom_text_repel(data = label_coord,
                          aes_string(x, y, color=col),
                          label = data$name,  size = labelsize, alpha=alpha)
   }
@@ -783,7 +783,7 @@ NULL
                           aes_string(x, y, alpha=alpha), shape=shape, color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text_repel(data = label_coord, 
+      p <- p + ggrepel::geom_text_repel(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
                          size = labelsize, color=col)
     
@@ -794,7 +794,7 @@ NULL
     if("point" %in% geom) 
       p <- p + geom_point(data = data, aes(x, y), shape=shape, color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text_repel(data = label_coord, aes_string(x,y), 
+      p <- p + ggrepel::geom_text_repel(data = label_coord, aes_string(x,y), 
                          color = col, label = data$name, size = labelsize)
   }
   

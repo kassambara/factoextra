@@ -17,15 +17,15 @@ LazyData: true
 Depends:
     R (>= 3.1.0),
     ggplot2,
-    grid,
-    abind
+    grid
 Imports:
     cluster,
     dendextend,
     stats,
     reshape2,
     ggrepel,
-    Hmisc
+    Hmisc,
+    abind
 Suggests:
     ade4,
     ca,
@@ -51,6 +51,8 @@ Collate:
     'fviz_ca.R'
     'fviz_contrib.R'
     'fviz_cos2.R'
+    'get_hmfa.R'
+    'fviz_hmfa.R'
     'get_mca.R'
     'fviz_mca.R'
     'get_mfa.R'
