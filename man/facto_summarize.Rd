@@ -8,11 +8,11 @@ facto_summarize(X, element, result = c("coord", "cos2", "contrib"),
   axes = 1:2, select = NULL)
 }
 \arguments{
-\item{X}{an object of class PCA, CA and MCA [FactoMineR]; prcomp and princomp [stats]; 
+\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
 dudi, pca, coa and acm [ade4]; ca [ca package].}
 
 \item{element}{the element to subset from the output. Possible values are
-"row" or "col" for CA; "var" or "ind" for PCA and MCA}
+"row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA}
 
 \item{result}{the result to be extracted for the element. Possible values are
 the combination of c("cos2", "contrib", "coord")}
@@ -34,8 +34,8 @@ A data frame containing the (total) coord, cos2 and the contribution for the axe
 }
 \description{
 Subset and summarize the results of Principal Component Analysis (PCA), 
-Correspondence Analysis (CA) and 
-Multiple Correspondence Analysis (MCA) functions from several packages.
+Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and
+Multiple Factor Analysis (MFA) functions from several packages.
 }
 \details{
 If length(axes) > 1, then the columns contrib and cos2 correspond to the total contributions and total cos2
@@ -90,6 +90,19 @@ head(res)
 res <- facto_summarize(res.mca, "ind", axes = 1:2)
 head(res)
 
+# Multiple factor Analysis
+# +++++++++++++++++++++++++++++++++
+library(FactoMineR)
+data(poison)
+res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+               name.group=c("desc","desc2","symptom","eat"),
+               num.group.sup=1:2, graph=FALSE)
+# Summarize categorcial variables on axes 1:2
+res <- facto_summarize(res.mfa, "quali.var", axes = 1:2)
+head(res)
+# Summarize individuals on axes 1:2
+res <- facto_summarize(res.mfa, "ind", axes = 1:2)
+head(res)
  }
 }
 \author{
