@@ -25,6 +25,7 @@ NULL
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
 # from different packages (FactoMineR, ade4, ....) 
 .get_facto_class <- function(X){
+  
   if(inherits(X, c('PCA', 'sPCA', 'princomp', 'prcomp')))
     facto_class ="PCA"
   else if(inherits(X, 'pca') & inherits(X, 'dudi'))
@@ -32,13 +33,14 @@ NULL
   else if(inherits(X, c("CA", "sCA", "ca", "coa", "correspondence"))) facto_class="CA"
   else if(inherits(X, c("MCA", "sMCA", "acm"))) facto_class = "MCA"
   else if(inherits(X, c("MFA", "sMFA","mfa"))) facto_class = "MFA"
+  else if(inherits(X, c("HMFA", "sHMFA"))) facto_class = "HMFA"
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
 
 # Get the result for supplementary points
 #++++++++++++++++++++++++++
-## X: an output of factor analysis (PCA, CA, MCA, MFA) 
+## X: an output of factor analysis (PCA, CA, MCA, MFA, HMFA) 
 ## element possible values are "row.sup", "col.sup" (CA);
 # quanti, ind.sup (PCA); quali.sup (MCA); quanti.var.sup, quali.var.sup (MFA)
 ## result the result tobe extracted for the element. Possible values are
@@ -48,7 +50,7 @@ NULL
 ## select: a selection of variables. See the function .select()
 .get_supp <- function(X, element = NULL, axes = 1:2, 
                       result = c("coord", "cos2"), select = NULL){
-  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "sCA", "sPCA", "sMCA", "sMFA"))) {
+  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA","sCA", "sPCA", "sMCA", "sMFA", "sHMFA"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -869,7 +871,7 @@ NULL
   if(label[1]=="all" | "ind" %in% label) lab$ind =TRUE
   if(label[1]=="all" | "ind.sup" %in% label) lab$ind.sup =TRUE
   if(label[1]=="all" | "quali" %in% label) lab$quali =TRUE
-  # group - MFA
+  # group - MFA, HMFA
   lab$group <- lab$group.sup <- FALSE
   if(label[1]=="all" | "group" %in% label) lab$group =TRUE
   if(label[1]=="all" | "group.sup" %in% label) lab$group.sup =TRUE
@@ -897,17 +899,17 @@ NULL
 ## Returns a list 
 .hide <- function(invisible){
   hide  <- list()
-  # var - PCA, MCA, MFA
+  # var - PCA, MCA, MFA, HMFA
   hide$var <- hide$quanti <- hide$quali.sup <- FALSE
   if("var" %in% invisible) hide$var =TRUE
   if("quanti.sup" %in% invisible) hide$quanti =TRUE
   if("quali.sup" %in% invisible) hide$quali.sup = TRUE
-  # ind - PCA, MCA, MFA
+  # ind - PCA, MCA, MFA, HMFA
   hide$ind <- hide$ind.sup <- hide$quali <- FALSE
   if("ind" %in% invisible) hide$ind =TRUE
   if("ind.sup" %in% invisible) hide$ind.sup =TRUE
   if("quali" %in% invisible) hide$quali =TRUE
-  # group - MFA
+  # group - MFA, HMFA
   hide$group <- hide$group.sup <- FALSE
   if("group" %in% invisible) hide$group =TRUE
   if("group.sup" %in% invisible) hide$group.sup =TRUE

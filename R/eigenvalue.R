@@ -3,8 +3,8 @@
 #' @description
 #' Extracts and plots the eigenvalues/variances of the dimensions 
 #' from the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
-#' and Multiple Factor Analysis (MFA) functions.\cr\cr
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA),
+#' Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.\cr\cr
 #' \itemize{
 #' \item{get_eig(): Extract the eigenvalues/variances of the principal dimensions}
 #' \item{fviz_eig(): Plot the eigenvalues/variances against the number of dimensions}
@@ -12,7 +12,7 @@
 #' \item{fviz_screeplot(): an alias of fviz_eig()}
 #' }
 #' 
-#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
+#' @param X an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and princomp [stats]; 
 #'  dudi, pca, coa and acm [ade4]; ca and mjca [ca package].
 #' @param choice a text specifying the data to be plotted. 
 #' Allowed values are "variance" or "eigenvalue".
@@ -119,7 +119,7 @@ NULL
 get_eig<-function(X){
   
   # FactoMineR package
-  if(inherits(X, c('PCA', 'CA', 'MCA', 'MFA', 'sPCA', 'sCA', 'sMCA', 'sMFA'))) eig <- X$eig
+  if(inherits(X, c('PCA', 'CA', 'MCA', 'MFA', 'HMFA', 'sPCA', 'sCA', 'sMCA', 'sMFA', 'sHMFA'))) eig <- X$eig
   else{
     # stats package
     if(inherits(X, 'prcomp') | inherits(X, 'princomp')) eig <- (X$sdev)^2

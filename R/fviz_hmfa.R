@@ -1,20 +1,18 @@
-#' @include get_mfa.R
+#' @include get_hmfa.R
 NULL
-#' Visualize Multiple Factor Analysis
+#' Visualize Hierarchical Multiple Factor Analysis
 #'
 #' @description
-#' Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
+#' Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Hierarchical Multiple Factor Analysis (HMFA).\cr\cr
 #' \itemize{
-#' \item{fviz_mfa_ind(): Graph of individuals}
-#' \item{fviz_mfa_ind_starplot(): Star graph of individuals}
-#' \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
-#' \item{fviz_mfa_quali_var(): Graph of qualitative variables}
-#' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-#' \item{fviz_mfa_group(): Graph of the groups representation}
-#' \item{fviz_mfa_axes(): Graph of partial axes}
-#' \item{fviz_mfa(): An alias of fviz_mfa_ind_starplot()}
+#' \item{fviz_hmfa_ind(): Graph of individuals}
+#' \item{fviz_hmfa_quanti_var(): Graph of quantitative variables}
+#' \item{fviz_hmfa_quali_var(): Graph of qualitative variables}
+#' \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
+#' \item{fviz_hmfa_group(): Graph of the groups representation}
+#' \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 #' }
-#' @param X an object of class MFA [FactoMineR].
+#' @param X an object of class HMFA [FactoMineR].
 #' @inheritParams fviz_mca
 #' @param label a text specifying the elements to be labelled.
 #'  Default value is "all".
@@ -74,15 +72,14 @@ NULL
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
-#' # Multiple Factor Analysis
+#' # Hierarchical Multiple Factor Analysis
 #' # ++++++++++++++++++++++++
 #' # Install and load FactoMineR to compute MFA
 #' # install.packages("FactoMineR")
 #' library("FactoMineR")
-#' data(poison)
-#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
-#'                name.group=c("desc","desc2","symptom","eat"),
-#'                num.group.sup=1:2, graph=FALSE)
+#' data(wine)
+#' hierar <- list(c(2,5,3,10,9,2), c(4,2))
+#' res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
 #'
 #' # Graph of individuals
 #' # ++++++++++++++++++++
@@ -187,9 +184,8 @@ NULL
 #' # Graph of categorical variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
 #' data(poison)
-#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
-#'                name.group=c("desc","desc2","symptom","eat"),
-#'                num.group.sup=1:2, graph=FALSE)
+#' hierar <- list(c(2,2,5,6), c(1,3))
+#' res.hmfa <- HMFA(poison, H = hierar, type=c("s","n","n","n"), graph = FALSE)
 #'
 #' # Default plot
 #' fviz_mfa_quali_var(res.mfa)
@@ -269,10 +265,10 @@ NULL
 #' fviz_mfa_axes(res.mfa)
 #'
 #'  }
-#' @name fviz_mfa
-#' @rdname fviz_mfa
+#' @name fviz_hmfa
+#' @rdname fviz_hmfa
 #' @export
-fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
+fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          label = "all", invisible="none",
                          labelsize=4, pointsize = 2,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
@@ -329,7 +325,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     
     if(is.factor(habillage)){
       if(nrow(ind)!=length(habillage))
-        stop("The number of active individuals used in the MFA is different ",
+        stop("The number of active individuals used in the HMFA is different ",
              "from the length of the factor habillage. Please, remove the supplementary ",
              "individuals in the variable habillage.")
       name.quali <- "Groups"
@@ -337,7 +333,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       ind[, 1]<-as.factor(ind[,1])
     }
     # X is from FactoMineR outputs
-    else if(inherits(X, "MFA")){
+    else if(inherits(X, "HMFA")){
       data <- X$call$X
       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
       else name.quali <- habillage
@@ -388,14 +384,14 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                             aes_string('x', 'y', color=name.quali, shape=name.quali),
                             size=pointsize*2)
       if(lab$quali & "text" %in% geom) {
-       if(repel)
-         p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
-                                           aes_string('x', 'y', color=name.quali),
-                                           label=rownames(coord_quali.sup), size=labelsize)
-       else
-         p <- p + geom_text(data=coord_quali.sup,
-                            aes_string('x', 'y', color=name.quali),
-                            label=rownames(coord_quali.sup), size=labelsize)
+        if(repel)
+          p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
+                                            aes_string('x', 'y', color=name.quali),
+                                            label=rownames(coord_quali.sup), size=labelsize)
+        else
+          p <- p + geom_text(data=coord_quali.sup,
+                             aes_string('x', 'y', color=name.quali),
+                             label=rownames(coord_quali.sup), size=labelsize)
       }
     }
     if(addEllipses){
@@ -411,7 +407,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Add supplementary quantitative individuals
   # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$ind.sup){
+  if(inherits(X, 'HMFA') & !hide$ind.sup){
     ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
                          select = select.ind)
     if(!is.null(ind_sup)) {
@@ -429,31 +425,22 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   p <- .fviz_finish(p, X, axes) +
     geom_hline(yintercept = 0, color = "black", linetype="dashed") +
     geom_vline(xintercept = 0, color = "black", linetype="dashed") +
-    labs(title = "Individuals factor map - MFA")
+    labs(title = "Individuals factor map - HMFA")
   
   
   p
 }
 
 
-#' @rdname fviz_mfa
+#' @rdname fviz_hmfa
 #' @export
-fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="all",  invisible ="none",
+fviz_hmfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="all",  invisible ="none",
                                 labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                 col.quanti.sup="blue",  col.quali.sup = "darkgreen", col.circle = "grey70",
                                 select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                                 # map ="symmetric", 
                                 repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
 {
-  # Check if there are quantitative variables.
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(Hmisc::`%nin%`("c", group.all)) 
-    if(Hmisc::`%nin%`("s", group.all)) 
-      stop("There are no quantitative variables to plot.")
-  
   
   if(is.null(jitter$what)) jitter$what <- "label"
   
@@ -485,9 +472,9 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
-      geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
-      geom_hline(yintercept = 0, linetype="dashed")+
-      geom_vline(xintercept = 0, linetype="dashed")    
+    geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
+    geom_hline(yintercept = 0, linetype="dashed")+
+    geom_vline(xintercept = 0, linetype="dashed")    
   
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
@@ -525,9 +512,9 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
 
 
 
-#' @rdname fviz_mfa
+#' @rdname fviz_hmfa
 #' @export
-fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
+fviz_hmfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
                                labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
                                select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -535,20 +522,11 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
                                jitter = list(what = "label", width = NULL, height = NULL))
 {
   
-  # Check if there are qualitative variables.
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(Hmisc::`%nin%`("n", group.all)) 
-      stop("There are no qualitative variables to plot.")
-  
-  
   if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   var <- facto_summarize(X, element = "quali.var",
-                         result = c("coord", "contrib", "cos2"), axes = axes)
+                         result = c("coord", "contrib"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
   
   # scale coords according to the type of map
@@ -607,7 +585,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
+fviz_hmfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   label = "all", invisible="none", labelsize=4, pointsize = 2,
                                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                                   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
@@ -621,19 +599,11 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
-  # Check if there are qualitative variables.
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(Hmisc::`%nin%`("n", group.all)) 
-    stop("There are no qualitative variables to plot.")
-  
   if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   var <- facto_summarize(X, element = "quali.var",
-                         result = c("coord", "contrib", "cos2"), axes = axes)
+                         result = c("coord", "contrib"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
   
   # scale coords according to the type of map
@@ -652,11 +622,10 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
     alpha.limits = range(var.all[, alpha.var])
   
-  
   # Individuals
   geom2 <- geom
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
-  p <- fviz_mfa_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
+  p <- fviz_hmfa_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
                     labelsize=labelsize, pointsize = pointsize,
                     col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
                     shape.ind=shape.ind, repel = repel,
@@ -677,7 +646,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Add supplementary qualitative variable categories
   # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$quali.sup ){
+  if(inherits(X, 'HMFA') & !hide$quali.sup ){
     quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
                            select = select.var)
     if(!is.null(quali_sup)){
@@ -692,217 +661,214 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
     
   }
-  p+labs(title="MFA factor map - Biplot")
+  p+labs(title="HMFA factor map - Biplot")
 }
 
+# fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
+#                                   label = "all", invisible="none", legend.partial.title = NULL,
+#                                   labelsize=4, pointsize = 2, linesize = 0.5, repel = FALSE,
+#                                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
+#                                   col.ind = "black", col.ind.sup = "darkblue", col.partial = "black",
+#                                   alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
+#                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+#                                   select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
+#                                   # map ="symmetric",
+#                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
+# {
+#   
+#   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
+#     stop("The specified value(s) for the argument geom are not allowed ")
+#   if(length(axes) > 2) stop("axes should be of length 2")
+#   
+#   if(is.null(jitter$what)) jitter$what <- "label"
+#   
+#   # data frame to be used for plotting
+#   ind.sum <- facto_summarize(X, element = "ind",
+#                              result = c("coord", "contrib", "coord.partial"), axes = axes)
+#   ind <- ind.sum$res
+#   colnames(ind)[2:3] <-  c("x", "y")
+#   # partial points
+#   ind.partial <- ind.sum$res.partial
+#   colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
+#   ind.partial <- merge(ind, ind.partial, by = "name")
+#   
+#   # scale ind coords according to the type of map
+#   # ind <- .scale_ca(ind, res.ca = X,  element = "ind",
+#   #                  type = map, axes = axes)
+#   
+#   # Selection
+#   ind.all <- ind
+#   if(!is.null(select.ind))
+#     ind <- .select(ind, select.ind)
+#   
+#   if(!is.null(select.partial)) {
+#     if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
+#     ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial)$name, , drop = FALSE]
+#   }
+#   
+#   # elements to be labelled or hidden
+#   lab <- .label(label)
+#   hide <- .hide(invisible)
+#   
+#   # partial points
+#   if(col.ind %in% c("cos2","contrib", "coord")) col.partial <- col.ind
+#   else if(is.null(col.partial)) col.partial <- "group.name"
+#   
+#   alpha.limits <- NULL
+#   if(alpha.ind %in% c("cos2","contrib", "coord", "coord.partial", "x", "y")) 
+#     alpha.limits = range(ind.all[, alpha.ind])
+#   
+#   
+#   # No qualitative variable to color individuals
+#   if(habillage[1]=="none"){
+#     p <- ggplot()
+#     if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
+#     else {
+#       p <- .ggscatter(data = ind, data.partial = ind.partial, x = 'x', y = 'y',
+#                       col=col.ind,  alpha = alpha.ind, col.partial = col.partial,
+#                       alpha.limits = alpha.limits, shape = shape.ind, repel = repel,
+#                       geom = geom, lab = lab$ind, labelsize = labelsize,
+#                       pointsize = pointsize, jitter = jitter, linesize = linesize)
+#     }
+#   }
+#   # qualitative variable is used to color the individuals
+#   else{
+#     
+#     # Plot individuals
+#     p <- ggplot()
+#     if(hide$ind & hide$quali) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
+#     
+#     if(is.factor(habillage)){
+#       if(nrow(ind)!=length(habillage))
+#         stop("The number of active individuals used in the MFA is different ",
+#              "from the length of the factor habillage. Please, remove the supplementary ",
+#              "individuals in the variable habillage.")
+#       name.quali <- "Groups"
+#       ind <- cbind.data.frame(Groups = habillage, ind)
+#       ind[, 1]<-as.factor(ind[,1])
+#     }
+#     # X is from FactoMineR outputs
+#     else if(inherits(X, "MFA")){
+#       data <- X$call$X
+#       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
+#       else name.quali <- habillage
+#       ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
+#       colnames(ind)[1]<-name.quali
+#       ind[, 1]<-as.factor(ind[,1])
+#     }
+#     # Update partial individuals with habillage infos
+#     ind.partial <- ind.sum$res.partial
+#     colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
+#     ind.partial <- merge(ind, ind.partial, by = "name")
+#     
+#     if(!hide$ind) {
+#       
+#       label_coord <- ind
+#       # jittering
+#       if(jitter$what %in% c("both", "b")){
+#         label_coord <- ind <- .jitter(ind, jitter)
+#       }
+#       else if(jitter$what %in% c("point", "p")){
+#         ind <- .jitter(ind, jitter)
+#       }
+#       else if(jitter$what %in% c("label", "l")){
+#         label_coord <- .jitter(label_coord, jitter)
+#       }
+#       
+#       if("point" %in% geom) {
+#         # Partial points
+#         p <- p + geom_point(data = ind.partial,
+#                             aes_string(x = 'x.partial', y = 'y.partial', colour = name.quali, 
+#                                        shape = name.quali), size = pointsize)
+#         # Partial segments
+#         p <- p + geom_segment(data = ind.partial,
+#                               aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+#                                          linetype = 'group.name', colour = name.quali), 
+#                               size = linesize)
+#         # Centroids
+#         p <- p+geom_point(data = ind,
+#                           aes_string('x', 'y', color=name.quali, shape = name.quali),
+#                           size = pointsize)
+#       }
+#       if(lab$ind & "text" %in% geom) {
+#         if(repel)
+#           p <- p + ggrepel::geom_text_repel(data = label_coord,
+#                                             aes_string('x', 'y', label = 'name',
+#                                                        color=name.quali, shape = name.quali),  size = labelsize)
+#         else
+#           p <- p + geom_text(data = label_coord,
+#                              aes_string('x', 'y', label = 'name',
+#                                         color=name.quali, shape = name.quali),  size = labelsize)
+#       }
+#     }
+#     
+#     if(!hide$quali){
+#       coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])
+#       coord_quali.sup <- cbind.data.frame(name = rownames(coord_quali.sup),
+#                                           coord_quali.sup)
+#       colnames(coord_quali.sup)[1] <- name.quali
+#       coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
+#       
+#       if("point" %in% geom)
+#         p <- p + geom_point(data=coord_quali.sup,
+#                             aes_string('x', 'y', color=name.quali, shape=name.quali),
+#                             size=pointsize*2)
+#       if(lab$quali & "text" %in% geom) {
+#         if(repel)
+#           p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
+#                                             aes_string('x', 'y', color=name.quali),
+#                                             label=rownames(coord_quali.sup), size=labelsize)
+#         else
+#           p <- p + geom_text(data=coord_quali.sup,
+#                              aes_string('x', 'y', color=name.quali),
+#                              label=rownames(coord_quali.sup), size=labelsize)
+#       }
+#     }
+#     if(addEllipses){
+#       ell <- .get_ellipse_by_groups(ind$x, ind$y,
+#                                     groups = ind[, name.quali], ellipse.level=ellipse.level)
+#       colnames(ell)<-c(name.quali, "x", "y")
+#       ell[, 1]<-as.factor(ell[,1])
+#       p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+#     }
+#     
+#     
+#   }
+#   
+#   # Add supplementary quantitative individuals
+#   # Available only in FactoMineR
+#   if(inherits(X, 'MFA') & !hide$ind.sup){
+#     ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
+#                          select = select.ind)
+#     if(!is.null(ind_sup)) {
+#       colnames(ind_sup)[2:3] <-  c("x", "y")
+#       ind_sup <- .scale_ca(ind_sup, res.ca = X,  element = "ind.sup",
+#                            type = map, axes = axes)
+#     }
+#     if(!is.null(ind_sup)){
+#       p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
+#                     color = col.ind.sup, shape = 19, pointsize = pointsize,
+#                     labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom), jitter = jitter )
+#     }
+#   }
+#   
+#   p <- .fviz_finish(p, X, axes) +
+#     geom_hline(yintercept = 0, color = "black", linetype="dashed") +
+#     geom_vline(xintercept = 0, color = "black", linetype="dashed") +
+#     # Edit legend title
+#     scale_shape(name = legend.partial.title) + 
+#     scale_linetype(name = legend.partial.title) +
+#     # Edit plot title
+#     labs(title = "Individuals factor map - MFA")
+#   
+#   
+#   p
+# }
 
-#' @rdname fviz_mfa
+
+#' @rdname fviz_hmfa
 #' @export
-fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
-                                  label = "all", invisible="none", legend.partial.title = NULL,
-                                  labelsize=4, pointsize = 2, linesize = 0.5, repel = FALSE,
-                                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                                  col.ind = "black", col.ind.sup = "darkblue", col.partial = "black",
-                                  alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
-                                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  # map ="symmetric",
-                                  jitter = list(what = "label", width = NULL, height = NULL), ...)
-{
-  
-  if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
-    stop("The specified value(s) for the argument geom are not allowed ")
-  if(length(axes) > 2) stop("axes should be of length 2")
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  ind.sum <- facto_summarize(X, element = "ind",
-                             result = c("coord", "contrib", "cos2", "coord.partial"), axes = axes)
-  ind <- ind.sum$res
-  colnames(ind)[2:3] <-  c("x", "y")
-  # partial points
-  ind.partial <- ind.sum$res.partial
-  colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
-  ind.partial <- merge(ind, ind.partial, by = "name")
-  
-  # scale ind coords according to the type of map
-  # ind <- .scale_ca(ind, res.ca = X,  element = "ind",
-  #                  type = map, axes = axes)
-  
-  # Selection
-  ind.all <- ind
-  if(!is.null(select.ind))
-    ind <- .select(ind, select.ind)
-  
-  if(!is.null(select.partial)) {
-    if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
-    ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial)$name, , drop = FALSE]
-  }
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  # partial points
-  if(col.ind %in% c("cos2","contrib", "coord")) col.partial <- col.ind
-  else if(is.null(col.partial)) col.partial <- "group.name"
-  
-  alpha.limits <- NULL
-  if(alpha.ind %in% c("cos2","contrib", "coord", "coord.partial", "x", "y")) 
-    alpha.limits = range(ind.all[, alpha.ind])
-  
-  
-  # No qualitative variable to color individuals
-  if(habillage[1]=="none"){
-    p <- ggplot()
-    if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
-    else {
-      p <- .ggscatter(data = ind, data.partial = ind.partial, x = 'x', y = 'y',
-                      col=col.ind,  alpha = alpha.ind, col.partial = col.partial,
-                      alpha.limits = alpha.limits, shape = shape.ind, repel = repel,
-                      geom = geom, lab = lab$ind, labelsize = labelsize,
-                      pointsize = pointsize, jitter = jitter, linesize = linesize)
-    }
-  }
-  # qualitative variable is used to color the individuals
-  else{
-    
-    # Plot individuals
-    p <- ggplot()
-    if(hide$ind & hide$quali) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
-    
-    if(is.factor(habillage)){
-      if(nrow(ind)!=length(habillage))
-        stop("The number of active individuals used in the MFA is different ",
-             "from the length of the factor habillage. Please, remove the supplementary ",
-             "individuals in the variable habillage.")
-      name.quali <- "Groups"
-      ind <- cbind.data.frame(Groups = habillage, ind)
-      ind[, 1]<-as.factor(ind[,1])
-    }
-    # X is from FactoMineR outputs
-    else if(inherits(X, "MFA")){
-      data <- X$call$X
-      if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
-      else name.quali <- habillage
-      ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
-      colnames(ind)[1]<-name.quali
-      ind[, 1]<-as.factor(ind[,1])
-    }
-    # Update partial individuals with habillage infos
-    ind.partial <- ind.sum$res.partial
-    colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
-    ind.partial <- merge(ind, ind.partial, by = "name")
-    
-    if(!hide$ind) {
-      
-      label_coord <- ind
-      # jittering
-      if(jitter$what %in% c("both", "b")){
-        label_coord <- ind <- .jitter(ind, jitter)
-      }
-      else if(jitter$what %in% c("point", "p")){
-        ind <- .jitter(ind, jitter)
-      }
-      else if(jitter$what %in% c("label", "l")){
-        label_coord <- .jitter(label_coord, jitter)
-      }
-      
-      if("point" %in% geom) {
-        # Partial points
-        p <- p + geom_point(data = ind.partial,
-                            aes_string(x = 'x.partial', y = 'y.partial', colour = name.quali, 
-                                       shape = name.quali), size = pointsize)
-        # Partial segments
-        p <- p + geom_segment(data = ind.partial,
-                            aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
-                                       linetype = 'group.name', colour = name.quali), 
-                            size = linesize)
-        # Centroids
-        p <- p+geom_point(data = ind,
-                          aes_string('x', 'y', color=name.quali, shape = name.quali),
-                          size = pointsize)
-      }
-      if(lab$ind & "text" %in% geom) {
-       if(repel)
-         p <- p + ggrepel::geom_text_repel(data = label_coord,
-                                           aes_string('x', 'y', label = 'name',
-                                                      color=name.quali, shape = name.quali),  size = labelsize)
-       else
-         p <- p + geom_text(data = label_coord,
-                            aes_string('x', 'y', label = 'name',
-                                       color=name.quali, shape = name.quali),  size = labelsize)
-      }
-    }
-    
-    if(!hide$quali){
-      coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])
-      coord_quali.sup <- cbind.data.frame(name = rownames(coord_quali.sup),
-                                          coord_quali.sup)
-      colnames(coord_quali.sup)[1] <- name.quali
-      coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
-      
-      if("point" %in% geom)
-        p <- p + geom_point(data=coord_quali.sup,
-                            aes_string('x', 'y', color=name.quali, shape=name.quali),
-                            size=pointsize*2)
-      if(lab$quali & "text" %in% geom) {
-       if(repel)
-         p <- p + ggrepel::geom_text_repel(data=coord_quali.sup,
-                                           aes_string('x', 'y', color=name.quali),
-                                           label=rownames(coord_quali.sup), size=labelsize)
-       else
-         p <- p + geom_text(data=coord_quali.sup,
-                            aes_string('x', 'y', color=name.quali),
-                            label=rownames(coord_quali.sup), size=labelsize)
-      }
-    }
-    if(addEllipses){
-      ell <- .get_ellipse_by_groups(ind$x, ind$y,
-                                    groups = ind[, name.quali], ellipse.level=ellipse.level)
-      colnames(ell)<-c(name.quali, "x", "y")
-      ell[, 1]<-as.factor(ell[,1])
-      p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
-    }
-    
-    
-  }
-  
-  # Add supplementary quantitative individuals
-  # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$ind.sup){
-    ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
-                         select = select.ind)
-    if(!is.null(ind_sup)) {
-      colnames(ind_sup)[2:3] <-  c("x", "y")
-      ind_sup <- .scale_ca(ind_sup, res.ca = X,  element = "ind.sup",
-                           type = map, axes = axes)
-    }
-    if(!is.null(ind_sup)){
-      p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom), jitter = jitter )
-    }
-  }
-  
-  p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype="dashed") +
-    geom_vline(xintercept = 0, color = "black", linetype="dashed") +
-    # Edit legend title
-    scale_shape(name = legend.partial.title) + 
-    scale_linetype(name = legend.partial.title) +
-    # Edit plot title
-    labs(title = "Individuals factor map - MFA")
-  
-  
-  p
-}
-
-
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
+fviz_hmfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
                            col.group="blue",  col.group.sup = "darkgreen", repel = FALSE,
                            select.group = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -914,7 +880,7 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
   
   # data frame to be used for plotting
   group <- facto_summarize(X, element = "group",
-                           result = c("coord", "contrib", "cos2"), axes = axes)
+                           result = c("coord"), axes = axes)
   colnames(group)[2:3] <-  c("x", "y")
   
   # Selection
@@ -947,71 +913,68 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
   p + labs(title="MFA - Groups Representations")
 }
 
+# 
+# fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
+#                           label = "all", invisible="none", labelsize=4, pointsize = 2,
+#                           col.axes="red", alpha.axes=1, col.circle ="grey70",
+#                           select.axes = list(name = NULL, contrib = NULL),
+#                           # map ="symmetric",
+#                           arrows = c(FALSE, FALSE), repel = FALSE,
+#                           jitter = list(what = "label", width = NULL, height = NULL), ...)
+# {
+#   
+#   if(is.null(jitter$what)) jitter$what <- "label"
+#   
+#   # data frame to be used for plotting
+#   partial.axes <- facto_summarize(X, element = "partial.axes",
+#                                   result = c("coord", "contrib"), axes = axes)
+#   colnames(partial.axes)[2:3] <-  c("x", "y")
+#   
+#   
+#   # scale coords according to the type of map
+#   # var <- .scale_ca(var, res.ca = X,  element = "partial.axes",
+#   #                  type = map, axes = axes)
+#   
+#   # Selection
+#   partial.axes.all <- partial.axes
+#   if(!is.null(select.axes)) partial.axes <- .select(partial.axes, select.axes)
+#   
+#   # elements to be labelled or hidden
+#   lab <- .label(label)
+#   hide <- .hide(invisible)
+#   
+#   alpha.limits <- NULL
+#   if(alpha.axes %in% c("contrib", "coord", "x", "y"))
+#     alpha.limits = range(partial.axes.all[, alpha.axes])
+#   
+#   # Draw correlation circle
+#   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
+#   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
+#   p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
+#     geom_path(color=col.circle)+
+#     geom_hline(yintercept = 0, linetype="dashed")+
+#     geom_vline(xintercept = 0, linetype="dashed")
+#   
+#   # geometry for variable
+#   geom2 <- geom
+#   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
+#   
+#   if(!hide$partial.axes){
+#     p <-.ggscatter(p = p, data = partial.axes, x = 'x', y = 'y',
+#                    col=col.axes,  alpha = alpha.axes,
+#                    alpha.limits = alpha.limits,
+#                    geom =  geom2, lab = lab$var, labelsize = labelsize, 
+#                    pointsize = pointsize, jitter = jitter, repel = repel)
+#   }
+#   
+#   p + labs(title="MFA - Partial Axes Representations")
+# }
 
 
-#' @rdname fviz_mfa
+#' @rdname fviz_hmfa
 #' @export
-fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
-                          label = "all", invisible="none", labelsize=4, pointsize = 2,
-                          col.axes="red", alpha.axes=1, col.circle ="grey70",
-                          select.axes = list(name = NULL, contrib = NULL),
-                          # map ="symmetric",
-                          arrows = c(FALSE, FALSE), repel = FALSE,
-                          jitter = list(what = "label", width = NULL, height = NULL), ...)
-{
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  partial.axes <- facto_summarize(X, element = "partial.axes",
-                         result = c("coord", "contrib"), axes = axes)
-  colnames(partial.axes)[2:3] <-  c("x", "y")
-  
-  
-  # scale coords according to the type of map
-  # var <- .scale_ca(var, res.ca = X,  element = "partial.axes",
-  #                  type = map, axes = axes)
-  
-  # Selection
-  partial.axes.all <- partial.axes
-  if(!is.null(select.axes)) partial.axes <- .select(partial.axes, select.axes)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.axes %in% c("contrib", "coord", "x", "y"))
-    alpha.limits = range(partial.axes.all[, alpha.axes])
-  
-  # Draw correlation circle
-  theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
-  p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
-    geom_path(color=col.circle)+
-    geom_hline(yintercept = 0, linetype="dashed")+
-    geom_vline(xintercept = 0, linetype="dashed")
-  
-  # geometry for variable
-  geom2 <- geom
-  if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
-  
-  if(!hide$partial.axes){
-    p <-.ggscatter(p = p, data = partial.axes, x = 'x', y = 'y',
-                   col=col.axes,  alpha = alpha.axes,
-                   alpha.limits = alpha.limits,
-                   geom =  geom2, lab = lab$var, labelsize = labelsize, 
-                   pointsize = pointsize, jitter = jitter, repel = repel)
-  }
-  
-  p + labs(title="MFA - Partial Axes Representations")
-}
-
-
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa <- function(X, ...){
-  fviz_mfa_ind_starplot(X, ...)
+fviz_hmfa <- function(X, ...){
+  fviz_hmfa_ind_starplot(X, ...)
 }
 
 
