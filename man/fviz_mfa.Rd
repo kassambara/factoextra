@@ -163,6 +163,8 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
 
+\item{col.circle}{a color for the correlation circle.}
+
 \item{select.var}{a selection of individuals/variables to be drawn. 
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
 \itemize{
@@ -282,7 +284,7 @@ res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
                num.group.sup=c(1,6), graph=FALSE)
 # Default plot
-fviz_mfa_qanti_var(res.mfa)
+fviz_mfa_quanti_var(res.mfa)
 # Change color and theme
 fviz_mfa_quanti_var(res.mfa, col.var="steelblue")+
  theme_minimal()

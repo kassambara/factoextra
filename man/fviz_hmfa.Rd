@@ -54,6 +54,13 @@ fviz_hmfa(X, ...)
 \arguments{
 \item{X}{an object of class HMFA [FactoMineR].}
 
+\item{axes}{a numeric vector of length 2 specifying the dimensions to be plotted.}
+
+\item{geom}{a text specifying the geometry to be used for the graph. 
+Allowed values are the combination of c("point", "arrow", "text"). 
+Use "point" (to show only points); 
+"text" to show only labels; c("point", "text") or c("arrow", "text") to show both types.}
+
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -67,10 +74,19 @@ fviz_hmfa(X, ...)
 Default value is "none".
 Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
 
+\item{labelsize}{font size for the labels}
+
+\item{pointsize}{the size of points}
+
 \item{habillage}{an optional factor variable for coloring
 the observations by groups. Default value is "none".
 If X is an MFA object from FactoMineR package, habillage can also specify
 the index of the factor variable in the data.}
+
+\item{addEllipses}{logical value.
+If TRUE, draws ellipses around the individuals when habillage != "none".}
+
+\item{ellipse.level}{the size of the concentration ellipse in normal probability}
 
 \item{col.ind, }{col.partial, col.var, col.group, col.axes color for individuals, partial individuals, variables, 
 groups and axes, respectively.
@@ -78,6 +94,8 @@ groups and axes, respectively.
  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+
+\item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, }{alpha.partial, alpha.var, alpha.group, alpha.axes controls the transparency of
  individual, partial individual, variable, group and axes colors, respectively.
@@ -126,6 +144,8 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
  To use this, make sure that habillage ="none".}
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
+
+\item{col.circle}{a color for the correlation circle.}
 
 \item{select.var}{a selection of individuals/variables to be drawn. 
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 

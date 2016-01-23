@@ -16,6 +16,7 @@ NULL
 #' }
 #' @param X an object of class MFA [FactoMineR].
 #' @inheritParams fviz_mca
+#' @inheritParams fviz_pca
 #' @param label a text specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -162,7 +163,7 @@ NULL
 #'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
 #'                num.group.sup=c(1,6), graph=FALSE)
 #' # Default plot
-#' fviz_mfa_qanti_var(res.mfa)
+#' fviz_mfa_quanti_var(res.mfa)
 #' # Change color and theme
 #' fviz_mfa_quanti_var(res.mfa, col.var="steelblue")+
 #'  theme_minimal()
