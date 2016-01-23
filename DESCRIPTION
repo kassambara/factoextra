@@ -4,7 +4,9 @@ Title: Extract and visualize the results of multivariate data analyses
 Version: 1.0.3
 Date: 2015-02-21
 Authors@R: c(
-    person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"))
+    person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
+    person("Fabian", "Mundt", role = c("aut"), email = "mundt@ph-karlsruhe.de")
+    )
 Description: factoextra provides some easy-to-use functions to extract and
     visualize the output of multivariate data analysis, including PCA (Principal
     Component Analysis), CA (Correspondence Analysis) and MCA (Multiple
