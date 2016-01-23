@@ -3,11 +3,14 @@
 \name{get_hmfa}
 \alias{get_hmfa}
 \alias{get_hmfa_group}
+\alias{get_hmfa_ind}
 \alias{get_hmfa_quali_var}
 \alias{get_hmfa_quanti_var}
 \title{Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - HMFA}
 \usage{
 get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group"))
+
+get_hmfa_ind(res.hmfa)
 
 get_hmfa_quanti_var(res.hmfa)
 

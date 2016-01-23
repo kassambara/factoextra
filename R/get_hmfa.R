@@ -66,7 +66,7 @@ get_hmfa <- function(res.hmfa, element = c("ind", "quanti.var", "quali.var", "gr
   else stop("Allowed values for the argument element are: 'ind', 'quanti.var', 'quali.var' or 'group'.")
 }
 
-#' @rdname get_mfa
+#' @rdname get_hmfa
 #' @export
 get_hmfa_ind <- function(res.hmfa){
   # FactoMineR package
