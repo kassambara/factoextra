@@ -4,12 +4,12 @@ NULL
 #' 
 #' @description
 #'  Subset and summarize the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA) and 
-#' Multiple Correspondence Analysis (MCA) functions from several packages.
-#' @param X an object of class PCA, CA and MCA [FactoMineR]; prcomp and princomp [stats]; 
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and
+#' Multiple Factor Analysis (MFA) functions from several packages.
+#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
 #'  dudi, pca, coa and acm [ade4]; ca [ca package].
 #' @param element the element to subset from the output. Possible values are
-#'  "row" or "col" for CA; "var" or "ind" for PCA and MCA
+#'  "row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA
 #' @param result the result to be extracted for the element. Possible values are
 #'  the combination of c("cos2", "contrib", "coord")
 #' @param axes a numeric vector specifying the axes of interest. Default values are 1:2
@@ -76,6 +76,19 @@ NULL
 #' res <- facto_summarize(res.mca, "ind", axes = 1:2)
 #' head(res)
 #' 
+#' # Multiple factor Analysis
+#' # +++++++++++++++++++++++++++++++++
+#' library(FactoMineR)
+#' data(poison)
+#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+#'                name.group=c("desc","desc2","symptom","eat"),
+#'                num.group.sup=1:2, graph=FALSE)
+#' # Summarize categorcial variables on axes 1:2
+#' res <- facto_summarize(res.mfa, "quali.var", axes = 1:2)
+#' head(res)
+#' # Summarize individuals on axes 1:2
+#' res <- facto_summarize(res.mfa, "ind", axes = 1:2)
+#' head(res)
 #'  }
 #' @export 
 facto_summarize <- function(X, element,
@@ -84,8 +97,8 @@ facto_summarize <- function(X, element,
                             
   { 
   # check element
-  if(!element %in% c("row", "col", "var", "ind"))
-    stop('Te argument element should be one of "row", "col", "var", "ind"')
+  if(!element %in% c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"))
+    stop('Te argument element should be one of "row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"')
   
   # check and get the classe of X
   facto_class <- .get_facto_class(X)
@@ -103,6 +116,19 @@ facto_summarize <- function(X, element,
   else if(facto_class=="MCA"){
     if(element %in% c("var", "col")) elmt<- get_mca_var(X)
     else if(element %in% c("ind", "row")) elmt <- get_mca_ind(X)
+  }
+  else if (facto_class == "MFA") {
+  if (element %in% c("quanti.var", "col")) elmt <- get_mfa_quanti_var(X)
+  else if (element %in% c("quali.var", "col")) elmt <- get_mfa_quali_var(X)
+  else if (element %in% c("group", "col")) elmt <- get_mfa_group(X)
+  else if (element %in% c("partial.axes","col")) elmt <- get_mfa_partial_axes(X) 
+  else if (element %in% c("ind", "row")) elmt <- get_mfa_ind(X)
+  }
+  else if (facto_class == "HMFA") {
+    if (element %in% c("quanti.var", "col")) elmt <- get_hmfa_quanti_var(X)
+    else if (element %in% c("quali.var", "col")) elmt <- get_hmfa_quali_var(X)
+    else if (element %in% c("group", "col")) elmt <- get_hmfa_group(X)
+    else if (element %in% c("ind", "row")) elmt <- get_hmfa_ind(X)
   }
   
   
@@ -143,9 +169,24 @@ facto_summarize <- function(X, element,
     res <- cbind(res, contrib = contrib)
   }
   
+  # 4.Extract the coordinates x, y and coord partial
+  if("coord.partial" %in% result){
+    dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE])
+    # groupnames 
+    groupnames <- data.frame(do.call('rbind', strsplit(as.character(rownames(dd)), '.', fixed = TRUE)))
+    colnames(groupnames) <- c("name", "group.name")
+    coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+    res.partial <- data.frame(groupnames, dd, coord.partial)
+  }
+  
   name <- rownames(elmt$coord)
   if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
   res <- cbind.data.frame(name = name, res)
   if(!is.null(select)) res <- .select(res, select)
-  res 
+  
+  if("coord.partial" %in% result){
+  res = list(res = res, res.partial = res.partial)
+  }
+
+  res
 }

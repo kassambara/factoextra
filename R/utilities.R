@@ -17,37 +17,45 @@ NULL
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
 #' @importFrom ggplot2 element_blank
+#' @importFrom ggplot2 xlim
+#' @importFrom ggplot2 ylim
+#' @importFrom ggplot2 guides
+#' @importFrom ggplot2 scale_shape
+#' @importFrom ggplot2 scale_linetype
+#' @importFrom ggrepel geom_text_repel
 #' @importFrom grid arrow
 #' @importFrom grid unit
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
-# X: an output of factor analysis (PCA, CA, MCA) 
+# X: an output of factor analysis (PCA, CA, MCA, MFA) 
 # from different packages (FactoMineR, ade4, ....) 
 .get_facto_class <- function(X){
-  if(inherits(X, c('PCA', 'princomp', 'prcomp')))
+  
+  if(inherits(X, c('PCA', 'sPCA', 'princomp', 'prcomp')))
     facto_class ="PCA"
   else if(inherits(X, 'pca') & inherits(X, 'dudi'))
     facto_class ="PCA"
-  else if(inherits(X, c("CA", "ca", "coa", "correspondence"))) facto_class="CA"
-  else if(inherits(X, c("MCA", "acm"))) facto_class = "MCA"
+  else if(inherits(X, c("CA", "sCA", "ca", "coa", "correspondence"))) facto_class="CA"
+  else if(inherits(X, c("MCA", "sMCA", "acm"))) facto_class = "MCA"
+  else if(inherits(X, c("MFA", "sMFA","mfa"))) facto_class = "MFA"
+  else if(inherits(X, c("HMFA", "sHMFA"))) facto_class = "HMFA"
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
 
 # Get the result for supplementary points
 #++++++++++++++++++++++++++
-## X: an output of factor analysis (PCA, CA, MCA) 
+## X: an output of factor analysis (PCA, CA, MCA, MFA, HMFA) 
 ## element possible values are "row.sup", "col.sup" (CA);
-# quanti, ind.sup (PCA); quali.sup (MCA)
+# quanti, ind.sup (PCA); quali.sup (MCA); quanti.var.sup, quali.var.sup (MFA)
 ## result the result tobe extracted for the element. Possible values are
-#  the combination of c("cos2", "contrib", "coord")
+#  the combination of c("cos2", "coord")
 ## axes a numeric vector specifying the axes of interest. Default values are 1:2
 ##  for axes 1 and 2
 ## select: a selection of variables. See the function .select()
 .get_supp <- function(X, element = NULL, axes = 1:2, 
                       result = c("coord", "cos2"), select = NULL){
-  
-  if(inherits(X, c("CA", "PCA", "MCA"))) {
+  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA","sCA", "sPCA", "sMCA", "sMFA", "sHMFA"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -311,7 +319,6 @@ NULL
 # res.ca : CA object
 # element: possible values are "row" or "col"
 .get_ca_mass <- function(res.ca, element){
-  
   if(inherits(res.ca, "ca")){
     if(element == "row"){
     mass <- res.ca$rowmass
@@ -323,7 +330,7 @@ NULL
     }
   }
   # FactoMiner
-  else if(inherits(res.ca, c("CA", "MCA"))){
+  else if(inherits(res.ca, c("CA", "MCA", "sCA", "sMCA"))){
     if(element %in% c("row", "ind")) mass <- res.ca$call$marge.row
     else if(element %in% c("col", "var")) mass <- res.ca$call$marge.col
     
@@ -396,6 +403,14 @@ NULL
     title <- paste0(varname, " of variables to Dim-", paste(axes, collapse="-"))
   else if(element=="ind")
     title <- paste0(varname, " of individuals to Dim-", paste(axes, collapse="-"))
+  else if(element=="quanti.var")
+    title <- paste0(varname, " of quantitive variables to Dim-", paste(axes, collapse="-"))
+  else if(element=="quali.var")
+    title <- paste0(varname, " of qualitive variables to Dim-", paste(axes, collapse="-"))
+  else if(element=="group")
+    title <- paste0(varname, " of groups to Dim-", paste(axes, collapse="-"))
+  else if(element=="partial.axes")
+    title <- paste0(varname, " of partial axes to Dim-", paste(axes, collapse="-"))
   
   return(title)
 }
@@ -480,8 +495,10 @@ NULL
   else if(sort.value[1]=="asc") x <- sort(x, decreasing = FALSE)
   # bar names
   if(is.null(names(x))) names(x) <- 1:length(x)
+  
   #data frame for ggplot2
   d <- cbind.data.frame(name = factor(names(x), levels = names(x)), val = x)
+  
   # plot
   p <- ggplot(d, aes_string("name", "val")) + 
     geom_bar(stat="identity", fill=fill, color = color) +
@@ -515,15 +532,15 @@ NULL
 #  "text" to show only labels or c("point", "text") to show both types.
 ## jitter: to avoid overplotting. Possible values for what are "label", "point", "both"
 # it's possible to use also the shortcut "l", "p", "b".
-.ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black",  alpha = 1,
+.ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black", alpha = 1, 
                        alpha.limits = NULL, shape = 19, pointsize = 2, 
-                       geom=c("point", "text"), lab = TRUE, labelsize = 4, 
-                       jitter = list(what = "label", width = NULL, height = NULL), ...)
+                       geom=c("point", "text"), lab = TRUE, labelsize = 4, repel = TRUE,
+                       jitter = list(what = "label", width = NULL, height = NULL),
+                       data.partial = NULL, col.partial = "black", linesize = 0.5, ...)
   {
   
   data <- as.data.frame(data)
   label_coord <- data
-  
   # jittering
   if(jitter$what %in% c("both", "b")){
     label_coord <- data <- .jitter(data, jitter)
@@ -554,77 +571,142 @@ NULL
 #     stop("The argument col is incorrect.")
 #   }
   
- 
-  
   if(is.null(p)) p <- ggplot() 
   # The color and the transparency of variables are automatically controlled by
   # their cos2, contrib,  "x" or "y" coordinates
   if(col %in% c("cos2","contrib", "coord", "x", "y") &
             alpha %in% c("cos2","contrib", "coord", "x", "y"))
   {
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points - same colour as centrois
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', colour = col, 
+                                       shape = 'group.name', alpha = alpha), 
+                            size = pointsize)
+        # Partial segments - same colour as centrois
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         colour = col, linetype = 'group.name', alpha = alpha), 
+                              size = linesize)
+      }
       p <- p + geom_point(data = data, 
                           aes_string(x,y, color=col, alpha=alpha),
                           shape=shape, size = pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                   aes_string(x = 0, y = 0, xend = x, yend = y, color=col, alpha=alpha),
                   arrow = grid::arrow(length = grid::unit(0.2, 'cm')))
-  
     if(lab & "text"%in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + ggrepel::geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
   # Only the color is controlled automatically
   else if(col %in% c("cos2","contrib", "coord", "x", "y")){
-    
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points - same colour as centrois
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', colour = col, 
+                                       shape = 'group.name'), 
+                            alpha = alpha, size = pointsize)
+        # Partial segments - same colour as centrois
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         colour = col, linetype = 'group.name'),
+                              alpha = alpha, size = linesize)
+      }
       p <- p + geom_point(data = data, aes_string(x,y, color=col),
                           shape=shape, alpha=alpha, size=pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                             aes_string(x = 0, y = 0, xend = x, yend = y, color=col),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), alpha = alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord,
+      p <- p + ggrepel::geom_text_repel(data = label_coord,
                          aes_string(x, y, color=col),
-                         label = data$name,  size = labelsize, alpha=alpha, vjust = -0.7)
+                         label = data$name,  size = labelsize, alpha=alpha)
   }
   
   # Only the transparency is controlled automatically
   else if(alpha %in% c("cos2","contrib", "coord", "x", "y")){
-    
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        # Partial points
+        p <- p + geom_point(data = data.partial,
+                            aes_string(x = 'x.partial', y = 'y.partial', alpha = alpha, 
+                                       shape = 'group.name'), 
+                            colour = col.partial, size = pointsize)
+        # Partial segments
+        p <- p + geom_segment(data = data.partial,
+                              aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                         alpha = alpha, linetype = 'group.name'), 
+                              colour = col.partial, size = linesize)
+      }
       p <- p + geom_point(data = data, 
                           aes_string(x, y, alpha=alpha), 
                           shape=shape, color=col, size = pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                             aes_string(x = 0, y = 0, xend = x, yend = y, alpha=alpha),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
-                         size = labelsize, color=col, vjust = -0.7)
+                         size = labelsize, color=col)
     
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
   
   else{
-    if("point" %in% geom) 
+    if("point" %in% geom) {
+      if(!is.null(data.partial)) {
+        if(col.partial == 'group.name') {
+          # Partial points
+          p <- p + geom_point(data = data.partial,
+                              aes_string(x = 'x.partial', y = 'y.partial', colour = 'group.name',
+                                         shape = 'group.name'), 
+                              size = pointsize)
+          # Partial segments
+          p <- p + geom_segment(data = data.partial,
+                                aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                           linetype = 'group.name', colour = 'group.name'), 
+                                size = linesize)
+          # Remove legend title
+          p <- p + theme(legend.title=element_blank()) + guides(shape = FALSE, linetype = FALSE)
+        } else {
+          # Partial points
+          p <- p + geom_point(data = data.partial,
+                              aes_string(x = 'x.partial', y = 'y.partial', shape = 'group.name'), 
+                              colour = col.partial, size = pointsize)
+          # Partial segments
+          p <- p + geom_segment(data = data.partial,
+                                aes_string(x = 'x', y = 'y', xend = 'x.partial', yend = 'y.partial',
+                                           linetype = 'group.name'), colour = col.partial, size = linesize) 
+        }
+      } 
       p <- p + geom_point(data = data, aes_string(x, y),
                           shape=shape, color=col, size = pointsize)
+    }
     else if("arrow" %in% geom) 
       p <- p + geom_segment(data = data,
                             aes_string(x = 0, y = 0, xend = x, yend = y),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, aes_string(x,y), 
-                         color = col, label = data$name, size = labelsize, vjust = -0.7)
+      if(repel) {
+        p <- p + ggrepel::geom_text_repel(data = label_coord, mapping = aes_string(x,y), 
+                                          color = col, label = data$name, size = labelsize)
+      } else {
+        p <- p + geom_text(data = label_coord, mapping = aes_string(x,y), 
+                           color = col, label = data$name, size = labelsize, nudge_y = -0.015)
+     }
   }
   
   return(p)
@@ -680,7 +762,7 @@ NULL
                           aes_string(x,y, color=col, alpha=alpha), shape=shape)
     
     if(lab & "text"%in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x,y, label = 'name', 
                                     color=col, alpha=alpha), size = labelsize)
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
@@ -693,9 +775,9 @@ NULL
                           shape=shape, alpha=alpha)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord,
+      p <- p + geom_text_repel(data = label_coord,
                          aes_string(x, y, color=col),
-                         label = data$name,  size = labelsize, alpha=alpha, vjust = -0.7)
+                         label = data$name,  size = labelsize, alpha=alpha)
   }
   
   # Only the transparency is controlled automatically
@@ -706,9 +788,9 @@ NULL
                           aes_string(x, y, alpha=alpha), shape=shape, color=col)
     
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, 
+      p <- p + geom_text_repel(data = label_coord, 
                          aes_string(x, y, alpha=alpha, label="name"),
-                         size = labelsize, color=col, vjust = -0.7)
+                         size = labelsize, color=col)
     
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
@@ -717,8 +799,8 @@ NULL
     if("point" %in% geom) 
       p <- p + geom_point(data = data, aes(x, y), shape=shape, color=col)
     if(lab & "text" %in% geom) 
-      p <- p + geom_text(data = label_coord, aes_string(x,y), 
-                         color = col, label = data$name, size = labelsize, vjust = -0.7)
+      p <- p + geom_text_repel(data = label_coord, aes_string(x,y), 
+                         color = col, label = data$name, size = labelsize)
   }
   
   return(p)
@@ -784,16 +866,23 @@ NULL
 ## Returns a list 
 .label <- function(label){
   lab  <- list()
-  # var - PCA, MCA
+  # var - PCA, MCA, MFA
   lab$var <- lab$quanti <- lab$quali.sup <- FALSE
   if(label[1]=="all" | "var" %in% label) lab$var =TRUE
   if(label[1]=="all" | "quanti.sup" %in% label) lab$quanti =TRUE
   if(label[1]=="all" | "quali.sup" %in% label) lab$quali.sup =TRUE
-  # ind - PCA, MCA
+  # ind - PCA, MCA, MFA
   lab$ind <- lab$ind.sup <- lab$quali <- FALSE
   if(label[1]=="all" | "ind" %in% label) lab$ind =TRUE
   if(label[1]=="all" | "ind.sup" %in% label) lab$ind.sup =TRUE
   if(label[1]=="all" | "quali" %in% label) lab$quali =TRUE
+  # group - MFA, HMFA
+  lab$group <- lab$group.sup <- FALSE
+  if(label[1]=="all" | "group" %in% label) lab$group =TRUE
+  if(label[1]=="all" | "group.sup" %in% label) lab$group.sup =TRUE
+  # partial.axes - MFA
+  lab$partial.axes <- FALSE
+  if(label[1]=="all" | "partial.axes" %in% label) lab$partial.axes =TRUE
   # row - ca
   lab$row <- lab$row.sup <- FALSE
   if(label[1]=="all" | "row" %in% label) lab$row =TRUE
@@ -815,16 +904,23 @@ NULL
 ## Returns a list 
 .hide <- function(invisible){
   hide  <- list()
-  # var - PCA, MCA
+  # var - PCA, MCA, MFA, HMFA
   hide$var <- hide$quanti <- hide$quali.sup <- FALSE
   if("var" %in% invisible) hide$var =TRUE
   if("quanti.sup" %in% invisible) hide$quanti =TRUE
   if("quali.sup" %in% invisible) hide$quali.sup = TRUE
-  # ind - PCA, MCA
+  # ind - PCA, MCA, MFA, HMFA
   hide$ind <- hide$ind.sup <- hide$quali <- FALSE
   if("ind" %in% invisible) hide$ind =TRUE
   if("ind.sup" %in% invisible) hide$ind.sup =TRUE
   if("quali" %in% invisible) hide$quali =TRUE
+  # group - MFA, HMFA
+  hide$group <- hide$group.sup <- FALSE
+  if("group" %in% invisible) hide$group =TRUE
+  if("group.sup" %in% invisible) hide$group.sup =TRUE
+  # partial.axes - MFA
+  hide$partial.axes <- FALSE
+  if("partial.axes" %in% invisible) hide$partial.axes =TRUE
   # row - ca
   hide$row <- hide$row.sup <- FALSE
   if("row" %in% invisible) hide$row =TRUE

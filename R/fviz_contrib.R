@@ -5,8 +5,8 @@ NULL
 #' @description
 #' This function can be used to visualize the quality of representation (cos2) of rows/columns 
 #' from the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA) and 
-#' Multiple Correspondence Analysis (MCA) functions.
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) 
+#' and Multiple Factor Analysis (MFA) functions.
 #' @param ... not used
 #' @inheritParams fviz_cos2
 #' @details
@@ -78,10 +78,25 @@ NULL
 #' fviz_contrib(res.mca, choice ="ind", axes = 1, top = 20)
 #' # Visualize variable categorie contributions on axes 1
 #' fviz_contrib(res.mca, choice ="var", axes = 1)
+#' 
+#' # Multiple Factor Analysis
+#' # ++++++++++++++++++++++++
+#' library(FactoMineR)
+#' data(poison)
+#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
+#'                name.group=c("desc","desc2","symptom","eat"),
+#'                num.group.sup=1:2, graph=FALSE)
+#'               
+#' # Visualize individual contributions on axes 1
+#' fviz_contrib(res.mfa, choice ="ind", axes = 1)
+#' # Select the top 20
+#' fviz_contrib(res.mfa, choice ="ind", axes = 1, top = 20)
+#' # Visualize catecorical variable categorie contributions on axes 1
+#' fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
 #'  
 #'  }
-#'  @export 
-fviz_contrib <- function(X, choice = c("row", "col", "var", "ind"), axes=1,
+#' @export 
+fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"), axes=1,
                    fill="steelblue", color = "steelblue",  
                    sort.val = c("desc", "asc", "none"), top = Inf)
 {

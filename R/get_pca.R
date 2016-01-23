@@ -61,7 +61,7 @@ get_pca <- function(res.pca, element = c("var", "ind")){
 get_pca_ind<-function(res.pca, ...){
   
   # FactoMineR package
-  if(inherits(res.pca, 'PCA')) ind <- res.pca$ind
+  if(inherits(res.pca, c('PCA', 'sPCA'))) ind <- res.pca$ind
   
   # ade4 package
   else if(inherits(res.pca, 'pca') & inherits(res.pca, 'dudi')){  
@@ -101,7 +101,7 @@ get_pca_ind<-function(res.pca, ...){
 #' @export 
 get_pca_var<-function(res.pca){
   # FactoMineR package
-  if(inherits(res.pca, 'PCA')) var <- res.pca$var
+  if(inherits(res.pca, c('PCA','sPCA'))) var <- res.pca$var
   # ade4 package
   else if(inherits(res.pca, 'pca') & inherits(res.pca, 'dudi')){
     var <- .get_pca_var_results(res.pca$co)

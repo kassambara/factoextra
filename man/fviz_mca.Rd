@@ -8,28 +8,28 @@
 \title{Visualize Multiple Correspondence Analysis}
 \usage{
 fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
-  col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", jitter = list(what = "label", width = NULL, height =
-  NULL), ...)
+  invisible = "none", labelsize = 4, pointsize = 2, repel = FALSE,
+  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
+  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
+  shape.ind = 19, select.ind = list(name = NULL, cos2 = NULL, contrib =
+  NULL), map = "symmetric", jitter = list(what = "label", width = NULL,
+  height = NULL), ...)
 
 fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, col.var = "red",
   alpha.var = 1, shape.var = 17, col.quanti.sup = "blue",
-  col.quali.sup = "darkgreen", select.var = list(name = NULL, cos2 = NULL,
-  contrib = NULL), map = "symmetric", jitter = list(what = "label", width =
-  NULL, height = NULL))
+  col.quali.sup = "darkgreen", repel = FALSE, select.var = list(name =
+  NULL, cos2 = NULL, contrib = NULL), map = "symmetric", jitter = list(what
+  = "label", width = NULL, height = NULL))
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
   col.var = "red", alpha.var = 1, col.quanti.sup = "blue",
-  col.quali.sup = "darkgreen", shape.ind = 19, shape.var = 17,
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  col.quali.sup = "darkgreen", repel = FALSE, shape.ind = 19,
+  shape.var = 17, select.var = list(name = NULL, cos2 = NULL, contrib =
+  NULL), select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
   map = "symmetric", arrows = c(FALSE, FALSE), jitter = list(what =
   "label", width = NULL, height = NULL), ...)
 
@@ -61,6 +61,8 @@ Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "q
 \item{labelsize}{font size for the labels}
 
 \item{pointsize}{the size of points}
+
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
 
 \item{habillage}{an optional factor variable for coloring
 the observations by groups. Default value is "none".
