@@ -3,8 +3,8 @@
 #' @description
 #' Extracts and plots the eigenvalues/variances of the dimensions 
 #' from the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA) and 
-#' Multiple Correspondence Analysis (MCA) functions.\cr\cr
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA),
+#' Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.\cr\cr
 #' \itemize{
 #' \item{get_eig(): Extract the eigenvalues/variances of the principal dimensions}
 #' \item{fviz_eig(): Plot the eigenvalues/variances against the number of dimensions}
@@ -12,7 +12,7 @@
 #' \item{fviz_screeplot(): an alias of fviz_eig()}
 #' }
 #' 
-#' @param X an object of class PCA, CA and MCA [FactoMineR]; prcomp and princomp [stats]; 
+#' @param X an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and princomp [stats]; 
 #'  dudi, pca, coa and acm [ade4]; ca and mjca [ca package].
 #' @param choice a text specifying the data to be plotted. 
 #' Allowed values are "variance" or "eigenvalue".
@@ -24,7 +24,7 @@
 #' @param ncp a numeric value specifying the number of dimensions to be shown.
 #' @param addlabels logical value. If TRUE, labels are added at the top of bars or points
 #'  showing the information retained by each dimension.
-#'  @param ... optional arguments to be passed to the functions geom_bar(), 
+#' @param ... optional arguments to be passed to the functions geom_bar(), 
 #'  geom_line(), geom_text() or fviz_eig().
 #'  
 #' @return 
@@ -100,7 +100,18 @@
 #' get_eig(res.mca)
 #' fviz_eig(res.mca)
 #'  }
-#'
+#'  
+#' # Multiple Factor Analysis
+#' # +++++++++++++++++++++++++++++++++
+#' library(FactoMineR)
+#' data(wine)
+#' res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
+#'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
+#'                num.group.sup=c(1,6), graph=FALSE)
+#' get_eig(res.mfa)
+#' fviz_eig(res.mfa)
+#' 
+#' 
 #' @name eigenvalue
 NULL
 #' @rdname eigenvalue
@@ -108,7 +119,7 @@ NULL
 get_eig<-function(X){
   
   # FactoMineR package
-  if(inherits(X, c('PCA', 'CA', 'MCA'))) eig <- X$eig
+  if(inherits(X, c('PCA', 'CA', 'MCA', 'MFA', 'HMFA', 'sPCA', 'sCA', 'sMCA', 'sMFA', 'sHMFA'))) eig <- X$eig
   else{
     # stats package
     if(inherits(X, 'prcomp') | inherits(X, 'princomp')) eig <- (X$sdev)^2
