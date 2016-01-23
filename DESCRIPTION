@@ -17,7 +17,8 @@ LazyData: true
 Depends:
     R (>= 3.1.0),
     ggplot2,
-    grid
+    grid,
+    abind
 Imports:
     cluster,
     dendextend,
