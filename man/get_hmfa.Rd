@@ -4,6 +4,7 @@
 \alias{get_hmfa}
 \alias{get_hmfa_group}
 \alias{get_hmfa_ind}
+\alias{get_hmfa_partial}
 \alias{get_hmfa_quali_var}
 \alias{get_hmfa_quanti_var}
 \title{Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - HMFA}
@@ -17,6 +18,8 @@ get_hmfa_quanti_var(res.hmfa)
 get_hmfa_quali_var(res.hmfa)
 
 get_hmfa_group(res.hmfa)
+
+get_hmfa_partial(res.hmfa)
 }
 \arguments{
 \item{res.hmfa}{an object of class HMFA [FactoMineR].}
