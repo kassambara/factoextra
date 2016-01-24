@@ -32,20 +32,20 @@ NULL
 #'  the observations by groups. Default value is "none".
 #'  If X is an MFA object from FactoMineR package, habillage can also specify
 #'  the index of the factor variable in the data.
-#' @param col.ind, col.partial, col.var, col.group, col.axes color for individuals, partial individuals, variables, 
+#' @param col.ind,col.partial,col.var,col.group,col.axes color for individuals, partial individuals, variables, 
 #' groups and axes, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
-#' @param alpha.ind, alpha.partial, alpha.var, alpha.group, alpha.axes controls the transparency of
+#' @param alpha.ind,alpha.partial,alpha.var,alpha.group,alpha.axes controls the transparency of
 #'  individual, partial individual, variable, group and axes colors, respectively.
 #' The value can variate from 0 (total transparency) to 1 (no transparency).
 #' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
-#' @param shape.ind,shape.var, shape.group, shape.axes point shapes of individuals, variables, groups and axes
+#' @param shape.ind,shape.var,shape.group,shape.axes point shapes of individuals, variables, groups and axes
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param select.ind, select.partial, select.var, select.group, select.axes a selection of individuals/partial individuals/
 #' variables/groups/axes to be drawn.
