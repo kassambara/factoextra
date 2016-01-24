@@ -91,14 +91,14 @@ NULL
 #' head(res)
 #'  }
 #' @export 
-facto_summarize <- function(X, element,
+facto_summarize <- function(X, element, node.level = 1, group.names, 
                             result = c("coord", "cos2", "contrib"),
                             axes=1:2, select = NULL)
                             
   { 
   # check element
-  if(!element %in% c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"))
-    stop('Te argument element should be one of "row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"')
+  if(!element %in% c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes", "partial.node"))
+    stop('Te argument element should be one of "row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes", "partial.node"')
   
   # check and get the classe of X
   facto_class <- .get_facto_class(X)
@@ -129,11 +129,16 @@ facto_summarize <- function(X, element,
     else if (element %in% c("quali.var", "col")) elmt <- get_hmfa_quali_var(X)
     else if (element %in% c("group", "col")) elmt <- get_hmfa_group(X)
     else if (element %in% c("ind", "row")) elmt <- get_hmfa_ind(X)
+    else if (element %in% c("partial.node", "row")) elmt <- get_hmfa_partial(X)
   }
   
   
   # check axes
-  if(max(axes) > ncol(elmt$coord))
+  if(class(elmt)[[2]] == "hmfa_partial")
+    ndim <- ncol(elmt[[1]])
+  else
+    ndim <- ncol(elmt$coord)
+  if(max(axes) > ndim)
     stop("The value of the argument axes is incorrect. ",
          "The number of axes in the data is: ", ncol(elmt$coord), 
          ". Please try again with axes between 1 - ", ncol(elmt$coord))
@@ -169,7 +174,7 @@ facto_summarize <- function(X, element,
     res <- cbind(res, contrib = contrib)
   }
   
-  # 4.Extract the coordinates x, y and coord partial
+  # 4.Extract the coordinates x, y and coord partial - MFA
   if("coord.partial" %in% result){
     dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE])
     # groupnames 
@@ -179,14 +184,40 @@ facto_summarize <- function(X, element,
     res.partial <- data.frame(groupnames, dd, coord.partial)
   }
   
-  name <- rownames(elmt$coord)
-  if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
-  res <- cbind.data.frame(name = name, res)
-  if(!is.null(select)) res <- .select(res, select)
-  
-  if("coord.partial" %in% result){
-  res = list(res = res, res.partial = res.partial)
+  # 5. Extract the coordinates x, y and coord partial - HMFA
+  if("coord.node.partial" %in% result){
+    # Select hierarchical node
+    node <- as.data.frame(elmt[[node.level]])
+    name <- rep(rownames(node), length(group.names))
+    # Prepare data set
+    dim.group <- dim.names <- dd <- coord.partial <- dim.coord <- dim.name <- NULL
+    for(i in axes[1]:length(axes)) {
+      dim.group <- NULL
+      for(j in 1:length(group.names)) {
+        dim.name <- paste0("Dim", axes[i], ".", j)
+        dim.coord <- abind::abind(dim.coord, node[,dim.name])
+        dim.group <- c(dim.group, rep(group.names[j], length(node[,dim.name])))
+      }
+      dim.names <- c(dim.names, paste0("Dim", axes[i]))
+      dd <- cbind(dd, dim.coord)
+      dim.coord <- NULL
+    }
+    colnames(dd) <- dim.names
+    coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+    res.partial <- data.frame(group.name = dim.group, name, dd, coord.partial)
   }
-
+  
+  if("coord.node.partial" %in% result) 
+    res <- res.partial
+  else {
+    name <- rownames(elmt$coord)
+    if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
+    res <- cbind.data.frame(name = name, res)
+    if(!is.null(select)) res <- .select(res, select)
+    if("coord.partial" %in% result){
+    res = list(res = res, res.partial = res.partial)
+    }
+  }
+  
   res
 }
