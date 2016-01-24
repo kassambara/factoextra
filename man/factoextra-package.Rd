@@ -43,7 +43,7 @@ get_eig(res.pca)
 # Visualize eigenvalues/variances
 fviz_eig(res.pca)
 # Add labels, change theme
-fviz_screeplot(res.pca,  addlabels=TRUE, hjust = -0.3) +
+fviz_screeplot(res.pca,  addlabels=TRUE) +
     theme_minimal()
 
 # Graph of variables
