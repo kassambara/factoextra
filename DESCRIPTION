@@ -24,7 +24,8 @@ Imports:
     stats,
     reshape2,
     ggrepel,
-    Hmisc
+    Hmisc,
+    abind
 Suggests:
     ade4,
     ca,
