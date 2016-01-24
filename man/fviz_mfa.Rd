@@ -106,7 +106,7 @@ If TRUE, draws ellipses around the individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal probability}
 
-\item{col.ind, }{col.partial, col.var, col.group, col.axes color for individuals, partial individuals, variables, 
+\item{col.ind, col.partial, col.var, col.group, col.axes}{color for individuals, partial individuals, variables, 
 groups and axes, respectively.
  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
@@ -115,7 +115,7 @@ groups and axes, respectively.
 
 \item{col.ind.sup}{color for supplementary individuals}
 
-\item{alpha.ind, }{alpha.partial, alpha.var, alpha.group, alpha.axes controls the transparency of
+\item{alpha.ind, alpha.partial, alpha.var, alpha.group, alpha.axes}{controls the transparency of
  individual, partial individual, variable, group and axes colors, respectively.
 The value can variate from 0 (total transparency) to 1 (no transparency).
 Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -123,7 +123,7 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
-\item{shape.ind, shape.var, }{shape.group, shape.axes point shapes of individuals, variables, groups and axes}
+\item{shape.ind, shape.var, shape.group, shape.axes}{point shapes of individuals, variables, groups and axes}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
 
@@ -146,20 +146,6 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 }}
 
 \item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
-
-\item{col.var}{color for individuals and variables, respectively.
-Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
-contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
-
-\item{alpha.var}{controls the transparency of
- individual and variable colors, respectively.
-The value can variate from 0 (total transparency) to 1 (no transparency).
-Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
- To use this, make sure that habillage ="none".}
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
 
