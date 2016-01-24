@@ -113,3 +113,15 @@ get_hmfa_group <- function(res.hmfa){
   class(group)<-c("factoextra", "hmfa_group")
   return(group)
 }
+
+#' @rdname get_hmfa
+#' @export
+get_hmfa_partial <- function(res.hmfa){
+  # FactoMineR package
+  # Group calculation is only for first layer valid (see Pagès 2015)
+  if(inherits(res.hmfa, c("HMFA", "sHMFA"))) partial <- res.hmfa$partial
+  else stop("An object of class : ", class(res.hmfa), 
+            " can't be handled by the function get_hmfa_partial()")
+  class(partial)<-c("factoextra", "hmfa_partial")
+  return(partial)
+}
