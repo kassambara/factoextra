@@ -12,6 +12,8 @@ NULL
 #'  "row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA
 #' @param result the result to be extracted for the element. Possible values are
 #'  the combination of c("cos2", "contrib", "coord")
+#' @param group.names a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).
+#' @param node.level a single number indicating the HMFA node level.
 #' @param axes a numeric vector specifying the axes of interest. Default values are 1:2
 #'  for axes 1 and 2.
 #' @param select a selection of variables. Allowed values are NULL or a list containing the arguments

@@ -106,7 +106,7 @@ If TRUE, draws ellipses around the individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal probability}
 
-\item{col.ind, col.partial, col.var, col.group, col.axes}{color for individuals, partial individuals, variables, 
+\item{col.ind, col.partial, col.var, col.group, col.group.sup, col.axes}{color for individuals, partial individuals, variables, 
 groups and axes, respectively.
  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
@@ -123,11 +123,11 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
-\item{shape.ind, shape.var, shape.group, shape.axes}{point shapes of individuals, variables, groups and axes}
+\item{shape.ind, shape.var, shape.group}{point shapes of individuals, variables, groups and axes}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
 
-\item{select.ind, }{select.partial, select.var, select.group, select.axes a selection of individuals/partial individuals/
+\item{select.ind, select.partial, select.var, select.group, select.axes}{a selection of individuals/partial individuals/
 variables/groups/axes to be drawn.
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
 \itemize{
@@ -151,18 +151,13 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 
 \item{col.circle}{a color for the correlation circle.}
 
-\item{select.var}{a selection of individuals/variables to be drawn. 
-Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
-\itemize{
-\item name is a character vector containing individuals/variables to be drawn
-\item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn. 
-if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest contrib are drawn
-}}
-
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).
 First value sets the rows and the second value sets the columns.}
+
+\item{legend.partial.title}{the title of the partal groups legend.}
+
+\item{linesize}{size of partial point connecting line.}
 }
 \value{
 a ggplot2 plot

@@ -14,6 +14,10 @@ dudi, pca, coa and acm [ade4]; ca [ca package].}
 \item{element}{the element to subset from the output. Possible values are
 "row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA}
 
+\item{node.level}{a single number indicating the HMFA node level.}
+
+\item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
+
 \item{result}{the result to be extracted for the element. Possible values are
 the combination of c("cos2", "contrib", "coord")}
 
