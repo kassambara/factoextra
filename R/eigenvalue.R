@@ -24,6 +24,7 @@
 #' @param ncp a numeric value specifying the number of dimensions to be shown.
 #' @param addlabels logical value. If TRUE, labels are added at the top of bars or points
 #'  showing the information retained by each dimension.
+#' @param hjust horizontal adjustment of the labels.
 #' @param ... optional arguments to be passed to the functions geom_bar(), 
 #'  geom_line(), geom_text() or fviz_eig().
 #'  
@@ -54,8 +55,8 @@
 #' fviz_eig(res.pca, addlabels=TRUE)
 #' 
 #' # Change the y axis limits
-#' fviz_eig(res.pca, addlabels=TRUE, hjust = -0.3) +
-#'    ylim(0, 80)
+#'fviz_eig(res.pca, addlabels=TRUE, hjust = -0.3) +
+#'   ylim(0, 80)
 #' # Scree plot - Eigenvalues
 #' fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
 #' 
@@ -156,7 +157,7 @@ get_eigenvalue <- function(X){
 #' @export
 fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                          barfill="steelblue", barcolor="steelblue", linecolor = "black",
-                         ncp=10, addlabels=FALSE, ...)
+                         ncp=10, addlabels=FALSE, hjust = 0,  ...)
 {
   
   eig <- get_eigenvalue(X)
@@ -187,7 +188,7 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   if("line" %in% geom) p <- p + geom_line(color = linecolor, ...)+
     geom_point(shape=19, color=linecolor)
   if(addlabels) p <- p + geom_text(label = text_labels,
-                                   vjust=-0.4, ...)
+                                   vjust=-0.4, hjust = hjust, ...)
   p <- p + labs(title = title, x = xlab, y = ylab)
   
   p 
