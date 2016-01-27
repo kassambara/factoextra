@@ -133,7 +133,7 @@ NULL
 #'      theme_minimal()
 #'
 #' # Color individuals by groups
-#' grp <- as.factor(poison.active[, "Vomiting"])
+#' grp <- as.factor(poison[, "Vomiting"])
 #' fviz_mfa_ind(res.mfa, label="none", habillage=grp)
 #' # Add ellipses
 #' p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
@@ -250,18 +250,18 @@ NULL
 #' # Select the partial points of the top 5
 #' # contributing individuals
 #' fviz_mfa_ind_starplot(res.mfa, 
-#'                       select.partial = list(contrib = 2)) 
-#'                       + theme_minimal()
+#'                       select.partial = list(contrib = 2)) +
+#'                       theme_minimal()
 #'                       
 #' # Change colours of star segments
 #' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
-#'                       col.partial = "group.name")
-#'                       + theme_minimal()
+#'                       col.partial = "group.name") +
+#'                       theme_minimal()
 #'
 #' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
-#'                       col.partial = "group.name")
-#'                       + scale_color_brewer(palette = "Dark2")
-#'                       + theme_minimal()
+#'                       col.partial = "group.name") +
+#'                       scale_color_brewer(palette = "Dark2") +
+#'                       theme_minimal() 
 #'   
 #' # Graph of groups (correlation square)
 #' # ++++++++++++++++++++++++++++++++++++
