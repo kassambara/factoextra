@@ -83,6 +83,7 @@
 #'  
 #' # PAM clustering
 #' # ++++++++++++++++++++
+#' require(cluster)
 #' pam.res <- pam(iris.scaled, 3)
 #'  # Visualize pam clustering
 #' fviz_cluster(pam.res, geom = "point", frame.type = "norm")
@@ -152,7 +153,7 @@
 #' gap_stat <- clusGap(iris.scaled, FUN = pam, K.max = 10, B = 50)
 #' fviz_gap_stat(gap_stat)
 #' # Gap statistic for hierarchical clustering
-#' gap_stat <- clusGap(iris.scaled, FUN = hc, K.max = 10, B = 50)
+#' gap_stat <- clusGap(iris.scaled, FUN = hcut, K.max = 10, B = 50)
 #' fviz_gap_stat(gap_stat)
 #'  
 #' }
