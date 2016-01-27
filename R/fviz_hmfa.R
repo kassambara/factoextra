@@ -852,8 +852,8 @@ fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), g
                          select = select.ind)
     if(!is.null(ind_sup)) {
       colnames(ind_sup)[2:3] <-  c("x", "y")
-      ind_sup <- .scale_ca(ind_sup, res.ca = X,  element = "ind.sup",
-                           type = map, axes = axes)
+      # ind_sup <- .scale_ca(ind_sup, res.ca = X,  element = "ind.sup",
+      #                     type = map, axes = axes)
     }
     if(!is.null(ind_sup)){
       p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
