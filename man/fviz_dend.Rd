@@ -63,7 +63,7 @@ fviz_dend(res.hc, cex = 0.5, k = 4, type = "triangle")
 
 # Change the color of tree using black color for all groups
 # Change rectangle border colors
-fviz_dend(res.hc, rect = T, k_colors ="black",
+fviz_dend(res.hc, rect = TRUE, k_colors ="black",
 rect_border = 2:5, rect_lty = 1)
 
 # Customized color for groups
