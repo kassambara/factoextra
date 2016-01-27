@@ -14,7 +14,7 @@ get_eigenvalue(X)
 
 fviz_eig(X, choice = c("variance", "eigenvalue"), geom = c("bar", "line"),
   barfill = "steelblue", barcolor = "steelblue", linecolor = "black",
-  ncp = 10, addlabels = FALSE, ...)
+  ncp = 10, addlabels = FALSE, hjust = 0, ...)
 
 fviz_screeplot(...)
 }
@@ -38,6 +38,8 @@ Allowed values are "bar" for barplot, "line" for lineplot or c("bar", "line") to
 
 \item{addlabels}{logical value. If TRUE, labels are added at the top of bars or points
 showing the information retained by each dimension.}
+
+\item{hjust}{horizontal adjustment of the labels.}
 
 \item{...}{optional arguments to be passed to the functions geom_bar(), 
 geom_line(), geom_text() or fviz_eig().}
@@ -80,7 +82,7 @@ fviz_eig(res.pca, addlabels=TRUE)
 
 # Change the y axis limits
 fviz_eig(res.pca, addlabels=TRUE, hjust = -0.3) +
-   ylim(0, 80)
+  ylim(0, 80)
 # Scree plot - Eigenvalues
 fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
 
