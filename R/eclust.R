@@ -1,6 +1,8 @@
 #' @include utilities.R cluster_utilities.R dist.R fviz_cluster.R fviz_dend.R
 NULL
+
 #' Visual enhancement of clustering analysis
+#' 
 #' @param x numeric vector, data matrix or data frame
 #' @param FUNcluster a clustering function including "kmeans", "pam", "clara", "fanny", "hclust", "agnes" and "diana". 
 #' Abbreviation is allowed.
