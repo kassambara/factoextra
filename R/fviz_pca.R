@@ -260,22 +260,31 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     p <- ggplot()
     if(hide$ind & hide$quali) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
     
-    if(is.factor(habillage)){ 
+#     if(is.factor(habillage)){ 
+#       if(nrow(ind)!=length(habillage))
+#         stop("The number of active individuals used in the PCA is different ",
+#              "from the length of the factor habillage. Please, remove the supplementary ",
+#              "individuals in the variable habillage.")
+#       name.quali <- "Groups"
+#       ind <- cbind.data.frame(Groups = habillage, ind)
+#       ind[, 1]<-as.factor(ind[,1])
+#     }
+    # X is from FactoMineR outputs
+    if(inherits(X, "PCA") & length(habillage) == 1){
+      data <- X$call$X
+      if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
+      else name.quali <- habillage 
+      ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
+      colnames(ind)[1]<-name.quali
+      ind[, 1]<-as.factor(ind[,1])
+    }
+    else{
       if(nrow(ind)!=length(habillage))
         stop("The number of active individuals used in the PCA is different ",
              "from the length of the factor habillage. Please, remove the supplementary ",
              "individuals in the variable habillage.")
       name.quali <- "Groups"
       ind <- cbind.data.frame(Groups = habillage, ind)
-      ind[, 1]<-as.factor(ind[,1])
-    }
-    # X is from FactoMineR outputs
-    else if(inherits(X, "PCA")){
-      data <- X$call$X
-      if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
-      else name.quali <- habillage 
-      ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
-      colnames(ind)[1]<-name.quali
       ind[, 1]<-as.factor(ind[,1])
     }
     
