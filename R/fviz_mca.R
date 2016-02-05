@@ -283,17 +283,18 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     p <- ggplot()
     if(hide$ind & hide$quali) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
     
-    if(is.factor(habillage)){ 
-      if(nrow(ind)!=length(habillage))
-        stop("The number of active individuals used in the MCA is different ",
-             "from the length of the factor habillage. Please, remove the supplementary ",
-             "individuals in the variable habillage.")
-      name.quali <- "Groups"
-      ind <- cbind.data.frame(Groups = habillage, ind)
-      ind[, 1]<-as.factor(ind[,1])
-    }
+#     if(is.factor(habillage)){ 
+#       if(nrow(ind)!=length(habillage))
+#         stop("The number of active individuals used in the MCA is different ",
+#              "from the length of the factor habillage. Please, remove the supplementary ",
+#              "individuals in the variable habillage.")
+#       name.quali <- "Groups"
+#       ind <- cbind.data.frame(Groups = habillage, ind)
+#       ind[, 1]<-as.factor(ind[,1])
+#     }
+    
     # X is from FactoMineR outputs
-    else if(inherits(X, c("MCA", "sMCA"))){
+    if(inherits(X, c("MCA", "sMCA")) & length(habillage) == 1){
       data <- X$call$X
       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
       else name.quali <- habillage 
@@ -301,6 +302,16 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
       colnames(ind)[1]<-name.quali
       ind[, 1]<-as.factor(ind[,1])
     }
+    else{
+      if(nrow(ind)!=length(habillage))
+        stop("The number of active individuals used in the PCA is different ",
+             "from the length of the factor habillage. Please, remove the supplementary ",
+             "individuals in the variable habillage.")
+      name.quali <- "Groups"
+      ind <- cbind.data.frame(Groups = habillage, ind)
+      ind[, 1]<-as.factor(ind[,1])
+    }
+    
     
     if(!hide$ind) {
       
