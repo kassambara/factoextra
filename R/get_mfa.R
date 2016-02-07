@@ -109,7 +109,7 @@ get_mfa_quali_var <- function(res.mfa){
 #' @export
 get_mfa_group <- function(res.mfa){
   # FactoMineR package
-  if(inherits(res.mfa, "MFA")) group <- res.mfa$group
+  if(inherits(res.mfa, c("MFA", "sMFA"))) group <- res.mfa$group
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_group()")
   class(group)<-c("factoextra", "mfa_group")
