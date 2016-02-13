@@ -578,7 +578,7 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
   if("text" %in% geom)
     p <- p + geom_text(data = outliers_labs, 
                        aes_string('x', 'y', label = 'name'),  
-                       size = labelsize, vjust = -0.7, color = outlier.color, shape = outlier.shape)
+                       size = labelsize, vjust = -0.7, color = outlier.color)
   return(p)
 }
 
