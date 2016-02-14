@@ -37,7 +37,8 @@
 #'  coloring individuals by groups (see ?PCA in FactoMineR). 
 #' @param addEllipses logical value.
 #'  If TRUE, draws ellipses around the individuals when habillage != "none".
-#' @param ellipse.level the size of the concentration ellipse in normal probability
+#' @param ellipse.level the size of the concentration ellipse in normal probability.
+#' @param axes.linetype linetype of x and y axes.
 #' @param col.ind,col.var color for individuals and variables, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their 
@@ -217,7 +218,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
-                         jitter = list(what = "label", width = NULL, height = NULL),...)
+                         jitter = list(what = "label", width = NULL, height = NULL),
+                         axes.linetype = "dashed",...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -368,8 +370,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   }
   
   p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype="dashed") +
-    geom_vline(xintercept = 0, color = "black", linetype="dashed") +
+    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
+    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
     labs(title = "Individuals factor map - PCA")
   
   
@@ -384,7 +386,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         jitter = list(what = "label", width = NULL, height = NULL))
+                         jitter = list(what = "label", width = NULL, height = NULL),
+                         axes.linetype = "dashed")
 {
   
   if(is.null(jitter$what)) jitter$what <- "label"
@@ -414,8 +417,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
     p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
       geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
-      geom_hline(yintercept = 0, linetype="dashed")+
-      geom_vline(xintercept = 0, linetype="dashed")    
+      geom_hline(yintercept = 0, linetype=axes.linetype)+
+      geom_vline(xintercept = 0, linetype=axes.linetype)    
   }
   else p <- ggplot()
   

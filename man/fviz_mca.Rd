@@ -11,9 +11,9 @@ fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, repel = FALSE,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  shape.ind = 19, select.ind = list(name = NULL, cos2 = NULL, contrib =
-  NULL), map = "symmetric", jitter = list(what = "label", width = NULL,
-  height = NULL), ...)
+  shape.ind = 19, axes.linetype = "dashed", select.ind = list(name = NULL,
+  cos2 = NULL, contrib = NULL), map = "symmetric", jitter = list(what =
+  "label", width = NULL, height = NULL), ...)
 
 fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, col.var = "red",
@@ -72,7 +72,7 @@ the index of the factor variable in the data.}
 \item{addEllipses}{logical value.
 If TRUE, draws ellipses around the individuals when habillage != "none".}
 
-\item{ellipse.level}{the size of the concentration ellipse in normal probability}
+\item{ellipse.level}{the size of the concentration ellipse in normal probability.}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively.
 Possible values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -90,7 +90,9 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
-\item{shape.ind, shape.var}{point shapes of individuals and variables}
+\item{shape.ind, shape.var}{point shapes of individuals and variables.}
+
+\item{axes.linetype}{linetype of x and y axes.}
 
 \item{select.ind, select.var}{a selection of individuals/variables to be drawn. 
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 

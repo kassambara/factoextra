@@ -32,6 +32,7 @@ NULL
 #'  the observations by groups. Default value is "none".
 #'  If X is an MFA object from FactoMineR package, habillage can also specify
 #'  the index of the factor variable in the data.
+#' @param axes.linetype linetype of x and y axes.
 #' @param col.ind,col.partial,col.var,col.group,col.group.sup,col.axes color for individuals, partial individuals, variables, 
 #' groups and axes, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -280,7 +281,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          labelsize=4, pointsize = 2,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                         shape.ind = 19, repel = FALSE,
+                         shape.ind = 19, repel = FALSE, axes.linetype = "dashed",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          # map ="symmetric",
                          jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -430,8 +431,8 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   }
   
   p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype="dashed") +
-    geom_vline(xintercept = 0, color = "black", linetype="dashed") +
+    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
+    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
     labs(title = "Individuals factor map - MFA")
   
   
@@ -445,7 +446,7 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
                                 labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                 col.quanti.sup="blue",  col.quali.sup = "darkgreen", col.circle = "grey70",
                                 select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                # map ="symmetric", 
+                                axes.linetype = "dashed", # map ="symmetric", 
                                 repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
 {
   # Check if there are quantitative variables.
@@ -489,8 +490,8 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
       geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
-      geom_hline(yintercept = 0, linetype="dashed")+
-      geom_vline(xintercept = 0, linetype="dashed")    
+      geom_hline(yintercept = 0, linetype=axes.linetype)+
+      geom_vline(xintercept = 0, linetype=axes.linetype)    
   
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
@@ -710,7 +711,7 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  # map ="symmetric",
+                                  axes.linetype = "dashed", # map ="symmetric",
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -891,8 +892,8 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   }
   
   p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype="dashed") +
-    geom_vline(xintercept = 0, color = "black", linetype="dashed") +
+    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
+    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
     # Edit legend title
     scale_shape(name = legend.partial.title) + 
     scale_linetype(name = legend.partial.title) +
@@ -959,7 +960,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                           label = "all", invisible="none", labelsize=4, pointsize = 2,
                           col.axes="red", alpha.axes=1, col.circle ="grey70",
                           select.axes = list(name = NULL, contrib = NULL),
-                          # map ="symmetric",
+                          axes.linetype = "dashed",# map ="symmetric",
                           arrows = c(FALSE, FALSE), repel = FALSE,
                           jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
@@ -993,8 +994,8 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
     geom_path(color=col.circle)+
-    geom_hline(yintercept = 0, linetype="dashed")+
-    geom_vline(xintercept = 0, linetype="dashed")
+    geom_hline(yintercept = 0, linetype=axes.linetype)+
+    geom_vline(xintercept = 0, linetype=axes.linetype)
   
   # geometry for variable
   geom2 <- geom

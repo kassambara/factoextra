@@ -14,16 +14,17 @@ fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
   addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
   col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
-  repel = FALSE, select.ind = list(name = NULL, cos2 = NULL, contrib =
-  NULL), jitter = list(what = "label", width = NULL, height = NULL), ...)
+  repel = FALSE, axes.linetype = "dashed", select.ind = list(name = NULL,
+  cos2 = NULL, contrib = NULL), jitter = list(what = "label", width = NULL,
+  height = NULL), ...)
 
 fviz_hmfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.var = "red", alpha.var = 1, shape.var = 17,
   col.quanti.sup = "blue", col.quali.sup = "darkgreen",
   col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), repel = FALSE, jitter = list(what = "label", width = NULL, height
-  = NULL))
+  = NULL), axes.linetype = "dashed", repel = FALSE, jitter = list(what =
+  "label", width = NULL, height = NULL))
 
 fviz_hmfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -52,7 +53,8 @@ fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   shape.ind = 19, alpha.partial = 1, node.level = 1,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
   select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+  axes.linetype = "dashed", jitter = list(what = "label", width = NULL,
+  height = NULL), ...)
 
 fviz_hmfa_group(X, axes = c(1, 2), geom = c("point", "text"),
   alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
@@ -98,7 +100,7 @@ the index of the factor variable in the data.}
 \item{addEllipses}{logical value.
 If TRUE, draws ellipses around the individuals when habillage != "none".}
 
-\item{ellipse.level}{the size of the concentration ellipse in normal probability}
+\item{ellipse.level}{the size of the concentration ellipse in normal probability.}
 
 \item{col.ind, col.partial, col.var, col.group}{color for individuals, partial individuals, variables, 
 groups and axes, respectively.
@@ -120,6 +122,8 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 \item{shape.ind, shape.var, shape.group}{point shapes of individuals, variables, groups and axes}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
+
+\item{axes.linetype}{linetype of x and y axes.}
 
 \item{select.ind, select.partial, select.var, select.group}{a selection of individuals/partial individuals/
 variables/groups/axes to be drawn.

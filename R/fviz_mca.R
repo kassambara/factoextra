@@ -39,7 +39,8 @@
 #'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
-#' @param shape.ind,shape.var point shapes of individuals and variables
+#' @param axes.linetype linetype of x and y axes.
+#' @param shape.ind,shape.var point shapes of individuals and variables.
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
 #' @param select.ind,select.var a selection of individuals/variables to be drawn. 
@@ -233,7 +234,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          labelsize=4, pointsize = 2, repel = FALSE,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                         shape.ind = 19,
+                         shape.ind = 19, axes.linetype = "dashed",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          map ="symmetric",
                          jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -394,8 +395,8 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   }
   
   p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype="dashed") +
-    geom_vline(xintercept = 0, color = "black", linetype="dashed") +
+    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
+    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
     labs(title = "Individuals factor map - MCA")
   
   
