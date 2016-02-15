@@ -29,10 +29,10 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
   col.var = "steelblue", alpha.var = 1, col.quanti.sup = "blue",
-  col.circle = "grey70", repel = FALSE, select.var = list(name = NULL,
-  cos2 = NULL, contrib = NULL), select.ind = list(name = NULL, cos2 = NULL,
-  contrib = NULL), jitter = list(what = "label", width = NULL, height = NULL),
-  ...)
+  col.circle = "grey70", repel = FALSE, axes.linetype = "dashed",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats];

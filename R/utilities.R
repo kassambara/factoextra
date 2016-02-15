@@ -841,7 +841,7 @@ NULL
 # p a ggplot2
 # X an object of class PCA, MCA or CA
 # axes the plotted axes
-.fviz_finish <- function(p, X, axes = 1:2){
+.fviz_finish <- function(p, X, axes = 1:2, linetype = "dashed"){
   
   cc <- .get_facto_class(X)
   title <- paste0(cc, " factor map")
@@ -851,8 +851,8 @@ NULL
   ylab = paste0("Dim", axes[2], " (", round(eig[axes[2]], 1),"%)")
   
   p <- p +
-    geom_hline(yintercept = 0, color = "black", linetype="dashed") +
-    geom_vline(xintercept = 0, color = "black", linetype="dashed") +
+    geom_hline(yintercept = 0, color = "black", linetype=linetype) +
+    geom_vline(xintercept = 0, color = "black", linetype=linetype) +
     labs(title = title, x = xlab, y = ylab)
   
   return(p)

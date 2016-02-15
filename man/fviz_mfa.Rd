@@ -32,7 +32,8 @@ fviz_mfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   col.var = "red", alpha.var = 1, shape.var = 17,
   col.quanti.sup = "blue", col.quali.sup = "darkgreen", repel = FALSE,
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL))
+  axes.linetype = "dashed", jitter = list(what = "label", width = NULL,
+  height = NULL))
 
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -42,8 +43,8 @@ fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.quali.sup = "darkgreen", shape.ind = 19, shape.var = 17,
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  arrows = c(FALSE, FALSE), repel = FALSE, jitter = list(what = "label",
-  width = NULL, height = NULL), ...)
+  axes.linetype = "dashed", arrows = c(FALSE, FALSE), repel = FALSE,
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_mfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", legend.partial.title = NULL,

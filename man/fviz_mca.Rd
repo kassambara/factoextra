@@ -19,8 +19,9 @@ fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, col.var = "red",
   alpha.var = 1, shape.var = 17, col.quanti.sup = "blue",
   col.quali.sup = "darkgreen", repel = FALSE, select.var = list(name =
-  NULL, cos2 = NULL, contrib = NULL), map = "symmetric", jitter = list(what
-  = "label", width = NULL, height = NULL))
+  NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
+  map = "symmetric", jitter = list(what = "label", width = NULL, height =
+  NULL))
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -28,10 +29,10 @@ fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
   col.var = "red", alpha.var = 1, col.quanti.sup = "blue",
   col.quali.sup = "darkgreen", repel = FALSE, shape.ind = 19,
-  shape.var = 17, select.var = list(name = NULL, cos2 = NULL, contrib =
-  NULL), select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", arrows = c(FALSE, FALSE), jitter = list(what =
-  "label", width = NULL, height = NULL), ...)
+  shape.var = 17, axes.linetype = "dashed", select.var = list(name = NULL,
+  cos2 = NULL, contrib = NULL), select.ind = list(name = NULL, cos2 = NULL,
+  contrib = NULL), map = "symmetric", arrows = c(FALSE, FALSE),
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_mca(X, ...)
 }

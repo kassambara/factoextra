@@ -394,9 +394,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }  
   }
   
-  p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
-    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Individuals factor map - MCA")
   
   
@@ -409,7 +407,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
 fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
                          labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
                          col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
-                         select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         select.var = list(name = NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
                          map ="symmetric", jitter = list(what = "label", width = NULL, height = NULL))
 {
   
@@ -468,7 +466,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
     
   }
   
-  p <- .fviz_finish(p, X, axes) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Variable categories- MCA")
   p 
 }
@@ -483,7 +481,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                   col.var="red", alpha.var=1, col.quanti.sup="blue",
                   col.quali.sup = "darkgreen", repel = FALSE,
-                  shape.ind = 19, shape.var = 17, 
+                  shape.ind = 19, shape.var = 17, axes.linetype = "dashed",
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                   map ="symmetric", arrows = c(FALSE, FALSE), 
@@ -520,7 +518,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   p <- fviz_mca_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
           labelsize=labelsize, pointsize = pointsize,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-          shape.ind=shape.ind,
+          shape.ind=shape.ind, axes.linetype=axes.linetype,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
           select.ind = select.ind, jitter = jitter)
     

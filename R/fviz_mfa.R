@@ -430,9 +430,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
   }
   
-  p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
-    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Individuals factor map - MFA")
   
   
@@ -522,7 +520,7 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
     
   }
   
-  p <- .fviz_finish(p, X, axes) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Quantitative Variable categories - MFA")
   p
 }
@@ -535,7 +533,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
                                labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
                                select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                               # map ="symmetric", 
+                               axes.linetype = "dashed", # map ="symmetric", 
                                jitter = list(what = "label", width = NULL, height = NULL))
 {
   
@@ -604,7 +602,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
     
   }
   
-  p <- .fviz_finish(p, X, axes) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Qualitative Variable categories - MFA")
   p
 }
@@ -621,7 +619,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   shape.ind = 19, shape.var = 17,
                                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  # map ="symmetric", 
+                                  axes.linetype = "dashed", # map ="symmetric", 
                                   arrows = c(FALSE, FALSE), repel = FALSE,
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
@@ -664,7 +662,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   p <- fviz_mfa_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
                     labelsize=labelsize, pointsize = pointsize,
                     col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-                    shape.ind=shape.ind, repel = repel,
+                    shape.ind=shape.ind, repel = repel, axes.linetype=axes.linetype,
                     habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
                     select.ind = select.ind, jitter = jitter)
   
@@ -891,9 +889,7 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
   }
   
-  p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
-    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     # Edit legend title
     scale_shape(name = legend.partial.title) + 
     scale_linetype(name = legend.partial.title) +

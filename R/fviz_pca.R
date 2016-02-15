@@ -369,9 +369,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     }  
   }
   
-  p <- .fviz_finish(p, X, axes) +
-    geom_hline(yintercept = 0, color = "black", linetype=axes.linetype) +
-    geom_vline(xintercept = 0, color = "black", linetype=axes.linetype) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Individuals factor map - PCA")
   
   
@@ -445,7 +443,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     
   }
   
-  p <- .fviz_finish(p, X, axes) +
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
     labs(title = "Variables factor map - PCA")
   p 
 }
@@ -459,7 +457,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                   col.var="steelblue",  alpha.var=1, col.quanti.sup="blue",
-                  col.circle ="grey70", repel = FALSE,
+                  col.circle ="grey70", repel = FALSE, axes.linetype = "dashed",
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                   jitter = list(what = "label", width = NULL, height = NULL), ...)
@@ -499,7 +497,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom, label = label, invisible=invisible,
-          labelsize=labelsize, pointsize = pointsize,
+          labelsize=labelsize, pointsize = pointsize, axes.linetype=axes.linetype,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
           select.ind = select.ind, jitter = jitter)
