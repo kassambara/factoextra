@@ -2,8 +2,6 @@
 NULL
 #' @import ggplot2
 #' @importFrom ggrepel geom_text_repel
-#' @importFrom grid arrow
-#' @importFrom grid unit
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
