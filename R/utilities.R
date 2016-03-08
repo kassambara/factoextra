@@ -1,27 +1,6 @@
 #' @include eigenvalue.R
 NULL
-#' @importFrom ggplot2 geom_hline
-#' @importFrom ggplot2 geom_vline
-#' @importFrom ggplot2 labs
-#' @importFrom ggplot2 ggplot
-#' @importFrom ggplot2 geom_point
-#' @importFrom ggplot2 aes_string
-#' @importFrom ggplot2 geom_text
-#' @importFrom ggplot2 geom_segment
-#' @importFrom ggplot2 geom_bar
-#' @importFrom ggplot2 geom_path
-#' @importFrom ggplot2 geom_line
-#' @importFrom ggplot2 geom_blank
-#' @importFrom ggplot2 aes
-#' @importFrom ggplot2 scale_alpha
-#' @importFrom ggplot2 theme
-#' @importFrom ggplot2 element_text
-#' @importFrom ggplot2 element_blank
-#' @importFrom ggplot2 xlim
-#' @importFrom ggplot2 ylim
-#' @importFrom ggplot2 guides
-#' @importFrom ggplot2 scale_shape
-#' @importFrom ggplot2 scale_linetype
+#' @import ggplot2
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom grid arrow
 #' @importFrom grid unit
