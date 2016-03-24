@@ -1,4 +1,4 @@
-#' @include get_mca.R
+#' @include utilities.R get_mca.R
  NULL
 #' Visualize Multiple Correspondence Analysis
 #' 
