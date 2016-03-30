@@ -499,7 +499,7 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
     geom_line(color = linecolor) +
     geom_vline(xintercept = k, linetype=2, color = linecolor)+
     labs(y = "Gap statistic (k)", x = "Number of clusters k",
-         title = "Otimal number of clusters")
+         title = "Optimal number of clusters")
   p
 }
 
