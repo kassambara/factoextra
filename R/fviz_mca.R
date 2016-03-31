@@ -295,7 +295,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #     }
     
     # X is from FactoMineR outputs
-    if(inherits(X, c("MCA", "sMCA")) & length(habillage) == 1){
+    if(inherits(X, c("MCA")) & length(habillage) == 1){
       data <- X$call$X
       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
       else name.quali <- habillage 
@@ -379,7 +379,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Add supplementary quantitative individuals
   # Available only in FactoMineR
-  if(inherits(X, c('MCA', 'sMCA')) & !hide$ind.sup){
+  if(inherits(X, c('MCA')) & !hide$ind.sup){
     ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
                          select = select.ind)
     if(!is.null(ind_sup)) {
@@ -449,7 +449,7 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
   
   # Add supplementary qualitative variable categories
   # Available only in FactoMineR
-  if(inherits(X, c('MCA', 'sMCA')) & !hide$quali.sup ){
+  if(inherits(X, c('MCA')) & !hide$quali.sup ){
     quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
                             select = select.var)
     if(!is.null(quali_sup)){
@@ -536,7 +536,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Add supplementary qualitative variable categories
   # Available only in FactoMineR
-  if(inherits(X, c('MCA', 'sMCA')) & !hide$quali.sup ){
+  if(inherits(X, c('MCA')) & !hide$quali.sup ){
     quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
                            select = select.var)
     if(!is.null(quali_sup)){

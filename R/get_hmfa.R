@@ -70,7 +70,7 @@ get_hmfa <- function(res.hmfa, element = c("ind", "quanti.var", "quali.var", "gr
 #' @export
 get_hmfa_ind <- function(res.hmfa){
   # FactoMineR package
-  if(inherits(res.hmfa, c("HMFA", "sHMFA"))) ind <- res.hmfa$ind
+  if(inherits(res.hmfa, c("HMFA"))) ind <- res.hmfa$ind
   # @todo ade4 Support muss noch eingebaut werden!
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_ind()")
@@ -83,7 +83,7 @@ get_hmfa_ind <- function(res.hmfa){
 get_hmfa_quanti_var <- function(res.hmfa){
   # FactoMineR package
   if(is.null(res.hmfa$quanti.var)) stop("There are no quantitative variables in this HMFA.")
-  else if(inherits(res.hmfa, c("HMFA", "sHMFA"))) quanti_vars <- res.hmfa$quanti.var
+  else if(inherits(res.hmfa, c("HMFA"))) quanti_vars <- res.hmfa$quanti.var
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_quanti_var()")
   class(quanti_vars)<-c("factoextra", "hmfa_quanti_var")
@@ -95,7 +95,7 @@ get_hmfa_quanti_var <- function(res.hmfa){
 get_hmfa_quali_var <- function(res.hmfa){
   # FactoMineR package
   if(is.null(res.hmfa$quali.var)) stop("There are no qualitative variables in this HMFA.")
-  if(inherits(res.hmfa, c("HMFA", "sHMFA"))) quali_vars <- res.hmfa$quali.var
+  if(inherits(res.hmfa, c("HMFA"))) quali_vars <- res.hmfa$quali.var
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_quali_var()")
   class(quali_vars)<-c("factoextra", "hmfa_quali_var")
@@ -107,7 +107,7 @@ get_hmfa_quali_var <- function(res.hmfa){
 get_hmfa_group <- function(res.hmfa){
   # FactoMineR package
   # Group calculation is only for first layer valid (see Pagès 2015)
-  if(inherits(res.hmfa, c("HMFA", "sHMFA"))) group <- list(coord = res.hmfa$group$coord[[1]], canonical = res.hmfa$group$canonical)
+  if(inherits(res.hmfa, c("HMFA"))) group <- list(coord = res.hmfa$group$coord[[1]], canonical = res.hmfa$group$canonical)
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_group()")
   class(group)<-c("factoextra", "hmfa_group")
@@ -119,7 +119,7 @@ get_hmfa_group <- function(res.hmfa){
 get_hmfa_partial <- function(res.hmfa){
   # FactoMineR package
   # Group calculation is only for first layer valid (see Pagès 2015)
-  if(inherits(res.hmfa, c("HMFA", "sHMFA"))) partial <- res.hmfa$partial
+  if(inherits(res.hmfa, c("HMFA"))) partial <- res.hmfa$partial
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_partial()")
   class(partial)<-c("factoextra", "hmfa_partial")

@@ -62,7 +62,7 @@ get_ca <- function(res.ca, element = c("row", "col")){
 #' @export
 get_ca_col <- function(res.ca){
   # FactoMineR package
-  if(inherits(res.ca, c("CA", "sCA"))) cols <- res.ca$col
+  if(inherits(res.ca, c("CA"))) cols <- res.ca$col
   
   # ca package
   else if(inherits(res.ca, "ca")){
@@ -127,7 +127,7 @@ get_ca_col <- function(res.ca){
 get_ca_row <- function(res.ca){
   
   # FactoMineR package
-  if(inherits(res.ca, c("CA", "sCA"))) row <- res.ca$row
+  if(inherits(res.ca, c("CA"))) row <- res.ca$row
   
   # ca package
   else if(inherits(res.ca, "ca")){

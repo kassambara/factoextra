@@ -67,7 +67,7 @@ get_mca <- function(res.mca, element = c("var", "ind")){
 #' @export
 get_mca_var <- function(res.mca){
   # FactoMineR package
-  if(inherits(res.mca, c("MCA", "sMCA"))) vars <- res.mca$var
+  if(inherits(res.mca, c("MCA"))) vars <- res.mca$var
   # ade4 package
   else if(inherits(res.mca, "acm") & inherits(res.mca, 'dudi')){
     if (!requireNamespace("ade4", quietly = TRUE)) {
@@ -90,7 +90,7 @@ get_mca_var <- function(res.mca){
 #' @export
 get_mca_ind <- function(res.mca){
   # FactoMineR package
-  if(inherits(res.mca, c("MCA", "sMCA"))) ind <- res.mca$ind
+  if(inherits(res.mca, c("MCA"))) ind <- res.mca$ind
   # ade4 package
   else if(inherits(res.mca, "acm") & inherits(res.mca, 'dudi')){
     if (!requireNamespace("ade4", quietly = TRUE)) {

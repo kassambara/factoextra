@@ -8,14 +8,14 @@ NULL
 # from different packages (FactoMineR, ade4, ....) 
 .get_facto_class <- function(X){
   
-  if(inherits(X, c('PCA', 'sPCA', 'princomp', 'prcomp')))
+  if(inherits(X, c('PCA', 'princomp', 'prcomp')))
     facto_class ="PCA"
   else if(inherits(X, 'pca') & inherits(X, 'dudi'))
     facto_class ="PCA"
-  else if(inherits(X, c("CA", "sCA", "ca", "coa", "correspondence"))) facto_class="CA"
-  else if(inherits(X, c("MCA", "sMCA", "acm"))) facto_class = "MCA"
-  else if(inherits(X, c("MFA", "sMFA","mfa"))) facto_class = "MFA"
-  else if(inherits(X, c("HMFA", "sHMFA"))) facto_class = "HMFA"
+  else if(inherits(X, c("CA", "ca", "coa", "correspondence"))) facto_class="CA"
+  else if(inherits(X, c("MCA", "acm"))) facto_class = "MCA"
+  else if(inherits(X, c("MFA","mfa"))) facto_class = "MFA"
+  else if(inherits(X, c("HMFA"))) facto_class = "HMFA"
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
@@ -32,7 +32,7 @@ NULL
 ## select: a selection of variables. See the function .select()
 .get_supp <- function(X, element = NULL, axes = 1:2, 
                       result = c("coord", "cos2"), select = NULL){
-  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA","sCA", "sPCA", "sMCA", "sMFA", "sHMFA"))) {
+  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -307,7 +307,7 @@ NULL
     }
   }
   # FactoMiner
-  else if(inherits(res.ca, c("CA", "MCA", "sCA", "sMCA"))){
+  else if(inherits(res.ca, c("CA", "MCA"))){
     if(element %in% c("row", "ind")) mass <- res.ca$call$marge.row
     else if(element %in% c("col", "var")) mass <- res.ca$call$marge.col
     
