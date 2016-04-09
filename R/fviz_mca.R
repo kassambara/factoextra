@@ -43,6 +43,7 @@
 #' @param shape.ind,shape.var point shapes of individuals and variables.
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
+#' @param title the title of the graph
 #' @param select.ind,select.var a selection of individuals/variables to be drawn. 
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
 #' \itemize{
@@ -236,7 +237,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                          shape.ind = 19, axes.linetype = "dashed",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         map ="symmetric",
+                         map ="symmetric", title = "Individuals factor map - MCA",
                          jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -394,8 +395,9 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }  
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Individuals factor map - MCA")
+    labs(title = title2)
   
   
   p
@@ -406,7 +408,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #' @export 
 fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
                          labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
-                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
+                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE, title = "Variable categories- MCA",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
                          map ="symmetric", jitter = list(what = "label", width = NULL, height = NULL))
 {
@@ -466,8 +468,9 @@ fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  
     
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Variable categories- MCA")
+    labs(title = title2)
   p 
 }
 
@@ -484,7 +487,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   shape.ind = 19, shape.var = 17, axes.linetype = "dashed",
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  map ="symmetric", arrows = c(FALSE, FALSE), 
+                  map ="symmetric", arrows = c(FALSE, FALSE), title = "MCA factor map - Biplot",
                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -551,7 +554,8 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }  
     
   }
-  p+labs(title="MCA factor map - Biplot")
+  title2 <- title
+  p+labs(title=title2)
 }
 
 #' @rdname fviz_mca

@@ -30,6 +30,7 @@
 #'  Allowed values are the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
+#' @param title the title of the graph
 #' @param habillage an optional factor variable for coloring
 #'  the observations by groups. Default value is "none".
 #'  If X is a PCA object from FactoMineR package, habillage can also specify
@@ -219,7 +220,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
                          jitter = list(what = "label", width = NULL, height = NULL),
-                         axes.linetype = "dashed",...)
+                         title = "Individuals factor map - PCA", axes.linetype = "dashed",...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
@@ -369,8 +370,9 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     }  
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Individuals factor map - PCA")
+    labs(title = title2)
   
   
   p
@@ -385,7 +387,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          col.quanti.sup="blue", col.circle ="grey70",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                          jitter = list(what = "label", width = NULL, height = NULL),
-                         axes.linetype = "dashed")
+                         title = "Variables factor map - PCA", axes.linetype = "dashed")
 {
   
   if(is.null(jitter$what)) jitter$what <- "label"
@@ -443,8 +445,9 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Variables factor map - PCA")
+    labs(title = title2)
   p 
 }
 
@@ -459,7 +462,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   col.var="steelblue",  alpha.var=1, col.quanti.sup="blue",
                   col.circle ="grey70", repel = FALSE, axes.linetype = "dashed",
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), title = "Biplot of variables and individuals",
                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -522,7 +525,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                     labelsize = labelsize, addlabel = (lab$quanti), jitter = jitter )
     }  
   }
-  p+labs(title="Biplot of variables and individuals")
+  title2 <- title
+  p+labs(title=title2)
 }
 
 

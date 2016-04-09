@@ -27,6 +27,7 @@ NULL
 #' the combination of c("row", "row.sup","col", "col.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
+#' @param title the title of the graph
 #' @param col.col,col.row color for column/row points. 
 #' The default values are "red" and "blue", respectively. 
 #' Allowed values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -352,7 +353,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric", arrows = c(FALSE, FALSE), repel = FALSE,
+                       map ="symmetric", arrows = c(FALSE, FALSE), repel = FALSE, title = "CA factor map - Biplot",
                        jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -420,8 +421,8 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
     }   
   }    
       
-  
-  p + labs(title="CA factor map - Biplot")
+  title2 <- title
+  p + labs(title=title2)
   
 }
 

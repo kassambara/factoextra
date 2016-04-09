@@ -49,6 +49,7 @@ NULL
 #' @param legend.partial.title the title of the partal groups legend.
 #' @param linesize size of partial point connecting line.
 #' @param shape.ind,shape.var,shape.group point shapes of individuals, variables, groups and axes
+#' @param title the title of the graph
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param select.ind,select.partial,select.var,select.group,select.axes a selection of individuals/partial individuals/
 #' variables/groups/axes to be drawn.
@@ -283,7 +284,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                          shape.ind = 19, repel = FALSE, axes.linetype = "dashed",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         # map ="symmetric",
+                         title = "Individuals factor map - MFA",# map ="symmetric",
                          jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -430,8 +431,9 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Individuals factor map - MFA")
+    labs(title = title2)
   
   
   p
@@ -444,7 +446,7 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
                                 labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                 col.quanti.sup="blue",  col.quali.sup = "darkgreen", col.circle = "grey70",
                                 select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                axes.linetype = "dashed", # map ="symmetric", 
+                                axes.linetype = "dashed", title = "Quantitative Variable categories - MFA",# map ="symmetric", 
                                 repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
 {
   # Check if there are quantitative variables.
@@ -520,8 +522,9 @@ fviz_mfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="
     
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Quantitative Variable categories - MFA")
+    labs(title = title2)
   p
 }
 
@@ -533,7 +536,7 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
                                labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
                                select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                               axes.linetype = "dashed", # map ="symmetric", 
+                               axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",# map ="symmetric", 
                                jitter = list(what = "label", width = NULL, height = NULL))
 {
   
@@ -602,8 +605,9 @@ fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="a
     
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Qualitative Variable categories - MFA")
+    labs(title = title2)
   p
 }
 
@@ -619,7 +623,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   shape.ind = 19, shape.var = 17,
                                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  axes.linetype = "dashed", # map ="symmetric", 
+                                  axes.linetype = "dashed", title = "MFA factor map - Biplot",# map ="symmetric", 
                                   arrows = c(FALSE, FALSE), repel = FALSE,
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
@@ -695,7 +699,8 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
     
   }
-  p+labs(title="MFA factor map - Biplot")
+  title2 <- title
+  p+labs(title=title2)
 }
 
 
@@ -709,7 +714,7 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  axes.linetype = "dashed", # map ="symmetric",
+                                  axes.linetype = "dashed", title = "Individuals factor map - MFA",# map ="symmetric",
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -894,7 +899,8 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     scale_shape(name = legend.partial.title) + 
     scale_linetype(name = legend.partial.title) +
     # Edit plot title
-    labs(title = "Individuals factor map - MFA")
+    title2 <- title
+    labs(title = title2)
   
   
   p
@@ -907,7 +913,7 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
                            col.group="blue",  col.group.sup = "darkgreen", repel = FALSE,
                            select.group = list(name = NULL, cos2 = NULL, contrib = NULL),
-                           # map ="symmetric", 
+                           title = "MFA - Groups Representations",# map ="symmetric", 
                            jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -947,7 +953,8 @@ fviz_mfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gro
     scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
     theme(panel.border = element_rect(linetype = "solid", fill = "transparent")) 
   
-  p + labs(title="MFA - Groups Representations")
+  title2 <- title
+  p + labs(title=title2)
 }
 
 
@@ -958,7 +965,7 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                           label = "all", invisible="none", labelsize=4, pointsize = 2,
                           col.axes="red", alpha.axes=1, col.circle ="grey70",
                           select.axes = list(name = NULL, contrib = NULL),
-                          axes.linetype = "dashed",# map ="symmetric",
+                          axes.linetype = "dashed", title = "MFA - Partial Axes Representations",# map ="symmetric",
                           arrows = c(FALSE, FALSE), repel = FALSE,
                           jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
@@ -1007,7 +1014,8 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
                    pointsize = pointsize, jitter = jitter, repel = repel)
   }
   
-  p + labs(title="MFA - Partial Axes Representations")
+  title2 <- title
+  p + labs(title=title2)
 }
 
 
