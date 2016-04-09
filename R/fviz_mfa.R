@@ -49,6 +49,7 @@ NULL
 #' @param legend.partial.title the title of the partal groups legend.
 #' @param linesize size of partial point connecting line.
 #' @param shape.ind,shape.var,shape.group point shapes of individuals, variables, groups and axes
+#' @param title the title of the graph
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param select.ind,select.partial,select.var,select.group,select.axes a selection of individuals/partial individuals/
 #' variables/groups/axes to be drawn.

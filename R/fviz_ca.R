@@ -27,6 +27,7 @@ NULL
 #' the combination of c("row", "row.sup","col", "col.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
+#' @param title the title of the graph
 #' @param col.col,col.row color for column/row points. 
 #' The default values are "red" and "blue", respectively. 
 #' Allowed values include also : "cos2", "contrib", "coord", "x" or "y".

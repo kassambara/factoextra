@@ -33,6 +33,7 @@
 #' @param frame.alpha Alpha for frame specifying the transparency level of fill color. 
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
+#' @param title the title of the graph
 #' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
 #' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
 #' \itemize{

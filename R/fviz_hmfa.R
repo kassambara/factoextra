@@ -51,6 +51,7 @@ NULL
 #' @param legend.partial.title the title of the partal groups legend.
 #' @param linesize size of partial point connecting line.
 #' @param node.level a single number indicating the HMFA node level to plot.
+#' @param title the title of the graph
 #' @param select.ind,select.partial,select.var,select.group a selection of individuals/partial individuals/
 #' variables/groups/axes to be drawn.
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib:

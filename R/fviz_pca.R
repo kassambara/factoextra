@@ -30,6 +30,7 @@
 #'  Allowed values are the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
+#' @param title the title of the graph
 #' @param habillage an optional factor variable for coloring
 #'  the observations by groups. Default value is "none".
 #'  If X is a PCA object from FactoMineR package, habillage can also specify
