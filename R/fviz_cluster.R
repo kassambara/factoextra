@@ -166,7 +166,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          show.clust.cent = TRUE,
                          frame = TRUE, frame.type = "convex", frame.level = 0.95,
                          frame.alpha = 0.2,
-                         pointsize = 2, labelsize = 4, 
+                         pointsize = 2, labelsize = 4, title = "Cluster plot",
                          jitter = list(what = "label", width = NULL, height = NULL),
                          outlier.color = "black", outlier.shape = 19){
   
@@ -328,7 +328,8 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     xlab <- colnames(data)[1]
     ylab <- colnames(data)[2]
   }
-  p <- p + labs(title = "Cluster plot", x = xlab, y = ylab)
+  title2 <- title
+  p <- p + labs(title = title2, x = xlab, y = ylab)
 
   p
 }

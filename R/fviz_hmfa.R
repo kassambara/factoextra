@@ -277,7 +277,7 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                          shape.ind = 19, repel = FALSE, axes.linetype = "dashed",
-                         select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), title = "Individuals factor map - HMFA",
                          # map ="symmetric",
                          jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
@@ -424,9 +424,9 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                     labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom), jitter = jitter )
     }
   }
-  
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Individuals factor map - HMFA")
+    labs(title = title2)
   
   
   p
@@ -440,7 +440,7 @@ fviz_hmfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label=
                                 col.quanti.sup="blue",  col.quali.sup = "darkgreen", col.circle = "grey70",
                                 select.var = list(name = NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
                                 # map ="symmetric", 
-                                repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
+                                title = "Quantitative Variable categories - MFA",repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
 {
   
   if(is.null(jitter$what)) jitter$what <- "label"
@@ -505,9 +505,9 @@ fviz_hmfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label=
     }
     
   }
-  
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Quantitative Variable categories - MFA")
+    labs(title = title2)
   p
 }
 
@@ -519,7 +519,7 @@ fviz_hmfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="
                                labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
                                col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
                                select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                               axes.linetype = "dashed", # map ="symmetric", 
+                               axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",# map ="symmetric", 
                                jitter = list(what = "label", width = NULL, height = NULL))
 {
   
@@ -577,9 +577,9 @@ fviz_hmfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="
     }
     
   }
-  
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = "Qualitative Variable categories - MFA")
+    labs(title = title2)
   p
 }
 
@@ -596,7 +596,7 @@ fviz_hmfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   # map ="symmetric", 
-                                  arrows = c(FALSE, FALSE), repel = FALSE,
+                                  arrows = c(FALSE, FALSE), repel = FALSE, title = "HMFA factor map - Biplot",
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -662,7 +662,8 @@ fviz_hmfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
     
   }
-  p+labs(title="HMFA factor map - Biplot")
+  title2 <- title
+  p+labs(title=title2)
 }
 
 #' @rdname fviz_hmfa
@@ -675,7 +676,7 @@ fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), g
                                   alpha.ind = 1, shape.ind = 19, alpha.partial = 1, node.level = 1,
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                                   select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  axes.linetype = "dashed",# map ="symmetric",
+                                  axes.linetype = "dashed", title = "Individuals factor map - MFA",# map ="symmetric",
                                   jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
 
@@ -866,7 +867,8 @@ fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), g
     scale_shape(name = legend.partial.title) +
     scale_linetype(name = legend.partial.title) +
     # Edit plot title
-    labs(title = "Individuals factor map - MFA")
+    title2 <- title
+    labs(title = title2)
 
 
   p
@@ -879,7 +881,7 @@ fviz_hmfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gr
                            label = "all", invisible="none", labelsize=4, pointsize = 2,
                            col.group="blue",  col.group.sup = "darkgreen", repel = FALSE,
                            select.group = list(name = NULL, cos2 = NULL, contrib = NULL),
-                           # map ="symmetric", 
+                           title = "MFA - Groups Representations",# map ="symmetric", 
                            jitter = list(what = "label", width = NULL, height = NULL), ...)
 {
   
@@ -919,7 +921,8 @@ fviz_hmfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.gr
     scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
     theme(panel.border = element_rect(linetype = "solid", fill = "transparent")) 
   
-  p + labs(title="MFA - Groups Representations")
+  title2 <- title
+  p + labs(title=title2)
 }
 
 # 
