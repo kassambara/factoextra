@@ -55,7 +55,7 @@ NULL
     # 1.Extract the coordinates x, y and coord
     if("coord" %in% result){
       dd <- data.frame(elmt$coord[, axes, drop=FALSE])
-      if(length(axes) > 1) coord <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+      coord <- apply(dd^2, 1, sum) # x^2 + y2 + ...
       res <- cbind(dd, coord = coord)
     }
     
