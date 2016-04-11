@@ -225,7 +225,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
-  if(length(axes) > 2 ) stop("axes should be of length 2")
+  if(length(axes) > 2) stop("axes should be of length 2")
   
   if(is.null(jitter$what)) jitter$what <- "label"
   
