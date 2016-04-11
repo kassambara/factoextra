@@ -55,13 +55,13 @@ NULL
     # 1.Extract the coordinates x, y and coord
     if("coord" %in% result){
       dd <- data.frame(elmt$coord[, axes, drop=FALSE])
-      coord <- apply(dd^2, 1, sum) # x^2 + y2 + ...
-      res = cbind(dd, coord = coord)
+      if(length(axes) > 1) coord <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+      res <- cbind(dd, coord = coord)
     }
     
     # 2. Extract the cos2
     if("cos2" %in% result){
-      cos2 <- elmt$cos2[, axes]
+      cos2 <- data.frame(elmt$cos2[, axes, drop=FALSE])
       if(length(axes) > 1) cos2 <- apply(cos2, 1, sum, na.rm=TRUE)
       res <- cbind(res, cos2 = cos2)
     }
