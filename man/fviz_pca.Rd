@@ -15,14 +15,14 @@ fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
   jitter = list(what = "label", width = NULL, height = NULL),
-  axes.linetype = "dashed", ...)
+  title = "Individuals factor map - PCA", axes.linetype = "dashed", ...)
 
 fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", repel = FALSE, labelsize = 4, col.var = "black",
   alpha.var = 1, col.quanti.sup = "blue", col.circle = "grey70",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   jitter = list(what = "label", width = NULL, height = NULL),
-  axes.linetype = "dashed")
+  title = "Variables factor map - PCA", axes.linetype = "dashed")
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -32,7 +32,8 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.circle = "grey70", repel = FALSE, axes.linetype = "dashed",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+  title = "Biplot of variables and individuals", jitter = list(what =
+  "label", width = NULL, height = NULL), ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats];
@@ -109,6 +110,8 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}
+
+\item{title}{the title of the graph}
 
 \item{axes.linetype}{linetype of x and y axes.}
 

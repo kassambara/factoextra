@@ -28,8 +28,8 @@ fviz_ca_biplot(X, axes = c(1, 2), shape.row = 19, shape.col = 17,
   col.row.sup = "darkblue", alpha.row = 1, select.col = list(name = NULL,
   cos2 = NULL, contrib = NULL), select.row = list(name = NULL, cos2 = NULL,
   contrib = NULL), map = "symmetric", arrows = c(FALSE, FALSE),
-  repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL),
-  ...)
+  repel = FALSE, title = "CA factor map - Biplot", jitter = list(what =
+  "label", width = NULL, height = NULL), ...)
 
 fviz_ca(X, ...)
 }
@@ -100,6 +100,8 @@ if cos2 > 1, ex: 5, then the top 5 columns/rows with the highest cos2 are drawn.
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).
 First value sets the rows and the second value sets the columns.}
+
+\item{title}{the title of the graph}
 }
 \value{
 a ggplot2 plot

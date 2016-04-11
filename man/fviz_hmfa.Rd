@@ -15,24 +15,25 @@ fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
   col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
   repel = FALSE, axes.linetype = "dashed", select.ind = list(name = NULL,
-  cos2 = NULL, contrib = NULL), jitter = list(what = "label", width = NULL,
-  height = NULL), ...)
+  cos2 = NULL, contrib = NULL), title = "Individuals factor map - HMFA",
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_hmfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.var = "red", alpha.var = 1, shape.var = 17,
   col.quanti.sup = "blue", col.quali.sup = "darkgreen",
   col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), axes.linetype = "dashed", repel = FALSE, jitter = list(what =
-  "label", width = NULL, height = NULL))
+  = NULL), axes.linetype = "dashed",
+  title = "Quantitative Variable categories - MFA", repel = FALSE,
+  jitter = list(what = "label", width = NULL, height = NULL))
 
 fviz_hmfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.var = "red", alpha.var = 1, shape.var = 17,
   col.quanti.sup = "blue", col.quali.sup = "darkgreen", repel = FALSE,
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  axes.linetype = "dashed", jitter = list(what = "label", width = NULL,
-  height = NULL))
+  axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",
+  jitter = list(what = "label", width = NULL, height = NULL))
 
 fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -42,8 +43,9 @@ fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.quali.sup = "darkgreen", axes.linetype = "dashed", shape.ind = 19,
   shape.var = 17, select.var = list(name = NULL, cos2 = NULL, contrib =
   NULL), select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  arrows = c(FALSE, FALSE), repel = FALSE, jitter = list(what = "label",
-  width = NULL, height = NULL), ...)
+  arrows = c(FALSE, FALSE), repel = FALSE,
+  title = "HMFA factor map - Biplot", jitter = list(what = "label", width =
+  NULL, height = NULL), ...)
 
 fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   group.names = NULL, label = "all", invisible = "none",
@@ -54,15 +56,15 @@ fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   shape.ind = 19, alpha.partial = 1, node.level = 1,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
   select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-  axes.linetype = "dashed", jitter = list(what = "label", width = NULL,
-  height = NULL), ...)
+  axes.linetype = "dashed", title = "Individuals factor map - MFA",
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_hmfa_group(X, axes = c(1, 2), geom = c("point", "text"),
   alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
   labelsize = 4, pointsize = 2, col.group = "blue",
   col.group.sup = "darkgreen", repel = FALSE, select.group = list(name =
-  NULL, cos2 = NULL, contrib = NULL), jitter = list(what = "label", width =
-  NULL, height = NULL), ...)
+  NULL, cos2 = NULL, contrib = NULL), title = "MFA - Groups Representations",
+  jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_hmfa(X, ...)
 }
@@ -135,6 +137,8 @@ Allowed values are NULL or a list containing the arguments name, cos2 or contrib
 if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
 \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 }}
+
+\item{title}{the title of the graph}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).

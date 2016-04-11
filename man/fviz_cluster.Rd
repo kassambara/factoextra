@@ -10,8 +10,8 @@
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   show.clust.cent = TRUE, frame = TRUE, frame.type = "convex",
   frame.level = 0.95, frame.alpha = 0.2, pointsize = 2, labelsize = 4,
-  jitter = list(what = "label", width = NULL, height = NULL),
-  outlier.color = "black", outlier.shape = 19)
+  title = "Cluster plot", jitter = list(what = "label", width = NULL, height
+  = NULL), outlier.color = "black", outlier.shape = 19)
 
 fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE)
 
@@ -54,6 +54,8 @@ Default value is 0.95.}
 \item{pointsize}{the size of points}
 
 \item{labelsize}{font size for the labels}
+
+\item{title}{the title of the graph}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
