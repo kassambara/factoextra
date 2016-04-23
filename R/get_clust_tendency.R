@@ -15,12 +15,13 @@ NULL
 #'  the ordered dissimilarity image. The element "mid" can take the value of NULL.
 #' @param seed an integer specifying the seed for random number generator. Specify seed for reproducible results.
 #' @return 
-#' A list containing the elements: \cr\cr
-#' - hopkins_stat for Hopkins statistic value\cr\cr
-#' - plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).\cr
+#' A list containing the elements: 
+#'        
+#' - hopkins_stat for Hopkins statistic value
+#'       
+#' - plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).
 #' 
 #' @examples 
-#' \donttest{
 #' data(iris)
 #' 
 #' # Clustering tendency
@@ -29,7 +30,6 @@ NULL
 #' # Customize the dissimilarity image
 #' fviz_dist(dist(iris[, -5]), 
 #'    gradient = list(low = "black", mid = NULL, high = "white"))
-#' }
 #' @export
 get_clust_tendency <- function(data, n, graph = TRUE,
                                gradient = list(low = "red", mid = "white", high = "blue"),

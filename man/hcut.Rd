@@ -35,7 +35,8 @@ dividing by the variable's standard deviation.}
 }
 \value{
 an object of class "hcut" containing the result 
-of the standard function used (read the documentation of hclust, agnes, diana). \cr
+of the standard function used (read the documentation of hclust, agnes, diana). 
+      
 It includes also:
 \itemize{
 \item cluster: the cluster assignement of observations after cutting the tree

@@ -21,7 +21,8 @@ NULL
 #' @param graph logical value. If TRUE, the dendrogram is displayed.
 #' @param ... not used.
 #' @return an object of class "hcut" containing the result 
-#' of the standard function used (read the documentation of hclust, agnes, diana). \cr
+#' of the standard function used (read the documentation of hclust, agnes, diana). 
+#'       
 #' It includes also:
 #' \itemize{
 #' \item cluster: the cluster assignement of observations after cutting the tree

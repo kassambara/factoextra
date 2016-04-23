@@ -1,8 +1,9 @@
 #' @include utilities.R cluster_utilities.R dist.R fviz_cluster.R fviz_dend.R
 NULL
-
 #' Visual enhancement of clustering analysis
 #' 
+#' @description 
+#' Visual enhancement of clustering analysis.
 #' @param x numeric vector, data matrix or data frame
 #' @param FUNcluster a clustering function including "kmeans", "pam", "clara", "fanny", "hclust", "agnes" and "diana". 
 #' Abbreviation is allowed.
@@ -29,7 +30,8 @@ NULL
 #' @param seed integer used for seeding the random number generator.
 #' @param ... other arguments to be passed to FUNcluster.
 #' @return Returns an object of class "eclust" containing the result 
-#' of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). \cr
+#' of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). 
+#'      
 #' It includes also:
 #' \itemize{
 #' \item cluster: the cluster assignement of observations after cutting the tree
@@ -43,10 +45,11 @@ NULL
 #' }
 #' The "eclust" class has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
 #' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, \code{\link{fviz_cluster}}
+#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#' 
 #' @examples 
-#' \donttest{
 #' # Load and scale data
-#' data(USArrests)
+#' data("USArrests")
 #' df <- scale(USArrests)
 #' 
 #' # Enhanced k-means clustering
@@ -60,9 +63,11 @@ NULL
 #'  
 #'  # Enhanced hierarchical clustering
 #'  res.hc <- eclust(df, "hclust") # compute hclust
-#'  fviz_dend(res.hc) # dendrogam
-#'  fviz_silhouette(res.hc) # silhouette plot
-#' }
+#'   fviz_dend(res.hc) # dendrogam
+#'   fviz_silhouette(res.hc) # silhouette plot
+#'  
+#' @name eclust
+#' @rdname eclust
 #' @export
 eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes", "diana"),
                    k = NULL, k.max = 10, stand = FALSE,
@@ -70,7 +75,8 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
                    hc_metric = "euclidean", hc_method = "ward.D2",
                    gap_maxSE = list(method = "firstmax", SE.factor = 1), 
                    nboot = 100, verbose = interactive(),
-                   seed = 123,  ...){
+                   seed = 123,  ...)
+  {
   set.seed(seed)
   data <- x
   if(stand) x <- scale(x)

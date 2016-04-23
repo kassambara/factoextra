@@ -23,9 +23,11 @@ the ordered dissimilarity image. The element "mid" can take the value of NULL.}
 \item{seed}{an integer specifying the seed for random number generator. Specify seed for reproducible results.}
 }
 \value{
-A list containing the elements: \cr\cr
-- hopkins_stat for Hopkins statistic value\cr\cr
-- plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).\cr
+A list containing the elements: 
+       
+- hopkins_stat for Hopkins statistic value
+      
+- plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).
 }
 \description{
 Assess clustering tendency using Hopkins' statistic and visual approach. 
@@ -33,7 +35,6 @@ An ordered dissimilarity image (ODI) is shown. Objects belonging to the same clu
 using hierarchical clustering.
 }
 \examples{
-\donttest{
 data(iris)
 
 # Clustering tendency
@@ -42,6 +43,5 @@ get_clust_tendency(iris[,-5], 50)
 # Customize the dissimilarity image
 fviz_dist(dist(iris[, -5]), 
    gradient = list(low = "black", mid = NULL, high = "white"))
-}
 }
 

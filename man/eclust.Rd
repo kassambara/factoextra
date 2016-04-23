@@ -51,7 +51,8 @@ using gap statistic.}
 }
 \value{
 Returns an object of class "eclust" containing the result 
-of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). \cr
+of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). 
+     
 It includes also:
 \itemize{
 \item cluster: the cluster assignement of observations after cutting the tree
@@ -66,12 +67,11 @@ $avg.width (average width of all clusters)
 The "eclust" class has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
 }
 \description{
-Visual enhancement of clustering analysis
+Visual enhancement of clustering analysis.
 }
 \examples{
-\donttest{
 # Load and scale data
-data(USArrests)
+data("USArrests")
 df <- scale(USArrests)
 
 # Enhanced k-means clustering
@@ -85,9 +85,12 @@ res.km$nbclust
  
  # Enhanced hierarchical clustering
  res.hc <- eclust(df, "hclust") # compute hclust
- fviz_dend(res.hc) # dendrogam
- fviz_silhouette(res.hc) # silhouette plot
+  fviz_dend(res.hc) # dendrogam
+  fviz_silhouette(res.hc) # silhouette plot
+ 
 }
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \seealso{
 \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, \code{\link{fviz_cluster}}
