@@ -2,7 +2,7 @@
 % Please edit documentation in R/hcut.R
 \name{hcut}
 \alias{hcut}
-\title{Computes hierarchical clustering and cut the tree}
+\title{Computes Hierarchical Clustering and Cut the Tree}
 \usage{
 hcut(x, k = 2, isdiss = inherits(x, "dist"), hc_func = c("hclust",
   "agnes", "diana"), hc_method = "ward.D2", hc_metric = "euclidean",

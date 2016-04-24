@@ -1,6 +1,6 @@
 #' @include cluster_utilities.R dist.R
 NULL
-#' Computes hierarchical clustering and cut the tree
+#' Computes Hierarchical Clustering and Cut the Tree
 #' 
 #' @description 
 #' Computes hierarchical clustering (hclust, agnes, diana) and cut the tree into k clusters. It also accepts 
