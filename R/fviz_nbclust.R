@@ -31,7 +31,10 @@
 #'   "euclidean"). Used to compute the average silhouette width of clusters, the
 #'   within sum of square and hierarchical clustering. If NULL, dist(x) is 
 #'   computed with the default method = "euclidean"
-#' @param k.max the maximum number of clusters to consider, must be at least two
+#' @param k.max the maximum number of clusters to consider, must be at least two.
+#' @param nboot integer, number of Monte Carlo ("bootstrap") samples. Used only for determining the number of clusters 
+#' using gap statistic.
+#' @param verbose logical value. If TRUE, the result of progress is printed.
 #' @param barfill,barcolor fill color and outline color for bars
 #' @param linecolor color for lines
 #' @param print.summary logical value. If true, the optimal number of clusters 

@@ -34,7 +34,12 @@ clusters. Possible values are "silhouette" (for average silhouette width),
 within sum of square and hierarchical clustering. If NULL, dist(x) is 
 computed with the default method = "euclidean"}
 
-\item{k.max}{the maximum number of clusters to consider, must be at least two}
+\item{k.max}{the maximum number of clusters to consider, must be at least two.}
+
+\item{nboot}{integer, number of Monte Carlo ("bootstrap") samples. Used only for determining the number of clusters 
+using gap statistic.}
+
+\item{verbose}{logical value. If TRUE, the result of progress is printed.}
 
 \item{barfill, barcolor}{fill color and outline color for bars}
 
