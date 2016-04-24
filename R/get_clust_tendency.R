@@ -23,8 +23,16 @@ NULL
 #'   "mid" can take the value of NULL.
 #' @param seed an integer specifying the seed for random number generator. 
 #'   Specify seed for reproducible results.
-#' @details If the value of Hopkins statistic is close to zero (far below 0.5),
-#'   then we can conclude that the dataset is significantly clusterable.
+#' @details
+#' 
+#' \strong{Hopkins statistic}: If the value of Hopkins statistic is close to
+#' zero (far below 0.5), then we can conclude that the dataset is significantly
+#' clusterable.
+#' 
+#' \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
+#' clustering tendency in a visual form by counting the number of square shaped
+#' dark (or colored) blocks along the diagonal in a VAT image.
+#'  
 #' @return A list containing the elements:
 #'   
 #'   - hopkins_stat for Hopkins statistic value
@@ -37,11 +45,17 @@ NULL
 #' data(iris)
 #' 
 #' # Clustering tendency
-#' get_clust_tendency(iris[,-5], 50)
+#' gradient_col = list(low = "steelblue", high = "white")
+#' get_clust_tendency(iris[,-5], n = 50, gradient = gradient_col)
+#'    
+#' # Random uniformly distributed dataset
+#' # (without any inherent clusters)
+#' set.seed(123)
+#' random_df <- apply(iris[, -5], 2, 
+#'                    function(x){runif(length(x), min(x), max(x))}
+#'                    )
+#' get_clust_tendency(random_df, n = 50, gradient = gradient_col)
 #' 
-#' # Customize the dissimilarity image
-#' fviz_dist(dist(iris[, -5]), 
-#'    gradient = list(low = "#696969", mid = NULL, high = "white"))
 #' @export
 get_clust_tendency <- function(data, n, graph = TRUE,
                                gradient = list(low = "red", mid = "white", high = "blue"),
@@ -64,7 +78,7 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   plot <- NULL
   if(graph){
     plot <- fviz_dist(dist(data), order = TRUE, 
-                      show_labels = FALSE)
+                      show_labels = FALSE, gradient = gradient)
   }
   
   # Hopkins statistic

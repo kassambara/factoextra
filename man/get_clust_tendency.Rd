@@ -45,18 +45,29 @@ Before applying cluster methods, the first step is to assess
    website: Assessing clustering tendency}.
 }
 \details{
-If the value of Hopkins statistic is close to zero (far below 0.5),
-  then we can conclude that the dataset is significantly clusterable.
+\strong{Hopkins statistic}: If the value of Hopkins statistic is close to
+zero (far below 0.5), then we can conclude that the dataset is significantly
+clusterable.
+
+\strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
+clustering tendency in a visual form by counting the number of square shaped
+dark (or colored) blocks along the diagonal in a VAT image.
 }
 \examples{
 data(iris)
 
 # Clustering tendency
-get_clust_tendency(iris[,-5], 50)
+gradient_col = list(low = "steelblue", high = "white")
+get_clust_tendency(iris[,-5], n = 50, gradient = gradient_col)
+   
+# Random uniformly distributed dataset
+# (without any inherent clusters)
+set.seed(123)
+random_df <- apply(iris[, -5], 2, 
+                   function(x){runif(length(x), min(x), max(x))}
+                   )
+get_clust_tendency(random_df, n = 50, gradient = gradient_col)
 
-# Customize the dissimilarity image
-fviz_dist(dist(iris[, -5]), 
-   gradient = list(low = "#696969", mid = NULL, high = "white"))
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
