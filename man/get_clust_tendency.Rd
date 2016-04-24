@@ -58,6 +58,9 @@ get_clust_tendency(iris[,-5], 50)
 fviz_dist(dist(iris[, -5]), 
    gradient = list(low = "#696969", mid = NULL, high = "white"))
 }
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}
 \seealso{
 \code{\link{fviz_dist}}
 }

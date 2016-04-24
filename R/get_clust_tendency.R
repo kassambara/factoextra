@@ -32,6 +32,7 @@ NULL
 #'   - plot for ordered dissimilarity image. This is generated using the 
 #'   function \code{\link{fviz_dist}}(dist.obj).
 #' @seealso \code{\link{fviz_dist}}
+#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @examples 
 #' data(iris)
 #' 
