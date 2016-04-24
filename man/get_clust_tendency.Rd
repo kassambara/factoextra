@@ -8,31 +8,45 @@ get_clust_tendency(data, n, graph = TRUE, gradient = list(low = "red", mid =
   "white", high = "blue"), seed = 123)
 }
 \arguments{
-\item{data}{a numeric data frame or matrix. Columns are variables and rows are samples. 
-Computation are done on rows (samples) by default. If you want to calculate Hopkins statistic on 
-variables, transpose the data before.}
+\item{data}{a numeric data frame or matrix. Columns are variables and rows 
+are samples. Computation are done on rows (samples) by default. If you want
+to calculate Hopkins statistic on variables, transpose the data before.}
 
-\item{n}{the number of points selected from sample space which is also the number of 
-points selected from the given sample(data).}
+\item{n}{the number of points selected from sample space which is also the 
+number of points selected from the given sample(data).}
 
-\item{graph}{logical value; if TRUE the ordered dissimilarity image (ODI) is shown.}
+\item{graph}{logical value; if TRUE the ordered dissimilarity image (ODI) is 
+shown.}
 
-\item{gradient}{a list containing three elements specifying the colors for low, mid and high values in 
-the ordered dissimilarity image. The element "mid" can take the value of NULL.}
+\item{gradient}{a list containing three elements specifying the colors for 
+low, mid and high values in the ordered dissimilarity image. The element 
+"mid" can take the value of NULL.}
 
-\item{seed}{an integer specifying the seed for random number generator. Specify seed for reproducible results.}
+\item{seed}{an integer specifying the seed for random number generator. 
+Specify seed for reproducible results.}
 }
 \value{
-A list containing the elements: 
-       
-- hopkins_stat for Hopkins statistic value
-      
-- plot for ordered dissimilarity image. This is generated using the function fviz_dist(dist.obj).
+A list containing the elements:
+  
+  - hopkins_stat for Hopkins statistic value
+  
+  - plot for ordered dissimilarity image. This is generated using the 
+  function \code{\link{fviz_dist}}(dist.obj).
 }
 \description{
-Assess clustering tendency using Hopkins' statistic and visual approach. 
-An ordered dissimilarity image (ODI) is shown. Objects belonging to the same cluster are displayed in consecutive order 
-using hierarchical clustering.
+Before applying cluster methods, the first step is to assess 
+  whether the data is clusterable, a process defined as the \strong{assessing
+  of clustering tendency}. get_clust_tendency() assesses clustering tendency 
+  using Hopkins' statistic and a visual approach. An ordered dissimilarity 
+  image (ODI) is shown. Objects belonging to the same cluster are displayed 
+  in consecutive order using hierarchical clustering. For more details and 
+  interpretation, see 
+  \href{http://www.sthda.com/english/wiki/assessing-clustering-tendency-a-vital-issue-unsupervised-machine-learning}{STHDA
+   website: Assessing clustering tendency}.
+}
+\details{
+If the value of Hopkins statistic is close to zero (far below 0.5),
+  then we can conclude that the dataset is significantly clusterable.
 }
 \examples{
 data(iris)
@@ -42,6 +56,9 @@ get_clust_tendency(iris[,-5], 50)
 
 # Customize the dissimilarity image
 fviz_dist(dist(iris[, -5]), 
-   gradient = list(low = "black", mid = NULL, high = "white"))
+   gradient = list(low = "#696969", mid = NULL, high = "white"))
+}
+\seealso{
+\code{\link{fviz_dist}}
 }
 
