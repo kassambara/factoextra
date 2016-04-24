@@ -894,12 +894,12 @@ fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     }
   }
   
+  title2 <- title
   p <- .fviz_finish(p, X, axes, axes.linetype) +
     # Edit legend title
     scale_shape(name = legend.partial.title) + 
     scale_linetype(name = legend.partial.title) +
     # Edit plot title
-    title2 <- title
     labs(title = title2)
   
   
