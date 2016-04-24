@@ -73,4 +73,7 @@ fviz_cluster(res)
 }
 
 }
+\seealso{
+\code{\link{fviz_dend}}, \code{\link{hkmeans}}, \code{\link{eclust}}
+}
 

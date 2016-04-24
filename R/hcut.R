@@ -31,6 +31,8 @@ NULL
 #' \item size: the size of clusters
 #' \item data: a matrix containing the original or  the standardized data (if stand = TRUE)
 #' }
+#' 
+#' @seealso \code{\link{fviz_dend}}, \code{\link{hkmeans}}, \code{\link{eclust}}
 #' @examples 
 #' \donttest{
 #' data(USArrests)
