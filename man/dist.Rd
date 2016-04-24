@@ -14,12 +14,13 @@ fviz_dist(dist.obj, order = TRUE, show_labels = TRUE, lab_size = NULL,
 \arguments{
 \item{x}{a numeric matrix or a data frame.}
 
-\item{method}{the distance measure to be used. 
-This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", 
+\item{method}{the distance measure to be used. This must be one of 
+"euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski", 
 "pearson", "spearman" or "kendall".}
 
-\item{stand}{logical value; default is FALSE. If TRUE, then the data will be standardized using the function scale(). 
-Measurements are standardized for each variable (column), by subtracting the variable's mean value and 
+\item{stand}{logical value; default is FALSE. If TRUE, then the data will be 
+standardized using the function scale(). Measurements are standardized for 
+each variable (column), by subtracting the variable's mean value and 
 dividing by the variable's standard deviation.}
 
 \item{...}{other arguments to be passed to the function dist().}
@@ -36,23 +37,29 @@ dividing by the variable's standard deviation.}
 the ordered dissimilarity image. The element "mid" can take the value of NULL.}
 }
 \value{
-\itemize{
-\item get_dist(): returns an object of class "dist".
-\item fviz_dist(): returns a ggplot2
-}
+\itemize{ \item get_dist(): returns an object of class "dist". \item 
+  fviz_dist(): returns a ggplot2 }
 }
 \description{
-\itemize{
-\item get_dist(): Computes distance matrix between the rows of a data matrix. Compared to the standard dist() function, it supports 
-correlation-based distance measures including "pearson", "kendall" and "spearman" methods.
-\item fviz_dist(): Visualizes a distance matrix
-}
+Clustering methods classify data samples into groups of similar 
+  objects. This process requires some methods for measuring the distance or
+  the (dis)similarity between the observations. Read more: 
+  \href{http://www.sthda.com/english/wiki/clarifying-distance-measures-unsupervised-machine-learning}{STHDA
+   website - clarifying distance measures.}. \itemize{ \item get_dist():
+  Computes a distance matrix between the rows of a data matrix. Compared to the
+  standard \code{\link[stats]{dist}}() function, it supports
+  correlation-based distance measures including "pearson", "kendall" and
+  "spearman" methods. \item fviz_dist(): Visualizes a distance matrix }
 }
 \examples{
 data(USArrests)
 res.dist <- get_dist(USArrests, stand = TRUE, method = "pearson")
 
-fviz_dist(res.dist)
+fviz_dist(res.dist, 
+   gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
+}
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \seealso{
 \code{\link[stats]{dist}}
