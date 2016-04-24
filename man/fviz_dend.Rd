@@ -2,7 +2,7 @@
 % Please edit documentation in R/fviz_dend.R
 \name{fviz_dend}
 \alias{fviz_dend}
-\title{Enhanced visualization of dendrogram}
+\title{Enhanced Visualization of Dendrogram}
 \usage{
 fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
   color_labels_by_k = FALSE, label_cols = NULL, type = c("rectangle",

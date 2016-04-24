@@ -5,7 +5,7 @@
 \alias{fviz_gap_stat}
 \alias{fviz_nbclust}
 \alias{fviz_silhouette}
-\title{Visualize clustering results}
+\title{Visualize Clustering Results}
 \usage{
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   show.clust.cent = TRUE, frame = TRUE, frame.type = "convex",

@@ -1,6 +1,6 @@
 #' @include eigenvalue.R get_pca.R hcut.R
  NULL
-#' Visualize clustering results
+#' Visualize Clustering Results
 #' @description 
 #' \itemize{
 #' \item{fviz_cluster(): Draws the result of partitioning methods 

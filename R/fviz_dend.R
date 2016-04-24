@@ -1,4 +1,4 @@
-#' Enhanced visualization of dendrogram
+#' Enhanced Visualization of Dendrogram
 #' 
 #' @description 
 #' Enhanced visualization of dendrogram.
