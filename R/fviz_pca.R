@@ -1,15 +1,19 @@
 #' @include get_pca.R
  NULL
-#' Visualize Principal Component Analysis Principal component analysis (PCA)
-#' reduces the dimensionality of multivariate data, to two or three that can be
-#' visualized graphically with minimal loss of information.   
-#'      
-#'
-#' @description Graph of individuals/variables from the output of Principal 
-#'   Component Analysis (PCA). \cr\cr \itemize{ \item{fviz_pca_ind(): Graph of 
-#'   individuals} \item{fviz_pca_var(): Graph of variables} 
-#'   \item{fviz_pca_biplot(): Biplot of individuals and variables} 
-#'   \item{fviz_pca(): An alias of fviz_pca_biplot()} }
+#' Visualize Principal Component Analysis
+#' 
+#' 
+#' @description Principal component analysis (PCA) reduces the dimensionality of
+#'   multivariate data, to two or three that can be visualized graphically with 
+#'   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
+#'   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
+#'   stats], ii) PCA [in FactoMineR] and iii) dudi.pca [in ade4]. Read more:
+#'   \href{http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining}{Principal
+#'   Component Analysis}
+#'   
+#'   \itemize{ \item{fviz_pca_ind(): Graph of individuals} \item{fviz_pca_var():
+#'   Graph of variables} \item{fviz_pca_biplot(): Biplot of individuals and 
+#'   variables} \item{fviz_pca(): An alias of fviz_pca_biplot()} }
 #'   
 #' @param X an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
 #'   dudi and pca [ade4].
@@ -85,7 +89,6 @@
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}
-#' @references http://www.sthda.com
 #' @examples
 #' \donttest{
 #' # Principal component analysis
