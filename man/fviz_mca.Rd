@@ -41,12 +41,13 @@ fviz_mca(X, ...)
 \arguments{
 \item{X}{an object of class MCA [FactoMineR], acm [ade4].}
 
-\item{axes}{a numeric vector of length 2 specifying the dimensions to be plotted.}
+\item{axes}{a numeric vector of length 2 specifying the dimensions to be 
+plotted.}
 
-\item{geom}{a text specifying the geometry to be used for the graph. 
-Allowed values are the combination of c("point", "arrow", "text"). 
-Use "point" (to show only points); 
-"text" to show only labels; c("point", "text") or c("arrow", "text") to show both types.}
+\item{geom}{a text specifying the geometry to be used for the graph. Allowed 
+values are the combination of c("point", "arrow", "text"). Use "point" (to 
+show only points); "text" to show only labels; c("point", "text") or 
+c("arrow", "text") to show both types.}
 
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
@@ -72,10 +73,11 @@ the observations by groups. Default value is "none".
 If X is an MCA object from FactoMineR package, habillage can also specify
 the index of the factor variable in the data.}
 
-\item{addEllipses}{logical value.
-If TRUE, draws ellipses around the individuals when habillage != "none".}
+\item{addEllipses}{logical value. If TRUE, draws ellipses around the 
+individuals when habillage != "none".}
 
-\item{ellipse.level}{the size of the concentration ellipse in normal probability.}
+\item{ellipse.level}{the size of the concentration ellipse in normal 
+probability.}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively.
 Possible values include also : "cos2", "contrib", "coord", "x" or "y".
