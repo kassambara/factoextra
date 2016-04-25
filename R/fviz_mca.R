@@ -1,100 +1,101 @@
 #' @include utilities.R get_mca.R
- NULL
-#' Visualize Multiple Correspondence Analysis
-#' 
-#' @description
-#' Graph of individuals/variables from the output of Multiple Correspondence Analysis (MCA).\cr\cr
-#' \itemize{
-#' \item{fviz_mca_ind(): Graph of individuals}
-#' \item{fviz_mca_var(): Graph of variables}
-#' \item{fviz_mca_biplot(): Biplot of individuals and variables}
-#' \item{fviz_mca(): An alias of fviz_mca_biplot()}
-#' }
-#' @param X an object of class MCA [FactoMineR], acm [ade4].
-#' @inheritParams fviz_pca
-#' @param label a text specifying the elements to be labelled.
-#'  Default value is "all".
-#'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup"). 
-#'  "ind" can be used to label only active individuals. 
-#'  "ind.sup" is for supplementary individuals.
-#' "var" is for active variable categories.
-#'  "quali.sup" is for supplementary qualitative variable categories. 
-#' "quanti.sup" is for quantitative supplementary variables.
-#' @param invisible a text specifying the elements to be hidden on the plot.
-#'  Default value is "none".
-#'  Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
-#' @param habillage an optional factor variable for coloring
-#'  the observations by groups. Default value is "none".
-#'  If X is an MCA object from FactoMineR package, habillage can also specify
-#'  the index of the factor variable in the data. 
-#' @param col.ind,col.var color for individuals and variables, respectively.
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-#'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
-#' @param alpha.ind,alpha.var controls the transparency of
-#'  individual and variable colors, respectively.
-#' The value can variate from 0 (total transparency) to 1 (no transparency).
-#' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-#'  To use this, make sure that habillage ="none".
-#' @param axes.linetype linetype of x and y axes.
-#' @param shape.ind,shape.var point shapes of individuals and variables.
-#' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
-#' @param title the title of the graph
-#' @param select.ind,select.var a selection of individuals/variables to be drawn. 
-#' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
-#' \itemize{
-#' \item name is a character vector containing individuals/variables to be drawn
-#' \item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn. 
-#' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-#' \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest contrib are drawn
-#' }
-#' @param ... Arguments to be passed to the function fviz_mca_biplot()
-#' @param map character string specifying the map type. Allowed options include: 
-#' "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
-#' "colgab", "rowgreen" and "colgreen". See details
-#' @param arrows Vector of two logicals specifying if the plot should contain
-#'  points (FALSE, default) or arrows (TRUE).
-#'  First value sets the rows and the second value sets the columns.
-#' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
-#' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
-#' \itemize{
-#' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
-#' \item width: degree of jitter in x direction
-#' \item height: degree of jitter in y direction
-#' }
-#' @details The default plot of MCA is a "symmetric" plot in which both rows and 
-#' columns are in principal coordinates. In this situation, it's not possible 
-#' to interpret the distance between row points and column points. To overcome this 
-#' problem, the simplest way is to make an asymmetric plot. This means that, 
-#' the column profiles must be presented in row space or vice-versa. 
-#' The allowed options for the argument map are: 
-#' \itemize{
-#' \item "rowprincipal" or "colprincipal": asymmetric plots with either rows in principal 
-#' coordinates and columns in standard coordinates, or vice versa. 
-#' These plots preserve row metric or column metric respectively.
-#' \item "symbiplot": Both rows and columns are scaled to have variances 
-#' equal to the singular values (square roots of eigenvalues), 
-#' which gives a symmetric biplot but does not preserve row or column metrics. 
-#' \item "rowgab" or "colgab": Asymmetric maps, proposed by Gabriel & Odoroff (1990), 
-#' with rows (respectively, columns) in 
-#' principal coordinates and columns (respectively, rows) in standard coordinates 
-#' multiplied by the mass of the corresponding point.
-#' \item "rowgreen" or "colgreen": The so-called contribution biplots 
-#' showing visually the most contributing points (Greenacre 2006b). 
-#' These are similar to "rowgab" and "colgab" except that the points 
-#' in standard coordinates are multiplied by the square root of the corresponding masses, 
-#' giving reconstructions of the standardized residuals.
-#' }
+NULL
+#'Visualize Multiple Correspondence Analysis
+#'
+#'@description Multiple Correspondence Analysis (MCA) is an extension of simple 
+#'  CA to analyse a data table containing more than two categorical variables. 
+#'  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
+#'  the R functions: MCA [in FactoMineR], and acm [in ade4]. Read more: 
+#'  \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
+#'   Correspondence Analysis Essentials.}
 #'  
-#' @return a ggplot2 plot
-#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#'  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
+#'  Graph of variables} \item{fviz_mca_biplot(): Biplot of individuals and 
+#'  variables} \item{fviz_mca(): An alias of fviz_mca_biplot()} }
+#'@param X an object of class MCA [FactoMineR], acm [ade4].
+#'@inheritParams fviz_pca
+#'@param label a text specifying the elements to be labelled. Default value is 
+#'  "all". Allowed values are "none" or the combination of c("ind", 
+#'  "ind.sup","var", "quali.sup",  "quanti.sup"). "ind" can be used to label 
+#'  only active individuals. "ind.sup" is for supplementary individuals. "var" 
+#'  is for active variable categories. "quali.sup" is for supplementary 
+#'  qualitative variable categories. "quanti.sup" is for quantitative 
+#'  supplementary variables.
+#'@param invisible a text specifying the elements to be hidden on the plot. 
+#'  Default value is "none". Allowed values are the combination of c("ind", 
+#'  "ind.sup","var", "quali.sup",  "quanti.sup").
+#'@param habillage an optional factor variable for coloring the observations by 
+#'  groups. Default value is "none". If X is an MCA object from FactoMineR 
+#'  package, habillage can also specify the index of the factor variable in the 
+#'  data.
+#'@param col.ind,col.var color for individuals and variables, respectively. 
+#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
+#'  this case, the colors for individuals/variables are automatically controlled
+#'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
+#'  y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring 
+#'  (by cos2, contrib, ....), make sure that habillage ="none".
+#'@param alpha.ind,alpha.var controls the transparency of individual and 
+#'  variable colors, respectively. The value can variate from 0 (total 
+#'  transparency) to 1 (no transparency). Default value is 1. Possible values 
+#'  include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+#'  transparency for individual/variable colors are automatically controlled by 
+#'  their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
+#'  , "coord"), x values("x") or y values("y"). To use this, make sure that 
+#'  habillage ="none".
+#'@param axes.linetype linetype of x and y axes.
+#'@param shape.ind,shape.var point shapes of individuals and variables.
+#'@param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative 
+#'  supplementary variables.
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'  labels or not.
+#'@param title the title of the graph
+#'@param select.ind,select.var a selection of individuals/variables to be drawn.
+#'  Allowed values are NULL or a list containing the arguments name, cos2 or 
+#'  contrib: \itemize{ \item name is a character vector containing 
+#'  individuals/variables to be drawn \item cos2 if cos2 is in [0, 1], ex: 0.6, 
+#'  then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, 
+#'  then the top 5 individuals/variables with the highest cos2 are drawn. \item 
+#'  contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
+#'  the highest contrib are drawn }
+#'@param ... Arguments to be passed to the function fviz_mca_biplot()
+#'@param map character string specifying the map type. Allowed options include: 
+#'  "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
+#'  "colgab", "rowgreen" and "colgreen". See details
+#'@param arrows Vector of two logicals specifying if the plot should contain 
+#'  points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
+#'  second value sets the columns.
+#'@param jitter a parameter used to jitter the points in order to reduce 
+#'  overplotting. It's a list containing the objects what, width and height (i.e
+#'  jitter = list(what, width, height)). \itemize{ \item what: the element to be
+#'  jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b" 
+#'  \item width: degree of jitter in x direction \item height: degree of jitter 
+#'  in y direction }
+#'@details The default plot of MCA is a "symmetric" plot in which both rows and 
+#'  columns are in principal coordinates. In this situation, it's not possible 
+#'  to interpret the distance between row points and column points. To overcome 
+#'  this problem, the simplest way is to make an asymmetric plot. This means 
+#'  that, the column profiles must be presented in row space or vice-versa. The 
+#'  allowed options for the argument map are: \itemize{ \item "rowprincipal" or 
+#'  "colprincipal": asymmetric plots with either rows in principal coordinates 
+#'  and columns in standard coordinates, or vice versa. These plots preserve row
+#'  metric or column metric respectively. \item "symbiplot": Both rows and 
+#'  columns are scaled to have variances equal to the singular values (square 
+#'  roots of eigenvalues), which gives a symmetric biplot but does not preserve 
+#'  row or column metrics. \item "rowgab" or "colgab": Asymmetric maps, proposed
+#'  by Gabriel & Odoroff (1990), with rows (respectively, columns) in principal 
+#'  coordinates and columns (respectively, rows) in standard coordinates 
+#'  multiplied by the mass of the corresponding point. \item "rowgreen" or 
+#'  "colgreen": The so-called contribution biplots showing visually the most 
+#'  contributing points (Greenacre 2006b). These are similar to "rowgab" and 
+#'  "colgab" except that the points in standard coordinates are multiplied by 
+#'  the square root of the corresponding masses, giving reconstructions of the 
+#'  standardized residuals. }
+#'  
+#'@return a ggplot2 plot
+#'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#'@seealso \code{\link{get_mca}}, \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
+#'  \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
 #' @examples
-#' \donttest{
 #' # Multiple Correspondence Analysis
 #' # ++++++++++++++++++++++++++++++
 #' # Install and load FactoMineR to compute MCA
@@ -107,104 +108,92 @@
 #' 
 #' # Graph of individuals
 #' # +++++++++++++++++++++
-#' # Default plot
-#' fviz_mca_ind(res.mca)
-#' # Change title and axis labels
-#' fviz_mca_ind(res.mca) +
-#'  labs(title = "MCA", x = "Dim.1", y ="Dim.2" )
-#' # Change axis limits by specifying the min and max
-#' fviz_mca_ind(res.mca) + 
-#'    xlim(-0.8, 1.5) + ylim (-1.5, 1.5)
-#' # Use text only
-#' fviz_mca_ind(res.mca, geom = "text")
-#' # Use points only
-#' fviz_mca_ind(res.mca, geom="point")
-#' # Change the size of points
-#' fviz_mca_ind(res.mca, geom="point", pointsize = 4)
-#' # Change point color and theme
-#' fviz_mca_ind(res.mca, col.ind = "blue")+
-#'    theme_minimal()
-#' # Reduce overplotting
-#' fviz_mca_ind(res.mca, jitter = list(width = 0.2, height = 0.2))
-#'    
-#' # Control automatically the color of individuals 
-#' # using the cos2 or the contributions
-#' # cos2 = the quality of the individuals on the factor map
-#' fviz_mca_ind(res.mca, col.ind="cos2") 
-#' # Gradient color
-#' fviz_mca_ind(res.mca, col.ind="cos2") + 
-#'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=0.4, space = "Lab")
-#' # Change the theme and use only points
-#' fviz_mca_ind(res.mca, col.ind="cos2", geom = "point") + 
-#'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=0.4, space = "Lab")+ theme_minimal()
+#' 
+#' # Default Plot
+#' # Use repel = TRUE to avoid overplotting (slow if many points)
+#' # Color of individuals: col.ind = "steelblue"
+#' fviz_mca_ind(res.mca, repel = TRUE, col.ind = "steelblue")
+#' 
+#' # 1. Control automatically the color of individuals 
+#'    # using the "cos2" or the contributions "contrib"
+#'    # cos2 = the quality of the individuals on the factor map
+#' # 2. To keep only point or text use geom = "point" or geom = "text".
+#' # 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
+#' 
+#' fviz_mca_ind(res.mca, col.ind = "cos2")+
+#' theme_minimal()
+#' 
+#' # Change gradient color
+#' # Use repel = TRUE to avoid overplotting (slow if many points)
+#' fviz_mca_ind(res.mca, col.ind="cos2", repel = TRUE) + 
+#'       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
+#'       high= "#FC4E07", midpoint=0.6, space = "Lab")+
+#'  theme_minimal()
 #'       
-#' # Color by the contributions   
-#' fviz_mca_ind(res.mca, col.ind="contrib") + 
-#'       scale_color_gradient2(low="white", mid="blue", 
-#'       high="red", midpoint=1.5, space = "Lab")
-#'       
-#' # Control the transparency of the color by the
-#' # contributions
-#' fviz_mca_ind(res.mca, alpha.ind="contrib") +
-#'      theme_minimal()        
-#'              
-#' # Color individuals by groups
+#' # You can also control the transparency 
+#' # of the color by the cos2
+#' fviz_mca_ind(res.mca, alpha.ind="cos2") +
+#'      theme_minimal()  
+#'      
+#' # Color individuals by groups, add concentration ellipses
+#' # Remove labels: label = "none".
 #' grp <- as.factor(poison.active[, "Vomiting"])
-#' fviz_mca_ind(res.mca, label="none", habillage=grp)
-#' # Add ellipses
-#' p <- fviz_mca_ind(res.mca, label="none", habillage=grp, 
-#'              addEllipses=TRUE, ellipse.level=0.95)
+#' p <- fviz_mca_ind(res.mca, label="none", habillage=grp,
+#'        addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
+#'       
+#'     
 #' # Change group colors using RColorBrewer color palettes
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 #' p + scale_color_brewer(palette="Dark2") +
-#'    theme_minimal()
-#' p + scale_color_brewer(palette="Paired") +
+#'     scale_fill_brewer(palette="Dark2") +
 #'      theme_minimal()
-#' p + scale_color_brewer(palette="Set1") +
-#'      theme_minimal()
+#'      
+#' # Change group colors manually
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+#' p + scale_color_manual(values=c("#999999", "#E69F00"))+
+#'  scale_fill_manual(values=c("#999999", "#E69F00"))+
+#'  theme_minimal()  
 #'              
-#' # Select and visualize individuals with cos2 >= 0.4
-#' fviz_mca_ind(res.mca, select.ind = list(cos2 = 0.4))
-#' # Select the top 20 according to the cos2
+#'              
+#' # Select and visualize some individuals (ind) with select.ind argument.
+#'  # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.4)
+#'  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
+#'  # - Top 20 contributing individuals: select.ind = list(contrib = 20)
+#'  # - Select ind by names: select.ind = list(name = c("44", "38", "53",  "39") )
+#'  
+#' # Example: Select the top 40 according to the cos2
 #' fviz_mca_ind(res.mca, select.ind = list(cos2 = 20))
-#' # Select the top 20 contributing individuals
-#' fviz_mca_ind(res.mca, select.ind = list(contrib = 20))
-#' # Select by names
-#' fviz_mca_ind(res.mca, 
-#' select.ind = list(name = c("44", "38", "53",  "39")))
 #' 
 #'  
 #' # Graph of variable categories
 #' # ++++++++++++++++++++++++++++
 #' # Default plot
-#' fviz_mca_var(res.mca)
-#' # Change color and theme
-#' fviz_mca_var(res.mca, col.var="steelblue")+
+#' fviz_mca_var(res.mca, col.var = "#FC4E07", repel = TRUE)+
+#' theme_minimal()
+#' 
+#' # Control variable colors using their contributions
+#' fviz_mca_var(res.mca, col.var = "contrib", repel = TRUE)+
+#'  scale_color_gradient2(low="white", mid="blue", 
+#'            high="red", midpoint=2, space = "Lab") +
+#'  theme_minimal()      
+#'         
+#'    
+#' # Select variables with select.var argument
+#'    # You can select by contrib, cos2 and name 
+#'    # as previously described for ind
+#' # Select the top 10 contributing variables
+#' fviz_mca_var(res.mca, select.var = list(contrib = 10))
+#'     
+#' # Biplot
+#' # ++++++++++++++++++++++++++
+#' grp <- as.factor(poison.active[, "Vomiting"])
+#' fviz_mca_biplot(res.mca, repel = TRUE, col.var = "#E7B800",
+#'  habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)+
 #'  theme_minimal()
 #'  
-#' # Control variable colors using their contributions
-#' fviz_mca_var(res.mca, col.var = "contrib")+
-#'  scale_color_gradient2(low = "white", mid = "blue", 
-#'            high = "red", midpoint = 2, space = "Lab") +
-#'  theme_minimal()          
-#' # Control the transparency of variables using their contributions
-#' fviz_mca_var(res.mca, alpha.var = "contrib") +
-#'    theme_minimal()
-#'    
-#' # Select and visualize categories with cos2 >= 0.4
-#' fviz_mca_var(res.mca, select.var = list(cos2 = 0.4))
-#' # Select the top 10 contributing variable categories
-#' fviz_mca_var(res.mca, select.var = list(contrib = 10))
-#' # Select by names
-#' fviz_mca_var(res.mca, 
-#'  select.var= list(name = c("Courg_n", "Fever_y", "Fever_n")))
-#'     
-#' # biplot
-#' # ++++++++++++++++++++++++++
-#' fviz_mca_biplot(res.mca)
-#' # Keep only the labels for variable categories
+#'  \dontrun{
+#' # Keep only the labels for variable categories: 
 #' fviz_mca_biplot(res.mca, label ="var")
 #' # Keep only labels for individuals
 #' fviz_mca_biplot(res.mca, label ="ind")
@@ -225,11 +214,11 @@
 #' fviz_mca_biplot(res.mca,  
 #'                select.ind = list(contrib = 30),
 #'                select.var = list(contrib = 10)) 
+#' }
 #' 
-#'  }
-#' @name fviz_mca
-#' @rdname fviz_mca 
-#' @export 
+#'@name fviz_mca
+#'@rdname fviz_mca
+#'@export
 fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          label = "all", invisible="none", 
                          labelsize=4, pointsize = 2, repel = FALSE,
@@ -523,7 +512,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           shape.ind=shape.ind, axes.linetype=axes.linetype,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind, jitter = jitter)
+          select.ind = select.ind, jitter = jitter, repel = repel)
     
   # geometry for variable
   geom2 <- geom
