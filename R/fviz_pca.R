@@ -1,82 +1,90 @@
 #' @include get_pca.R
  NULL
-#' Visualize Principal Component Analysis
-#' 
-#' @description
-#' Graph of individuals/variables from the output of Principal Component Analysis (PCA). \cr\cr
-#' \itemize{
-#' \item{fviz_pca_ind(): Graph of individuals}
-#' \item{fviz_pca_var(): Graph of variables}
-#' \item{fviz_pca_biplot(): Biplot of individuals and variables}
-#' \item{fviz_pca(): An alias of fviz_pca_biplot()}
-#' }
-#'  
-#' @param X an object of class PCA [FactoMineR]; prcomp and princomp [stats];
-#'  dudi and pca [ade4].
-#' @param axes a numeric vector of length 2 specifying the dimensions to be plotted.
-#' @param geom a text specifying the geometry to be used for the graph. 
-#' Allowed values are the combination of c("point", "arrow", "text"). 
-#' Use "point" (to show only points); 
-#' "text" to show only labels; c("point", "text") or c("arrow", "text") to show both types.
-#' @param label a text specifying the elements to be labelled.
-#'  Default value is "all".
-#'  Allowed values are "none" or the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
-#'  "ind" can be used to label only active individuals.
-#'  "ind.sup" is for supplementary individuals.
-#'  "quali" is for supplementary qualitative variables. "var" is for active variables.
-#'  "quanti.sup" is for quantitative supplementary variables.
-#' @param invisible a text specifying the elements to be hidden on the plot.
-#'  Default value is "none".
-#'  Allowed values are the combination of c("ind", "ind.sup", "quali", "var", "quanti.sup").
+#' Visualize Principal Component Analysis Principal component analysis (PCA)
+#' reduces the dimensionality of multivariate data, to two or three that can be
+#' visualized graphically with minimal loss of information.   
+#'      
+#'
+#' @description Graph of individuals/variables from the output of Principal 
+#'   Component Analysis (PCA). \cr\cr \itemize{ \item{fviz_pca_ind(): Graph of 
+#'   individuals} \item{fviz_pca_var(): Graph of variables} 
+#'   \item{fviz_pca_biplot(): Biplot of individuals and variables} 
+#'   \item{fviz_pca(): An alias of fviz_pca_biplot()} }
+#'   
+#' @param X an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
+#'   dudi and pca [ade4].
+#' @param axes a numeric vector of length 2 specifying the dimensions to be 
+#'   plotted.
+#' @param geom a text specifying the geometry to be used for the graph. Allowed 
+#'   values are the combination of c("point", "arrow", "text"). Use "point" (to 
+#'   show only points); "text" to show only labels; c("point", "text") or 
+#'   c("arrow", "text") to show both types.
+#' @param label a text specifying the elements to be labelled. Default value is 
+#'   "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+#'   "quali", "var", "quanti.sup"). "ind" can be used to label only active 
+#'   individuals. "ind.sup" is for supplementary individuals. "quali" is for 
+#'   supplementary qualitative variables. "var" is for active variables. 
+#'   "quanti.sup" is for quantitative supplementary variables.
+#' @param invisible a text specifying the elements to be hidden on the plot. 
+#'   Default value is "none". Allowed values are the combination of c("ind", 
+#'   "ind.sup", "quali", "var", "quanti.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
 #' @param title the title of the graph
-#' @param habillage an optional factor variable for coloring
-#'  the observations by groups. Default value is "none".
-#'  If X is a PCA object from FactoMineR package, habillage can also specify
-#'  the supplementary qualitative variable (by its index or name) to be used for
-#'  coloring individuals by groups (see ?PCA in FactoMineR). 
-#' @param addEllipses logical value.
-#'  If TRUE, draws ellipses around the individuals when habillage != "none".
-#' @param ellipse.level the size of the concentration ellipse in normal probability.
+#' @param habillage an optional factor variable for coloring the observations by
+#'   groups. Default value is "none". If X is a PCA object from FactoMineR 
+#'   package, habillage can also specify the supplementary qualitative variable 
+#'   (by its index or name) to be used for coloring individuals by groups (see 
+#'   ?PCA in FactoMineR).
+#' @param addEllipses logical value. If TRUE, draws ellipses around the 
+#'   individuals when habillage != "none".
+#' @param ellipse.level the size of the concentration ellipse in normal 
+#'   probability.
+#' @param ellipse.type Character specifying frame type. Possible values are 
+#'   'convex' or types supporeted by \code{\link{ggplot2}{stat_ellipse}} 
+#'   including one of c("t", "norm", "euclid").
+#' @param ellipse.alpha Alpha for ellipse specifying the transparency level of 
+#'   fill color. Use alpha = 0 for no fill color.
 #' @param axes.linetype linetype of x and y axes.
-#' @param col.ind,col.var color for individuals and variables, respectively.
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the colors for individuals/variables are automatically controlled by their 
-#'  qualities of representation ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2+y^2, "coord"), x values ("x") or y values ("y").
-#'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
+#' @param col.ind,col.var color for individuals and variables, respectively. 
+#'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
+#'   this case, the colors for individuals/variables are automatically 
+#'   controlled by their qualities of representation ("cos2"), contributions 
+#'   ("contrib"), coordinates (x^2+y^2, "coord"), x values ("x") or y values 
+#'   ("y"). To use automatic coloring (by cos2, contrib, ....), make sure that 
+#'   habillage ="none".
 #' @param col.ind.sup color for supplementary individuals
-#' @param alpha.ind,alpha.var controls the transparency of
-#'  individual and variable colors, respectively.
-#' The value can variate from 0 (total transparency) to 1 (no transparency).
-#' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the transparency for the individual/variable colors are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2+y^2, "coord"), x values("x") or y values("y").
-#'  To use this, make sure that habillage ="none".
+#' @param alpha.ind,alpha.var controls the transparency of individual and 
+#'   variable colors, respectively. The value can variate from 0 (total 
+#'   transparency) to 1 (no transparency). Default value is 1. Possible values 
+#'   include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+#'   transparency for the individual/variable colors are automatically 
+#'   controlled by their qualities ("cos2"), contributions ("contrib"), 
+#'   coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
+#'   this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
 #' @param col.circle a color for the correlation circle.
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
-#' @param select.ind,select.var a selection of individuals/variables to be drawn. 
-#' Allowed values are NULL or a list containing the arguments name, cos2 or contrib: 
-#' \itemize{
-#' \item name: is a character vector containing individuals/variables to be drawn
-#' \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn. 
-#' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-#' \item contrib: if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest contrib are drawn
-#' }
-#' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
-#' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
-#' \itemize{
-#' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
-#' \item width: degree of jitter in x direction
-#' \item height: degree of jitter in y direction
-#' }
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'   labels or not.
+#' @param select.ind,select.var a selection of individuals/variables to be 
+#'   drawn. Allowed values are NULL or a list containing the arguments name, 
+#'   cos2 or contrib: \itemize{ \item name: is a character vector containing 
+#'   individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex: 
+#'   0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, 
+#'   ex: 5, then the top 5 individuals/variables with the highest cos2 are 
+#'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
+#'   individuals/variables with the highest contrib are drawn }
+#' @param jitter a parameter used to jitter the points in order to reduce 
+#'   overplotting. It's a list containing the objects what, width and height 
+#'   (i.e jitter = list(what, width, height)). \itemize{ \item what: the element
+#'   to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" 
+#'   or "b". \item width: degree of jitter in x direction \item height: degree 
+#'   of jitter in y direction }
 #' @param ... Arguments to be passed to the function fviz_pca_biplot().
-#'  
+#'   
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}
+#' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{
@@ -88,20 +96,21 @@
 #' # Graph of individuals
 #' # +++++++++++++++++++++
 #' 
-#' # Default plot
-#' fviz_pca_ind(res.pca)
+#' # Default plot. 
+#' # Use repel = TRUE to avoid overplotting (slow if many points)
+#' fviz_pca_ind(res.pca, repel = TRUE)
 #' 
 #' # Change title, axis labels, theme and color
 #' fviz_pca_ind(res.pca, geom = "point", col.ind = "steelblue")+ # Show points only
-#'  labs(title = "PCA", x = "PC1", y ="PC2" )+ # tile and axis labels
+#'  labs(title = "PCA", x = "PC1", y ="PC2" )+ # title and axis labels
 #'  theme_minimal() # change theme
 #'  
-#'    
 #' # Control automatically the color of individuals 
 #' # using the "cos2" or the contributions "contrib"
 #' # cos2 = the quality of the individuals on the factor map
+#' 
 #' fviz_pca_ind(res.pca, col.ind="cos2")+
-#' theme_minimal() 
+#'  theme_minimal() 
 #' 
 #' # Change gradient color
 #' fviz_pca_ind(res.pca, col.ind="cos2") + 
@@ -109,23 +118,23 @@
 #'       high= "#FC4E07", midpoint=0.6, space = "Lab")+
 #'       theme_minimal()
 #'    
-#' # Control the transparency of the color by the
-#' # cos2
+#' # You can also control the transparency 
+#' # of the color by the cos2
 #' fviz_pca_ind(res.pca, alpha.ind="cos2") +
 #'      theme_minimal()        
 #'              
-#'              
-#' # Color individuals by groups
-#' # Add concentration ellipses
+#' # Color individuals by groups, add concentration ellipses
 #' p <- fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
 #'        addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
 #'              
-#' # Change group color using RColorBrewer color palettes
+#' # Change group colors using RColorBrewer color palettes
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 #' p + scale_color_brewer(palette="Dark2") +
 #'      theme_minimal()
 #'      
 #' # Change group colors manually
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 #' p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
 #'  theme_minimal()    
 #'       
@@ -138,6 +147,7 @@
 #' # Select the top 20 contributing individuals
 #' fviz_pca_ind(res.pca, select.ind = list(contrib = 20))
 #' }
+#' 
 #' # Select by names
 #' fviz_pca_ind(res.pca, 
 #' select.ind = list(name = c("23", "42", "119")))
@@ -145,6 +155,7 @@
 #'  
 #' # Graph of variables
 #' # ++++++++++++++++++++++++++++
+#' 
 #' # Default plot
 #' fviz_pca_var(res.pca, col.var = "steelblue")+
 #' theme_minimal()
@@ -194,7 +205,8 @@ fviz_pca <- function(X, ...){
 #' @export 
 fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
                          label = "all", invisible="none", labelsize=4, pointsize = 2,
-                         habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
+                         habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
+                         ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
                          jitter = list(what = "label", width = NULL, height = NULL),
@@ -324,12 +336,28 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                              label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
       }
     }
+    
+#     if(addEllipses){
+#       ell <- .get_ellipse_by_groups(ind$x, ind$y,
+#                                     groups = ind[, name.quali], ellipse.level=ellipse.level)
+#       colnames(ell)<-c(name.quali, "x", "y")
+#       ell[, 1]<-as.factor(ell[,1])
+#       p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+#     }
+    
     if(addEllipses){
-      ell <- .get_ellipse_by_groups(ind$x, ind$y,
-                                    groups = ind[, name.quali], ellipse.level=ellipse.level)
-      colnames(ell)<-c(name.quali, "x", "y")
-      ell[, 1]<-as.factor(ell[,1])
-      p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+      if (ellipse.type == 'convex'){
+        frame.data <- .cluster_chull(ind[, c("x", "y")], ind[, name.quali])
+        colnames(frame.data)[which(colnames(frame.data) == "cluster")] <- name.quali
+        mapping = aes_string(x = "x", y = "y", colour =name.quali, fill = name.quali, group = name.quali)
+        p <- p + ggplot2::geom_polygon(data = frame.data,  mapping = mapping, alpha = ellipse.alpha)
+      }
+      else if (ellipse.type %in% c('t', 'norm', 'euclid')) {
+        mapping = aes_string(x = "x", y = "y", colour = name.quali, group = name.quali, fill = name.quali)
+        p <- p + ggplot2::stat_ellipse(mapping = mapping, data = ind,
+                                       level = ellipse.level, type = ellipse.type, alpha = ellipse.alpha,
+                                       geom = 'polygon')
+      }
     }
     
     
@@ -434,7 +462,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
 
 #' @rdname fviz_pca
 #' @export
-fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
+fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), 
                   label = "all", invisible="none", labelsize=4, pointsize = 2,
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
@@ -479,7 +507,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   var[, c("x", "y")] <- var[, c("x", "y")]*r*0.7
   
   # Individuals
-  p <- fviz_pca_ind(X,  axes = axes, geom = geom, label = label, invisible=invisible,
+  p <- fviz_pca_ind(X,  axes = axes, geom = geom, repel = repel, label = label, invisible=invisible,
           labelsize=labelsize, pointsize = pointsize, axes.linetype=axes.linetype,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
@@ -600,6 +628,22 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
             class(X))
   
   scale_unit
+}
+
+# Compute convex hull for each cluster
+# ++++++++++++++++++++++++++++++++
+# x,y: numeric vector corresponding to the coordinates of points
+# cluster: groups of observations
+.cluster_chull <- function(x, cluster){
+  cluster <- as.factor(cluster)
+  levs <- levels(cluster)
+  res = NULL
+  for(lev in levs){
+    dd <- x[which(cluster == lev), , drop = FALSE]
+    cc <- chull(dd)
+    res <- rbind(res, cbind(dd[cc, , drop = FALSE], cluster = rep(lev, length(cc))))
+  }
+  as.data.frame(res)
 }
 
 
