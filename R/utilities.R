@@ -964,3 +964,21 @@ NULL
   multishapes
 }
 
+
+# Compute convex hull for each cluster
+# ++++++++++++++++++++++++++++++++
+# x,y: numeric vector corresponding to the coordinates of points
+# cluster: groups of observations
+.cluster_chull <- function(x, cluster){
+  cluster <- as.factor(cluster)
+  levs <- levels(cluster)
+  res = NULL
+  for(lev in levs){
+    dd <- x[which(cluster == lev), , drop = FALSE]
+    cc <- chull(dd)
+    res <- rbind(res, cbind(dd[cc, , drop = FALSE], cluster = rep(lev, length(cc))))
+  }
+  as.data.frame(res)
+}
+
+
