@@ -81,7 +81,7 @@ individuals when habillage != "none".}
 probability.}
 
 \item{ellipse.type}{Character specifying frame type. Possible values are 
-'convex' or types supporeted by \code{\link{ggplot2}{stat_ellipse}} 
+'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
 including one of c("t", "norm", "euclid").}
 
 \item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
@@ -156,24 +156,22 @@ res.pca <- prcomp(iris[, -5],  scale = TRUE)
 # Graph of individuals
 # +++++++++++++++++++++
 
-# Default plot. 
-# Use repel = TRUE to avoid overplotting (slow if many points)
-fviz_pca_ind(res.pca, repel = TRUE)
+# Default plot
+fviz_pca_ind(res.pca, col.ind = "#00AFBB")
 
-# Change title, axis labels, theme and color
-fviz_pca_ind(res.pca, geom = "point", col.ind = "steelblue")+ # Show points only
- labs(title = "PCA", x = "PC1", y ="PC2" )+ # title and axis labels
- theme_minimal() # change theme
  
-# Control automatically the color of individuals 
-# using the "cos2" or the contributions "contrib"
-# cos2 = the quality of the individuals on the factor map
+# 1. Control automatically the color of individuals 
+   # using the "cos2" or the contributions "contrib"
+   # cos2 = the quality of the individuals on the factor map
+# 2. To keep only point or text use geom = "point" or geom = "text".
+# 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
 
-fviz_pca_ind(res.pca, col.ind="cos2")+
+fviz_pca_ind(res.pca, col.ind="cos2", geom = "point")+
  theme_minimal() 
 
 # Change gradient color
-fviz_pca_ind(res.pca, col.ind="cos2") + 
+# Use repel = TRUE to avoid overplotting (slow if many points)
+fviz_pca_ind(res.pca, col.ind="cos2", repel = TRUE) + 
       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
       high= "#FC4E07", midpoint=0.6, space = "Lab")+
       theme_minimal()
@@ -184,6 +182,7 @@ fviz_pca_ind(res.pca, alpha.ind="cos2") +
      theme_minimal()        
              
 # Color individuals by groups, add concentration ellipses
+# Remove labels: label = "none".
 p <- fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
        addEllipses=TRUE, ellipse.level=0.95)
 print(p)
@@ -191,58 +190,46 @@ print(p)
 # Change group colors using RColorBrewer color palettes
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_brewer(palette="Dark2") +
+    scale_fill_brewer(palette="Dark2") +
      theme_minimal()
      
 # Change group colors manually
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
+ scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
  theme_minimal()    
       
-# Select and visualize individuals with cos2 >= 0.96
-fviz_pca_ind(res.pca, select.ind = list(cos2 = 0.96))
-# Select the top 20 according to the cos2
-fviz_pca_ind(res.pca, select.ind = list(cos2 = 20))
-
-\dontrun{
-# Select the top 20 contributing individuals
-fviz_pca_ind(res.pca, select.ind = list(contrib = 20))
-}
-
-# Select by names
-fviz_pca_ind(res.pca, 
-select.ind = list(name = c("23", "42", "119")))
+# Select and visualize some individuals (ind) with select.ind argument.
+ # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.96)
+ # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
+ # - Top 20 contributing individuals: select.ind = list(contrib = 20)
+ # - Select ind by names: select.ind = list(name = c("23", "42", "119") )
+ 
+ # Example: Select the top 40 according to the cos2
+fviz_pca_ind(res.pca, select.ind = list(cos2 = 40))
 
  
 # Graph of variables
 # ++++++++++++++++++++++++++++
-
+  
 # Default plot
 fviz_pca_var(res.pca, col.var = "steelblue")+
 theme_minimal()
  
 # Control variable colors using their contributions
-fviz_pca_var(res.pca, col.var="contrib")+
+fviz_pca_var(res.pca, col.var = "contrib")+
  scale_color_gradient2(low="white", mid="blue", 
            high="red", midpoint=96, space = "Lab") +
  theme_minimal()         
  
-
-# Control the transparency of variables using their contributions
-fviz_pca_var(res.pca, alpha.var="contrib") +
-   theme_minimal()
-
-# Select and visualize variables with cos2 >= 0.96
-fviz_pca_var(res.pca, select.var = list(cos2 = 0.96))
-
+# Select variables with select.var argument
+   # You can select by contrib, cos2 and name 
+   # as previously described for ind
 # Select the top 3 contributing variables
 fviz_pca_var(res.pca, select.var = list(contrib = 3))
 
-# Select by names
-fviz_pca_var(res.pca, 
-   select.var= list(name = c("Sepal.Width", "Petal.Length")))
- 
     
-# biplot
+# Biplot of individuals and variables
 # ++++++++++++++++++++++++++
 fviz_pca_biplot(res.pca)
 
