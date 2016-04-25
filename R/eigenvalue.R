@@ -41,7 +41,7 @@
 #'  
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
-#'  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmca}}
+#'  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
 #'@references http://www.sthda.com
 #' @examples
 #' # Principal Component Analysis
