@@ -74,8 +74,8 @@ NULL
 #' }
 #'
 #' @return a ggplot2 plot
-#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @author Fabian Mundt \email{f.mundt@inventionate.de}
+#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
 #' \donttest{

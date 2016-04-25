@@ -387,9 +387,9 @@ fviz_mfa_axes(res.mfa)
  }
 }
 \author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-
 Fabian Mundt \email{f.mundt@inventionate.de}
+
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
 http://www.sthda.com
