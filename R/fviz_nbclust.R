@@ -74,13 +74,14 @@
 #' library(cluster)
 #' set.seed(123)
 #' # Compute gap statistic for kmeans
+#' # we used B = 10 for demo. Recommended value is ~500
 #' gap_stat <- clusGap(iris.scaled, FUN = kmeans, nstart = 25,
-#'  K.max = 10, B = 50)
+#'  K.max = 10, B = 10)
 #'  print(gap_stat, method = "firstmax")
 #' fviz_gap_stat(gap_stat)
 #'  
 #' # Gap statistic for hierarchical clustering
-#' gap_stat <- clusGap(iris.scaled, FUN = hcut, K.max = 10, B = 50)
+#' gap_stat <- clusGap(iris.scaled, FUN = hcut, K.max = 10, B = 10)
 #' fviz_gap_stat(gap_stat)
 #' 
 #'  
