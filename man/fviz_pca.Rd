@@ -131,7 +131,7 @@ of jitter in y direction }}
 \item{col.circle}{a color for the correlation circle.}
 }
 \value{
-a ggplot2 plot
+a ggplot
 }
 \description{
 Principal component analysis (PCA) reduces the dimensionality of

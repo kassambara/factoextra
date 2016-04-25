@@ -86,7 +86,7 @@
 #'   of jitter in y direction }
 #' @param ... Arguments to be passed to the function fviz_pca_biplot().
 #'   
-#' @return a ggplot2 plot
+#' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}
 #' @examples
