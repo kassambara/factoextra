@@ -511,7 +511,7 @@ NULL
 # it's possible to use also the shortcut "l", "p", "b".
 .ggscatter <- function(p = NULL, data, x = 'x', y = 'y', col="black", alpha = 1, 
                        alpha.limits = NULL, shape = 19, pointsize = 2, 
-                       geom=c("point", "text"), lab = TRUE, labelsize = 4, repel = TRUE,
+                       geom=c("point", "text"), lab = TRUE, labelsize = 4, repel = FALSE,
                        jitter = list(what = "label", width = NULL, height = NULL),
                        data.partial = NULL, col.partial = "black", linesize = 0.5, ...)
   {
@@ -575,10 +575,16 @@ NULL
       p <- p + geom_segment(data = data,
                   aes_string(x = 0, y = 0, xend = x, yend = y, color=col, alpha=alpha),
                   arrow = grid::arrow(length = grid::unit(0.2, 'cm')))
-    if(lab & "text"%in% geom) 
-      p <- p + ggrepel::geom_text_repel(data = label_coord, 
-                         aes_string(x,y, label = 'name', 
-                                    color=col, alpha=alpha), size = labelsize)
+    if(lab & "text"%in% geom) {
+      if(repel)
+        p <- p + ggrepel::geom_text_repel(data = label_coord, 
+                                          aes_string(x,y, label = 'name', 
+                                                     color=col, alpha=alpha), size = labelsize)
+      else
+        p <- p + geom_text(data=label_coord,
+                           aes_string(x,y, label = 'name', 
+                                      color=col, alpha=alpha), size = labelsize,  vjust = -0.5)
+    }
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
   # Only the color is controlled automatically
@@ -604,10 +610,16 @@ NULL
                             aes_string(x = 0, y = 0, xend = x, yend = y, color=col),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), alpha = alpha)
     
-    if(lab & "text" %in% geom) 
-      p <- p + ggrepel::geom_text_repel(data = label_coord,
-                         aes_string(x, y, color=col),
-                         label = data$name,  size = labelsize, alpha=alpha)
+    if(lab & "text" %in% geom) {
+      if(repel)
+        p <- p + ggrepel::geom_text_repel(data = label_coord,
+                                          aes_string(x, y, color=col),
+                                          label = data$name,  size = labelsize, alpha=alpha)
+      else
+        p <- p + geom_text(data=label_coord,
+                           aes_string(x,y, color = col), 
+                                      label = data$name, size = labelsize, alpha = alpha,  vjust = -0.5)
+    }
   }
   
   # Only the transparency is controlled automatically
@@ -634,10 +646,17 @@ NULL
                             aes_string(x = 0, y = 0, xend = x, yend = y, alpha=alpha),
                             arrow = grid::arrow(length = grid::unit(0.2, 'cm')), color=col)
     
-    if(lab & "text" %in% geom) 
-      p <- p + ggrepel::geom_text_repel(data = label_coord, 
-                         aes_string(x, y, alpha=alpha, label="name"),
-                         size = labelsize, color=col)
+    if(lab & "text" %in% geom) {
+      if(repel)
+        p <- p + ggrepel::geom_text_repel(data = label_coord, 
+                                          aes_string(x, y, alpha=alpha, label="name"),
+                                          size = labelsize, color=col)
+      else
+        p <- p + geom_text(data=label_coord,
+                           aes_string(x,y,  alpha=alpha, label="name"), 
+                           size = labelsize, color=col,  vjust = -0.5)
+    }
+
     
     if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   }
