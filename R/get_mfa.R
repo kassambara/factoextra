@@ -33,7 +33,8 @@ NULL
 #' library("FactoMineR")
 #' data(poison)
 #' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
-#' name.group=c("desc","desc2","symptom","eat"), num.group.sup=1:2)
+#' name.group=c("desc","desc2","symptom","eat"), num.group.sup=1:2,
+#' graph = FALSE)
 #'  
 #'  # Extract the results for qualitative variable categories
 #'  var <- get_mfa_quali_var(res.mfa)
