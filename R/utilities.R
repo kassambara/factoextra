@@ -701,7 +701,7 @@ NULL
                                           color = col, label = data$name, size = labelsize)
       } else {
         p <- p + geom_text(data = label_coord, mapping = aes_string(x,y), 
-                           color = col, label = data$name, size = labelsize, nudge_y = -0.015)
+                           color = col, label = data$name, size = labelsize, vjust = -0.5)
      }
   }
   
