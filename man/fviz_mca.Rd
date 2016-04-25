@@ -10,9 +10,10 @@
 fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, repel = FALSE,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
-  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  shape.ind = 19, axes.linetype = "dashed", select.ind = list(name = NULL,
-  cos2 = NULL, contrib = NULL), map = "symmetric",
+  ellipse.type = "norm", ellipse.alpha = 0.2, col.ind = "blue",
+  col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
+  axes.linetype = "dashed", select.ind = list(name = NULL, cos2 = NULL,
+  contrib = NULL), map = "symmetric",
   title = "Individuals factor map - MCA", jitter = list(what = "label",
   width = NULL, height = NULL), ...)
 
@@ -78,6 +79,13 @@ individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal 
 probability.}
+
+\item{ellipse.type}{Character specifying frame type. Possible values are 
+'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
+including one of c("t", "norm", "euclid").}
+
+\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
+fill color. Use alpha = 0 for no fill color.}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. 
 Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
