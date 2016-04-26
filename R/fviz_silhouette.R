@@ -1,18 +1,24 @@
 #' @include eigenvalue.R get_pca.R hcut.R
  NULL
 #'Visualize Silhouette Information from Clustering
-#'@description Silhouette (Si) analysis measures how well an observation is 
-#'  clustered and it estimates the average distance between clusters. 
-#'  fviz_silhouette() provides ggplot2-based elegant visualization of silhouette
-#'  information from i) the result of \code{\link[cluster]{silhouette}}(),
-#'  \code{\link[cluster]{pam}}(), \code{\link[cluster]{clara}}() and
-#'  \code{\link[cluster]{fanny}}() [in cluster package]; ii)
-#'  \code{\link{eclust}}() and \code{\link{hcut}}() [in factoextra].
-#' @details 
-#'  - Observations with a large silhouhette Si (almost 1) are very well clustered. 
-#'     
-#'  - A small Si (around 0) means that the observation lies between two clusters.   
-#'      
+#'@description Silhouette (Si) analysis is a cluster validation approach that
+#'  measures how well an observation is clustered and it estimates the average
+#'  distance between clusters. fviz_silhouette() provides ggplot2-based elegant
+#'  visualization of silhouette information from i) the result of
+#'  \code{\link[cluster]{silhouette}}(), \code{\link[cluster]{pam}}(),
+#'  \code{\link[cluster]{clara}}() and \code{\link[cluster]{fanny}}() [in
+#'  cluster package]; ii) \code{\link{eclust}}() and \code{\link{hcut}}() [in
+#'  factoextra].
+#'  
+#'  Read more: 
+#'  \href{http://www.sthda.com/english/wiki/clustering-validation-statistics-4-vital-things-everyone-should-know-unsupervised-machine-learning}{Clustering
+#'   Validation Statistics}.
+#'@details - Observations with a large silhouhette Si (almost 1) are very well 
+#'  clustered.
+#'  
+#'  - A small Si (around 0) means that the observation lies between two
+#'  clusters.
+#'  
 #'  - Observations with a negative Si are probably placed in the wrong cluster.
 #'  
 #'@param sil.obj an object of class silhouette: pam, clara, fanny [in cluster 

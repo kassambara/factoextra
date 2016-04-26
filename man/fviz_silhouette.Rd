@@ -19,19 +19,26 @@ are printed in fviz_silhouette().}
 return a ggplot
 }
 \description{
-Silhouette (Si) analysis measures how well an observation is 
- clustered and it estimates the average distance between clusters. 
- fviz_silhouette() provides ggplot2-based elegant visualization of silhouette
- information from i) the result of \code{\link[cluster]{silhouette}}(),
- \code{\link[cluster]{pam}}(), \code{\link[cluster]{clara}}() and
- \code{\link[cluster]{fanny}}() [in cluster package]; ii)
- \code{\link{eclust}}() and \code{\link{hcut}}() [in factoextra].
+Silhouette (Si) analysis is a cluster validation approach that
+ measures how well an observation is clustered and it estimates the average
+ distance between clusters. fviz_silhouette() provides ggplot2-based elegant
+ visualization of silhouette information from i) the result of
+ \code{\link[cluster]{silhouette}}(), \code{\link[cluster]{pam}}(),
+ \code{\link[cluster]{clara}}() and \code{\link[cluster]{fanny}}() [in
+ cluster package]; ii) \code{\link{eclust}}() and \code{\link{hcut}}() [in
+ factoextra].
+ 
+ Read more: 
+ \href{http://www.sthda.com/english/wiki/clustering-validation-statistics-4-vital-things-everyone-should-know-unsupervised-machine-learning}{Clustering
+  Validation Statistics}.
 }
 \details{
-- Observations with a large silhouhette Si (almost 1) are very well clustered. 
-    
- - A small Si (around 0) means that the observation lies between two clusters.   
-     
+- Observations with a large silhouhette Si (almost 1) are very well 
+ clustered.
+ 
+ - A small Si (around 0) means that the observation lies between two
+ clusters.
+ 
  - Observations with a negative Si are probably placed in the wrong cluster.
 }
 \examples{
