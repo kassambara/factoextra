@@ -84,22 +84,20 @@ iris.scaled <- scale(iris[, -5])
 km.res <- kmeans(iris.scaled, 3, nstart = 25)
 
 # Visualize kmeans clustering
-fviz_cluster(km.res, iris[, -5])
-# Change frame type
-fviz_cluster(km.res, iris[, -5], frame.type = "norm")
-# Remove ellipse fill color and change frame level
-fviz_cluster(km.res, iris[, -5], frame.type = "norm",
-            frame.alpha = 0, frame.level = 0.7)
-# Show points only
-fviz_cluster(km.res, iris[, -5], geom = "point")
-# Show text only
-fviz_cluster(km.res, iris[, -5], geom = "text")
+fviz_cluster(km.res, iris[, -5], frame.type = "convex")
+
+
 # Change the color and theme
 fviz_cluster(km.res, iris[, -5]) + 
  scale_color_brewer(palette = "Set2")+
  scale_fill_brewer(palette = "Set2") +
  theme_minimal()
  
+ \dontrun{
+# Show points only
+fviz_cluster(km.res, iris[, -5], geom = "point")
+# Show text only
+fviz_cluster(km.res, iris[, -5], geom = "text")
  
 # PAM clustering
 # ++++++++++++++++++++
@@ -107,6 +105,7 @@ require(cluster)
 pam.res <- pam(iris.scaled, 3)
  # Visualize pam clustering
 fviz_cluster(pam.res, geom = "point", frame.type = "norm")
+}
 
 # Hierarchical clustering
 # ++++++++++++++++++++++++
