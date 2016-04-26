@@ -43,6 +43,7 @@
 * Require R >= 3.1.0
 * A dataset named "multishapes" has been added. It contains clusters of multiple shapes. Useful for comparing density-based clustering and partitioning methods such as k-means
 * The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() and fviz_cluster() in order to reduce overplotting of points and texts
+* The functions fviz_*() now use ggplot2::stat_ellipse() for drawing ellipses.
 
 ## BUG FIXES
     
