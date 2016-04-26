@@ -8,11 +8,11 @@ Authors@R: c(
     person("Fabian", "Mundt", role = c("aut"), email = "f.mundt@inventionate.de")
     )
 Description: Provides some easy-to-use functions to extract and visualize
-    the output of multivariate data analyses, including `PCA` (Principal Component
-    Analysis), `CA` (Correspondence Analysis), `MCA` (Multiple Correspondence Analysis),
-    `MFA` (Multiple Factor Analysis) and `HMFA` (Hierarchical Multiple Factor Analysis)
-    functions from different R packages. It contains also many functions for simplifying clustering analysis
-    workflow and provides `ggplot2` - based elegant data visualization. 
+    the output of multivariate data analyses, including 'PCA' (Principal Component
+    Analysis), 'CA' (Correspondence Analysis), 'MCA' (Multiple Correspondence Analysis),
+    'MFA' (Multiple Factor Analysis) and 'HMFA' (Hierarchical Multiple Factor Analysis)
+    functions from different R packages. It contains also functions for simplifying some clustering analysis steps 
+    and provides 'ggplot2' - based elegant data visualization. 
 License: GPL-2
 LazyData: true
 Depends:
