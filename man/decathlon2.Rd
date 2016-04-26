@@ -33,7 +33,7 @@ Athletes' performance during two sporting meetings
 \donttest{
 data(decathlon2)
 decathlon.active <- decathlon2[1:23, 1:10]
-res.pca <- princomp(decathlon.active)
+res.pca <- prcomp(decathlon.active, scale = TRUE)
 fviz_pca_biplot(res.pca, data = decathlon.active)
 }
 
