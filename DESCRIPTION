@@ -28,7 +28,6 @@ Imports:
     stats,
     reshape2,
     ggrepel,
-    Hmisc,
     abind
 Suggests:
     ade4,
