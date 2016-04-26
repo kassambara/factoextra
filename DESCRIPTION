@@ -20,11 +20,11 @@ License: GPL-2
 LazyData: true
 Depends:
     R (>= 3.1.0),
-    ggplot2,
-    grid
+    ggplot2
 Imports:
     cluster,
     dendextend,
+    grid,
     stats,
     reshape2,
     ggrepel,
