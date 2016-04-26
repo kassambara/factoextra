@@ -91,74 +91,56 @@ NULL
 #'
 #' # Graph of individuals
 #' # ++++++++++++++++++++
+#' 
 #' # Default plot
-#' fviz_mfa_ind(res.mfa)
-#' # Change title and axis labels
-#' fviz_mfa_ind(res.mfa) +
-#'  labs(title = "MFA", x = "Dim.1", y ="Dim.2" )
-#' # Change axis limits by specifying the min and max
-#' fviz_mfa_ind(res.mfa) +
-#'    xlim(-0.8, 1.5) + ylim (-1.5, 1.5)
-#' # Use text only
-#' fviz_mfa_ind(res.mfa, geom = "text")
-#' # Use points only
-#' fviz_mfa_ind(res.mfa, geom="point")
-#' # Change the size of points
-#' fviz_mfa_ind(res.mfa, geom="point", pointsize = 4)
-#' # Change point color and theme
-#' fviz_mfa_ind(res.mfa, col.ind = "blue")+
-#'    theme_minimal()
-#' # Reduce overplotting
-#' fviz_mfa_ind(res.mfa, jitter = list(width = 0.2, height = 0.2))
+#' # Use repel = TRUE to avoid overplotting (slow if many points)
+#' # Color of individuals: col.ind = "#2E9FDF"
+#' fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")
+#' 
+#' # 1. Control automatically the color of individuals 
+#'    # using the "cos2" or the contributions "contrib"
+#'    # cos2 = the quality of the individuals on the factor map
+#' # 2. To keep only point or text use geom = "point" or geom = "text".
+#' # 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
+#' 
+#' fviz_mfa_ind(res.mfa, col.ind = "cos2")+
+#'  theme_minimal()
 #'
-#' # Control automatically the color of individuals
-#' # using the cos2 or the contributions
-#' # cos2 = the quality of the individuals on the factor map
-#' fviz_mfa_ind(res.mfa, col.ind="cos2")
-#' # Gradient color
-#' fviz_mfa_ind(res.mfa, col.ind="cos2") +
-#'       scale_color_gradient2(low="white", mid="blue",
-#'       high="red", midpoint=0.4)
-#' # Change the theme and use only points
-#' fviz_mfa_ind(res.mfa, col.ind="cos2", geom = "point") +
-#'       scale_color_gradient2(low="white", mid="blue",
-#'       high="red", midpoint=0.4)+ theme_minimal()
+#' # Change gradient color
+#' # Use repel = TRUE to avoid overplotting (slow if many points)
+#' fviz_mfa_ind(res.mfa, col.ind="cos2", repel = TRUE) + 
+#'       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
+#'       high= "#FC4E07", midpoint=0.4, space = "Lab")+
+#'  theme_minimal()
 #'
-#' # Color by the contributions
-#' fviz_mfa_ind(res.mfa, col.ind="contrib") +
-#'       scale_color_gradient2(low="white", mid="blue",
-#'       high="red", midpoint=1.5)
-#'
-#' # Control the transparency of the color by the
-#' # contributions
-#' fviz_mfa_ind(res.mfa, alpha.ind="contrib") +
-#'      theme_minimal()
-#'
-#' # Color individuals by groups
+#' # Color individuals by groups, add concentration ellipses
+#' # Remove labels: label = "none".
 #' grp <- as.factor(poison[, "Vomiting"])
-#' fviz_mfa_ind(res.mfa, label="none", habillage=grp)
-#' # Add ellipses
 #' p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
-#'              addEllipses=TRUE, ellipse.level=0.95)
+#'        addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
+#'
 #' # Change group colors using RColorBrewer color palettes
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 #' p + scale_color_brewer(palette="Dark2") +
-#'    theme_minimal()
-#' p + scale_color_brewer(palette="Paired") +
+#'     scale_fill_brewer(palette="Dark2") +
 #'      theme_minimal()
-#' p + scale_color_brewer(palette="Set1") +
-#'      theme_minimal()
+#'      
+#' # Change group colors manually
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+#' p + scale_color_manual(values=c("#999999", "#E69F00"))+
+#'  scale_fill_manual(values=c("#999999", "#E69F00"))+
+#'  theme_minimal()  
 #'
-#' # Select and visualize individuals with cos2 >= 0.4
-#' fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 0.4))
-#' # Select the top 20 according to the cos2
+#' # Select and visualize some individuals (ind) with select.ind argument.
+#'  # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.4)
+#'  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
+#'  # - Top 20 contributing individuals: select.ind = list(contrib = 20)
+#'  # - Select ind by names: select.ind = list(name = c("44", "38", "53",  "39") )
+#'  
+#' # Example: Select the top 40 according to the cos2
 #' fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 20))
-#' # Select the top 20 contributing individuals
-#' fviz_mfa_ind(res.mfa, select.ind = list(contrib = 20))
-#' # Select by names
-#' fviz_mfa_ind(res.mfa,
-#' select.ind = list(name = c("44", "38", "53",  "39")))
-#'
+#' 
 #'
 #' # Graph of qantitative variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
@@ -166,28 +148,23 @@ NULL
 #' res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
 #'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
 #'                num.group.sup=c(1,6), graph=FALSE)
+#'                
 #' # Default plot
-#' fviz_mfa_quanti_var(res.mfa)
-#' # Change color and theme
-#' fviz_mfa_quanti_var(res.mfa, col.var="steelblue")+
-#'  theme_minimal()
-#'
+#' fviz_mfa_quanti_var(res.mfa, col.var = "#FC4E07")+
+#' theme_minimal()
+#' 
 #' # Control variable colors using their contributions
 #' fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
 #'            high = "red", midpoint = 2) +
 #'  theme_minimal()
-#' # Control the transparency of variables using their contributions
-#' fviz_mfa_quanti_var(res.mfa, alpha.var = "contrib") +
-#'    theme_minimal()
-#'
-#' # Select and visualize categories with cos2 >= 0.4
-#' fviz_mfa_quanti_var(res.mfa, select.var = list(cos2 = 0.4))
-#' # Select the top 10 contributing variable categories
+#'  
+#' # Select variables with select.var argument
+#'    # You can select by contrib, cos2 and name 
+#'    # as previously described for ind
+#' # Select the top 10 contributing variables
 #' fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
-#' # Select by names
-#' fviz_mfa_quanti_var(res.mfa,
-#'  select.var= list(name =  c("Spice.before.shaking", "Aroma.intensity")))
+#'
 #'  
 #' # Graph of categorical variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
@@ -196,54 +173,24 @@ NULL
 #'                name.group=c("desc","desc2","symptom","eat"),
 #'                num.group.sup=1:2, graph=FALSE)
 #'
-#' # Default plot
-#' fviz_mfa_quali_var(res.mfa)
-#' # Change color and theme
-#' fviz_mfa_quali_var(res.mfa, col.var="steelblue")+
-#'  theme_minimal()
-#'
+#' # Plot
 #' # Control variable colors using their contributions
 #' fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
 #'            high = "red", midpoint = 2) +
 #'  theme_minimal()
-#' # Control the transparency of variables using their contributions
-#' fviz_mfa_quali_var(res.mfa, alpha.var = "contrib") +
-#'    theme_minimal()
-#'
-#' # Select and visualize categories with cos2 >= 0.4
-#' fviz_mfa_quali_var(res.mfa, select.var = list(cos2 = 0.4))
+#'  
 #' # Select the top 10 contributing variable categories
 #' fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
-#' # Select by names
-#' fviz_mfa_quali_var(res.mfa,
-#'  select.var= list(name =  c("Cheese_y", "Nausea_n", "Courg_y")))
 #'
 #' # Biplot of categorical variable categories and individuals
 #' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_quali_biplot(res.mfa)
-#' # Keep only the labels for variable categories
-#' fviz_mfa_quali_biplot(res.mfa, label ="var")
-#' # Keep only labels for individuals
-#' fviz_mfa_quali_biplot(res.mfa, label ="ind")
-#' # Hide variable categories
-#' fviz_mfa_quali_biplot(res.mfa, invisible ="var")
-#' # Hide individuals
-#' fviz_mfa_quali_biplot(res.mfa, invisible ="ind")
-#'# Control automatically the color of individuals using the cos2
-#' fviz_mfa_quali_biplot(res.mfa, label ="var", col.ind="cos2") +
-#'        theme_minimal()
-#' # Change the color by groups, add ellipses
+#' 
 #' grp <- as.factor(poison[, "Vomiting"])
-#' fviz_mfa_quali_biplot(res.mfa, label="var", col.var ="blue",
-#'    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) +
-#'    theme_minimal()
-#'
-#' # Select the top 30 contributing individuals
-#' # And the top 10 variables
-#' fviz_mfa_quali_biplot(res.mfa,
-#'                select.ind = list(contrib = 30),
-#'                select.var = list(contrib = 10))
+#' fviz_mfa_quali_biplot(res.mfa, repel = TRUE, col.var = "#E7B800",
+#'    habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)+
+#'  theme_minimal()
+#' 
 #'                
 #' # Graph of partial individuals (starplot)
 #' # +++++++++++++++++++++++++++++++++++++++
