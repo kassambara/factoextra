@@ -64,6 +64,7 @@ Collate:
     'fviz_mfa.R'
     'fviz_nbclust.R'
     'fviz_pca.R'
+    'fviz_silhouette.R'
     'get_ca.R'
     'get_clust_tendency.R'
     'hkmeans.R'
