@@ -162,12 +162,13 @@ NULL
 #'  
 #' # Graph of variable categories
 #' # ++++++++++++++++++++++++++++
-#' # Default plot
-#' fviz_mca_var(res.mca, col.var = "#FC4E07", repel = TRUE)+
+#' # Default plot: use repel = TRUE to avoid overplotting
+#' fviz_mca_var(res.mca, col.var = "#FC4E07")+
 #' theme_minimal()
 #' 
 #' # Control variable colors using their contributions
-#' fviz_mca_var(res.mca, col.var = "contrib", repel = TRUE)+
+#' # use repel = TRUE to avoid overplotting
+#' fviz_mca_var(res.mca, col.var = "contrib")+
 #'  scale_color_gradient2(low="white", mid="blue", 
 #'            high="red", midpoint=2, space = "Lab") +
 #'  theme_minimal()      
