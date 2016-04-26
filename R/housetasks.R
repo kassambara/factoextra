@@ -18,9 +18,10 @@
 #' @examples
 #' \donttest{
 #' library(FactoMineR)
-#' data(poison)
-#' res.mca <- MCA(poison, quanti.sup = 1:2, quali.sup=c(3,4), graph = FALSE)
-#' fviz_mca_biplot(res.mca, repel = TRUE)
+#' data(housetasks)
+#' res.ca <- CA(housetasks, graph=FALSE)
+#' fviz_ca_biplot(res.mca, repel = TRUE)+
+#' theme_minimal()
 #' }
 #' 
 NULL
