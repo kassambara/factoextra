@@ -240,6 +240,7 @@ p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
  scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
  theme_minimal()  
    
+\dontrun{
 # Select and visualize some individuals (ind) with select.ind argument.
  # - ind with cos2 >= 0.1: select.ind = list(cos2 = 0.1)
  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
@@ -248,6 +249,7 @@ p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
  
 # Example: Select the top 10 according to the cos2
 fviz_hmfa_ind(res.hmfa, select.ind = list(cos2 = 100))
+}
 
 
 # Graph of qantitative variable categories
@@ -263,11 +265,13 @@ fviz_hmfa_quanti_var(res.hmfa, col.var = "contrib")+
            high = "red", midpoint = 12) +
  theme_minimal()
 
+\dontrun{
 # Select variables with select.var argument
    # You can select by contrib, cos2 and name 
    # as previously described for ind
 # Select the top 10 contributing variables
 fviz_hmfa_quanti_var(res.hmfa, select.var = list(contrib = 10))
+}
  
 # Graph of categorical variable categories
 # ++++++++++++++++++++++++++++++++++++++++
