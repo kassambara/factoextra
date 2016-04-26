@@ -2,7 +2,6 @@
 % Please edit documentation in R/fviz_cluster.R
 \name{fviz_cluster}
 \alias{fviz_cluster}
-\alias{fviz_silhouette}
 \title{Visualize Clustering Results}
 \usage{
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
@@ -10,36 +9,38 @@ fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   frame.level = 0.95, frame.alpha = 0.2, pointsize = 2, labelsize = 4,
   title = "Cluster plot", jitter = list(what = "label", width = NULL, height
   = NULL), outlier.color = "black", outlier.shape = 19)
-
-fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE)
 }
 \arguments{
-\item{object}{an object of class "partition" created by the functions pam(), clara() or fanny() 
-in cluster package; "kmeans" [in stats package]; "dbscan" [in fpc package]; "Mclust" [in mclust]; 
-"hkmeans", "eclust" [in factoextra]. 
+\item{object}{an object of class "partition" created by the functions pam(),
+clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
+[in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
 Possible value are also any list object with data and cluster components 
 (e.g.: object = list(data = mydata, cluster = myclust)).}
 
-\item{data}{the data that has been used for clustering. Required only when object is a class of kmeans or dbscan.}
+\item{data}{the data that has been used for clustering. Required only when
+object is a class of kmeans or dbscan.}
 
-\item{stand}{logical value; if TRUE, data is standardized before principal component analysis}
+\item{stand}{logical value; if TRUE, data is standardized before principal
+component analysis}
 
-\item{geom}{a text specifying the geometry to be used for the graph. 
-Allowed values are the combination of c("point", "text"). 
-Use "point" (to show only points);  "text" to show only labels; c("point", "text") to show both types.}
+\item{geom}{a text specifying the geometry to be used for the graph. Allowed
+values are the combination of c("point", "text"). Use "point" (to show only
+points);  "text" to show only labels; c("point", "text") to show both types.}
 
 \item{show.clust.cent}{logical; if TRUE, shows cluster centers}
 
-\item{frame}{logical value; if TRUE, draws outline around points of each cluster}
+\item{frame}{logical value; if TRUE, draws outline around points of each
+cluster}
 
-\item{frame.type}{Character specifying frame type. 
-Possible values are 'convex' or types supporeted by \code{ggplot2::stat_ellipse} 
-including one of c("t", "norm", "euclid").}
+\item{frame.type}{Character specifying frame type. Possible values are
+'convex' or types supporeted by \code{ggplot2::stat_ellipse} including one
+of c("t", "norm", "euclid").}
 
-\item{frame.level}{Passed for \code{ggplot2::stat_ellipse} 's level. Ignored in 'convex'. 
-Default value is 0.95.}
+\item{frame.level}{Passed for \code{ggplot2::stat_ellipse} 's level. Ignored
+in 'convex'. Default value is 0.95.}
 
-\item{frame.alpha}{Alpha for frame specifying the transparency level of fill color.}
+\item{frame.alpha}{Alpha for frame specifying the transparency level of fill
+color.}
 
 \item{pointsize}{the size of points}
 
@@ -47,41 +48,28 @@ Default value is 0.95.}
 
 \item{title}{the title of the graph}
 
-\item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
-It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
-\itemize{
-\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
-\item width: degree of jitter in x direction
-\item height: degree of jitter in y direction
-}}
+\item{jitter}{a parameter used to jitter the points in order to reduce
+overplotting. It's a list containing the objects what, width and height (i.e
+jitter = list(what, width, height)). \itemize{ \item what: the element to be
+jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
+\item width: degree of jitter in x direction \item height: degree of jitter
+in y direction }}
 
 \item{outlier.color, outlier.shape}{the color and the shape of outliers. 
 Outliers can be detected only in DBSCAN clustering.}
-
-\item{sil.obj}{an object of class silhouette [from cluster package]}
-
-\item{label}{logical value. If true, x axis tick labels are shown}
-
-\item{print.summary}{logical value. If true a summary of cluster silhouettes are printed in 
-fviz_silhouette(); or the optimal number of clusters are printed in fviz_nbclust().}
 }
 \value{
-\itemize{
-\item fviz_cluster, fviz_silhouette: return a ggplot2
-}
+return a ggpplot.
 }
 \description{
-\itemize{
-\item{fviz_cluster(): Draws the result of partitioning methods 
-including kmeans [stats package]; pam, clara and fanny [cluster package]; dbscan [fpc package]; 
-Mclust [mclust package]; HCPC [FactoMineR]; hkmeans [factoextra]. 
-Observations are represented by points in the plot, using principal components if ncol(data) > 2. 
-An ellipse is drawn around each cluster.}
-\item{fviz_silhouette(): Draws the result of silhouette() [cluster package]}
-}
+Provides ggplot2-based elegant visualization of partitioning
+methods including kmeans [stats package]; pam, clara and fanny [cluster
+package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR];
+hkmeans [factoextra]. Observations are represented by points in the plot,
+using principal components if ncol(data) > 2. An ellipse is drawn around each
+cluster.
 }
 \examples{
-\donttest{
 set.seed(123)
 
 # Data preparation
@@ -122,36 +110,21 @@ fviz_cluster(pam.res, geom = "point", frame.type = "norm")
 
 # Hierarchical clustering
 # ++++++++++++++++++++++++
-# Compute pairewise distance matrices
-dist.res <- dist(iris.scaled, method = "euclidean")
-# Hierarchical clustering results
-hc <- hclust(dist.res, method = "complete")
-
-# Visualization of hclust
-plot(hc, labels = FALSE, hang = -1)
-# Add rectangle around 3 groups
-rect.hclust(hc, k = 3, border = 2:4) 
-
-# Cut into 3 groups
-hc.cut <- cutree(hc, k = 3)
-hc.cut
 # Use hcut() which compute hclust and cut the tree
-hcut(iris.scaled, k = 3, hc_method = "complete")
-# Silhouette plots
-# ++++++++++++++++++++++++++++++
-# cluster package required
-library(cluster)
+hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
+# Visualize dendrogram
+fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
+# Visualize cluster
+fviz_cluster(hc.cut)
 
-# Silhouhette for kmeans
-sil <- silhouette(km.res$cluster, dist(iris.scaled))
-fviz_silhouette(sil)
-# Silhouette for PAM
-fviz_silhouette(silhouette(pam.res))
-# Silhouette for hierarchical clustering
-fviz_silhouette(silhouette(hc.cut, dist.res))
 
- 
+
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}
+\seealso{
+\code{\link{fviz_silhouette}}, \code{\link{hcut}},
+ \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
 }
 
