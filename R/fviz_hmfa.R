@@ -79,7 +79,6 @@ NULL
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
-#' \donttest{
 #' # Hierarchical Multiple Factor Analysis
 #' # ++++++++++++++++++++++++
 #' # Install and load FactoMineR to compute MFA
@@ -92,103 +91,74 @@ NULL
 #' # Graph of individuals
 #' # ++++++++++++++++++++
 #' # Default plot
-#' fviz_hmfa_ind(res.hmfa)
-#' # Change title and axis labels
-#' fviz_hmfa_ind(res.hmfa) + 
-#' labs(title = "HMFA", x = "Dim.1", y ="Dim.2" )
-#' # Change axis limits by specifying the min and max
-#' fviz_hmfa_ind(res.hmfa) +
-#'    xlim(-0.8, 1.5) + ylim (-1.5, 1.5)
-#' # Use text only
-#' fviz_hmfa_ind(res.hmfa, geom = "text")
-#' # Use points only
-#' fviz_hmfa_ind(res.hmfa, geom="point")
-#' # Change the size of points
-#' fviz_hmfa_ind(res.hmfa, geom="point", pointsize = 4)
-#' # Change point color and theme
-#' fviz_hmfa_ind(res.hmfa, col.ind = "blue") +
-#'    theme_minimal()
-#' # Reduce overplotting
-#' fviz_hmfa_ind(res.hmfa, jitter = list(width = 0.2, height = 0.2))
-#' # Use ggrepel
-#' fviz_hmfa_ind(res.hmfa, repel = TRUE)
+#' # Color of individuals: col.ind = "#2E9FDF"
+#' fviz_hmfa_ind(res.hmfa, repel = FALSE, col.ind = "#2E9FDF")
+#' 
+#' # Show text only: geom = "text" or use point only: geom = "point".
+#' # Use repel = TRUE to avoid overplotting (slow if many points)
+#' fviz_hmfa_ind(res.hmfa, geom = "text", repel = TRUE)+
+#' theme_minimal()
+#' 
+#' # 1. Control automatically the color of individuals 
+#'    # using the "cos2" or the contributions "contrib"
+#'    # cos2 = the quality of the individuals on the factor map
+#' # 2. To keep only point or text use geom = "point" or geom = "text".
+#' # 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
 #'
-#' # Control automatically the color of individuals
-#' # using the cos2 or the contributions
-#' # cos2 = the quality of the individuals on the factor map
-#' fviz_hmfa_ind(res.hmfa, col.ind="cos2")
-#' # Gradient color
-#' fviz_hmfa_ind(res.hmfa, col.ind="cos2") +
-#'       scale_color_gradient2(low="white", mid="blue",
-#'       high="red", midpoint=0.4)
-#' # Change the theme and use only points
-#' fviz_hmfa_ind(res.hmfa, col.ind="cos2", geom = "point") +
-#'       scale_color_gradient2(low="white", mid="blue",
-#'       high="red", midpoint=0.4)+ theme_minimal()
-#'
-#' # Color by the contributions
-#' fviz_hmfa_ind(res.hmfa, col.ind="contrib") +
-#'       scale_color_gradient2(low="white", mid="blue",
-#'       high="red", midpoint=1.5)
-#'
-#' # Control the transparency of the color by the
-#' # contributions
-#' fviz_hmfa_ind(res.hmfa, alpha.ind="contrib") +
-#'      theme_minimal()
-#'
-#' # Color individuals by groups
+#' fviz_hmfa_ind(res.hmfa, col.ind="cos2")+
+#' theme_minimal()
+#' 
+#' # Color individuals by groups, add concentration ellipses
+#' # Remove labels: label = "none".
 #' grp <- as.factor(wine[,1])
-#' fviz_hmfa_ind(res.hmfa, label="none", habillage=grp)
-#' # Add ellipses
 #' p <- fviz_hmfa_ind(res.hmfa, label="none", habillage=grp,
-#'              addEllipses=TRUE, ellipse.level=0.95)
+#'        addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
+#' 
+#'
 #' # Change group colors using RColorBrewer color palettes
-#' p + scale_color_brewer(palette="Dark2") +
-#'    theme_minimal()
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 #' p + scale_color_brewer(palette="Paired") +
+#'     scale_fill_brewer(palette="Paired") +
 #'      theme_minimal()
-#' p + scale_color_brewer(palette="Set1") +
-#'      theme_minimal()
-#'
-#' # Select and visualize individuals with cos2 >= 0.4
-#' fviz_hmfa_ind(res.hmfa, select.ind = list(cos2 = 0.1))
-#' # Select the top 20 according to the cos2
-#' fviz_hmfa_ind(res.hmfa, select.ind = list(cos2 = 20))
-#' # Select the top 20 contributing individuals
-#' fviz_hmfa_ind(res.hmfa, select.ind = list(contrib = 20))
-#' # Select by names
-#' fviz_hmfa_ind(res.hmfa,
-#' select.ind = list(name = c("1VAU", "1FON")))
-#'
+#'      
+#' # Change group colors manually
+#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+#' p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
+#'  scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
+#'  theme_minimal()  
+#'    
+#' # Select and visualize some individuals (ind) with select.ind argument.
+#'  # - ind with cos2 >= 0.1: select.ind = list(cos2 = 0.1)
+#'  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
+#'  # - Top 20 contributing individuals: select.ind = list(contrib = 20)
+#'  # - Select ind by names: select.ind = list(name = c("1VAU", "1FON") )
+#'  
+#' # Example: Select the top 10 according to the cos2
+#' fviz_hmfa_ind(res.hmfa, select.ind = list(cos2 = 100))
+#' 
 #'
 #' # Graph of qantitative variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
 #' data(wine)
 #' hierar <- list(c(2,5,3,10,9,2), c(4,2))
 #' res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
+#' 
 #' # Default plot
-#' fviz_hmfa_quanti_var(res.hmfa)
-#' # Change color and theme
-#' fviz_hmfa_quanti_var(res.hmfa, col.var="steelblue")+
-#'  theme_minimal()
-#'
+#' fviz_hmfa_quanti_var(res.hmfa, col.var = "#FC4E07")+
+#' theme_minimal()
+#' 
 #' # Control variable colors using their contributions
 #' fviz_hmfa_quanti_var(res.hmfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
-#'            high = "red", midpoint = 2) +
+#'            high = "red", midpoint = 12) +
 #'  theme_minimal()
-#' # Control the transparency of variables using their contributions
-#' fviz_hmfa_quanti_var(res.hmfa, alpha.var = "contrib") +
-#'    theme_minimal()
-#'
-#' # Select and visualize categories with cos2 >= 0.4
-#' fviz_hmfa_quanti_var(res.hmfa, select.var = list(cos2 = 0.4))
-#' # Select the top 10 contributing variable categories
+#' 
+#' # Select variables with select.var argument
+#'    # You can select by contrib, cos2 and name 
+#'    # as previously described for ind
+#' # Select the top 10 contributing variables
 #' fviz_hmfa_quanti_var(res.hmfa, select.var = list(contrib = 10))
-#' # Select by names
-#' fviz_hmfa_quanti_var(res.hmfa,
-#'  select.var= list(name =  c("Spice.before.shaking", "Aroma.intensity")))
 #'  
 #' # Graph of categorical variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
@@ -197,52 +167,16 @@ NULL
 #' res.hmfa <- HMFA(poison, H = hierar, type=c("s","n","n","n"), graph = FALSE)
 #'
 #' # Default plot
-#' fviz_hmfa_quali_var(res.hmfa)
-#' # Change color and theme
-#' fviz_hmfa_quali_var(res.hmfa, col.var="steelblue")+
+#' fviz_hmfa_quali_var(res.hmfa, col.var = "contrib", repel = TRUE)+
 #'  theme_minimal()
 #'
-#' # Control variable colors using their contributions
-#' fviz_hmfa_quali_var(res.hmfa, col.var = "contrib")+
-#'  scale_color_gradient2(low = "white", mid = "blue",
-#'            high = "red", midpoint = 2) +
-#'  theme_minimal()
-#' # Control the transparency of variables using their contributions
-#' fviz_hmfa_quali_var(res.hmfa, alpha.var = "contrib") +
-#'    theme_minimal()
-#'
-#' # Select and visualize categories with cos2 are not supported!
-#' # Select the top 10 contributing variable categories
-#' fviz_hmfa_quali_var(res.hmfa, select.var = list(contrib = 10))
-#' # Select by names
-#' fviz_hmfa_quali_var(res.hmfa,
-#'  select.var= list(name =  c("Cheese_y", "Nausea_n", "Courg_y")))
 #'
 #' # Biplot of categorical variable categories and individuals
 #' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#' fviz_hmfa_quali_biplot(res.hmfa)
-#' # Keep only the labels for variable categories
-#' fviz_hmfa_quali_biplot(res.hmfa, label ="var")
-#' # Keep only labels for individuals
-#' fviz_hmfa_quali_biplot(res.hmfa, label ="ind")
-#' # Hide variable categories
-#' fviz_hmfa_quali_biplot(res.hmfa, invisible ="var")
-#' # Hide individuals
-#' fviz_hmfa_quali_biplot(res.hmfa, invisible ="ind")
-#'# Control automatically the color of individuals using the cos2
-#' fviz_hmfa_quali_biplot(res.hmfa, label ="var", col.ind="cos2") +
-#'        theme_minimal()
-#' # Change the color by groups, add ellipses
 #' grp <- as.factor(poison[, "Vomiting"])
-#' fviz_hmfa_quali_biplot(res.hmfa, label="var", col.var ="blue",
-#'    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) +
-#'    theme_minimal()
-#'
-#' # Select the top 30 contributing individuals
-#' # And the top 10 variables
-#' fviz_hmfa_quali_biplot(res.hmfa,
-#'                select.ind = list(contrib = 30),
-#'                select.var = list(contrib = 10))
+#' fviz_hmfa_quali_biplot(res.hmfa, repel = TRUE, habillage = grp)+
+#' theme_minimal()
+#' 
 #'                
 #' # Graph of partial individuals (starplot)
 #' # +++++++++++++++++++++++++++++++++++++++
@@ -256,10 +190,6 @@ NULL
 #'                       
 #' # Change colours of star segments
 #' fviz_hmfa_ind_starplot(res.hmfa, select.partial = list(contrib = 5), 
-#'                       col.partial = "group.name")+
-#'                       theme_minimal()
-#'
-#' fviz_hmfa_ind_starplot(res.hmfa, select.partial = list(contrib = 5), 
 #'                       col.partial = "group.name") +
 #'                       scale_color_brewer(palette = "Dark2") +
 #'                       theme_minimal()
@@ -268,7 +198,6 @@ NULL
 #' # ++++++++++++++++++++++++++++++++++++
 #' fviz_hmfa_group(res.hmfa)
 #'
-#'  }
 #' @name fviz_hmfa
 #' @rdname fviz_hmfa
 #' @export
