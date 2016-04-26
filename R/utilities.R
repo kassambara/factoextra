@@ -2,6 +2,18 @@
 NULL
 #' @import ggplot2
 #' @importFrom ggrepel geom_text_repel
+#' @importFrom grDevices chull
+#' @importFrom graphics plot
+#' @importFrom utils data
+#' @importFrom stats as.dendrogram
+#' @importFrom stats as.dist
+#' @importFrom stats kmeans
+#' @importFrom stats na.omit
+#' @importFrom stats qchisq
+#' @importFrom stats rnorm
+#' @importFrom stats runif
+#' @importFrom stats var
+#' 
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
