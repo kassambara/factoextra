@@ -92,12 +92,9 @@ NULL
 #' # ++++++++++++++++++++
 #' # Default plot
 #' # Color of individuals: col.ind = "#2E9FDF"
-#' fviz_hmfa_ind(res.hmfa, repel = FALSE, col.ind = "#2E9FDF")
-#' 
-#' # Show text only: geom = "text" or use point only: geom = "point".
 #' # Use repel = TRUE to avoid overplotting (slow if many points)
-#' fviz_hmfa_ind(res.hmfa, geom = "text", repel = TRUE)+
-#' theme_minimal()
+#' fviz_hmfa_ind(res.hmfa, repel = TRUE, col.ind = "#2E9FDF")
+#' 
 #' 
 #' # 1. Control automatically the color of individuals 
 #'    # using the "cos2" or the contributions "contrib"
@@ -112,7 +109,8 @@ NULL
 #' # Remove labels: label = "none".
 #' grp <- as.factor(wine[,1])
 #' p <- fviz_hmfa_ind(res.hmfa, label="none", habillage=grp,
-#'        addEllipses=TRUE, ellipse.level=0.95)
+#'        addEllipses=TRUE, ellipse.level=0.95)+
+#'        theme_minimal()
 #' print(p)
 #' 
 #'
@@ -144,10 +142,7 @@ NULL
 #' hierar <- list(c(2,5,3,10,9,2), c(4,2))
 #' res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
 #' 
-#' # Default plot
-#' fviz_hmfa_quanti_var(res.hmfa, col.var = "#FC4E07")+
-#' theme_minimal()
-#' 
+#' # Plot
 #' # Control variable colors using their contributions
 #' fviz_hmfa_quanti_var(res.hmfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
@@ -167,14 +162,15 @@ NULL
 #' res.hmfa <- HMFA(poison, H = hierar, type=c("s","n","n","n"), graph = FALSE)
 #'
 #' # Default plot
-#' fviz_hmfa_quali_var(res.hmfa, col.var = "contrib", repel = TRUE)+
+#' fviz_hmfa_quali_var(res.hmfa, col.var = "contrib")+
 #'  theme_minimal()
 #'
 #'
 #' # Biplot of categorical variable categories and individuals
 #' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #' grp <- as.factor(poison[, "Vomiting"])
-#' fviz_hmfa_quali_biplot(res.hmfa, repel = TRUE, habillage = grp)+
+#' fviz_hmfa_quali_biplot(res.hmfa, col.var = "#E7B800", repel = TRUE,
+#'     habillage = grp, addEllipses = TRUE)+ 
 #' theme_minimal()
 #' 
 #'                
