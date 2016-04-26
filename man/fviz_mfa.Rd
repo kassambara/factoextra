@@ -277,7 +277,8 @@ res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
 # Default plot
 fviz_mfa_quanti_var(res.mfa, col.var = "#FC4E07")+
 theme_minimal()
-
+   
+\dontrun{
 # Control variable colors using their contributions
 fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
  scale_color_gradient2(low = "white", mid = "blue",
@@ -289,7 +290,7 @@ fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
    # as previously described for ind
 # Select the top 10 contributing variables
 fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
-
+}
  
 # Graph of categorical variable categories
 # ++++++++++++++++++++++++++++++++++++++++
@@ -305,8 +306,12 @@ fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
            high = "red", midpoint = 2) +
  theme_minimal()
  
+ 
+ \dontrun{
 # Select the top 10 contributing variable categories
 fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
+}
+
 
 # Biplot of categorical variable categories and individuals
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -319,8 +324,11 @@ fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
                
 # Graph of partial individuals (starplot)
 # +++++++++++++++++++++++++++++++++++++++
-fviz_mfa_ind_starplot(res.mfa)
+fviz_mfa_ind_starplot(res.mfa, col.partial = "group.name")+
+scale_color_brewer(palette = "Dark2")+
+theme_minimal()
 
+\dontrun{
 # Select the partial points of the top 5
 # contributing individuals
 fviz_mfa_ind_starplot(res.mfa, 
@@ -332,7 +340,9 @@ fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5),
                       col.partial = "group.name") +
                       scale_color_brewer(palette = "Dark2") +
                       theme_minimal() 
-  
+}
+
+ 
 # Graph of groups (correlation square)
 # ++++++++++++++++++++++++++++++++++++
 fviz_mfa_group(res.mfa)

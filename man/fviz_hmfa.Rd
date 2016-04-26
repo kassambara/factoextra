@@ -289,15 +289,20 @@ fviz_hmfa_quali_var(res.hmfa, col.var = "contrib")+
 # Biplot of categorical variable categories and individuals
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 grp <- as.factor(poison[, "Vomiting"])
-fviz_hmfa_quali_biplot(res.hmfa, col.var = "#E7B800", repel = TRUE,
+# Use repel = TRUE to avoid overplotting
+fviz_hmfa_quali_biplot(res.hmfa, col.var = "#E7B800", repel = FALSE,
     habillage = grp, addEllipses = TRUE)+ 
 theme_minimal()
 
                
 # Graph of partial individuals (starplot)
 # +++++++++++++++++++++++++++++++++++++++
-fviz_hmfa_ind_starplot(res.hmfa)
-
+fviz_hmfa_ind_starplot(res.hmfa, col.partial = "group.name")+
+scale_color_brewer(palette = "Dark2") 
+ theme_minimal()
+ 
+ 
+\dontrun{
 # Select the partial points of the top 5
 # contributing individuals
 fviz_hmfa_ind_starplot(res.hmfa, 
@@ -309,6 +314,8 @@ fviz_hmfa_ind_starplot(res.hmfa, select.partial = list(contrib = 5),
                       col.partial = "group.name") +
                       scale_color_brewer(palette = "Dark2") +
                       theme_minimal()
+ }
+  
   
 # Graph of groups (correlation square)
 # ++++++++++++++++++++++++++++++++++++

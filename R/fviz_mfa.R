@@ -157,7 +157,8 @@ NULL
 #' # Default plot
 #' fviz_mfa_quanti_var(res.mfa, col.var = "#FC4E07")+
 #' theme_minimal()
-#' 
+#'    
+#' \dontrun{
 #' # Control variable colors using their contributions
 #' fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
@@ -169,7 +170,7 @@ NULL
 #'    # as previously described for ind
 #' # Select the top 10 contributing variables
 #' fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
-#'
+#' }
 #'  
 #' # Graph of categorical variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
@@ -185,9 +186,13 @@ NULL
 #'            high = "red", midpoint = 2) +
 #'  theme_minimal()
 #'  
+#'  
+#'  \dontrun{
 #' # Select the top 10 contributing variable categories
 #' fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
-#'
+#' }
+#' 
+#' 
 #' # Biplot of categorical variable categories and individuals
 #' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #'  # Use repel = TRUE to avoid overplotting
@@ -199,8 +204,12 @@ NULL
 #'                
 #' # Graph of partial individuals (starplot)
 #' # +++++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_ind_starplot(res.mfa)
+# # Change colours of star segments by group.name
+#' fviz_mfa_ind_starplot(res.mfa, col.partial = "group.name")+
+#' scale_color_brewer(palette = "Dark2")+
+#' theme_minimal()
 #' 
+#' \dontrun{
 #' # Select the partial points of the top 5
 #' # contributing individuals
 #' fviz_mfa_ind_starplot(res.mfa, 
@@ -212,7 +221,9 @@ NULL
 #'                       col.partial = "group.name") +
 #'                       scale_color_brewer(palette = "Dark2") +
 #'                       theme_minimal() 
-#'   
+#'}
+#'
+#'  
 #' # Graph of groups (correlation square)
 #' # ++++++++++++++++++++++++++++++++++++
 #' fviz_mfa_group(res.mfa)
