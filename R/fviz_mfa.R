@@ -95,7 +95,7 @@ NULL
 #' # Default plot
 #' # Use repel = TRUE to avoid overplotting (slow if many points)
 #' # Color of individuals: col.ind = "#2E9FDF"
-#' fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")
+#' fviz_mfa_ind(res.mfa, repel = FALSE, col.ind = "#2E9FDF")
 #' 
 #' # 1. Control automatically the color of individuals 
 #'    # using the "cos2" or the contributions "contrib"
@@ -122,8 +122,8 @@ NULL
 #'
 #' # Change group colors using RColorBrewer color palettes
 #' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-#' p + scale_color_brewer(palette="Dark2") +
-#'     scale_fill_brewer(palette="Dark2") +
+#' p + scale_color_brewer(palette="Paired") +
+#'     scale_fill_brewer(palette="Paired") +
 #'      theme_minimal()
 #'      
 #' # Change group colors manually
@@ -203,10 +203,6 @@ NULL
 #'                       theme_minimal()
 #'                       
 #' # Change colours of star segments
-#' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
-#'                       col.partial = "group.name") +
-#'                       theme_minimal()
-#'
 #' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
 #'                       col.partial = "group.name") +
 #'                       scale_color_brewer(palette = "Dark2") +
