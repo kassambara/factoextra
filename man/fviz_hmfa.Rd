@@ -209,7 +209,7 @@ res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
 # Use repel = TRUE to avoid overplotting (slow if many points)
 fviz_hmfa_ind(res.hmfa, repel = TRUE, col.ind = "#2E9FDF")
 
-
+\dontrun{
 # 1. Control automatically the color of individuals 
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the individuals on the factor map
@@ -218,6 +218,7 @@ fviz_hmfa_ind(res.hmfa, repel = TRUE, col.ind = "#2E9FDF")
 
 fviz_hmfa_ind(res.hmfa, col.ind="cos2")+
 theme_minimal()
+}
 
 # Color individuals by groups, add concentration ellipses
 # Remove labels: label = "none".
@@ -227,12 +228,13 @@ p <- fviz_hmfa_ind(res.hmfa, label="none", habillage=grp,
        theme_minimal()
 print(p)
 
-
+\dontrun{
 # Change group colors using RColorBrewer color palettes
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_brewer(palette="Paired") +
     scale_fill_brewer(palette="Paired") +
      theme_minimal()
+}
      
 # Change group colors manually
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors

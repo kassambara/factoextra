@@ -214,8 +214,10 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 # Default plot
 # Use repel = TRUE to avoid overplotting (slow if many points)
 # Color of individuals: col.ind = "#2E9FDF"
-fviz_mfa_ind(res.mfa, repel = FALSE, col.ind = "#2E9FDF")
-
+fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")+
+theme_minimal()
+   
+\dontrun{
 # 1. Control automatically the color of individuals 
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the individuals on the factor map
@@ -231,6 +233,7 @@ fviz_mfa_ind(res.mfa, col.ind="cos2", repel = TRUE) +
       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
       high= "#FC4E07", midpoint=0.4, space = "Lab")+
  theme_minimal()
+}
 
 # Color individuals by groups, add concentration ellipses
 # Remove labels: label = "none".
@@ -238,19 +241,22 @@ grp <- as.factor(poison[, "Vomiting"])
 p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
        addEllipses=TRUE, ellipse.level=0.95)
 print(p)
-
+ 
+ \dontrun{
 # Change group colors using RColorBrewer color palettes
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_brewer(palette="Paired") +
     scale_fill_brewer(palette="Paired") +
      theme_minimal()
+ }
      
 # Change group colors manually
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_manual(values=c("#999999", "#E69F00"))+
  scale_fill_manual(values=c("#999999", "#E69F00"))+
  theme_minimal()  
-
+ 
+ \dontrun{
 # Select and visualize some individuals (ind) with select.ind argument.
  # - ind with cos2 >= 0.4: select.ind = list(cos2 = 0.4)
  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
@@ -259,7 +265,7 @@ p + scale_color_manual(values=c("#999999", "#E69F00"))+
  
 # Example: Select the top 20 according to the cos2
 fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 20))
-
+}
 
 # Graph of qantitative variable categories
 # ++++++++++++++++++++++++++++++++++++++++
@@ -304,9 +310,9 @@ fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
 
 # Biplot of categorical variable categories and individuals
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+ # Use repel = TRUE to avoid overplotting
 grp <- as.factor(poison[, "Vomiting"])
-fviz_mfa_quali_biplot(res.mfa, repel = TRUE, col.var = "#E7B800",
+fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
    habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)+
  theme_minimal()
 
