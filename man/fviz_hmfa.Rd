@@ -12,10 +12,11 @@
 \usage{
 fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "blue",
-  col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
-  repel = FALSE, axes.linetype = "dashed", select.ind = list(name = NULL,
-  cos2 = NULL, contrib = NULL), title = "Individuals factor map - HMFA",
+  addEllipses = FALSE, ellipse.level = 0.95, ellipse.type = "norm",
+  ellipse.alpha = 0.1, col.ind = "blue", col.ind.sup = "darkblue",
+  alpha.ind = 1, shape.ind = 19, repel = FALSE,
+  axes.linetype = "dashed", select.ind = list(name = NULL, cos2 = NULL,
+  contrib = NULL), title = "Individuals factor map - HMFA",
   jitter = list(what = "label", width = NULL, height = NULL), ...)
 
 fviz_hmfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
@@ -51,13 +52,14 @@ fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   group.names = NULL, label = "all", invisible = "none",
   legend.partial.title = NULL, labelsize = 4, pointsize = 2,
   linesize = 0.5, repel = FALSE, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, col.ind = "black",
-  col.ind.sup = "darkblue", col.partial = "black", alpha.ind = 1,
-  shape.ind = 19, alpha.partial = 1, node.level = 1,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-  axes.linetype = "dashed", title = "Individuals factor map - MFA",
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+  addEllipses = FALSE, ellipse.level = 0.95, ellipse.type = "norm",
+  ellipse.alpha = 0.1, col.ind = "black", col.ind.sup = "darkblue",
+  col.partial = "black", alpha.ind = 1, shape.ind = 19,
+  alpha.partial = 1, node.level = 1, select.ind = list(name = NULL, cos2 =
+  NULL, contrib = NULL), select.partial = list(name = NULL, cos2 = NULL,
+  contrib = NULL), axes.linetype = "dashed",
+  title = "Individuals factor map - MFA", jitter = list(what = "label",
+  width = NULL, height = NULL), ...)
 
 fviz_hmfa_group(X, axes = c(1, 2), geom = c("point", "text"),
   alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
@@ -106,6 +108,13 @@ individuals when habillage != "none".}
 
 \item{ellipse.level}{the size of the concentration ellipse in normal 
 probability.}
+
+\item{ellipse.type}{Character specifying frame type. Possible values are 
+'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
+including one of c("t", "norm", "euclid").}
+
+\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
+fill color. Use alpha = 0 for no fill color.}
 
 \item{col.ind, col.partial, col.var, col.group}{color for individuals, partial individuals, variables, 
 groups and axes, respectively.

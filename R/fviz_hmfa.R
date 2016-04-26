@@ -205,6 +205,7 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          label = "all", invisible="none",
                          labelsize=4, pointsize = 2,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
+                         ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
                          shape.ind = 19, repel = FALSE, axes.linetype = "dashed",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), title = "Individuals factor map - HMFA",
@@ -327,12 +328,27 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                              label=rownames(coord_quali.sup), size=labelsize)
       }
     }
+#     if(addEllipses){
+#       ell <- .get_ellipse_by_groups(ind$x, ind$y,
+#                                     groups = ind[, name.quali], ellipse.level=ellipse.level)
+#       colnames(ell)<-c(name.quali, "x", "y")
+#       ell[, 1]<-as.factor(ell[,1])
+#       p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+#     }
+    
     if(addEllipses){
-      ell <- .get_ellipse_by_groups(ind$x, ind$y,
-                                    groups = ind[, name.quali], ellipse.level=ellipse.level)
-      colnames(ell)<-c(name.quali, "x", "y")
-      ell[, 1]<-as.factor(ell[,1])
-      p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+      if (ellipse.type == 'convex'){
+        frame.data <- .cluster_chull(ind[, c("x", "y")], ind[, name.quali])
+        colnames(frame.data)[which(colnames(frame.data) == "cluster")] <- name.quali
+        mapping = aes_string(x = "x", y = "y", colour =name.quali, fill = name.quali, group = name.quali)
+        p <- p + ggplot2::geom_polygon(data = frame.data,  mapping = mapping, alpha = ellipse.alpha)
+      }
+      else if (ellipse.type %in% c('t', 'norm', 'euclid')) {
+        mapping = aes_string(x = "x", y = "y", colour = name.quali, group = name.quali, fill = name.quali)
+        p <- p + ggplot2::stat_ellipse(mapping = mapping, data = ind,
+                                       level = ellipse.level, type = ellipse.type, alpha = ellipse.alpha,
+                                       geom = 'polygon')
+      }
     }
     
     
@@ -602,6 +618,7 @@ fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), g
                                   label = "all", invisible="none", legend.partial.title = NULL,
                                   labelsize=4, pointsize = 2, linesize = 0.5, repel = FALSE,
                                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
+                                  ellipse.type = "norm", ellipse.alpha = 0.1,
                                   col.ind = "black", col.ind.sup = "darkblue", col.partial = "black",
                                   alpha.ind = 1, shape.ind = 19, alpha.partial = 1, node.level = 1,
                                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -764,12 +781,27 @@ fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), g
                              label=rownames(coord_quali.sup), size=labelsize)
       }
     }
+#     if(addEllipses){
+#       ell <- .get_ellipse_by_groups(ind$x, ind$y,
+#                                     groups = ind[, name.quali], ellipse.level=ellipse.level)
+#       colnames(ell)<-c(name.quali, "x", "y")
+#       ell[, 1]<-as.factor(ell[,1])
+#       p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+#     }
+    
     if(addEllipses){
-      ell <- .get_ellipse_by_groups(ind$x, ind$y,
-                                    groups = ind[, name.quali], ellipse.level=ellipse.level)
-      colnames(ell)<-c(name.quali, "x", "y")
-      ell[, 1]<-as.factor(ell[,1])
-      p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
+      if (ellipse.type == 'convex'){
+        frame.data <- .cluster_chull(ind[, c("x", "y")], ind[, name.quali])
+        colnames(frame.data)[which(colnames(frame.data) == "cluster")] <- name.quali
+        mapping = aes_string(x = "x", y = "y", colour =name.quali, fill = name.quali, group = name.quali)
+        p <- p + ggplot2::geom_polygon(data = frame.data,  mapping = mapping, alpha = ellipse.alpha)
+      }
+      else if (ellipse.type %in% c('t', 'norm', 'euclid')) {
+        mapping = aes_string(x = "x", y = "y", colour = name.quali, group = name.quali, fill = name.quali)
+        p <- p + ggplot2::stat_ellipse(mapping = mapping, data = ind,
+                                       level = ellipse.level, type = ellipse.type, alpha = ellipse.alpha,
+                                       geom = 'polygon')
+      }
     }
 
 
