@@ -31,13 +31,21 @@ Provides some easy-to-use functions to extract and visualize the output of multi
      
 ## Installation
     
+      
+Install from [CRAN](https://cran.r-project.org/package=factoextra) as follow:
+   
+```{r, eval = FALSE}
+install.packages("factoextra")
+```
     
-Install the latest version from GitHub
-
+    
+Or, install the latest version from [GitHub](https://github.com/kassambara/factoextra): 
+    
+   
 ```{r, eval = FALSE}
 # Install
 if(!require(devtools)) install.packages("devtools")
-devtools::install_github("kassambara/survminer")
+devtools::install_github("kassambara/factoextra")
 ```
 
    

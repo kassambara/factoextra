@@ -8,12 +8,18 @@ Provides some easy-to-use functions to extract and visualize the output of multi
 Installation
 ------------
 
-Install the latest version from GitHub
+Install from [CRAN](https://cran.r-project.org/package=factoextra) as follow:
+
+``` r
+install.packages("factoextra")
+```
+
+Or, install the latest version from [GitHub](https://github.com/kassambara/factoextra):
 
 ``` r
 # Install
 if(!require(devtools)) install.packages("devtools")
-devtools::install_github("kassambara/survminer")
+devtools::install_github("kassambara/factoextra")
 ```
 
 Geting started
