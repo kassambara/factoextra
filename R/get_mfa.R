@@ -85,7 +85,7 @@ get_mfa_ind <- function(res.mfa){
 #' @export
 get_mfa_quanti_var <- function(res.mfa){
   # FactoMineR package
-  # @todo Eventuell abfangen, wenn keine Variablen vorhanden sind. FactoMineR generiert die Listen nur, wenn entsprechenden Datensätze vorhanden sind.
+  # @todo Eventuell abfangen, wenn keine Variablen vorhanden sind. FactoMineR generiert die Listen nur, wenn entsprechenden Datensatze vorhanden sind.
   if(is.null(res.mfa$quanti.var)) stop("There are no quantitative variables in this MFA.")
   else if(inherits(res.mfa, c("MFA"))) quanti_vars <- res.mfa$quanti.var
   else stop("An object of class : ", class(res.mfa), 

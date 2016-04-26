@@ -106,7 +106,7 @@ get_hmfa_quali_var <- function(res.hmfa){
 #' @export
 get_hmfa_group <- function(res.hmfa){
   # FactoMineR package
-  # Group calculation is only for first layer valid (see Pagès 2015)
+  # Group calculation is only for first layer valid (see Pages 2015)
   if(inherits(res.hmfa, c("HMFA"))) group <- list(coord = res.hmfa$group$coord[[1]], canonical = res.hmfa$group$canonical)
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_group()")
@@ -118,7 +118,7 @@ get_hmfa_group <- function(res.hmfa){
 #' @export
 get_hmfa_partial <- function(res.hmfa){
   # FactoMineR package
-  # Group calculation is only for first layer valid (see Pagès 2015)
+  # Group calculation is only for first layer valid (see Pages 2015)
   if(inherits(res.hmfa, c("HMFA"))) partial <- res.hmfa$partial
   else stop("An object of class : ", class(res.hmfa), 
             " can't be handled by the function get_hmfa_partial()")
