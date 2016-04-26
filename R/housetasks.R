@@ -16,12 +16,10 @@
 #'@source This data is from FactoMineR package.
 #'
 #' @examples
-#' \donttest{
 #' library(FactoMineR)
 #' data(housetasks)
 #' res.ca <- CA(housetasks, graph=FALSE)
-#' fviz_ca_biplot(res.mca, repel = TRUE)+
+#' fviz_ca_biplot(res.ca, repel = TRUE)+
 #' theme_minimal()
-#' }
 #' 
 NULL

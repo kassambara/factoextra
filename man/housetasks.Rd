@@ -22,13 +22,11 @@ A data frame containing the frequency of execution of 13 house
  tasks in the couple. This table is also available in ade4 package.
 }
 \examples{
-\donttest{
 library(FactoMineR)
 data(housetasks)
 res.ca <- CA(housetasks, graph=FALSE)
-fviz_ca_biplot(res.mca, repel = TRUE)+
+fviz_ca_biplot(res.ca, repel = TRUE)+
 theme_minimal()
-}
 
 }
 
