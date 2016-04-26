@@ -1,0 +1,19 @@
+language: r
+r_packages:
+ - ggplot2
+ - grid
+ - cluster
+ - dendextend
+ - reshape2
+ -  ggrepel
+ - abind
+ - stats
+ - rmarkdown
+ - knitr
+ - devtools
+ - ade4
+ - ca
+ - FactoMineR
+ - MASS
+sudo: required
+
