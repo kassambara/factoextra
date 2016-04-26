@@ -78,7 +78,6 @@ NULL
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
-#' \donttest{
 #' # Multiple Factor Analysis
 #' # ++++++++++++++++++++++++
 #' # Install and load FactoMineR to compute MFA
@@ -133,12 +132,12 @@ NULL
 #'  theme_minimal()  
 #'
 #' # Select and visualize some individuals (ind) with select.ind argument.
-#'  # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.4)
+#'  # - ind with cos2 >= 0.4: select.ind = list(cos2 = 0.4)
 #'  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
 #'  # - Top 20 contributing individuals: select.ind = list(contrib = 20)
 #'  # - Select ind by names: select.ind = list(name = c("44", "38", "53",  "39") )
 #'  
-#' # Example: Select the top 40 according to the cos2
+#' # Example: Select the top 20 according to the cos2
 #' fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 20))
 #' 
 #'
@@ -215,8 +214,6 @@ NULL
 #' #' # Graph of partial axes
 #' # ++++++++++++++++++++++++
 #' fviz_mfa_axes(res.mfa)
-#'
-#'  }
 #' @name fviz_mfa
 #' @rdname fviz_mfa
 #' @export
