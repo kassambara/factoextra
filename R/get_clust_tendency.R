@@ -77,7 +77,7 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   rownames(data) <- paste0("r", 1:nrow(data))
   plot <- NULL
   if(graph){
-    plot <- fviz_dist(dist(data), order = TRUE, 
+    plot <- fviz_dist(stats::dist(data), order = TRUE, 
                       show_labels = FALSE, gradient = gradient)
   }
   
@@ -92,13 +92,13 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   minp = rep(0, n)
   minq = rep(0, n)
   for (i in 1:n) {
-    distp[1] <- dist(rbind(p[i, ], data[1, ]))
-    minqi <- dist(rbind(q[i, ], data[1, ]))
+    distp[1] <- stats::dist(rbind(p[i, ], data[1, ]))
+    minqi <- stats::dist(rbind(q[i, ], data[1, ]))
     for (j in 2:nrow(data)) {
-      distp[j] <- dist(rbind(p[i, ], data[j, ]))
+      distp[j] <- stats::dist(rbind(p[i, ], data[j, ]))
       error <- q[i, ] - data[j, ]
       if (sum(abs(error)) != 0) {
-        distq <- dist(rbind(q[i, ], data[j, ]))
+        distq <- stats::dist(rbind(q[i, ], data[j, ]))
         if (distq < minqi) 
           minqi <- distq
       }

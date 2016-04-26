@@ -108,7 +108,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   else if(method %in% c("silhouette", "wss")) {
 
       if (is.data.frame(x)) x <- as.matrix(x)
-      if(is.null(diss)) diss <- dist(x)
+      if(is.null(diss)) diss <- stats::dist(x)
       
       v <- rep(0, k.max)
       if(method == "silhouette"){
