@@ -289,10 +289,10 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
 # +++++++++++++++++++++++++++++++++++++++++++
 # f: numeric vector containing the gap statistic
 # SE.f : standard error of the gap statistic
-# method : character string indicating how the “optimal” number of clusters, k^, 
+# method : character string indicating how the "optimal" number of clusters, k, 
   # is computed from the gap statistics (and their standard deviations), 
   # or more generally how the location k^ of the maximum of f[k] should be determined.
-# SE.factor:  Determining the optimal number of clusters, Tibshirani et al. proposed the “1 S.E.”-rule.
+# SE.factor:  Determining the optimal number of clusters, Tibshirani et al. proposed the "1 S.E."-rule.
 .maxSE <- function (f, SE.f, method = c("firstSEmax", "Tibs2001SEmax", 
                                         "globalSEmax", "firstmax", "globalmax"), SE.factor = 1) 
 {
