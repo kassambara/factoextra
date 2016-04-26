@@ -239,7 +239,7 @@ p + scale_color_manual(values=c("#999999", "#E69F00"))+
              
              
 # Select and visualize some individuals (ind) with select.ind argument.
- # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.4)
+ # - ind with cos2 >= 0.4: select.ind = list(cos2 = 0.4)
  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
  # - Top 20 contributing individuals: select.ind = list(contrib = 20)
  # - Select ind by names: select.ind = list(name = c("44", "38", "53",  "39") )
