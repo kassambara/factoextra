@@ -192,9 +192,8 @@ res.mca <- MCA(poison.active, graph=FALSE)
 # +++++++++++++++++++++
 
 # Default Plot
-# Use repel = TRUE to avoid overplotting (slow if many points)
 # Color of individuals: col.ind = "steelblue"
-fviz_mca_ind(res.mca, repel = TRUE, col.ind = "steelblue")
+fviz_mca_ind(res.mca, col.ind = "steelblue")
 
 # 1. Control automatically the color of individuals 
    # using the "cos2" or the contributions "contrib"
@@ -202,20 +201,15 @@ fviz_mca_ind(res.mca, repel = TRUE, col.ind = "steelblue")
 # 2. To keep only point or text use geom = "point" or geom = "text".
 # 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
 
-fviz_mca_ind(res.mca, col.ind = "cos2")+
+fviz_mca_ind(res.mca, col.ind = "cos2", repel = TRUE)+
 theme_minimal()
 
-# Change gradient color
-# Use repel = TRUE to avoid overplotting (slow if many points)
-fviz_mca_ind(res.mca, col.ind="cos2", repel = TRUE) + 
-      scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-      high= "#FC4E07", midpoint=0.6, space = "Lab")+
- theme_minimal()
-      
+\dontrun{     
 # You can also control the transparency 
 # of the color by the cos2
 fviz_mca_ind(res.mca, alpha.ind="cos2") +
      theme_minimal()  
+}
      
 # Color individuals by groups, add concentration ellipses
 # Remove labels: label = "none".
@@ -277,15 +271,20 @@ fviz_mca_biplot(res.mca, repel = TRUE, col.var = "#E7B800",
  \dontrun{
 # Keep only the labels for variable categories: 
 fviz_mca_biplot(res.mca, label ="var")
+
 # Keep only labels for individuals
 fviz_mca_biplot(res.mca, label ="ind")
+
 # Hide variable categories
 fviz_mca_biplot(res.mca, invisible ="var")
+
 # Hide individuals
 fviz_mca_biplot(res.mca, invisible ="ind")
+
 # Control automatically the color of individuals using the cos2
 fviz_mca_biplot(res.mca, label ="var", col.ind="cos2") +
        theme_minimal()
+       
 # Change the color by groups, add ellipses
 fviz_mca_biplot(res.mca, label="var", col.var ="blue",
    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) + 
