@@ -19,6 +19,8 @@
 #'@param geom a text specifying the geometry to be used for the graph. Allowed
 #'  values are the combination of c("point", "text"). Use "point" (to show only
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'   labels or not.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
 #'@param frame logical value; if TRUE, draws outline around points of each
 #'  cluster
@@ -60,7 +62,8 @@
 #' km.res <- kmeans(iris.scaled, 3, nstart = 25)
 #' 
 #' # Visualize kmeans clustering
-#' fviz_cluster(km.res, iris[, -5], frame.type = "convex")
+#' # use repel = TRUE to avoid overplotting
+#' fviz_cluster(km.res, iris[, -5], frame.type = "norm")
 #' 
 #' 
 #'# Change the color and theme
@@ -90,7 +93,7 @@
 #' # Visualize dendrogram
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 #' # Visualize cluster
-#' fviz_cluster(hc.cut)
+#' fviz_cluster(hc.cut, frame.type = "convex")
 #' 
 #'
 #' 
@@ -98,7 +101,7 @@
 #' @rdname fviz_cluster
 #' @export
 fviz_cluster <- function(object, data = NULL, stand = TRUE, 
-                         geom = c("point", "text"), 
+                         geom = c("point", "text"), repel = FALSE,
                          show.clust.cent = TRUE,
                          frame = TRUE, frame.type = "convex", frame.level = 0.95,
                          frame.alpha = 0.2,
@@ -213,10 +216,19 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
         
   }
   
-  if("text" %in% geom)
-    p <- p + geom_text(data = label_coord, 
-                       aes_string('x', 'y', label = 'name', color="cluster"),  
-                       size = labelsize, vjust = -0.7)
+  if("text" %in% geom){
+    if(repel)
+      p <- p +ggrepel::geom_text_repel(data = label_coord, 
+                                       aes_string('x', 'y', label = "name", color="cluster"),
+                                       size = labelsize)
+    else
+      p <- p + geom_text(data = label_coord, 
+                         aes_string('x', 'y', label = 'name', color="cluster"),  
+                         size = labelsize, vjust = -0.7)
+  }
+  
+  
+    
   
   # Add cluster center
   clustcent <- stats::aggregate(ind[, 2:3], by=list(cluster=cluster), mean)
@@ -226,10 +238,17 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
       p <- p + geom_point(data=clustcent,
                           aes_string('x', 'y', color="cluster", shape="cluster"),
                           size=pointsize*2)    
-    if("text" %in% geom)
-      p <- p + geom_text(data=clustcent, 
-                         aes_string('x', 'y', color="cluster"),
-                         label=clustcent$cluster, size=labelsize*1.2, vjust=-1)
+    if("text" %in% geom){
+      if(repel)
+        p <- p +ggrepel::geom_text_repel(data = clustcent, 
+                                         aes_string('x', 'y', color="cluster"),
+                                         label=clustcent$cluster, size=labelsize*1.2)
+      else
+        p <- p + geom_text(data=clustcent, 
+                           aes_string('x', 'y', color="cluster"),
+                           label=clustcent$cluster, size=labelsize*1.2, vjust=-1)
+    }
+    
   }
   
   # Add frame
@@ -250,7 +269,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   # Add outliers (can exist only in dbscan)
   if(is_outliers)
     p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
-                  pointsize, labelsize, geom)
+                  pointsize, labelsize, geom, repel = repel)
   
   
   # Plot titles
@@ -259,8 +278,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     eig <- get_eigenvalue(pca)[,2]
     xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
     ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
-  }
-  else{
+  }else{
     xlab <- colnames(data)[1]
     ylab <- colnames(data)[2]
   }
@@ -290,17 +308,24 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
 # Add outliers to cluster plot (for dbscan only)
 .add_outliers <-function(p, outliers_data, outliers_labs, 
                          outlier.color = "black", outlier.shape = 19,
-                         pointsize = 2, labelsize = 4, geom = c("point", "text"))
+                         pointsize = 2, labelsize = 4, geom = c("point", "text"), repel = FALSE)
   {
   
   if("point" %in% geom) 
     p <-  p + geom_point(data = outliers_data, 
                       aes_string('x', 'y'),
                       size = pointsize, color = outlier.color, shape = outlier.shape)
-  if("text" %in% geom)
-    p <- p + geom_text(data = outliers_labs, 
-                       aes_string('x', 'y', label = 'name'),  
-                       size = labelsize, vjust = -0.7, color = outlier.color)
+  if("text" %in% geom){
+    if(repel)
+      p <- p +ggrepel::geom_text_repel(data = outliers_labs, 
+                                       aes_string('x', 'y', label = 'name'),
+                                       size = labelsize, color = outlier.color)
+    else
+      p <- p + geom_text(data = outliers_labs, 
+                         aes_string('x', 'y', label = 'name'),  
+                         size = labelsize, vjust = -0.7, color = outlier.color)
+  }
+    
   return(p)
 }
 

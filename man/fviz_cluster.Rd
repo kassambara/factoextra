@@ -5,10 +5,11 @@
 \title{Visualize Clustering Results}
 \usage{
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
-  show.clust.cent = TRUE, frame = TRUE, frame.type = "convex",
-  frame.level = 0.95, frame.alpha = 0.2, pointsize = 2, labelsize = 4,
-  title = "Cluster plot", jitter = list(what = "label", width = NULL, height
-  = NULL), outlier.color = "black", outlier.shape = 19)
+  repel = FALSE, show.clust.cent = TRUE, frame = TRUE,
+  frame.type = "convex", frame.level = 0.95, frame.alpha = 0.2,
+  pointsize = 2, labelsize = 4, title = "Cluster plot",
+  jitter = list(what = "label", width = NULL, height = NULL),
+  outlier.color = "black", outlier.shape = 19)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(),
@@ -26,6 +27,9 @@ component analysis}
 \item{geom}{a text specifying the geometry to be used for the graph. Allowed
 values are the combination of c("point", "text"). Use "point" (to show only
 points);  "text" to show only labels; c("point", "text") to show both types.}
+
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
+labels or not.}
 
 \item{show.clust.cent}{logical; if TRUE, shows cluster centers}
 
@@ -84,7 +88,8 @@ iris.scaled <- scale(iris[, -5])
 km.res <- kmeans(iris.scaled, 3, nstart = 25)
 
 # Visualize kmeans clustering
-fviz_cluster(km.res, iris[, -5], frame.type = "convex")
+# use repel = TRUE to avoid overplotting
+fviz_cluster(km.res, iris[, -5], frame.type = "norm")
 
 
 # Change the color and theme
@@ -114,7 +119,7 @@ hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 # Visualize dendrogram
 fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 # Visualize cluster
-fviz_cluster(hc.cut)
+fviz_cluster(hc.cut, frame.type = "convex")
 
 
 
