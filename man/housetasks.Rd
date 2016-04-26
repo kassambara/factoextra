@@ -26,7 +26,8 @@ A data frame containing the frequency of execution of 13 house
 library(FactoMineR)
 data(housetasks)
 res.ca <- CA(housetasks, graph=FALSE)
-fviz_ca_biplot(res.mca, repel = TRUE)
+fviz_ca_biplot(res.mca, repel = TRUE)+
+theme_minimal()
 }
 
 }
