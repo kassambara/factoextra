@@ -2,51 +2,56 @@
 NULL
 #' Visual enhancement of clustering analysis
 #' 
-#' @description 
-#' Visual enhancement of clustering analysis.
+#' @description Provides solution for enhancing the workflow of clustering
+#'   analyses and ggplot2-based elegant data visualization. Read more: 
+#'  \href{http://www.sthda.com/english/wiki/visual-enhancement-of-clustering-analysis-unsupervised-machine-learning}{Visual enhancement of clustering analysis}.
 #' @param x numeric vector, data matrix or data frame
-#' @param FUNcluster a clustering function including "kmeans", "pam", "clara", "fanny", "hclust", "agnes" and "diana". 
-#' Abbreviation is allowed.
-#' @param k the number of clusters to be generated. If NULL, the gap statistic is used to estimate the appropriate 
-#' number of clusters. In the case of kmeans, k can be either the number of clusters, 
-#' or a set of initial (distinct) cluster centers.
-#' @param k.max the maximum number of clusters to consider, must be at least two.
-#' @param stand logical value; default is FALSE. If TRUE, then the data will be standardized using the function scale(). 
-#' Measurements are standardized for each variable (column), by subtracting the variable's mean value and 
-#' dividing by the variable's standard deviation.
+#' @param FUNcluster a clustering function including "kmeans", "pam", "clara", 
+#'   "fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.
+#' @param k the number of clusters to be generated. If NULL, the gap statistic 
+#'   is used to estimate the appropriate number of clusters. In the case of 
+#'   kmeans, k can be either the number of clusters, or a set of initial 
+#'   (distinct) cluster centers.
+#' @param k.max the maximum number of clusters to consider, must be at least 
+#'   two.
+#' @param stand logical value; default is FALSE. If TRUE, then the data will be 
+#'   standardized using the function scale(). Measurements are standardized for 
+#'   each variable (column), by subtracting the variable's mean value and 
+#'   dividing by the variable's standard deviation.
 #' @param graph logical value. If TRUE, cluster plot is displayed.
-#' @param hc_metric character string specifying the metric to be used for calculating 
-#' dissimilarities between observations. Allowed values are those accepted by the function dist() [including "euclidean", "manhattan", "maximum",
-#'  "canberra", "binary", "minkowski"] and correlation based distance measures ["pearson", "spearman" or "kendall"]. 
-#'  Used only when FUNcluster is a hierarchical 
-#'  clustering function such as one of "hclust", "agnes" or "diana".
-#' @param hc_method the agglomeration method to be used (?hclust): 
-#' "ward.D", "ward.D2", "single", "complete", "average", ...
-#' @param gap_maxSE a list containing the parameters (method and SE.factor) for determining the location of 
-#' the maximum of the gap statistic (Read the documentation ?cluster::maxSE).
-#' @param nboot integer, number of Monte Carlo ("bootstrap") samples. Used only for determining the number of clusters 
-#' using gap statistic.
+#' @param hc_metric character string specifying the metric to be used for 
+#'   calculating dissimilarities between observations. Allowed values are those 
+#'   accepted by the function dist() [including "euclidean", "manhattan", 
+#'   "maximum", "canberra", "binary", "minkowski"] and correlation based 
+#'   distance measures ["pearson", "spearman" or "kendall"]. Used only when 
+#'   FUNcluster is a hierarchical clustering function such as one of "hclust", 
+#'   "agnes" or "diana".
+#' @param hc_method the agglomeration method to be used (?hclust): "ward.D", 
+#'   "ward.D2", "single", "complete", "average", ...
+#' @param gap_maxSE a list containing the parameters (method and SE.factor) for 
+#'   determining the location of the maximum of the gap statistic (Read the 
+#'   documentation ?cluster::maxSE).
+#' @param nboot integer, number of Monte Carlo ("bootstrap") samples. Used only 
+#'   for determining the number of clusters using gap statistic.
 #' @param verbose logical value. If TRUE, the result of progress is printed.
 #' @param seed integer used for seeding the random number generator.
 #' @param ... other arguments to be passed to FUNcluster.
-#' @return Returns an object of class "eclust" containing the result 
-#' of the standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.). 
-#'      
-#' It includes also:
-#' \itemize{
-#' \item cluster: the cluster assignement of observations after cutting the tree
-#' \item nbclust: the number of clusters
-#' \item silinfo: the silhouette information of observations,  
-#' including $widths (silhouette width values of each observation), 
-#' $clus.avg.widths (average silhouette width of each cluster) and 
-#' $avg.width (average width of all clusters)
-#' \item size: the size of clusters
-#' \item data: a matrix containing the original or the standardized data (if stand = TRUE)
-#' }
-#' The "eclust" class has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
-#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, \code{\link{fviz_cluster}}
+#' @return Returns an object of class "eclust" containing the result of the 
+#'   standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.).
+#'   
+#'   It includes also: \itemize{ \item cluster: the cluster assignement of 
+#'   observations after cutting the tree \item nbclust: the number of clusters 
+#'   \item silinfo: the silhouette information of observations, including 
+#'   $widths (silhouette width values of each observation), $clus.avg.widths 
+#'   (average silhouette width of each cluster) and $avg.width (average width of
+#'   all clusters) \item size: the size of clusters \item data: a matrix 
+#'   containing the original or the standardized data (if stand = TRUE) } The 
+#'   "eclust" class has method for fviz_silhouette(), fviz_dend(), 
+#'   fviz_cluster().
+#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, 
+#'   \code{\link{fviz_cluster}}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' 
+#'   
 #' @examples 
 #' # Load and scale data
 #' data("USArrests")
