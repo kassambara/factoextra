@@ -45,7 +45,8 @@ hkmeans returns an object of class "hkmeans" containing the following components
 \description{
 The final k-means clustering solution is very sensitive to the initial random selection 
 of cluster centers. This function provides a solution using an hybrid approach by combining 
-the hierarchical clustering and the k-means methods. The procedure is explained in "Details" section. \cr\cr
+the hierarchical clustering and the k-means methods. The procedure is explained in "Details" section. Read more:
+  \href{http://www.sthda.com/english/wiki/hybrid-hierarchical-k-means-clustering-for-optimizing-clustering-outputs-unsupervised-machine-learning}{Hybrid hierarchical k-means clustering for optimizing clustering outputs}.
 \itemize{
 \item hkmeans(): compute hierarchical k-means clustering
 \item print.hkmeans(): prints the result of hkmeans
@@ -53,10 +54,14 @@ the hierarchical clustering and the k-means methods. The procedure is explained 
 }
 }
 \details{
-The procedure is as follow:\cr\cr  
-1. Compute hierarchical clustering\cr
-2. Cut the tree in k-clusters\cr
-3. compute the center (i.e the mean) of each cluster\cr
+The procedure is as follow:   
+     
+1. Compute hierarchical clustering
+   
+2. Cut the tree in k-clusters
+   
+3. compute the center (i.e the mean) of each cluster
+     
 4. Do k-means by using the set of cluster centers (defined in step 3) as the initial cluster centers
 }
 \examples{
