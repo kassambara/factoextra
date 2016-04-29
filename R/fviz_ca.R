@@ -394,7 +394,7 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
   geom2 <- geom
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_ca_row(X,  axes = axes, shape.row = shape.row, 
-        geom=geom2,
+        geom=geom2, repel = repel,
         label = label, invisible = invisible, labelsize=labelsize, pointsize = pointsize,
         col.row =col.row, col.row.sup=col.row.sup,  alpha.row = alpha.row, select.row = select.row,
         map = map, jitter = jitter)
