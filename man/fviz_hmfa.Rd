@@ -298,7 +298,7 @@ theme_minimal()
 # Graph of partial individuals (starplot)
 # +++++++++++++++++++++++++++++++++++++++
 fviz_hmfa_ind_starplot(res.hmfa, col.partial = "group.name")+
-scale_color_brewer(palette = "Dark2") 
+scale_color_brewer(palette = "Dark2")+
  theme_minimal()
  
  
