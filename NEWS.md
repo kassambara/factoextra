@@ -5,10 +5,11 @@
     
 ## Minor changing
    
+
    
 ## Bug fixes
 
-
+- Now fviz_ca_biplot() reacts when repel = TRUE used
 
 # factoextra 1.0.3
   
