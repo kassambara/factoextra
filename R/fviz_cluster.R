@@ -122,8 +122,11 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   }
   # HCPC in FactoMineR
   else if(inherits(object, "HCPC")) {
-    data <- object$data.clust[, -ncol(object$data.clust), drop = FALSE]
-    object$cluster <- as.vector(object$data.clust$clust)
+    object$cluster <- res.hcpc$call$X$clust
+    data <- res.hcpc <- object
+    stand <- FALSE # to avoid trying to standardize HCPC results
+#     data <- object$data.clust[, -ncol(object$data.clust), drop = FALSE]
+#     object$cluster <- as.vector(object$data.clust$clust)
   }
   else if(inherits(object, "hcut")){
     if(inherits(object$data, "dist")){
@@ -149,19 +152,32 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     # ncol(data) > 2 --> PCA
     if(ncol(data)>2){
     pca <- stats::prcomp(data, scale = FALSE, center = FALSE)
-    ind  <- facto_summarize(pca, element = "ind", result = "coord", axes = 1:2)
-    pca_performed = TRUE
+    ind <- facto_summarize(pca, element = "ind", result = "coord", axes = 1:2)
+    eig <- get_eigenvalue(pca)[,2]
+    xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
+    ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
     }
     # PCA is not performed
     else if(ncol(data) == 2){
       ind <- as.data.frame(data)
       ind <- cbind.data.frame(name = rownames(ind), ind)
+      xlab <- colnames(data)[1]
+      ylab <- colnames(data)[2]
     }
     else{
       stop("The dimension of the data < 2! No plot.")
     }
     colnames(ind)[2:3] <-  c("x", "y")
     label_coord <- ind
+  }
+  else if(inherits(data, "HCPC")){
+    ind <- res.hcpc$call$X[, c("Dim 1", "Dim 2", "clust")]
+    ind <- cbind.data.frame(name = rownames(ind), ind)
+    colnames(ind)[2:3] <-  c("x", "y")
+    label_coord <- ind
+    eig <- get_eigenvalue(res.hcpc$call$t$res)[,2]
+    xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
+    ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
   }
   else stop("A data of class ", class(data), " is not supported.")
   
@@ -274,14 +290,6 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   
   # Plot titles
   # ++++++++++++++++++++++++
-  if(pca_performed){
-    eig <- get_eigenvalue(pca)[,2]
-    xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
-    ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
-  }else{
-    xlab <- colnames(data)[1]
-    ylab <- colnames(data)[2]
-  }
   title2 <- title
   p <- p + labs(title = title2, x = xlab, y = ylab)
 

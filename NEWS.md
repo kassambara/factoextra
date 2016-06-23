@@ -9,7 +9,9 @@
    
 ## Bug fixes
 
+- Now fviz_cluster can handle HCPC object obtaine from MCA ([Alejandro Juarez-Escario, #13](https://github.com/kassambara/factoextra/pull/13))
 - Now fviz_ca_biplot() reacts when repel = TRUE used
+
 
 # factoextra 1.0.3
   
