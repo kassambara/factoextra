@@ -109,6 +109,13 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          jitter = list(what = "label", width = NULL, height = NULL),
                          outlier.color = "black", outlier.shape = 19){
   
+  # Deprecated arguments
+  if (!missing(jitter)) {
+    warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
+            call. = FALSE)
+    if(!is.null(jitter$width) | !is.null(jitter$height) ) repel = TRUE
+  }
+  
   # object from cluster package
   if(inherits(object, c("partition", "hkmeans", "eclust"))) data <- object$data
   # Object from kmeans (stats package)
@@ -186,12 +193,6 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   label = FALSE
   if("text" %in% geom) label = TRUE
   if(!("point" %in% geom)) pointsize = 0
-  if(is.null(jitter$what)) jitter$what <- "label"
- 
-  # Jittering
-  if(jitter$what %in% c("both", "b")) label_coord <- ind <- .jitter(ind, jitter)
-  else if(jitter$what %in% c("point", "p")) ind <- .jitter(ind, jitter)
-  else if(jitter$what %in% c("label", "l")) label_coord <- .jitter(label_coord, jitter)
   
   plot.data <- cbind.data.frame(ind, cluster = cluster)
   label_coord <- cbind.data.frame(label_coord, cluster = cluster)
