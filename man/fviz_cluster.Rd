@@ -72,6 +72,10 @@ in y direction }}
 \item{outlier.color, outlier.shape}{the color and the shape of outliers. 
 Outliers can be detected only in DBSCAN clustering.}
 
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
+
 \item{...}{other arguments to be passed to the function ggpubr::ggpar.}
 }
 \value{
