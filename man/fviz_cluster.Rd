@@ -9,9 +9,10 @@ fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   frame.type = "convex", frame.level = 0.95, frame.alpha = 0.2,
   ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
   ellipse.alpha = 0.2, pointsize = 2, labelsize = 12,
-  title = "Cluster plot", jitter = list(what = "label", width = NULL, height
-  = NULL), outlier.color = "black", outlier.shape = 19,
-  ggtheme = theme_grey(), ...)
+  title = "Cluster plot", main = "Cluster plot", xlab = NULL,
+  ylab = NULL, jitter = list(what = "label", width = NULL, height = NULL),
+  outlier.color = "black", outlier.shape = 19, ggtheme = theme_grey(),
+  ...)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(),

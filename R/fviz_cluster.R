@@ -110,7 +110,8 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          frame.alpha = 0.2,
                          ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
                          ellipse.alpha = 0.2,
-                         pointsize = 2, labelsize = 12, title = "Cluster plot",
+                         pointsize = 2, labelsize = 12,
+                         title = "Cluster plot", main = "Cluster plot",  xlab = NULL, ylab = NULL,
                          jitter = list(what = "label", width = NULL, height = NULL),
                          outlier.color = "black", outlier.shape = 19,
                          ggtheme = theme_grey(), ...){
@@ -126,6 +127,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   if(!missing(frame.type)) ellipse.type <- .facto_dep("frame.type", "ellipse.type", frame.type)
   if(!missing(frame.level)) ellipse.level <- .facto_dep("frame.level", "ellipse.level", frame.level)
   if(!missing(frame.alpha)) ellipse.alpha <- .facto_dep("frame.alpha", "ellipse.alpha", frame.alpha)
+  if(!missing(title)) main <- .facto_dep("title", "main", title)
   
   
   # object from cluster package
@@ -173,15 +175,15 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     pca <- stats::prcomp(data, scale = FALSE, center = FALSE)
     ind <- facto_summarize(pca, element = "ind", result = "coord", axes = 1:2)
     eig <- get_eigenvalue(pca)[,2]
-    xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
-    ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
+    if(is.null(xlab)) xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
+    if(is.null(ylab)) ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
     }
     # PCA is not performed
     else if(ncol(data) == 2){
       ind <- as.data.frame(data)
       ind <- cbind.data.frame(name = rownames(ind), ind)
-      xlab <- colnames(data)[1]
-      ylab <- colnames(data)[2]
+      if(is.null(xlab)) xlab <- colnames(data)[1]
+      if(is.null(ylab)) ylab <- colnames(data)[2]
     }
     else{
       stop("The dimension of the data < 2! No plot.")
@@ -195,8 +197,8 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     colnames(ind)[2:3] <-  c("x", "y")
     label_coord <- ind
     eig <- get_eigenvalue(res.hcpc$call$t$res)[,2]
-    xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
-    ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
+    if(is.null(xlab)) xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
+    if(is.null(ylab)) ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
   }
   else stop("A data of class ", class(data), " is not supported.")
   
@@ -238,7 +240,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          mean.point = show.clust.cent, 
                          ellipse = ellipse, ellipse.type = ellipse.type,
                          ellipse.alpha = ellipse.alpha,
-                         main = title, xlab = xlab, ylab = ylab,
+                         main = main, xlab = xlab, ylab = ylab,
                          ggtheme = ggtheme, ...
                          )
   
