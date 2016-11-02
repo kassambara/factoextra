@@ -43,7 +43,10 @@
 #'  in y direction }
 #'@param outlier.color,outlier.shape the color and the shape of outliers. 
 #'  Outliers can be detected only in DBSCAN clustering.
-#' @inheritParams ggpubr::ggpar
+#' @param main plot main title.
+#' @param xlab,ylab character vector specifying x and y axis labels,
+#'   respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab,
+#'   respectively.
 #' @param ... other arguments to be passed to the function ggpubr::ggpar.
 #'  
 #'@return return a ggpplot.

@@ -58,7 +58,7 @@ color. Use alpha = 0 for no fill color.}
 
 \item{main}{plot main title.}
 
-\item{xlab}{character vector specifying x and y axis labels,
+\item{xlab, ylab}{character vector specifying x and y axis labels,
 respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab,
 respectively.}
 
@@ -71,10 +71,6 @@ in y direction }}
 
 \item{outlier.color, outlier.shape}{the color and the shape of outliers. 
 Outliers can be detected only in DBSCAN clustering.}
-
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
-Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
-theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{...}{other arguments to be passed to the function ggpubr::ggpar.}
 }
