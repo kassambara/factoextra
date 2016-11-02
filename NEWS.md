@@ -2,7 +2,9 @@
 
 ## New features
     
-    
+- New arguments main, xlab, ylab in `fviz_cluster()` to change the plot main title and axis labels.
+- New arguments ellipse, ellipse.type, ellipse.level and ellipse.alpha available in `fviz_cluster()`.
+     
 ## Minor changing
    
 - Check point added in the function `fviz_nbcluster` to make sure that x is an object of class data.frame or matrix ([Jakub Nowosad, #15](https://github.com/kassambara/factoextra/issues/15)).
