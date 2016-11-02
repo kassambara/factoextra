@@ -22,15 +22,16 @@
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'   labels or not.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
-#'@param frame logical value; if TRUE, draws outline around points of each
+#'@param frame,ellipse logical value; if TRUE, draws outline around points of each
 #'  cluster
-#'@param frame.type Character specifying frame type. Possible values are
-#'  'convex' or types supporeted by \code{ggplot2::stat_ellipse} including one
-#'  of c("t", "norm", "euclid").
-#'@param frame.level Passed for \code{ggplot2::stat_ellipse} 's level. Ignored
+#'@param frame.type,ellipse.type Character specifying frame type. Possible values are
+#'   'convex', 'confidence' or types supported by
+#'   \code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm",
+#'   "euclid").
+#'@param frame.level,ellipse.level the size of the concentration ellipse in normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored
 #'  in 'convex'. Default value is 0.95.
-#'@param frame.alpha Alpha for frame specifying the transparency level of fill
-#'  color.
+#'@param frame.alpha,ellipse.alpha Alpha for frame specifying the transparency level of fill
+#'  color. Use alpha = 0 for no fill color.
 #'@param labelsize font size for the labels
 #'@param pointsize the size of points
 #'@param title the title of the graph
@@ -42,6 +43,8 @@
 #'  in y direction }
 #'@param outlier.color,outlier.shape the color and the shape of outliers. 
 #'  Outliers can be detected only in DBSCAN clustering.
+#' @inheritParams ggpubr::ggscatter
+#' @param ... other arguments to be passed to the function ggpubr::ggpar.
 #'  
 #'@return return a ggpplot.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -63,7 +66,7 @@
 #' 
 #' # Visualize kmeans clustering
 #' # use repel = TRUE to avoid overplotting
-#' fviz_cluster(km.res, iris[, -5], frame.type = "norm")
+#' fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")
 #' 
 #' 
 #'# Change the color and theme
@@ -83,7 +86,7 @@
 #' require(cluster)
 #' pam.res <- pam(iris.scaled, 3)
 #'  # Visualize pam clustering
-#' fviz_cluster(pam.res, geom = "point", frame.type = "norm")
+#' fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 #' }
 #' 
 #' # Hierarchical clustering
@@ -93,7 +96,7 @@
 #' # Visualize dendrogram
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 #' # Visualize cluster
-#' fviz_cluster(hc.cut, frame.type = "convex")
+#' fviz_cluster(hc.cut, ellipse.type = "convex")
 #' 
 #'
 #' 
@@ -105,9 +108,12 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          show.clust.cent = TRUE,
                          frame = TRUE, frame.type = "convex", frame.level = 0.95,
                          frame.alpha = 0.2,
-                         pointsize = 2, labelsize = 4, title = "Cluster plot",
+                         ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
+                         ellipse.alpha = 0.2,
+                         pointsize = 2, labelsize = 12, title = "Cluster plot",
                          jitter = list(what = "label", width = NULL, height = NULL),
-                         outlier.color = "black", outlier.shape = 19){
+                         outlier.color = "black", outlier.shape = 19,
+                         ggtheme = theme_grey(), ...){
   
   # Deprecated arguments
   if (!missing(jitter)) {
@@ -115,6 +121,12 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
             call. = FALSE)
     if(!is.null(jitter$width) | !is.null(jitter$height) ) repel = TRUE
   }
+  
+  if(!missing(frame)) ellipse <- .facto_dep("frame", "ellipse", frame)
+  if(!missing(frame.type)) ellipse.type <- .facto_dep("frame.type", "ellipse.type", frame.type)
+  if(!missing(frame.level)) ellipse.level <- .facto_dep("frame.level", "ellipse.level", frame.level)
+  if(!missing(frame.alpha)) ellipse.alpha <- .facto_dep("frame.alpha", "ellipse.alpha", frame.alpha)
+  
   
   # object from cluster package
   if(inherits(object, c("partition", "hkmeans", "eclust"))) data <- object$data
@@ -216,83 +228,24 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   
   # Plot
   # ++++++++++++++++++++++++
-  ngroups <- length(levels(plot.data$cluster))
-  p <- ggplot()
-  if("point" %in% geom) 
-  {
-    if(ngroups <= 6){
-    p <- p+geom_point(data = plot.data , 
-                      aes_string('x', 'y', color="cluster", shape = "cluster"),
-                      size = pointsize)
-    }
-    else 
-      p <- p+geom_point(data = plot.data , 
-                        aes_string('x', 'y', color="cluster", shape = "cluster"),
-                        size = pointsize) +
-        ggplot2::scale_shape_manual(values=1:ngroups, labels = levels(plot.data$cluster)) 
-        
-  }
-  
-  if("text" %in% geom){
-    if(repel)
-      p <- p +ggrepel::geom_text_repel(data = label_coord, 
-                                       aes_string('x', 'y', label = "name", color="cluster"),
-                                       size = labelsize)
-    else
-      p <- p + geom_text(data = label_coord, 
-                         aes_string('x', 'y', label = 'name', color="cluster"),  
-                         size = labelsize, vjust = -0.7)
-  }
-  
-  
-    
-  
-  # Add cluster center
-  clustcent <- stats::aggregate(ind[, 2:3], by=list(cluster=cluster), mean)
-  colnames(clustcent) <- c("cluster", "x", "y")
-  if(show.clust.cent){
-    if("point" %in% geom) 
-      p <- p + geom_point(data=clustcent,
-                          aes_string('x', 'y', color="cluster", shape="cluster"),
-                          size=pointsize*2)    
-    if("text" %in% geom){
-      if(repel)
-        p <- p +ggrepel::geom_text_repel(data = clustcent, 
-                                         aes_string('x', 'y', color="cluster"),
-                                         label=clustcent$cluster, size=labelsize*1.2)
-      else
-        p <- p + geom_text(data=clustcent, 
-                           aes_string('x', 'y', color="cluster"),
-                           label=clustcent$cluster, size=labelsize*1.2, vjust=-1)
-    }
-    
-  }
-  
-  # Add frame
-  if(frame){
-    if (frame.type == 'convex'){
-      frame.data <- .cluster_chull(ind[, c("x", "y")], cluster)
-      mapping = aes_string(x = "x", y = "y", colour ="cluster", fill = "cluster")
-      p <- p + ggplot2::geom_polygon(data = frame.data,  mapping = mapping, alpha = frame.alpha)
-    }
-    else if (frame.type %in% c('t', 'norm', 'euclid')) {
-        mapping = aes_string(x = "x", y = "y", colour = "cluster", fill = "cluster")
-        p <- p + ggplot2::stat_ellipse(mapping = mapping, data = plot.data,
-                                       level = frame.level, type = frame.type,
-                                       geom = 'polygon', alpha = frame.alpha)
-    }
-  }
+  lab <- NULL
+  if("text" %in% geom) lab <- "name"
+  p <- ggpubr::ggscatter(plot.data, "x", "y",
+                         color="cluster", shape = "cluster", size = pointsize,
+                         point = "point" %in% geom, 
+                         label = lab,
+                         font.label = labelsize, repel = repel,
+                         mean.point = show.clust.cent, 
+                         ellipse = ellipse, ellipse.type = ellipse.type,
+                         ellipse.alpha = ellipse.alpha,
+                         main = title, xlab = xlab, ylab = ylab,
+                         ggtheme = ggtheme, ...
+                         )
   
   # Add outliers (can exist only in dbscan)
   if(is_outliers)
     p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
                   pointsize, labelsize, geom, repel = repel)
-  
-  
-  # Plot titles
-  # ++++++++++++++++++++++++
-  title2 <- title
-  p <- p + labs(title = title2, x = xlab, y = ylab)
 
   p
 }

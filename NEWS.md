@@ -6,6 +6,7 @@
 ## Minor changing
    
 - Check point added in the function `fviz_nbcluster` to make sure that x is an object of class data.frame or matrix ([Jakub Nowosad, #15](https://github.com/kassambara/factoextra/issues/15)).
+- The following arguments are deprecated in `fviz_cluster`(): frame, frame.type, frame.level, frame.alpha. Now, use ellipse, ellipse.type, ellipse.level and ellipse.alpha instead.
 
    
 ## Bug fixes

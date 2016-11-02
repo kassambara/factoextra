@@ -7,9 +7,11 @@
 fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
   repel = FALSE, show.clust.cent = TRUE, frame = TRUE,
   frame.type = "convex", frame.level = 0.95, frame.alpha = 0.2,
-  pointsize = 2, labelsize = 4, title = "Cluster plot",
-  jitter = list(what = "label", width = NULL, height = NULL),
-  outlier.color = "black", outlier.shape = 19)
+  ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
+  ellipse.alpha = 0.2, pointsize = 2, labelsize = 12,
+  title = "Cluster plot", jitter = list(what = "label", width = NULL, height
+  = NULL), outlier.color = "black", outlier.shape = 19,
+  ggtheme = theme_grey(), ...)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(),
@@ -33,18 +35,19 @@ labels or not.}
 
 \item{show.clust.cent}{logical; if TRUE, shows cluster centers}
 
-\item{frame}{logical value; if TRUE, draws outline around points of each
+\item{frame, ellipse}{logical value; if TRUE, draws outline around points of each
 cluster}
 
-\item{frame.type}{Character specifying frame type. Possible values are
-'convex' or types supporeted by \code{ggplot2::stat_ellipse} including one
-of c("t", "norm", "euclid").}
+\item{frame.type, ellipse.type}{Character specifying frame type. Possible values are
+'convex', 'confidence' or types supported by
+\code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm",
+"euclid").}
 
-\item{frame.level}{Passed for \code{ggplot2::stat_ellipse} 's level. Ignored
+\item{frame.level, ellipse.level}{the size of the concentration ellipse in normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored
 in 'convex'. Default value is 0.95.}
 
-\item{frame.alpha}{Alpha for frame specifying the transparency level of fill
-color.}
+\item{frame.alpha, ellipse.alpha}{Alpha for frame specifying the transparency level of fill
+color. Use alpha = 0 for no fill color.}
 
 \item{pointsize}{the size of points}
 
@@ -61,6 +64,12 @@ in y direction }}
 
 \item{outlier.color, outlier.shape}{the color and the shape of outliers. 
 Outliers can be detected only in DBSCAN clustering.}
+
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{...}{other arguments to be passed to the function ggpubr::ggpar.}
 }
 \value{
 return a ggpplot.
@@ -89,7 +98,7 @@ km.res <- kmeans(iris.scaled, 3, nstart = 25)
 
 # Visualize kmeans clustering
 # use repel = TRUE to avoid overplotting
-fviz_cluster(km.res, iris[, -5], frame.type = "norm")
+fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")
 
 
 # Change the color and theme
@@ -109,7 +118,7 @@ fviz_cluster(km.res, iris[, -5], geom = "text")
 require(cluster)
 pam.res <- pam(iris.scaled, 3)
  # Visualize pam clustering
-fviz_cluster(pam.res, geom = "point", frame.type = "norm")
+fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 }
 
 # Hierarchical clustering
@@ -119,7 +128,7 @@ hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 # Visualize dendrogram
 fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 # Visualize cluster
-fviz_cluster(hc.cut, frame.type = "convex")
+fviz_cluster(hc.cut, ellipse.type = "convex")
 
 
 
