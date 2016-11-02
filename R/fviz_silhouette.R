@@ -46,7 +46,7 @@
 #' km.res <- kmeans(iris.scaled, 3, nstart = 25)
 #' 
 #' # Visualize kmeans clustering
-#' fviz_cluster(km.res, iris[, -5], frame.type = "norm")+
+#' fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")+
 #' theme_minimal()
 #' 
 #' # Visualize silhouhette information
@@ -63,7 +63,7 @@
 #' require(cluster)
 #' pam.res <- pam(iris.scaled, 3)
 #' # Visualize pam clustering
-#' fviz_cluster(pam.res, frame.type = "norm")+
+#' fviz_cluster(pam.res, ellipse.type = "norm")+
 #' theme_minimal()
 #' # Visualize silhouhette information
 #' fviz_silhouette(pam.res)

@@ -1,58 +1,53 @@
 #' @include eigenvalue.R get_pca.R hcut.R
  NULL
 #'Visualize Clustering Results
-#'@description Provides ggplot2-based elegant visualization of partitioning
-#'methods including kmeans [stats package]; pam, clara and fanny [cluster
-#'package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR];
-#'hkmeans [factoextra]. Observations are represented by points in the plot,
-#'using principal components if ncol(data) > 2. An ellipse is drawn around each
-#'cluster.
-#'@param object an object of class "partition" created by the functions pam(),
+#'@description Provides ggplot2-based elegant visualization of partitioning 
+#'  methods including kmeans [stats package]; pam, clara and fanny [cluster 
+#'  package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR]; 
+#'  hkmeans [factoextra]. Observations are represented by points in the plot, 
+#'  using principal components if ncol(data) > 2. An ellipse is drawn around 
+#'  each cluster.
+#'@param object an object of class "partition" created by the functions pam(), 
 #'  clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
 #'  [in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
 #'  Possible value are also any list object with data and cluster components 
 #'  (e.g.: object = list(data = mydata, cluster = myclust)).
-#'@param data the data that has been used for clustering. Required only when
+#'@param data the data that has been used for clustering. Required only when 
 #'  object is a class of kmeans or dbscan.
-#'@param stand logical value; if TRUE, data is standardized before principal
+#'@param stand logical value; if TRUE, data is standardized before principal 
 #'  component analysis
-#'@param geom a text specifying the geometry to be used for the graph. Allowed
-#'  values are the combination of c("point", "text"). Use "point" (to show only
+#'@param geom a text specifying the geometry to be used for the graph. Allowed 
+#'  values are the combination of c("point", "text"). Use "point" (to show only 
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'   labels or not.
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'  labels or not.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
-#'@param frame,ellipse logical value; if TRUE, draws outline around points of each
-#'  cluster
-#'@param frame.type,ellipse.type Character specifying frame type. Possible values are
-#'   'convex', 'confidence' or types supported by
-#'   \code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm",
-#'   "euclid").
-#'@param frame.level,ellipse.level the size of the concentration ellipse in normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored
-#'  in 'convex'. Default value is 0.95.
-#'@param frame.alpha,ellipse.alpha Alpha for frame specifying the transparency level of fill
-#'  color. Use alpha = 0 for no fill color.
+#'@param ellipse logical value; if TRUE, draws outline around points of 
+#'  each cluster
+#'@param ellipse.type Character specifying frame type. Possible 
+#'  values are 'convex', 'confidence' or types supported by 
+#'  \code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm", 
+#'  "euclid").
+#'@param ellipse.level the size of the concentration ellipse in 
+#'  normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. 
+#'  Ignored in 'convex'. Default value is 0.95.
+#'@param ellipse.alpha Alpha for frame specifying the transparency 
+#'  level of fill color. Use alpha = 0 for no fill color.
 #'@param labelsize font size for the labels
 #'@param pointsize the size of points
-#'@param title the title of the graph
-#'@param jitter a parameter used to jitter the points in order to reduce
-#'  overplotting. It's a list containing the objects what, width and height (i.e
-#'  jitter = list(what, width, height)). \itemize{ \item what: the element to be
-#'  jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
-#'  \item width: degree of jitter in x direction \item height: degree of jitter
-#'  in y direction }
 #'@param outlier.color,outlier.shape the color and the shape of outliers. 
 #'  Outliers can be detected only in DBSCAN clustering.
-#' @param main plot main title.
-#' @param xlab,ylab character vector specifying x and y axis labels,
-#'   respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab,
-#'   respectively.
+#'@param main plot main title.
+#'@param xlab,ylab character vector specifying x and y axis labels, 
+#'  respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab, 
+#'  respectively.
 #'@inheritParams ggpubr::ggpar
-#' @param ... other arguments to be passed to the function ggpubr::ggpar.
+#'@param ... other arguments to be passed to the functions
+#'  \code{\link[ggpubr]{ggscatter}} and \code{\link[ggpubr]{ggpar}}.
 #'  
 #'@return return a ggpplot.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}},
+#'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}}, 
 #'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
 #' @examples 
 #' set.seed(123)
@@ -73,11 +68,9 @@
 #' fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")
 #' 
 #' 
-#'# Change the color and theme
-#'fviz_cluster(km.res, iris[, -5]) + 
-#'  scale_color_brewer(palette = "Set2")+
-#'  scale_fill_brewer(palette = "Set2") +
-#'  theme_minimal()
+#'# Change the color palette and theme
+#'fviz_cluster(km.res, iris[, -5],
+#'    palette = "Set2", ggtheme = theme_minimal())
 #'  
 #'  \dontrun{
 #' # Show points only
@@ -104,34 +97,33 @@
 #' 
 #'
 #' 
-#' @name fviz_cluster
-#' @rdname fviz_cluster
-#' @export
+#'@name fviz_cluster
+#'@rdname fviz_cluster
+#'@export
 fviz_cluster <- function(object, data = NULL, stand = TRUE, 
                          geom = c("point", "text"), repel = FALSE,
                          show.clust.cent = TRUE,
-                         frame = TRUE, frame.type = "convex", frame.level = 0.95,
-                         frame.alpha = 0.2,
                          ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
                          ellipse.alpha = 0.2,
                          pointsize = 2, labelsize = 12,
-                         title = "Cluster plot", main = "Cluster plot",  xlab = NULL, ylab = NULL,
-                         jitter = list(what = "label", width = NULL, height = NULL),
+                         main = "Cluster plot",  xlab = NULL, ylab = NULL,
                          outlier.color = "black", outlier.shape = 19,
                          ggtheme = theme_grey(), ...){
   
   # Deprecated arguments
-  if (!missing(jitter)) {
+  extra_args <- list(...)
+  
+  if (!is.null(extra_args$jitter)) {
     warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
             call. = FALSE)
-    if(!is.null(jitter$width) | !is.null(jitter$height) ) repel = TRUE
+    if(!is.null(extra_args$jitter$width) | !is.null(extra_args$jitter$height) ) repel = TRUE
   }
   
-  if(!missing(frame)) ellipse <- .facto_dep("frame", "ellipse", frame)
-  if(!missing(frame.type)) ellipse.type <- .facto_dep("frame.type", "ellipse.type", frame.type)
-  if(!missing(frame.level)) ellipse.level <- .facto_dep("frame.level", "ellipse.level", frame.level)
-  if(!missing(frame.alpha)) ellipse.alpha <- .facto_dep("frame.alpha", "ellipse.alpha", frame.alpha)
-  if(!missing(title)) main <- .facto_dep("title", "main", title)
+  if(!is.null(extra_args$frame)) ellipse <- .facto_dep("frame", "ellipse", ellipse)
+  if(!is.null(extra_args$frame.type)) ellipse.type <- .facto_dep("frame.type", "ellipse.type", extra_args$frame.type)
+  if(!is.null(extra_args$frame.level)) ellipse.level <- .facto_dep("frame.level", "ellipse.level", extra_args$frame.level)
+  if(!is.null(extra_args$frame.alpha)) ellipse.alpha <- .facto_dep("frame.alpha", "ellipse.alpha", extra_args$frame.alpha)
+  if(!is.null(extra_args$title)) main <- .facto_dep("title", "main", extra_args$title)
   
   
   # object from cluster package
