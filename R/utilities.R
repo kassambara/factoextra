@@ -993,4 +993,10 @@ NULL
   as.data.frame(res)
 }
 
+# Deprecated argument
+.facto_dep <- function(arg, replace, return_val){
+    warning("argument ", arg, " is deprecated; please use ", replace, "instead", 
+            call. = FALSE)
+  return_val
+}
 
