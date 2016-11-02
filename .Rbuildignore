@@ -4,3 +4,4 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^factoextra-r-package\.png$
+^\.travis\.yml$
