@@ -56,6 +56,12 @@ color. Use alpha = 0 for no fill color.}
 
 \item{title}{the title of the graph}
 
+\item{main}{plot main title.}
+
+\item{xlab}{character vector specifying x and y axis labels,
+respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab,
+respectively.}
+
 \item{jitter}{a parameter used to jitter the points in order to reduce
 overplotting. It's a list containing the objects what, width and height (i.e
 jitter = list(what, width, height)). \itemize{ \item what: the element to be

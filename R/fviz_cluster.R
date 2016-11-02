@@ -43,7 +43,7 @@
 #'  in y direction }
 #'@param outlier.color,outlier.shape the color and the shape of outliers. 
 #'  Outliers can be detected only in DBSCAN clustering.
-#' @inheritParams ggpubr::ggscatter
+#' @inheritParams ggpubr::ggpar
 #' @param ... other arguments to be passed to the function ggpubr::ggpar.
 #'  
 #'@return return a ggpplot.
