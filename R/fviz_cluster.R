@@ -180,6 +180,9 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
       ind <- cbind.data.frame(name = rownames(ind), ind)
       if(is.null(xlab)) xlab <- colnames(data)[1]
       if(is.null(ylab)) ylab <- colnames(data)[2]
+      
+      if(xlab=="x") xlab <- "x value"
+      if(ylab == "y") ylab <- "y value"
     }
     else{
       stop("The dimension of the data < 2! No plot.")
