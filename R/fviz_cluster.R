@@ -228,6 +228,10 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   # ++++++++++++++++++++++++
   lab <- NULL
   if("text" %in% geom) lab <- "name"
+  
+  if(inherits(object, "partition") & missing(show.clust.cent))
+    show.clust.cent <- FALSE # hide mean point for PAM, CLARA
+  
   p <- ggpubr::ggscatter(plot.data, "x", "y",
                          color="cluster", shape = "cluster", size = pointsize,
                          point = "point" %in% geom, 
