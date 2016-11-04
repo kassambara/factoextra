@@ -327,14 +327,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
       }
     }
     
-#     if(addEllipses){
-#       ell <- .get_ellipse_by_groups(ind$x, ind$y,
-#                                     groups = ind[, name.quali], ellipse.level=ellipse.level)
-#       colnames(ell)<-c(name.quali, "x", "y")
-#       ell[, 1]<-as.factor(ell[,1])
-#       p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
-#     }
-    
     if(addEllipses){
       if (ellipse.type == 'convex'){
         frame.data <- .cluster_chull(ind[, c("x", "y")], ind[, name.quali])
