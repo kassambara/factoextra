@@ -11,12 +11,13 @@ fviz_pca(X, ...)
 
 fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
-  ellipse.type = "norm", ellipse.alpha = 0.1, col.ind = "black",
-  col.ind.sup = "blue", alpha.ind = 1, select.ind = list(name = NULL, cos2
-  = NULL, contrib = NULL), jitter = list(what = "label", width = NULL, height
-  = NULL), title = "Individuals factor map - PCA", axes.linetype = "dashed",
-  ...)
+  pointshape = 19, habillage = "none", addEllipses = FALSE,
+  ellipse.level = 0.95, ellipse.type = "norm", ellipse.alpha = 0.1,
+  col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  jitter = list(what = "label", width = NULL, height = NULL),
+  title = "Individuals factor map - PCA", axes.linetype = "dashed",
+  ggtheme = ggplot2::theme_grey(), ...)
 
 fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", repel = FALSE, labelsize = 4, col.var = "black",
@@ -27,13 +28,13 @@ fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
-  col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
-  col.var = "steelblue", alpha.var = 1, col.quanti.sup = "blue",
-  col.circle = "grey70", repel = FALSE, axes.linetype = "dashed",
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  title = "Biplot of variables and individuals", jitter = list(what =
+  pointshape = 19, habillage = "none", addEllipses = FALSE,
+  ellipse.level = 0.95, col.ind = "black", col.ind.sup = "blue",
+  alpha.ind = 1, col.var = "steelblue", alpha.var = 1,
+  col.quanti.sup = "blue", col.circle = "grey70", repel = FALSE,
+  axes.linetype = "dashed", select.var = list(name = NULL, cos2 = NULL,
+  contrib = NULL), select.ind = list(name = NULL, cos2 = NULL, contrib =
+  NULL), title = "Biplot of variables and individuals", jitter = list(what =
   "label", width = NULL, height = NULL), ...)
 }
 \arguments{
@@ -67,6 +68,8 @@ Default value is "none". Allowed values are the combination of c("ind",
 \item{labelsize}{font size for the labels}
 
 \item{pointsize}{the size of points}
+
+\item{pointshape}{the shape of points}
 
 \item{habillage}{an optional factor variable for coloring the observations by
 groups. Default value is "none". If X is a PCA object from FactoMineR 
@@ -125,6 +128,10 @@ of jitter in y direction }}
 \item{title}{the title of the graph}
 
 \item{axes.linetype}{linetype of x and y axes.}
+
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 

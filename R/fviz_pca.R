@@ -34,6 +34,7 @@
 #'   "ind.sup", "quali", "var", "quanti.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
+#' @param pointshape the shape of points
 #' @param title the title of the graph
 #' @param habillage an optional factor variable for coloring the observations by
 #'   groups. Default value is "none". If X is a PCA object from FactoMineR 
@@ -84,6 +85,7 @@
 #'   to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" 
 #'   or "b". \item width: degree of jitter in x direction \item height: degree 
 #'   of jitter in y direction }
+#' @inheritParams ggpubr::ggpar
 #' @param ... Arguments to be passed to the function fviz_pca_biplot().
 #'   
 #' @return a ggplot
@@ -194,20 +196,22 @@ fviz_pca <- function(X, ...){
 #' @rdname fviz_pca 
 #' @export 
 fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
-                         label = "all", invisible="none", labelsize=4, pointsize = 2,
+                         label = "all", invisible="none", labelsize=4, 
+                         pointsize = 2, pointshape = 19,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
                          ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
                          jitter = list(what = "label", width = NULL, height = NULL),
-                         title = "Individuals factor map - PCA", axes.linetype = "dashed",...)
+                         title = "Individuals factor map - PCA", axes.linetype = "dashed",
+                         ggtheme = ggplot2::theme_grey(),
+                         ...)
 {
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
   if(length(axes) != 2) stop("axes should be of length 2")
   
-  if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   ind <- facto_summarize(X, element = "ind", 
@@ -222,36 +226,16 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   lab <- .label(label)
   hide <- .hide(invisible)
   
+  ind_label <- NULL
+  if(lab$ind & "text" %in% geom) ind_label <- "name"
+  
   alpha.limits <- NULL
   if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
     alpha.limits = range(ind.all[, alpha.ind])
   
-  # No qualitative variable to color individuals
-  if(habillage[1]=="none"){ 
-    p <- ggplot() 
-    if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
-    else p <- .ggscatter(data = ind, x = 'x', y = 'y', 
-                         col=col.ind,  alpha = alpha.ind, repel = repel,
-                         alpha.limits = alpha.limits, shape = 19, 
-                         geom = geom, lab = lab$ind, labelsize = labelsize,
-                         pointsize = pointsize, jitter = jitter)
-  }
-  
   # qualitative variable is used to color the individuals
-  else{
-    # Plot individuals
-    p <- ggplot()
-    if(hide$ind & hide$quali) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
+  if(habillage[1] !="none"){
     
-#     if(is.factor(habillage)){ 
-#       if(nrow(ind)!=length(habillage))
-#         stop("The number of active individuals used in the PCA is different ",
-#              "from the length of the factor habillage. Please, remove the supplementary ",
-#              "individuals in the variable habillage.")
-#       name.quali <- "Groups"
-#       ind <- cbind.data.frame(Groups = habillage, ind)
-#       ind[, 1]<-as.factor(ind[,1])
-#     }
     # X is from FactoMineR outputs
     if(inherits(X, "PCA") & length(habillage) == 1){
       data <- X$call$X
@@ -259,7 +243,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
       else name.quali <- habillage 
       ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
       colnames(ind)[1]<-name.quali
-      ind[, 1]<-as.factor(ind[,1])
+      if(!inherits(ind[, 1], "factor")) ind[, 1]<-as.factor(ind[,1])
     }
     else{
       if(nrow(ind)!=length(habillage))
@@ -268,82 +252,30 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
              "individuals in the variable habillage.")
       name.quali <- "Groups"
       ind <- cbind.data.frame(Groups = habillage, ind)
-      ind[, 1]<-as.factor(ind[,1])
+      if(!inherits(ind[, 1], "factor")) ind[, 1] <- as.factor(ind[,1])
     }
-    
-    if(!hide$ind) {   
-      
-      
-      label_coord <- ind
-      # jittering
-      if(jitter$what %in% c("both", "b")){
-        label_coord <- ind <- .jitter(ind, jitter)
-      }
-      else if(jitter$what %in% c("point", "p")){
-        ind <- .jitter(ind, jitter)
-      }
-      else if(jitter$what %in% c("label", "l")){
-        label_coord <- .jitter(label_coord, jitter)
-      }
-      
-      if("point" %in% geom) 
-          p <- p+geom_point(data = ind, 
-                            aes_string('x', 'y', color=name.quali, shape = name.quali),
-                            size = pointsize)
-      if(lab$ind & "text" %in% geom) {
-        if(repel)
-          p <- p +ggrepel::geom_text_repel(data = label_coord, 
-                             aes_string('x', 'y', label = 'name',
-                                        color=name.quali, shape = name.quali),  size = labelsize)
-        else
-          p <- p + geom_text(data = label_coord, 
-                             aes_string('x', 'y', label = 'name',
-                                        color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
-      }
-      }
-    
-    if(!hide$quali){   
-      coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])
-      coord_quali.sup <- cbind.data.frame(name = rownames(coord_quali.sup),
-                                          coord_quali.sup)
-      colnames(coord_quali.sup)[1] <- name.quali
-      coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
-      
-      if("point" %in% geom) 
-      {
-        p <- p + geom_point(data=coord_quali.sup,
-                            aes_string('x', 'y', color=name.quali, shape=name.quali),
-                            size=pointsize*2) 
-      }
-      if(lab$quali & "text" %in% geom) {
-        if(repel)
-          p <- p + ggrepel::geom_text_repel(data=coord_quali.sup, 
-                             aes_string('x', 'y', color=name.quali),
-                             label=rownames(coord_quali.sup), size=labelsize)
-        else
-          p <- p + geom_text(data=coord_quali.sup, 
-                             aes_string('x', 'y', color=name.quali),
-                             label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
-      }
-    }
-    
-    if(addEllipses){
-      if (ellipse.type == 'convex'){
-        frame.data <- .cluster_chull(ind[, c("x", "y")], ind[, name.quali])
-        colnames(frame.data)[which(colnames(frame.data) == "cluster")] <- name.quali
-        mapping = aes_string(x = "x", y = "y", colour =name.quali, fill = name.quali, group = name.quali)
-        p <- p + ggplot2::geom_polygon(data = frame.data,  mapping = mapping, alpha = ellipse.alpha)
-      }
-      else if (ellipse.type %in% c('t', 'norm', 'euclid')) {
-        mapping = aes_string(x = "x", y = "y", colour = name.quali, group = name.quali, fill = name.quali)
-        p <- p + ggplot2::stat_ellipse(mapping = mapping, data = ind,
-                                       level = ellipse.level, type = ellipse.type, alpha = ellipse.alpha,
-                                       geom = 'polygon')
-      }
-    }
-    
-    
+    col.ind <- name.quali
+    if(missing(pointshape)) pointshape <- name.quali
   }
+  
+  # Plot
+  #%%%%%%%%%%%%%%%%%%%
+  p <- ggplot() 
+  if(hide$ind & hide$quali) p <- ggplot()+geom_blank(data = ind, aes_string('x','y'))
+  
+  point <- ("point" %in% geom) & (!hide$ind) # to show individuals point should be TRUE
+  mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide$quali) # to show mean point
+  
+  p <- ggpubr::ggscatter(data = ind, x = "x", y = "y",
+                         color = col.ind, alpha = alpha.ind, shape = pointshape, 
+                         point = point, size = pointsize, mean.point = mean.point,
+                         label = ind_label, font.label = labelsize*3, repel = repel,
+                         ellipse = addEllipses, ellipse.type = ellipse.type,
+                         ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
+                         main = title,
+                         ggtheme = ggtheme, ...
+  )
+  if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   
   # Add supplementary quantitative individuals
   # Available only in FactoMineR
@@ -358,10 +290,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     }  
   }
   
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
-  
+  p <- .fviz_finish(p, X, axes, axes.linetype) 
   
   p
 }
@@ -445,7 +374,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
 #' @rdname fviz_pca
 #' @export
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), 
-                  label = "all", invisible="none", labelsize=4, pointsize = 2,
+                  label = "all", invisible="none", labelsize=4, 
+                  pointsize = 2, pointshape = 19,
                   habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                   col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                   col.var="steelblue",  alpha.var=1, col.quanti.sup="blue",
@@ -490,7 +420,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom, repel = repel, label = label, invisible=invisible,
-          labelsize=labelsize, pointsize = pointsize, axes.linetype=axes.linetype,
+          labelsize=labelsize, pointsize = pointsize, pointshape = pointshape, axes.linetype=axes.linetype,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
           select.ind = select.ind, jitter = jitter)
