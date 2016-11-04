@@ -200,13 +200,9 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          ggtheme = ggplot2::theme_grey(),
                          ...)
 {
-  # Deprecated arguments
+  # Deprecated arguments: jitter
   extra_args <- list(...)
-  if (!is.null(extra_args$jitter)) {
-    warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
-            call. = FALSE)
-    if(!is.null(extra_args$jitter$width) | !is.null(extra_args$jitter$height) ) repel = TRUE
-  }
+  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
@@ -307,11 +303,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   
   # Deprecated arguments
   extra_args <- list(...)
-  if (!is.null(extra_args$jitter)) {
-    warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
-            call. = FALSE)
-    if(!is.null(extra_args$jitter$width) | !is.null(extra_args$jitter$height) ) repel = TRUE
-  }
+  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
   
   if(length(axes) != 2) stop("axes should be of length 2")
   
