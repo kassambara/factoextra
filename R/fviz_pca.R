@@ -212,8 +212,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     stop("The specified value(s) for the argument geom are not allowed ")
   if(length(axes) != 2) stop("axes should be of length 2")
   
-  
-  # data frame to be used for plotting
+  # Data frame to be used for plotting
   ind <- facto_summarize(X, element = "ind", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(ind)[2:3] <-  c("x", "y")
@@ -222,7 +221,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   ind.all <- ind
   if(!is.null(select.ind)) ind <- .select(ind, select.ind)
   
-  # elements to be labelled or hidden
+  # Elements to be labelled or hidden
   lab <- .label(label)
   hide <- .hide(invisible)
   
