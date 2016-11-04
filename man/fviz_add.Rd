@@ -6,8 +6,7 @@
 \usage{
 fviz_add(ggp, df, axes = c(1, 2), geom = c("point", "arrow"),
   color = "blue", addlabel = TRUE, labelsize = 4, pointsize = 2,
-  shape = 19, linetype = "dashed", jitter = list(what = "label", width =
-  NULL, height = NULL))
+  shape = 19, linetype = "dashed", repel = FALSE, ...)
 }
 \arguments{
 \item{ggp}{a ggplot2 plot.}
@@ -31,13 +30,8 @@ Allowed values are "point" or "arrow" or "text"}
 
 \item{linetype}{the linetype to be used when geom ="arrow"}
 
-\item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
-It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)). 
-\itemize{
-\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
-\item width: degree of jitter in x direction
-\item height: degree of jitter in y direction
-}}
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
+labels or not.}
 }
 \value{
 a ggplot2 plot
