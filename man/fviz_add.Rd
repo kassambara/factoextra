@@ -32,6 +32,8 @@ Allowed values are "point" or "arrow" or "text"}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
+
+\item{...}{Additional arguments, not used}
 }
 \value{
 a ggplot2 plot

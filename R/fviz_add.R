@@ -16,6 +16,7 @@
 #' @param linetype the linetype to be used when geom ="arrow"
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'   labels or not.
+#' @param ... Additional arguments, not used
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
