@@ -302,7 +302,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          labelsize=4, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         title = "Variables factor map - PCA", axes.linetype = "dashed", ...)
+                         title = "Variables factor map - PCA", axes.linetype = "dashed", 
+                         ggtheme = theme_grey(), ...)
 {
   
   # Deprecated arguments
@@ -336,24 +337,28 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
     alpha.limits = range(var.all[, alpha.var])
   
-  # Draw correlation circle
-  if(scale.unit){
-    theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-    circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
-    p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
-      geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
-      geom_hline(yintercept = 0, linetype=axes.linetype)+
-      geom_vline(xintercept = 0, linetype=axes.linetype)    
+  point <- ("point" %in% geom) & (!hide$var) # to show variable point should be TRUE
+  var_label <- NULL
+  if(lab$var & "text" %in% geom & !hide$var) var_label <- "name"
+  # Draw variables
+  p <- ggpubr::ggscatter(data = var, x = 'x', y = 'y', 
+                 color = col.var,  alpha = alpha.var, 
+                 point = point, label = var_label, 
+                 font.label = labelsize*3, repel = repel,
+                 ggtheme = ggtheme, main = title, ...)
+  # Draw arrows
+  if("arrow" %in% geom & !hide$var){
+    origin <- rep(0, nrow(var))
+    dd <- cbind.data.frame(var, xstart = origin, ystart = origin)
+    p <- p + ggpubr:::geom_exec(geom_segment, data = dd, 
+                                  x = "xstart", y = "ystart", xend = "x", yend = "y",
+                                  arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
+                                  color = col.var, alpha = alpha.var)
   }
-  else p <- ggplot()
+  if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
-                   col=col.var,  alpha = alpha.var, 
-                   alpha.limits = alpha.limits, 
-                   geom =  geom, repel = repel,
-                   lab = lab$var, labelsize = labelsize)
-  }
+  # Draw correlation circle
+  if(scale.unit) p <- .add_corr_circle(p, color = col.circle, axes.linetype = axes.linetype)
   
   # Add supplementary quantitative variables
   # Available only in FactoMineR
@@ -370,9 +375,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     
   }
   
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
+  p <- .fviz_finish(p, X, axes, axes.linetype) 
   p 
 }
 
@@ -488,4 +491,14 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   scale_unit
 }
 
+# Add correlation circle to variables plot
+.add_corr_circle <- function(p, color = "grey70", axes.linetype = "dashed"){
+  theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
+  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
+  p + 
+    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color)+
+    geom_hline(yintercept = 0, linetype=axes.linetype)+
+    geom_vline(xintercept = 0, linetype=axes.linetype)
+  
+}
 

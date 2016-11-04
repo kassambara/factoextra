@@ -22,7 +22,8 @@ fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", repel = FALSE, labelsize = 4, col.var = "black",
   alpha.var = 1, col.quanti.sup = "blue", col.circle = "grey70",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  title = "Variables factor map - PCA", axes.linetype = "dashed", ...)
+  title = "Variables factor map - PCA", axes.linetype = "dashed",
+  ggtheme = theme_grey(), ...)
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
