@@ -39,6 +39,7 @@ BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
     'cluster_utilities.R'
     'decathlon2.R'
+    'fviz_add.R'
     'eigenvalue.R'
     'utilities.R'
     'dist.R'
@@ -49,7 +50,6 @@ Collate:
     'fviz_cluster.R'
     'eclust.R'
     'facto_summarize.R'
-    'fviz_add.R'
     'fviz_ca.R'
     'fviz_contrib.R'
     'fviz_cos2.R'

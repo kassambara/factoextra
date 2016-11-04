@@ -1,4 +1,4 @@
-#' @include eigenvalue.R
+#' @include eigenvalue.R fviz_add.R
 NULL
 #' @import ggplot2
 #' @importFrom ggrepel geom_text_repel
@@ -86,9 +86,29 @@ NULL
       else res <- .select(res, select, check = FALSE)
     }
   }
+  if(!is.null(res)){
+    if(nrow(res) == 0) res <- NULL
+  }
   res
 }
 
+
+# Add supplementary elements to a plot
+# p a ggplot
+# X an object from FactoMiner
+# element: "ind.sup", "quanti"
+# axes: axes of interest
+# scale.: numeric, the data is multiplied by scale. before ploting
+# select: a selection of individuals/variables to be drawn.
+.add_supp <- function(p, X, element, axes, select, scale.=1,
+                      ...){
+  dd <- .get_supp(X, element = element, axes = axes, select = select)
+  if(!is.null(dd)){
+    colnames(dd)[2:3] <-  c("x", "y")
+    p <- fviz_add(p, df = dd[, 2:3, drop = FALSE]*scale., ...)
+  }
+  p
+}
 
 # get supplementary columns from ca output (ca package)
 .get_ca_col_sup <- function(res.ca){
@@ -1000,3 +1020,7 @@ NULL
   return_val
 }
 
+# Check axis lengths
+.check_axes <- function(axes, .length){
+  if(length(axes) != .length) stop("axes should be of length ", 2)
+}
