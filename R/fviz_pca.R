@@ -110,33 +110,28 @@
 #' 
 #' # Change gradient color
 #' # Use repel = TRUE to avoid overplotting (slow if many points)
-#' fviz_pca_ind(res.pca, col.ind="cos2", repel = TRUE) + 
+#' fviz_pca_ind(res.pca, col.ind="cos2", repel = TRUE, ggtheme = theme_minimal()) + 
 #'       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-#'       high= "#FC4E07", midpoint=0.6, space = "Lab")+
-#'       theme_minimal()
+#'       high= "#FC4E07", midpoint=0.6, space = "Lab")
 #'    
 #' # You can also control the transparency 
 #' # of the color by the cos2
-#' fviz_pca_ind(res.pca, alpha.ind="cos2") +
-#'      theme_minimal()        
+#' fviz_pca_ind(res.pca, alpha.ind="cos2", ggtheme = theme_minimal()) 
 #'              
 #' # Color individuals by groups, add concentration ellipses
-#' # Remove labels: label = "none".
-#' p <- fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
-#'        addEllipses=TRUE, ellipse.level=0.95)
-#' print(p)
-#'              
 #' # Change group colors using RColorBrewer color palettes
 #' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-#' p + scale_color_brewer(palette="Dark2") +
-#'     scale_fill_brewer(palette="Dark2") +
-#'      theme_minimal()
+#' # Remove labels: label = "none".
+#' fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
+#'      addEllipses=TRUE, ellipse.level=0.95, palette = "Dark2")
+#'              
 #'      
 #' # Change group colors manually
 #' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-#' p + scale_color_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
-#'  scale_fill_manual(values=c("#999999", "#E69F00", "#56B4E9"))+
-#'  theme_minimal()    
+#' fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
+#'      addEllipses=TRUE, ellipse.level=0.95,
+#'      palette = c("#999999", "#E69F00", "#56B4E9"),
+#'      ggtheme = theme_minimal())
 #'       
 #' # Select and visualize some individuals (ind) with select.ind argument.
 #'  # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.96)
@@ -152,14 +147,13 @@
 #' # ++++++++++++++++++++++++++++
 #'   
 #' # Default plot
-#' fviz_pca_var(res.pca, col.var = "steelblue")+
-#' theme_minimal()
+#' fviz_pca_var(res.pca, col.var = "steelblue", 
+#'    ggtheme = theme_minimal())
 #'  
 #' # Control variable colors using their contributions
-#' fviz_pca_var(res.pca, col.var = "contrib")+
+#' fviz_pca_var(res.pca, col.var = "contrib", ggtheme = theme_minimal())+
 #'  scale_color_gradient2(low="white", mid="blue", 
-#'            high="red", midpoint=96, space = "Lab") +
-#'  theme_minimal()         
+#'            high="red", midpoint=96, space = "Lab")
 #'  
 #' # Select variables with select.var argument
 #'    # You can select by contrib, cos2 and name 
@@ -175,8 +169,8 @@
 #' # Keep only the labels for variables
 #' # Change the color by groups, add ellipses
 #' fviz_pca_biplot(res.pca, label = "var", habillage=iris$Species,
-#'                addEllipses=TRUE, ellipse.level=0.95)+
-#' theme_minimal()
+#'                addEllipses=TRUE, ellipse.level=0.95,
+#'                ggtheme = theme_minimal())
 #' 
 #'  }
 #'  
