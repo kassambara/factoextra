@@ -15,7 +15,6 @@ fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   ellipse.level = 0.95, ellipse.type = "norm", ellipse.alpha = 0.1,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL),
   title = "Individuals factor map - PCA", axes.linetype = "dashed",
   ggtheme = ggplot2::theme_grey(), ...)
 
@@ -118,13 +117,6 @@ ex: 5, then the top 5 individuals/variables with the highest cos2 are
 drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
 individuals/variables with the highest contrib are drawn }}
 
-\item{jitter}{a parameter used to jitter the points in order to reduce 
-overplotting. It's a list containing the objects what, width and height 
-(i.e jitter = list(what, width, height)). \itemize{ \item what: the element
-to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" 
-or "b". \item width: degree of jitter in x direction \item height: degree 
-of jitter in y direction }}
-
 \item{title}{the title of the graph}
 
 \item{axes.linetype}{linetype of x and y axes.}
@@ -136,6 +128,13 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 
 \item{col.circle}{a color for the correlation circle.}
+
+\item{jitter}{a parameter used to jitter the points in order to reduce 
+overplotting. It's a list containing the objects what, width and height 
+(i.e jitter = list(what, width, height)). \itemize{ \item what: the element
+to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" 
+or "b". \item width: degree of jitter in x direction \item height: degree 
+of jitter in y direction }}
 }
 \value{
 a ggplot
