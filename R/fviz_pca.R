@@ -201,12 +201,18 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
                          ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
-                         select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
-                         jitter = list(what = "label", width = NULL, height = NULL),
+                         select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          title = "Individuals factor map - PCA", axes.linetype = "dashed",
                          ggtheme = ggplot2::theme_grey(),
                          ...)
 {
+  # Deprecated arguments
+  extra_args <- list(...)
+  if (!is.null(extra_args$jitter)) {
+    warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
+            call. = FALSE)
+    if(!is.null(extra_args$jitter$width) | !is.null(extra_args$jitter$height) ) repel = TRUE
+  }
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
@@ -286,7 +292,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     if(!is.null(ind_sup)){
       p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom) , jitter = jitter)
+                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom))
     }  
   }
   
@@ -423,7 +429,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
           labelsize=labelsize, pointsize = pointsize, pointshape = pointshape, axes.linetype=axes.linetype,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind, jitter = jitter)
+          select.ind = select.ind, jitter = jitter, ...)
 
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
