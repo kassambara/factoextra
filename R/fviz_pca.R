@@ -455,8 +455,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                     labelsize = labelsize, addlabel = (lab$quanti), repel = repel)
     }  
   }
-  title2 <- title
-  p+labs(title=title2)
+  p+labs(title=title)
 }
 
 
@@ -471,23 +470,11 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 .get_scale_unit <-function(X){
   scale_unit <- FALSE
   if(inherits(X, 'PCA')) scale_unit <- X$call$scale.unit
-  else if(inherits(X, "prcomp" )) {
-    scale_unit <- X$scale
-    if(is.numeric(scale_unit)) scale_unit = TRUE
-  }
-  else if(inherits(X, "princomp")){
-    scale_unit <- X$scale
-    if(length(unique(scale_unit))>1) scale_unit <- TRUE
-    else scale_unit = FALSE
-  }
-  else if(inherits(X, 'pca') & inherits(X, 'dudi')){
-    scale_unit <- X$norm
-    if(length(unique(scale_unit))>1) scale_unit <- TRUE
-    else scale_unit = FALSE
-  }
+  else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale) 
+  else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1 
+  else if(inherits(X, 'pca') & inherits(X, 'dudi')) scale_unit <- length(unique(X$norm))>1 
   else stop("Error in .get_scale_unit function : can't handle an object of class ",
             class(X))
-  
   scale_unit
 }
 
