@@ -80,7 +80,7 @@
 #'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
 #'   individuals/variables with the highest contrib are drawn }
 #' @inheritParams ggpubr::ggpar
-#' @param ... Arguments to be passed to the function fviz_pca_biplot().
+#' @param ... Arguments to be passed to the functions fviz_pca_biplot() and ggpubr::ggscatter().
 #'   
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}

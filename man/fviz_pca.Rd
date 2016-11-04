@@ -40,7 +40,7 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
 dudi and pca [ade4].}
 
-\item{...}{Arguments to be passed to the function fviz_pca_biplot().}
+\item{...}{Arguments to be passed to the functions fviz_pca_biplot() and ggpubr::ggscatter().}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
 plotted.}
