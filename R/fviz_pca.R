@@ -204,15 +204,14 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   extra_args <- list(...)
   if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
   
+  .check_axes(axes, .length = 2)
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
-  if(length(axes) != 2) stop("axes should be of length 2")
   
   # Data frame to be used for plotting
-  ind <- facto_summarize(X, element = "ind", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
+  ind <- facto_summarize(X, element = "ind", axes = axes,
+                         result = c("coord", "contrib", "cos2"))
   colnames(ind)[2:3] <-  c("x", "y")
-  
   # Selection
   ind.all <- ind
   if(!is.null(select.ind)) ind <- .select(ind, select.ind)
@@ -271,21 +270,17 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   
   # Add supplementary quantitative individuals
-  # Available only in FactoMineR
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  # Available only for FactoMineR
   if(inherits(X, 'PCA') & !hide$ind.sup){
-    ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
-                         select = select.ind)
-    if(!is.null(ind_sup)){
-      colnames(ind_sup)[2:3] <-  c("x", "y")
-      p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.ind.sup, shape = 19, pointsize = pointsize,
+    p <- .add_supp (p, X, element = "ind.sup", axes = axes, select = select.ind,
+                    geom = geom, color = col.ind.sup, shape = 19, pointsize = pointsize,
                     labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom),
-                    repel = repel)
-    }  
+                    repel = repel
+                    )
   }
   
   p <- .fviz_finish(p, X, axes, axes.linetype) 
-  
   p
 }
 
@@ -305,8 +300,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   extra_args <- list(...)
   if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
   
-  if(length(axes) != 2) stop("axes should be of length 2")
-  
+  .check_axes(axes, .length = 2)
   scale.unit <- .get_scale_unit(X)
   
   # data frame to be used for plotting
@@ -317,6 +311,15 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   # Selection
   var.all <- var
   if(!is.null(select.var)) var <- .select(var, select.var)
+  
+  # Multiple the data by scale. before plotting
+  # Used by fviz_pca_biplot
+  scale. <- 1
+  if(!is.null(extra_args$scale.)) {
+    scale. <- extra_args$scale.
+    scale.unit <- FALSE
+  }
+  var[, c("x", "y")] <- var[, c("x", "y")]*scale.
   
   # elements to be labelled or hidden
   lab <- .label(label)
@@ -338,32 +341,21 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                  font.label = labelsize*3, repel = repel,
                  ggtheme = ggtheme, main = title, ...)
   # Draw arrows
-  if("arrow" %in% geom & !hide$var){
-    origin <- rep(0, nrow(var))
-    dd <- cbind.data.frame(var, xstart = origin, ystart = origin)
-    p <- p + ggpubr:::geom_exec(geom_segment, data = dd, 
-                                  x = "xstart", y = "ystart", xend = "x", yend = "y",
-                                  arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
-                                  color = col.var, alpha = alpha.var)
-  }
+  if("arrow" %in% geom & !hide$var) 
+    p <- p + .arrows(data = var, color = col.var, alpha = alpha.var)
   if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
-  
   # Draw correlation circle
-  if(scale.unit) p <- .add_corr_circle(p, color = col.circle, axes.linetype = axes.linetype)
+  if(scale.unit) p <- .add_corr_circle(p, color = col.circle)
   
   # Add supplementary quantitative variables
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # Available only in FactoMineR
   if(inherits(X, 'PCA') & !hide$quanti ){
-    
-    quanti_sup <- .get_supp(X, element = "quanti", axes = axes,
-                            select = select.var)
-    if(!is.null(quanti_sup)) colnames(quanti_sup)[2:3] <-  c("x", "y")
-    if(!is.null(quanti_sup)){
-      p <- fviz_add(p, df = quanti_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.quanti.sup, linetype = 2,
-                    labelsize = labelsize, addlabel = (lab$quanti), repel = repel)
-    }  
-    
+    p <- .add_supp (p, X, element = "quanti", axes = axes, select = select.var,
+                    geom = geom, color = col.quanti.sup, linetype =2,
+                    labelsize = labelsize, addlabel = (lab$quanti & "text" %in% geom),
+                    repel = repel, scale. = scale.
+    )
   }
   
   p <- .fviz_finish(p, X, axes, axes.linetype) 
@@ -384,29 +376,15 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
                   title = "Biplot of variables and individuals",
+                  ggtheme = theme_grey(),
                    ...)
 {
   
-  if(length(axes) != 2) stop("axes should be of length 2")
-  
-  scale.unit <- .get_scale_unit(X)
-  
-  # data frame to be used for plotting
+  .check_axes(axes, .length = 2)
+  # Data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
   
   pca.ind <- get_pca_ind(X)
   ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
@@ -417,35 +395,18 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
     (max(ind[,"x"])-min(ind[,"x"])/(max(var[,"x"])-min(var[,"x"]))),
     (max(ind[,"y"])-min(ind[,"y"])/(max(var[,"y"])-min(var[,"y"])))
   )
-  var[, c("x", "y")] <- var[, c("x", "y")]*r*0.7
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom, repel = repel, label = label, invisible=invisible,
           labelsize=labelsize, pointsize = pointsize, pointshape = pointshape, axes.linetype=axes.linetype,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind,  ...)
-
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
-                   col=col.var,  alpha = alpha.var, 
-                   alpha.limits = alpha.limits, 
-                   geom =  c("arrow", "text"), repel = repel,
-                   lab = lab$var, labelsize = labelsize)
-  }
-  
-  # Add supplementary quantitative variables
-  # Available only in FactoMineR
-  if(inherits(X, 'PCA') & !hide$quanti ){
-    quanti_sup <- .get_supp(X, element = "quanti", axes = axes,
-                            select = select.var)
-    if(!is.null(quanti_sup)) colnames(quanti_sup)[2:3] <-  c("x", "y")
-    if(!is.null(quanti_sup)){
-      p <- fviz_add(p, df = quanti_sup[, 2:3, drop = FALSE]*r*0.7, geom = c("arrow", "text"),
-                    color = col.quanti.sup, linetype = 2,
-                    labelsize = labelsize, addlabel = (lab$quanti), repel = repel)
-    }  
-  }
+          select.ind = select.ind, ggtheme = ggtheme, ...)
+  # Add variables
+  p <- fviz_pca_var(X, axes = axes, geom =  c("arrow", "text"), repel = repel, label = label, invisible = invisible,
+                    labelsize = labelsize, axes.linetype=axes.linetype,
+                    col.var = col.var, alpha.var = alpha.var, select.var = select.var,
+                    scale.= r*0.7, ggp = p, ggtheme = ggtheme)
   p+labs(title=title)
 }
 
@@ -470,13 +431,22 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 }
 
 # Add correlation circle to variables plot
-.add_corr_circle <- function(p, color = "grey70", axes.linetype = "dashed"){
+.add_corr_circle <- function(p, color = "grey70"){
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p + 
-    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color)+
-    geom_hline(yintercept = 0, linetype=axes.linetype)+
-    geom_vline(xintercept = 0, linetype=axes.linetype)
+    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color)
   
+}
+
+# Add arrow to the plot
+.arrows <- function(data, color = "black", alpha = 1, 
+                    origin = 0, xend = "x", yend = "y"){
+  origin <- rep(origin, nrow(data))
+  dd <- cbind.data.frame(data, xstart = origin, ystart = origin)
+  ggpubr::geom_exec(geom_segment, data = dd, 
+                     x = "xstart", y = "ystart", xend = xend, yend = yend,
+                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
+                     color = color, alpha = alpha)
 }
 

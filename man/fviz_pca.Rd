@@ -33,7 +33,8 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.quanti.sup = "blue", col.circle = "grey70", repel = FALSE,
   axes.linetype = "dashed", select.var = list(name = NULL, cos2 = NULL,
   contrib = NULL), select.ind = list(name = NULL, cos2 = NULL, contrib =
-  NULL), title = "Biplot of variables and individuals", ...)
+  NULL), title = "Biplot of variables and individuals",
+  ggtheme = theme_grey(), ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
