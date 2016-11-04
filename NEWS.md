@@ -4,6 +4,7 @@
     
 - New arguments main, xlab, ylab in `fviz_cluster()` to change the plot main title and axis labels.
 - New arguments ellipse, ellipse.type, ellipse.level and ellipse.alpha available in `fviz_cluster()`.
+- New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #15](https://github.com/kassambara/factoextra/issues/20)).
      
 ## Minor changing
    
