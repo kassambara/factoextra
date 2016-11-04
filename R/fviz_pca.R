@@ -232,14 +232,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   lab <- .label(label)
   hide <- .hide(invisible)
   
-  ind_label <- NULL
-  if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
-  
-  alpha.limits <- NULL
-  if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(ind.all[, alpha.ind])
-  
-  # qualitative variable is used to color the individuals
+  # Qualitative variable is used to color the individuals by groups
+  #%%%%%%%%%%%%%%%%%%%%%%%%%
   if(habillage[1] !="none"){
     
     # X is from FactoMineR outputs
@@ -269,6 +263,13 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   point <- ("point" %in% geom) & (!hide$ind) # to show individuals point should be TRUE
   mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide$quali) # to show mean point
   
+  ind_label <- NULL
+  if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
+  
+  alpha.limits <- NULL
+  if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
+    alpha.limits = range(ind.all[, alpha.ind])
+  
   p <- ggpubr::ggscatter(data = ind, x = "x", y = "y",
                          color = col.ind, alpha = alpha.ind, shape = pointshape, 
                          point = point, size = pointsize, mean.point = mean.point,
@@ -285,11 +286,12 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   if(inherits(X, 'PCA') & !hide$ind.sup){
     ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
                          select = select.ind)
-    if(!is.null(ind_sup)) colnames(ind_sup)[2:3] <-  c("x", "y")
     if(!is.null(ind_sup)){
+      colnames(ind_sup)[2:3] <-  c("x", "y")
       p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom))
+                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom),
+                    repel = repel)
     }  
   }
   
@@ -458,67 +460,6 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #+++++++++++++++++++++
 # Helper functions
 #+++++++++++++++++++++
-
-#+++++++++++
-# .get_ellipse() : Compute the concentration ellipse of the points
-#+++++++++++
-# x : the coordinates of points. It can be a numeric vector, matrix or data.frame
-# y : optional y coordinates of points. y is not required when x
-# is a matrix or data.frame
-# result is a data.frame containing the x and y coordinates of
-# the ellipse. Columns are x, y
-.get_ellipse <- function(x, y=NULL, ellipse.level = 0.95) {
-  if(class(x)%in% c("matrix", "data.frame")){
-    y <- x[,2]
-    x <- x[,1]
-  }
-  sigma <- var(cbind(x, y))
-  mu <- c(mean(x), mean(y))
-  t <- sqrt(qchisq(ellipse.level, df = 2))
-  theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- cbind(cos(theta), sin(theta))
-  data.frame(sweep(circle %*% chol(sigma) * t, 2, mu, FUN = '+'))
-}
-
-#+++++++++++
-# .get_ellipse() : Compute the concentration ellipse of the points by groups
-#+++++++++++
-# x : the coordinates of points. It can be a numeric vector, matrix or data.frame
-# y : optional y coordinates of points. y is not required when x is a matrix or data.frame
-# groups  : a factor variable
-
-# result is a data.frame containing the x and y coordinates of
-# the ellipse by groups. Columns are : groups, x, y
-.get_ellipse_by_groups <-function(x, y=NULL, groups, ellipse.level = 0.95){
-  
-  if(class(x)%in% c("matrix", "data.frame")){
-    y <- x[,2]
-    x <- x[,1]
-  }
-  groups <-as.factor(groups)
-  levs <- levels(groups)
-  len <- summary(groups) # number of cases per group
-  d <- data.frame(x =x, y = y, groups=groups)
-  result <- NULL
-  for(i in 1:length(levs)){
-    res <- .get_ellipse(d[which(groups==levs[i]),, drop=FALSE], ellipse.level=ellipse.level)
-    res <- cbind.data.frame(group=rep(levs[i], nrow(res)), res)
-    result <- rbind.data.frame(result,res)
-  }
-  result
-}
-
-# Return the coordinates of groups levels
-# x : coordinate of individuals on x axis
-# y : coordinate of indiviuals on y axis
-.get_coord_quali<-function(x, y, groups){
-  data.frame(
-    x= tapply(x, groups, mean),
-    y = tapply(y, groups, mean)
-  )
-}
-
-
 
 # X : an object of class PCA, princomp, prcomp, dudi
 # Return TRUE if the data are scaled to unit variance
