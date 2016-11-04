@@ -233,7 +233,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   hide <- .hide(invisible)
   
   ind_label <- NULL
-  if(lab$ind & "text" %in% geom) ind_label <- "name"
+  if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
   
   alpha.limits <- NULL
   if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
