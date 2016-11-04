@@ -242,7 +242,7 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
                          font.label = labelsize, repel = repel,
                          mean.point = show.clust.cent, 
                          ellipse = ellipse, ellipse.type = ellipse.type,
-                         ellipse.alpha = ellipse.alpha,
+                         ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
                          main = main, xlab = xlab, ylab = ylab,
                          ggtheme = ggtheme, ...
                          )
