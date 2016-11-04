@@ -22,8 +22,7 @@ fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", repel = FALSE, labelsize = 4, col.var = "black",
   alpha.var = 1, col.quanti.sup = "blue", col.circle = "grey70",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  jitter = list(what = "label", width = NULL, height = NULL),
-  title = "Variables factor map - PCA", axes.linetype = "dashed")
+  title = "Variables factor map - PCA", axes.linetype = "dashed", ...)
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -33,8 +32,7 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   col.quanti.sup = "blue", col.circle = "grey70", repel = FALSE,
   axes.linetype = "dashed", select.var = list(name = NULL, cos2 = NULL,
   contrib = NULL), select.ind = list(name = NULL, cos2 = NULL, contrib =
-  NULL), title = "Biplot of variables and individuals", jitter = list(what =
-  "label", width = NULL, height = NULL), ...)
+  NULL), title = "Biplot of variables and individuals", ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
@@ -128,13 +126,6 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 
 \item{col.circle}{a color for the correlation circle.}
-
-\item{jitter}{a parameter used to jitter the points in order to reduce 
-overplotting. It's a list containing the objects what, width and height 
-(i.e jitter = list(what, width, height)). \itemize{ \item what: the element
-to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" 
-or "b". \item width: degree of jitter in x direction \item height: degree 
-of jitter in y direction }}
 }
 \value{
 a ggplot
