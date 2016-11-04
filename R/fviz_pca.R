@@ -266,9 +266,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   
   # Plot
   #%%%%%%%%%%%%%%%%%%%
-  p <- ggplot() 
-  if(hide$ind & hide$quali) p <- ggplot()+geom_blank(data = ind, aes_string('x','y'))
-  
   point <- ("point" %in% geom) & (!hide$ind) # to show individuals point should be TRUE
   mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide$quali) # to show mean point
   
@@ -429,7 +426,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
           labelsize=labelsize, pointsize = pointsize, pointshape = pointshape, axes.linetype=axes.linetype,
           col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
           habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind, jitter = jitter, ...)
+          select.ind = select.ind,  ...)
 
   if(!hide$var){
     p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
