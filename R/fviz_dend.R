@@ -1,19 +1,25 @@
 #' Enhanced Visualization of Dendrogram
 #' 
-#' @description 
-#' Enhanced visualization of dendrogram.
-#' @param x an object of class dendrogram, hclust, agnes, diana, hcut or hkmeans.
+#' @description Enhanced visualization of dendrogram.
+#' @param x an object of class dendrogram, hclust, agnes, diana, hcut or
+#'   hkmeans.
 #' @param k the number of groups for cutting the tree.
-#' @param k_colors a vector containing colors to be used for the groups. 
-#' It should contains k number of colors. 
-#' @param show_labels a logical value. If TRUE, leaf labels are shown. Default value is TRUE.
-#' @param color_labels_by_k logical value. If TRUE, labels are colored automatically by group when k != NULL.
-#' @param label_cols a vector containing the colors for labels. 
+#' @param k_colors a vector containing colors to be used for the groups. It
+#'   should contains k number of colors.
+#' @param show_labels a logical value. If TRUE, leaf labels are shown. Default
+#'   value is TRUE.
+#' @param color_labels_by_k logical value. If TRUE, labels are colored
+#'   automatically by group when k != NULL.
+#' @param label_cols a vector containing the colors for labels.
 #' @param type type of plot. Allowed values are one of "rectangle" or "triangle"
-#' @param rect logical value specifying whether to add a rectangle around groups. Used only when k != NULL.
-#' @param rect_border,rect_lty,rect_lwd border color, line type and line width for rectangles
+#' @param rect logical value specifying whether to add a rectangle around
+#'   groups. Used only when k != NULL.
+#' @param rect_border,rect_lty,rect_lwd border color, line type and line width
+#'   for rectangles
 #' @param cex size of labels
 #' @param main,xlab,ylab main and axis titles
+#' @param sub Plot subtitle. If NULL, the method used hierarchical clustering is
+#'   shown. To remove the subtitle use sub = "".
 #' @param ... other arguments to be passed to the function plot.dendrogram()
 #' @examples 
 #' \donttest{
@@ -59,20 +65,31 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
                       label_cols = NULL,
                       type = c("rectangle", "triangle"),
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, 
-                      cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height", ...)
+                      cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height", 
+                      sub = NULL, ...)
 {
   
   if(inherits(x, "hcut")){
     k <- x$nbclust
     dend <- as.dendrogram(x)
+    method <- x$method
   }
   else if(inherits(x, "hkmeans")){
     k <- length(unique(x$cluster))
     dend <- as.dendrogram(x$hclust)
+    method <- x$hclust$method
   }
-  else if(inherits(x, c("hclust", "agnes", "diana"))) dend <- as.dendrogram(x)
-  else if(inherits(x, "dendrogram")) dend <- x
+  else if(inherits(x, c("hclust", "agnes", "diana"))) {
+    dend <- as.dendrogram(x)
+    method <- x$method
+  }
+  else if(inherits(x, "dendrogram")) {
+    dend <- x
+    method <- ""
+  }
   else stop("Can't handle an object of class ", paste(class(x), collapse =", ") )
+  
+  if(is.null(sub)) sub = paste0("Method: ", method)
   
   dend <- dendextend::set(dend, "labels_cex", cex) 
   if(!is.null(k)) {
@@ -87,7 +104,7 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   leaflab <- ifelse(show_labels, "perpendicular", "none")
   
   plot(dend,  type = type[1], xlab = xlab, ylab = ylab, main = main,
-       leaflab = leaflab,...)
+       leaflab = leaflab, sub = sub,...)
   if(rect & !is.null(k))
     dendextend::rect.dendrogram(dend, k=k, border = rect_border, 
                                 lty = rect_lty, lwd = rect_lwd)

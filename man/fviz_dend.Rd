@@ -8,31 +8,39 @@ fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
   color_labels_by_k = FALSE, label_cols = NULL, type = c("rectangle",
   "triangle"), rect = FALSE, rect_border = "gray", rect_lty = 2,
   rect_lwd = 1.5, cex = 0.8, main = "Cluster Dendrogram", xlab = "",
-  ylab = "Height", ...)
+  ylab = "Height", sub = NULL, ...)
 }
 \arguments{
-\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or hkmeans.}
+\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or
+hkmeans.}
 
 \item{k}{the number of groups for cutting the tree.}
 
-\item{k_colors}{a vector containing colors to be used for the groups. 
-It should contains k number of colors.}
+\item{k_colors}{a vector containing colors to be used for the groups. It
+should contains k number of colors.}
 
-\item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default value is TRUE.}
+\item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default
+value is TRUE.}
 
-\item{color_labels_by_k}{logical value. If TRUE, labels are colored automatically by group when k != NULL.}
+\item{color_labels_by_k}{logical value. If TRUE, labels are colored
+automatically by group when k != NULL.}
 
 \item{label_cols}{a vector containing the colors for labels.}
 
 \item{type}{type of plot. Allowed values are one of "rectangle" or "triangle"}
 
-\item{rect}{logical value specifying whether to add a rectangle around groups. Used only when k != NULL.}
+\item{rect}{logical value specifying whether to add a rectangle around
+groups. Used only when k != NULL.}
 
-\item{rect_border, rect_lty, rect_lwd}{border color, line type and line width for rectangles}
+\item{rect_border, rect_lty, rect_lwd}{border color, line type and line width
+for rectangles}
 
 \item{cex}{size of labels}
 
 \item{main, xlab, ylab}{main and axis titles}
+
+\item{sub}{Plot subtitle. If NULL, the method used hierarchical clustering is
+shown. To remove the subtitle use sub = "".}
 
 \item{...}{other arguments to be passed to the function plot.dendrogram()}
 }
