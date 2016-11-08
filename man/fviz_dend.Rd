@@ -7,8 +7,9 @@
 fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
   color_labels_by_k = FALSE, label_cols = NULL, type = c("rectangle",
   "triangle"), rect = FALSE, rect_border = "gray", rect_lty = 2,
-  rect_lwd = 1.5, cex = 0.8, main = "Cluster Dendrogram", xlab = "",
-  ylab = "Height", sub = NULL, ...)
+  rect_lwd = 1.5, as.ggplot = FALSE, horiz = FALSE, cex = 0.8,
+  main = "Cluster Dendrogram", xlab = "", ylab = "Height", sub = NULL,
+  ...)
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or
@@ -34,6 +35,10 @@ groups. Used only when k != NULL.}
 
 \item{rect_border, rect_lty, rect_lwd}{border color, line type and line width
 for rectangles}
+
+\item{as.ggplot}{a logical value. If TRUE, the dendrogram is plotted using ggplot2.}
+
+\item{horiz}{a logical value. If TRUE, an horizontal dendrogram is drawn.}
 
 \item{cex}{size of labels}
 

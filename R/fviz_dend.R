@@ -16,6 +16,8 @@
 #'   groups. Used only when k != NULL.
 #' @param rect_border,rect_lty,rect_lwd border color, line type and line width
 #'   for rectangles
+#' @param as.ggplot a logical value. If TRUE, the dendrogram is plotted using ggplot2.
+#' @param horiz a logical value. If TRUE, an horizontal dendrogram is drawn.
 #' @param cex size of labels
 #' @param main,xlab,ylab main and axis titles
 #' @param sub Plot subtitle. If NULL, the method used hierarchical clustering is
@@ -65,6 +67,7 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
                       label_cols = NULL,
                       type = c("rectangle", "triangle"),
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, 
+                      as.ggplot = FALSE, horiz = FALSE,
                       cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height", 
                       sub = NULL, ...)
 {
@@ -89,7 +92,7 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   }
   else stop("Can't handle an object of class ", paste(class(x), collapse =", ") )
   
-  if(is.null(sub)) sub = paste0("Method: ", method)
+  if(is.null(sub) & method!="") sub = paste0("Method: ", method)
   
   dend <- dendextend::set(dend, "labels_cex", cex) 
   if(!is.null(k)) {
@@ -103,10 +106,18 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   
   leaflab <- ifelse(show_labels, "perpendicular", "none")
   
-  plot(dend,  type = type[1], xlab = xlab, ylab = ylab, main = main,
-       leaflab = leaflab, sub = sub,...)
-  if(rect & !is.null(k))
-    dendextend::rect.dendrogram(dend, k=k, border = rect_border, 
-                                lty = rect_lty, lwd = rect_lwd)
-  
+  if(as.ggplot){
+    p <- ggplot(dendextend::as.ggdend(dend), theme = NULL, horiz = horiz)+
+      expand_limits(y=-1)+
+      labs(title = main, x = xlab, y = ylab)+
+      theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+    return(p)
+  }
+  else{
+    plot(dend,  type = type[1], xlab = xlab, ylab = ylab, main = main,
+         leaflab = leaflab, sub = sub, horiz = horiz,...)
+    if(rect & !is.null(k))
+      dendextend::rect.dendrogram(dend, k=k, border = rect_border, 
+                                  lty = rect_lty, lwd = rect_lwd)
+  }
 }
