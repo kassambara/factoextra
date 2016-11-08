@@ -2,28 +2,32 @@
 % Please edit documentation in R/fviz_dend.R
 \name{fviz_dend}
 \alias{fviz_dend}
+\alias{theme_ggdend}
 \title{Enhanced Visualization of Dendrogram}
 \usage{
 fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
   color_labels_by_k = FALSE, label_cols = NULL, lwd = 1,
   type = c("rectangle", "triangle"), rect = FALSE, rect_border = "gray",
-  rect_lty = 2, rect_lwd = 1.5, as.ggplot = FALSE, horiz = FALSE,
-  cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height",
-  sub = NULL, ...)
+  rect_lty = 2, rect_lwd = 1.5, as.ggplot = FALSE,
+  ggtheme = theme_ggdend(), horiz = FALSE, circular = FALSE, cex = 0.8,
+  main = "Cluster Dendrogram", xlab = "", ylab = "Height", sub = NULL,
+  ...)
+
+theme_ggdend()
 }
 \arguments{
-\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or
+\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or 
 hkmeans.}
 
 \item{k}{the number of groups for cutting the tree.}
 
-\item{k_colors}{a vector containing colors to be used for the groups. It
+\item{k_colors}{a vector containing colors to be used for the groups. It 
 should contains k number of colors.}
 
-\item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default
+\item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default 
 value is TRUE.}
 
-\item{color_labels_by_k}{logical value. If TRUE, labels are colored
+\item{color_labels_by_k}{logical value. If TRUE, labels are colored 
 automatically by group when k != NULL.}
 
 \item{label_cols}{a vector containing the colors for labels.}
@@ -32,15 +36,23 @@ automatically by group when k != NULL.}
 
 \item{type}{type of plot. Allowed values are one of "rectangle" or "triangle"}
 
-\item{rect}{logical value specifying whether to add a rectangle around
+\item{rect}{logical value specifying whether to add a rectangle around 
 groups. Used only when k != NULL.}
 
-\item{rect_border, rect_lty, rect_lwd}{border color, line type and line width
+\item{rect_border, rect_lty, rect_lwd}{border color, line type and line width 
 for rectangles}
 
-\item{as.ggplot}{a logical value. If TRUE, the dendrogram is plotted using ggplot2.}
+\item{as.ggplot}{a logical value. If TRUE, the dendrogram is plotted using 
+ggplot2.}
+
+\item{ggtheme}{function, ggplot2 theme name. Ignored when as.ggplot = FALSE.
+Default value is theme_ggdend(). Allowed values include ggplot2 official
+themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(),
+theme_void(), ....}
 
 \item{horiz}{a logical value. If TRUE, an horizontal dendrogram is drawn.}
+
+\item{circular}{a logical value. If TRUE, draws a circular dendogram.}
 
 \item{cex}{size of labels}
 
@@ -54,6 +66,10 @@ shown. To remove the subtitle use sub = "".}
 \description{
 Enhanced visualization of dendrogram.
 }
+\section{Functions}{
+\itemize{
+\item \code{theme_ggdend}: default theme used for dendrogram plotted with ggplot2
+}}
 \examples{
 \donttest{
 # Load and scale the data

@@ -4,6 +4,7 @@
     
 - New arguments main, xlab, ylab in `fviz_cluster()` to change the plot main title and axis labels.
 - New arguments ellipse, ellipse.type, ellipse.level and ellipse.alpha available in `fviz_cluster()`.
+- New argument as.ggplot in `fviz_cluster()` for plotting dendrogram using ggplot2.
 - New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #15](https://github.com/kassambara/factoextra/issues/20)).
 - New argument repel in `fviz_add()`.
      
@@ -11,8 +12,12 @@
    
 - Check point added in the function `fviz_nbcluster` to make sure that x is an object of class data.frame or matrix ([Jakub Nowosad, #15](https://github.com/kassambara/factoextra/issues/15)).
 - The following arguments are deprecated in `fviz_cluster`(): title, frame, frame.type, frame.level, frame.alpha. Now, use main, ellipse, ellipse.type, ellipse.level and ellipse.alpha instead.
-- Now, by default, the function `fviz_cluster`() doesn't show cluster mean points for an object of class PAM and CLARA, when the argument show.clust.cent is missing . This is because cluster centers are medoids in the case of PAM and CLARA but not means. However, user can force the function to display the mean points by using the argument show.clust.cent = TRUE.
+  
+- Now, by default, the function `fviz_cluster`() doesn't show cluster mean points for an object of class PAM and CLARA, when the argument show.clust.cent is missing . This is because cluster centers are medoids in the case of PAM and CLARA but not means. However, user can force the function to display the mean points by using the argument show.clust.cent = TRUE.  
+   
 - The argument jitter is deprecated; use repel = TRUE instead, to avoid overlapping of labels.
+  
+- New argument "sub" in `fviz_dend()` for adding a subtitle to the dendrogram. If NULL, the method used hierarchical clustering is shown. To remove the subtitle use sub = "".
 
    
 ## Bug fixes
