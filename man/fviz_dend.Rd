@@ -2,18 +2,15 @@
 % Please edit documentation in R/fviz_dend.R
 \name{fviz_dend}
 \alias{fviz_dend}
-\alias{theme_ggdend}
 \title{Enhanced Visualization of Dendrogram}
 \usage{
 fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
-  color_labels_by_k = FALSE, label_cols = NULL, lwd = 1,
-  type = c("rectangle", "triangle"), rect = FALSE, rect_border = "gray",
-  rect_lty = 2, rect_lwd = 1.5, as.ggplot = FALSE,
-  ggtheme = theme_ggdend(), horiz = FALSE, circular = FALSE, cex = 0.8,
+  color_labels_by_k = TRUE, label_cols = NULL, labels_track_height = 1,
+  lwd = 1, type = c("rectangle", "triangle"), rect = FALSE,
+  rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, as.ggplot = FALSE,
+  ggtheme = theme_classic(), horiz = FALSE, circular = FALSE, cex = 0.8,
   main = "Cluster Dendrogram", xlab = "", ylab = "Height", sub = NULL,
   ...)
-
-theme_ggdend()
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or 
@@ -22,7 +19,11 @@ hkmeans.}
 \item{k}{the number of groups for cutting the tree.}
 
 \item{k_colors}{a vector containing colors to be used for the groups. It 
-should contains k number of colors.}
+should contains k number of colors. If as.ggplot = TRUE, Allowed values 
+include also "grey" for grey color palettes; brewer palettes e.g. "RdBu", 
+"Blues", ...;  and scientific journal palettes from ggsci R package, e.g.: 
+"npg", "aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and 
+"rickandmorty".}
 
 \item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default 
 value is TRUE.}
@@ -31,6 +32,9 @@ value is TRUE.}
 automatically by group when k != NULL.}
 
 \item{label_cols}{a vector containing the colors for labels.}
+
+\item{labels_track_height}{a numeric value for adjusting the room for the
+labels. Ignored when as.ggplot = FALSE.}
 
 \item{lwd}{a numeric value specifying branches line width.}
 
@@ -45,9 +49,9 @@ for rectangles}
 \item{as.ggplot}{a logical value. If TRUE, the dendrogram is plotted using 
 ggplot2.}
 
-\item{ggtheme}{function, ggplot2 theme name. Ignored when as.ggplot = FALSE.
-Default value is theme_ggdend(). Allowed values include ggplot2 official
-themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(),
+\item{ggtheme}{function, ggplot2 theme name. Ignored when as.ggplot = FALSE. 
+Default value is theme_classic(). Allowed values include ggplot2 official 
+themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(), 
 theme_void(), ....}
 
 \item{horiz}{a logical value. If TRUE, an horizontal dendrogram is drawn.}
@@ -64,12 +68,9 @@ shown. To remove the subtitle use sub = "".}
 \item{...}{other arguments to be passed to the function plot.dendrogram()}
 }
 \description{
-Enhanced visualization of dendrogram.
+Draws easily beautiful dendrogram using either R base plot or 
+  ggplot2. Provides also an option for drawing a circular dendrogram.
 }
-\section{Functions}{
-\itemize{
-\item \code{theme_ggdend}: default theme used for dendrogram plotted with ggplot2
-}}
 \examples{
 \donttest{
 # Load and scale the data

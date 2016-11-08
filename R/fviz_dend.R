@@ -1,16 +1,23 @@
 #' Enhanced Visualization of Dendrogram
 #' 
-#' @description Enhanced visualization of dendrogram.
+#' @description Draws easily beautiful dendrogram using either R base plot or 
+#'   ggplot2. Provides also an option for drawing a circular dendrogram.
 #' @param x an object of class dendrogram, hclust, agnes, diana, hcut or 
 #'   hkmeans.
 #' @param k the number of groups for cutting the tree.
 #' @param k_colors a vector containing colors to be used for the groups. It 
-#'   should contains k number of colors.
+#'   should contains k number of colors. If as.ggplot = TRUE, Allowed values 
+#'   include also "grey" for grey color palettes; brewer palettes e.g. "RdBu", 
+#'   "Blues", ...;  and scientific journal palettes from ggsci R package, e.g.: 
+#'   "npg", "aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and 
+#'   "rickandmorty".
 #' @param show_labels a logical value. If TRUE, leaf labels are shown. Default 
 #'   value is TRUE.
 #' @param color_labels_by_k logical value. If TRUE, labels are colored 
 #'   automatically by group when k != NULL.
 #' @param label_cols a vector containing the colors for labels.
+#' @param labels_track_height a numeric value for adjusting the room for the
+#'   labels. Ignored when as.ggplot = FALSE.
 #' @param lwd a numeric value specifying branches line width.
 #' @param type type of plot. Allowed values are one of "rectangle" or "triangle"
 #' @param rect logical value specifying whether to add a rectangle around 
@@ -25,9 +32,9 @@
 #' @param main,xlab,ylab main and axis titles
 #' @param sub Plot subtitle. If NULL, the method used hierarchical clustering is
 #'   shown. To remove the subtitle use sub = "".
-#' @param ggtheme function, ggplot2 theme name. Ignored when as.ggplot = FALSE.
-#'   Default value is theme_ggdend(). Allowed values include ggplot2 official
-#'   themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(),
+#' @param ggtheme function, ggplot2 theme name. Ignored when as.ggplot = FALSE. 
+#'   Default value is theme_classic(). Allowed values include ggplot2 official 
+#'   themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(), 
 #'   theme_void(), ....
 #' @param ... other arguments to be passed to the function plot.dendrogram()
 #' @examples 
@@ -70,14 +77,18 @@
 #' 
 #' }
 #' @export
-fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_labels_by_k = FALSE,
-                      label_cols = NULL, lwd = 1,
+fviz_dend <- function(x, k = NULL, k_colors = NULL,  show_labels = TRUE, color_labels_by_k = TRUE,
+                      label_cols = NULL,  labels_track_height = 1, lwd = 1,
                       type = c("rectangle", "triangle"),
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, 
-                      as.ggplot = FALSE, ggtheme = theme_ggdend(), horiz = FALSE, circular = FALSE,
+                      as.ggplot = FALSE, ggtheme = theme_classic(), horiz = FALSE, circular = FALSE,
                       cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height", 
                       sub = NULL, ...)
 {
+  
+  if(.is_col_palette(k_colors)) palette <- k_colors
+  else palette <- NULL
+  if(!color_labels_by_k & is.null(label_cols)) label_cols <- "black"
   
   if(inherits(x, "hcut")){
     k <- x$nbclust
@@ -98,34 +109,34 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
     method <- ""
   }
   else stop("Can't handle an object of class ", paste(class(x), collapse =", ") )
-  
   if(is.null(sub) & method!="") sub = paste0("Method: ", method)
+  if(as.ggplot |circular) lwd <- lwd/1.5
   
   dend <- dendextend::set(dend, "labels_cex", cex) 
   dend <- dendextend::set(dend, "branches_lwd", lwd) 
   
   if(!is.null(k)) {
-    if(is.null(k_colors)) k_colors <- grDevices::rainbow(k)
+    if(is.null(k_colors) | .is_col_palette(k_colors)) k_colors <- grDevices::rainbow(k)
     dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = k_colors)
     if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = k_colors)
   }
+  
   if(!is.null(label_cols)){
     dend <- dendextend::set(dend, "labels_col", label_cols) 
   }
   
   leaflab <- ifelse(show_labels, "perpendicular", "none")
   
-  if(as.ggplot & !circular){
-    p <- .ggplot_dend(dend, type = "rectangle", offset_labels = -0.1, ggtheme = ggtheme, horiz = horiz)+
-      expand_limits(y=-1)+
-      labs(title = main, x = xlab, y = ylab)
-    if(horiz) p <- p + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
-    else p <- p + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
-    return(p)
+  if(as.ggplot){
+    if(xlab =="") xlab <- NULL
+    if(ylab=="") ylab <- NULL
   }
-  else if(circular){
-    p <- .ggplot_dend(dend, type = "rectangle", offset_labels = -0.1,
-                      circular = circular, ggtheme = ggtheme)
+  
+  if(as.ggplot | circular){
+    p <- .ggplot_dend(dend, type = "rectangle", offset_labels = -0.1, nodes = FALSE,
+                      ggtheme = ggtheme, horiz = horiz, circular = circular, palette = palette,
+                      label_cols = label_cols, labels_track_height = labels_track_height, ...)
+    if(!circular) p <- p + labs(title = main, x = xlab, y = ylab)
     return(p)
   }
   else{
@@ -137,23 +148,15 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   }
 }
 
-#' @export
-#' @describeIn fviz_dend default theme used for dendrogram plotted with ggplot2
-theme_ggdend <- function() {
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), 
-        panel.background = element_blank(), axis.title.x = element_text(colour = NA), 
-        axis.title.y = element_blank(), axis.text.x = element_blank(), 
-        axis.text.y = element_blank(), axis.line = element_blank(), 
-        axis.ticks = element_blank())
-}
-
 
 # Helper functions
 #%%%%%%%%%%%%%%%%%%%%
+# .ggplot_dend derrived from dendextend::ggplot.ggdend
 # data: a ggdend class object.
 .ggplot_dend <- function (dend, segments = TRUE, labels = TRUE, nodes = TRUE, 
                         horiz = FALSE, ggtheme = theme_ggdend(), 
                         offset_labels = 0, circular = FALSE, type = "rectangle",
+                        palette = NULL, label_cols = NULL, labels_track_height = 1,
                         ...) {
   
   gdend <- dendextend::as.ggdend(dend, type = type)
@@ -172,6 +175,12 @@ theme_ggdend <- function() {
   }
   
   data <- dendextend::prepare.ggdend(gdend)
+  # To avoid overlaping of labels at coord_polar start
+  if(circular) {
+    n_rows <- nrow(data$labels)
+    data$labels$x[1] <- 0.7
+    data$labels$vjust[1] <- 1.7
+  }
 
   
   p <- ggplot()
@@ -179,8 +188,9 @@ theme_ggdend <- function() {
     p <- p + geom_segment(data = data$segments,
       aes_string(x = "x", y = "y", xend = "xend", yend = "yend", 
                  colour = "col", linetype = "lty", size = "lwd"), lineend = "square") +
-      guides(linetype = FALSE, col = FALSE) + scale_colour_identity() + 
+      guides(linetype = FALSE, col = FALSE) + #scale_colour_identity() + 
       scale_size_identity() + scale_linetype_identity()
+    if(is.null(palette)) p <- p + scale_colour_identity()
   }
   if (nodes) {
     p <- p + geom_point(data = data$nodes, 
@@ -191,14 +201,18 @@ theme_ggdend <- function() {
   if (labels) {
     data$labels$cex <- 5 * data$labels$cex
     data$labels$y <- data$labels$y + offset_labels
-      p <- p + geom_text(data = data$labels, 
-                         aes_string(x = "x", y = "y", label = "label", colour = "col",
-                                    size = "cex", angle = "angle", hjust = "hjust", vjust = "vjust"))#edited
+    if(is.null(label_cols)) label_cols <- "col"
+    p <- p + ggpubr::geom_exec(geom_text, data = data$labels,
+                               x = "x", y = "y", label = "label", color = label_cols, size = "cex",
+                                angle = "angle", hjust = "hjust", vjust = "vjust")
   }
-  if (horiz) {
-    p <- p + coord_flip() + scale_y_reverse(expand = c(0.2, 0))
+  p <- ggpubr::ggpar(p, ggtheme = ggtheme, palette = palette, ...) + theme(axis.line = element_blank())
+  if (horiz & !circular) {
+    p <- p + coord_flip() + scale_y_reverse()+
+      theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+            axis.text.x = element_text())
   }
-  p <- p + ggtheme
+  else p <- p + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
   
   if(circular){
     p <- p + theme(plot.margin = margin(0, 0, 0, 0),
@@ -208,6 +222,9 @@ theme_ggdend <- function() {
                   ylim(max(dendextend::get_branches_heights(dend)), -1)+
                   coord_polar(theta = 'x', direction = 1)
     
+  }
+  else{
+    p <- p + expand_limits(y=-labels_track_height)
   }
   
   p
@@ -231,5 +248,25 @@ theme_ggdend <- function() {
   return(list(angle = angle, hjust = hjust))
 }
 
+
+.is_col_palette <- function(palette){
+  brewerpal <- c(
+    # sequential
+    'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges',
+    'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 'Purples', 'RdPu', 'Reds',
+    'YlGn', 'YlGnBu YlOrBr', 'YlOrRd',
+    #Divergent
+    'BrBG', 'PiYG', 'PRGn', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral',
+    # Qualitative
+    'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3'
+  )
+  # Scientific Journal and Sci-Fi Themed Color Palettes for ggplot2
+  # ggsci package: https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html
+  ggscipal <- c("npg", "aaas", "lancet", "jco",
+                "ucscgb", "uchicago", "simpsons", "rickandmorty")
+  
+  if(is.null(palette)) return(FALSE)
+  else return(length(palette)==1 & palette[1] %in% c(brewerpal, ggscipal))
+}
 
 
