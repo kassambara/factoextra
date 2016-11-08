@@ -96,8 +96,9 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   set.seed(123)
   if(k.max < 2) stop("k.max must bet > = 2")
   method = match.arg(method)
-  if(!inherits(x, c("data.frame", "matrix")))
-    stop("x should be an object of class matrix or data.frame.")
+  if(!inherits(x, c("data.frame", "matrix")) & !("Best.nc" %in% names(x)))
+    stop("x should be an object of class matrix/data.frame or ",
+         "an object created by the function NbClust() [NbClust package].")
   
   # x is an object created by the function NbClust() [NbClust package]
   if(inherits(x, "list") & "Best.nc" %in% names(x)){
