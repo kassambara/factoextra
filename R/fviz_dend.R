@@ -11,6 +11,7 @@
 #' @param color_labels_by_k logical value. If TRUE, labels are colored
 #'   automatically by group when k != NULL.
 #' @param label_cols a vector containing the colors for labels.
+#' @param lwd a numeric value specifying branches line width.
 #' @param type type of plot. Allowed values are one of "rectangle" or "triangle"
 #' @param rect logical value specifying whether to add a rectangle around
 #'   groups. Used only when k != NULL.
@@ -64,7 +65,7 @@
 #' }
 #' @export
 fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_labels_by_k = FALSE,
-                      label_cols = NULL,
+                      label_cols = NULL, lwd = 1,
                       type = c("rectangle", "triangle"),
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, 
                       as.ggplot = FALSE, horiz = FALSE,
@@ -95,6 +96,8 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   if(is.null(sub) & method!="") sub = paste0("Method: ", method)
   
   dend <- dendextend::set(dend, "labels_cex", cex) 
+  dend <- dendextend::set(dend, "branches_lwd", lwd) 
+  
   if(!is.null(k)) {
     if(is.null(k_colors)) k_colors <- grDevices::rainbow(k)
     dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = k_colors)
@@ -107,10 +110,12 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL, show_labels = TRUE, color_la
   leaflab <- ifelse(show_labels, "perpendicular", "none")
   
   if(as.ggplot){
-    p <- ggplot(dendextend::as.ggdend(dend), theme = NULL, horiz = horiz)+
+    dend_dd <- dendextend::as.ggdend(dend, type = "rectangle")
+    p <- dendextend:::ggplot.ggdend(dend_dd, theme = NULL, horiz = horiz, offset_labels = -0.1)+
       expand_limits(y=-1)+
-      labs(title = main, x = xlab, y = ylab)+
-      theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+      labs(title = main, x = xlab, y = ylab)
+    if(horiz) p <- p + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+    else p <- p + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
     return(p)
   }
   else{

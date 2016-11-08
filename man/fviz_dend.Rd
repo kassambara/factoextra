@@ -5,11 +5,11 @@
 \title{Enhanced Visualization of Dendrogram}
 \usage{
 fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
-  color_labels_by_k = FALSE, label_cols = NULL, type = c("rectangle",
-  "triangle"), rect = FALSE, rect_border = "gray", rect_lty = 2,
-  rect_lwd = 1.5, as.ggplot = FALSE, horiz = FALSE, cex = 0.8,
-  main = "Cluster Dendrogram", xlab = "", ylab = "Height", sub = NULL,
-  ...)
+  color_labels_by_k = FALSE, label_cols = NULL, lwd = 1,
+  type = c("rectangle", "triangle"), rect = FALSE, rect_border = "gray",
+  rect_lty = 2, rect_lwd = 1.5, as.ggplot = FALSE, horiz = FALSE,
+  cex = 0.8, main = "Cluster Dendrogram", xlab = "", ylab = "Height",
+  sub = NULL, ...)
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or
@@ -27,6 +27,8 @@ value is TRUE.}
 automatically by group when k != NULL.}
 
 \item{label_cols}{a vector containing the colors for labels.}
+
+\item{lwd}{a numeric value specifying branches line width.}
 
 \item{type}{type of plot. Allowed values are one of "rectangle" or "triangle"}
 
