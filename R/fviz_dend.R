@@ -7,11 +7,10 @@
 #'   hkmeans.
 #' @param k the number of groups for cutting the tree.
 #' @param k_colors a vector containing colors to be used for the groups. It 
-#'   should contains k number of colors. If as.ggplot = TRUE or type = 
-#'   "phylogenic", Allowed values include also "grey" for grey color palettes; 
-#'   brewer palettes e.g. "RdBu", "Blues", ...;  and scientific journal palettes
-#'   from ggsci R package, e.g.: "npg", "aaas", "lancet", "jco", "ucscgb", 
-#'   "uchicago", "simpsons" and "rickandmorty".
+#'   should contains k number of colors. Allowed values include also "grey" for
+#'   grey color palettes; brewer palettes e.g. "RdBu", "Blues", ...;  and
+#'   scientific journal palettes from ggsci R package, e.g.: "npg", "aaas",
+#'   "lancet", "jco", "ucscgb", "uchicago", "simpsons" and "rickandmorty".
 #' @param show_labels a logical value. If TRUE, leaf labels are shown. Default 
 #'   value is TRUE.
 #' @param color_labels_by_k logical value. If TRUE, labels are colored 
@@ -40,8 +39,9 @@
 #'   themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(), 
 #'   theme_void(), ....
 #' @param ... other arguments to be passed to the function plot.dendrogram()
-#' @return an object of class fviz_dend with the attributes "dendrogram"
-#'   accessible using attr(x, "dendrogram"), where x is the result of fviz_dend().
+#' @return an object of class fviz_dend with the attributes "dendrogram" 
+#'   accessible using attr(x, "dendrogram"), where x is the result of
+#'   fviz_dend().
 #' @examples 
 #' \donttest{
 #' # Load and scale the data
