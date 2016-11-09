@@ -19,11 +19,11 @@ hkmeans.}
 \item{k}{the number of groups for cutting the tree.}
 
 \item{k_colors}{a vector containing colors to be used for the groups. It 
-should contains k number of colors. If as.ggplot = TRUE or type = "phylogenic", Allowed values 
-include also "grey" for grey color palettes; brewer palettes e.g. "RdBu", 
-"Blues", ...;  and scientific journal palettes from ggsci R package, e.g.: 
-"npg", "aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and 
-"rickandmorty".}
+should contains k number of colors. If as.ggplot = TRUE or type = 
+"phylogenic", Allowed values include also "grey" for grey color palettes; 
+brewer palettes e.g. "RdBu", "Blues", ...;  and scientific journal palettes
+from ggsci R package, e.g.: "npg", "aaas", "lancet", "jco", "ucscgb", 
+"uchicago", "simpsons" and "rickandmorty".}
 
 \item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default 
 value is TRUE.}
@@ -33,14 +33,16 @@ automatically by group when k != NULL.}
 
 \item{label_cols}{a vector containing the colors for labels.}
 
-\item{labels_track_height}{a numeric value for adjusting the room for the
+\item{labels_track_height}{a numeric value for adjusting the room for the 
 labels. Ignored when as.ggplot = FALSE.}
 
-\item{repel}{logical value. Use repel = TRUE to avoid label overplotting when type = "phylogenic".}
+\item{repel}{logical value. Use repel = TRUE to avoid label overplotting when
+type = "phylogenic".}
 
 \item{lwd}{a numeric value specifying branches line width.}
 
-\item{type}{type of plot. Allowed values are one of "rectangle", "triangle", "circular", "phylogenic".}
+\item{type}{type of plot. Allowed values are one of "rectangle", "triangle", 
+"circular", "phylogenic".}
 
 \item{rect}{logical value specifying whether to add a rectangle around 
 groups. Used only when k != NULL.}
@@ -67,9 +69,14 @@ shown. To remove the subtitle use sub = "".}
 
 \item{...}{other arguments to be passed to the function plot.dendrogram()}
 }
+\value{
+an object of class fviz_dend with the attributes "dendrogram"
+  accessible using attr(x, "dendrogram"), where x is the result of fviz_dend().
+}
 \description{
 Draws easily beautiful dendrograms using either R base plot or 
-  ggplot2. Provides also an option for drawing a circular dendrogram and phylogenic trees.
+  ggplot2. Provides also an option for drawing a circular dendrogram and 
+  phylogenic trees.
 }
 \examples{
 \donttest{

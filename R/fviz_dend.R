@@ -1,26 +1,29 @@
 #' Enhanced Visualization of Dendrogram
 #' 
 #' @description Draws easily beautiful dendrograms using either R base plot or 
-#'   ggplot2. Provides also an option for drawing a circular dendrogram and phylogenic trees.
+#'   ggplot2. Provides also an option for drawing a circular dendrogram and 
+#'   phylogenic trees.
 #' @param x an object of class dendrogram, hclust, agnes, diana, hcut or 
 #'   hkmeans.
 #' @param k the number of groups for cutting the tree.
 #' @param k_colors a vector containing colors to be used for the groups. It 
-#'   should contains k number of colors. If as.ggplot = TRUE or type = "phylogenic", Allowed values 
-#'   include also "grey" for grey color palettes; brewer palettes e.g. "RdBu", 
-#'   "Blues", ...;  and scientific journal palettes from ggsci R package, e.g.: 
-#'   "npg", "aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and 
-#'   "rickandmorty".
+#'   should contains k number of colors. If as.ggplot = TRUE or type = 
+#'   "phylogenic", Allowed values include also "grey" for grey color palettes; 
+#'   brewer palettes e.g. "RdBu", "Blues", ...;  and scientific journal palettes
+#'   from ggsci R package, e.g.: "npg", "aaas", "lancet", "jco", "ucscgb", 
+#'   "uchicago", "simpsons" and "rickandmorty".
 #' @param show_labels a logical value. If TRUE, leaf labels are shown. Default 
 #'   value is TRUE.
 #' @param color_labels_by_k logical value. If TRUE, labels are colored 
 #'   automatically by group when k != NULL.
 #' @param label_cols a vector containing the colors for labels.
-#' @param labels_track_height a numeric value for adjusting the room for the
+#' @param labels_track_height a numeric value for adjusting the room for the 
 #'   labels. Ignored when as.ggplot = FALSE.
-#' @param repel logical value. Use repel = TRUE to avoid label overplotting when type = "phylogenic".
+#' @param repel logical value. Use repel = TRUE to avoid label overplotting when
+#'   type = "phylogenic".
 #' @param lwd a numeric value specifying branches line width.
-#' @param type type of plot. Allowed values are one of "rectangle", "triangle", "circular", "phylogenic".
+#' @param type type of plot. Allowed values are one of "rectangle", "triangle", 
+#'   "circular", "phylogenic".
 #' @param rect logical value specifying whether to add a rectangle around 
 #'   groups. Used only when k != NULL.
 #' @param rect_border,rect_lty,rect_lwd border color, line type and line width 
@@ -37,6 +40,8 @@
 #'   themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(), 
 #'   theme_void(), ....
 #' @param ... other arguments to be passed to the function plot.dendrogram()
+#' @return an object of class fviz_dend with the attributes "dendrogram"
+#'   accessible using attr(x, "dendrogram"), where x is the result of fviz_dend().
 #' @examples 
 #' \donttest{
 #' # Load and scale the data
@@ -86,8 +91,9 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL,  show_labels = TRUE, color_l
                       sub = NULL, ...)
 {
   
-  if(.is_col_palette(k_colors)) palette <- k_colors
-  else palette <- NULL
+#  if(.is_col_palette(k_colors)) palette <- k_colors
+ # else palette <- NULL
+  palette <- NULL
   if(!color_labels_by_k & is.null(label_cols)) label_cols <- "black"
   type <- match.arg(type)
   circular <- type == "circular"
@@ -123,7 +129,8 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL,  show_labels = TRUE, color_l
   dend <- dendextend::set(dend, "branches_lwd", lwd) 
   
   if(!is.null(k)) {
-    if(is.null(k_colors) | .is_col_palette(k_colors)) k_colors <- grDevices::rainbow(k)
+    if(ggpubr:::.is_col_palette(k_colors)) k_colors <- ggpubr:::.get_pal(k_colors, k = k)
+    else if(is.null(k_colors)) k_colors <- grDevices::rainbow(k)
     dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = k_colors)
     if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = k_colors)
   }
@@ -139,16 +146,16 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL,  show_labels = TRUE, color_l
     if(ylab=="") ylab <- NULL
   }
   
+  p <- 1
   if(as.ggplot | circular){
     p <- .ggplot_dend(dend, type = "rectangle", offset_labels = -0.1, nodes = FALSE,
                       ggtheme = ggtheme, horiz = horiz, circular = circular, palette = palette,
                       labels = show_labels, label_cols = label_cols, 
                       labels_track_height = labels_track_height, ...)
     if(!circular) p <- p + labs(title = main, x = xlab, y = ylab)
-    return(p)
   }
   else if(phylogenic){
-    .phylogenic_tree(dend, labels = show_labels, label_cols = label_cols,
+    p <- .phylogenic_tree(dend, labels = show_labels, label_cols = label_cols,
                                  palette = palette, repel = repel,
                                  ggtheme = ggtheme, ...)
   }
@@ -159,6 +166,10 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL,  show_labels = TRUE, color_l
       dendextend::rect.dendrogram(dend, k=k, border = rect_border, 
                                   lty = rect_lty, lwd = rect_lwd)
   }
+  attr(p, "dendrogram") <- dend
+  structure(p, class = c(class(p), "fviz_dend"))
+  if(as.ggplot | circular | phylogenic) return(p)
+  else invisible(p)
 }
 
 
@@ -331,28 +342,6 @@ fviz_dend <- function(x, k = NULL, k_colors = NULL,  show_labels = TRUE, color_l
   hjust[(halfn+1):nn] <- 1
   
   return(list(angle = angle, hjust = hjust))
-}
-
-
-# Check if color palette
-.is_col_palette <- function(palette){
-  brewerpal <- c(
-    # sequential
-    'Blues', 'BuGn', 'BuPu', 'GnBu', 'Greens', 'Greys', 'Oranges',
-    'OrRd', 'PuBu', 'PuBuGn', 'PuRd', 'Purples', 'RdPu', 'Reds',
-    'YlGn', 'YlGnBu YlOrBr', 'YlOrRd',
-    #Divergent
-    'BrBG', 'PiYG', 'PRGn', 'PuOr', 'RdBu', 'RdGy', 'RdYlBu', 'RdYlGn', 'Spectral',
-    # Qualitative
-    'Accent', 'Dark2', 'Paired', 'Pastel1', 'Pastel2', 'Set1', 'Set2', 'Set3'
-  )
-  # Scientific Journal and Sci-Fi Themed Color Palettes for ggplot2
-  # ggsci package: https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html
-  ggscipal <- c("npg", "aaas", "lancet", "jco",
-                "ucscgb", "uchicago", "simpsons", "rickandmorty")
-  
-  if(is.null(palette)) return(FALSE)
-  else return(length(palette)==1 & palette[1] %in% c(brewerpal, ggscipal))
 }
 
 
