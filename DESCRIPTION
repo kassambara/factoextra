@@ -22,6 +22,7 @@ Depends:
 Imports:
     cluster,
     dendextend,
+    ggpubr,
     grid,
     stats,
     reshape2,
@@ -31,7 +32,6 @@ Suggests:
     ade4,
     ca,
     FactoMineR,
-    ggpubr,
     igraph,
     MASS,
     knitr
