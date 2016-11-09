@@ -6,11 +6,11 @@
 \usage{
 fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
   color_labels_by_k = TRUE, label_cols = NULL, labels_track_height = 1,
-  lwd = 1, type = c("rectangle", "triangle"), rect = FALSE,
-  rect_border = "gray", rect_lty = 2, rect_lwd = 1.5, as.ggplot = FALSE,
-  ggtheme = theme_classic(), horiz = FALSE, circular = FALSE, cex = 0.8,
-  main = "Cluster Dendrogram", xlab = "", ylab = "Height", sub = NULL,
-  ...)
+  repel = FALSE, lwd = 1, type = c("rectangle", "triangle", "circular",
+  "phylogenic"), rect = FALSE, rect_border = "gray", rect_lty = 2,
+  rect_lwd = 1.5, as.ggplot = FALSE, ggtheme = theme_classic(),
+  horiz = FALSE, cex = 0.8, main = "Cluster Dendrogram", xlab = "",
+  ylab = "Height", sub = NULL, ...)
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or 
@@ -19,7 +19,7 @@ hkmeans.}
 \item{k}{the number of groups for cutting the tree.}
 
 \item{k_colors}{a vector containing colors to be used for the groups. It 
-should contains k number of colors. If as.ggplot = TRUE, Allowed values 
+should contains k number of colors. If as.ggplot = TRUE or type = "phylogenic", Allowed values 
 include also "grey" for grey color palettes; brewer palettes e.g. "RdBu", 
 "Blues", ...;  and scientific journal palettes from ggsci R package, e.g.: 
 "npg", "aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and 
@@ -36,9 +36,11 @@ automatically by group when k != NULL.}
 \item{labels_track_height}{a numeric value for adjusting the room for the
 labels. Ignored when as.ggplot = FALSE.}
 
+\item{repel}{logical value. Use repel = TRUE to avoid label overplotting when type = "phylogenic".}
+
 \item{lwd}{a numeric value specifying branches line width.}
 
-\item{type}{type of plot. Allowed values are one of "rectangle" or "triangle"}
+\item{type}{type of plot. Allowed values are one of "rectangle", "triangle", "circular", "phylogenic".}
 
 \item{rect}{logical value specifying whether to add a rectangle around 
 groups. Used only when k != NULL.}
@@ -56,8 +58,6 @@ theme_void(), ....}
 
 \item{horiz}{a logical value. If TRUE, an horizontal dendrogram is drawn.}
 
-\item{circular}{a logical value. If TRUE, draws a circular dendogram.}
-
 \item{cex}{size of labels}
 
 \item{main, xlab, ylab}{main and axis titles}
@@ -68,8 +68,8 @@ shown. To remove the subtitle use sub = "".}
 \item{...}{other arguments to be passed to the function plot.dendrogram()}
 }
 \description{
-Draws easily beautiful dendrogram using either R base plot or 
-  ggplot2. Provides also an option for drawing a circular dendrogram.
+Draws easily beautiful dendrograms using either R base plot or 
+  ggplot2. Provides also an option for drawing a circular dendrogram and phylogenic trees.
 }
 \examples{
 \donttest{

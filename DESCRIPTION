@@ -32,6 +32,7 @@ Suggests:
     ade4,
     ca,
     FactoMineR,
+    igraph,
     MASS,
     knitr
 URL: http://www.sthda.com/english/rpkgs/factoextra
