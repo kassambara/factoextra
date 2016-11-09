@@ -25,7 +25,6 @@ Imports:
     grid,
     stats,
     reshape2,
-    ggpubr,
     ggrepel,
     abind
 Suggests:
@@ -35,6 +34,7 @@ Suggests:
     igraph,
     MASS,
     knitr
+Remotes: kassambara/ggpubr
 URL: http://www.sthda.com/english/rpkgs/factoextra
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
