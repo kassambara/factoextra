@@ -11,7 +11,7 @@ fviz_nbclust(x, FUNcluster = NULL, method = c("silhouette", "wss",
   linecolor = "steelblue", print.summary = TRUE, ...)
 
 fviz_gap_stat(gap_stat, linecolor = "steelblue", maxSE = list(method =
-  "firstmax", SE.factor = 1))
+  "firstSEmax", SE.factor = 1))
 }
 \arguments{
 \item{x}{numeric matrix or data frame. In the function fviz_nbclust(), x can 
