@@ -134,12 +134,11 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
       ylab <- "Total Within Sum of Square"
       if(method == "silhouette") ylab <- "Average silhouette width"
       
-      p <- ggplot(df, aes_string( x = "clusters", y = "y", group = 1)) +
-        geom_point(color = linecolor) +
-        geom_line(color = linecolor) +
-        labs(y = ylab, x = "Number of clusters k",
-             title = "Optimal number of clusters")
-      
+      p <- ggpubr::ggline(df, x = "clusters", y = "y", group = 1,
+                          color = linecolor, ylab = ylab,
+                          xlab = "Number of clusters k",
+                          main = "Optimal number of clusters"
+                          )
       if(method == "silhouette") 
         p <- p + geom_vline(xintercept = which.max(v), linetype=2, color = linecolor)
       
@@ -147,9 +146,12 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   }
   
   else if(method == "gap_stat"){
+    extra_args <- list(...)
     gap_stat <- cluster::clusGap(x, FUNcluster, K.max = k.max,  B = nboot, 
                                  verbose = verbose, ...)
-    p <- fviz_gap_stat(gap_stat,  linecolor = linecolor, ...)
+    if(!is.null(extra_args$maxSE)) maxSE <- extra_args$maxSE
+    else maxSE <- list(method = "firstSEmax", SE.factor = 1)
+    p <- fviz_gap_stat(gap_stat,  linecolor = linecolor, maxSE = maxSE)
     return(p) 
   }
   
@@ -176,7 +178,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
 #'   
 #' @export
 fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
-                          maxSE = list(method = "firstmax", SE.factor = 1)){
+                          maxSE = list(method = "firstSEmax", SE.factor = 1)){
   if(!inherits(gap_stat, "clusGap"))
     stop("Only an object of class clusGap is allowed. (cluster package)")
   if(is.list(maxSE)){
@@ -198,10 +200,8 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
   df$clusters <- as.factor(1:nrow(df))
   df$ymin <- gap-se
   df$ymax <- gap + se
-  p <- ggplot(df, aes_string( x = "clusters", y = "gap", group = 1)) +
+  p <- ggpubr::ggline(df, x = "clusters", y = "gap", group = 1, color = linecolor)+
     ggplot2::geom_errorbar(aes_string(ymin="ymin", ymax="ymax"), width=.2, color = linecolor)+
-    geom_point(color = linecolor) +
-    geom_line(color = linecolor) +
     geom_vline(xintercept = k, linetype=2, color = linecolor)+
     labs(y = "Gap statistic (k)", x = "Number of clusters k",
          title = "Optimal number of clusters")
@@ -279,8 +279,8 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
       cat("* According to the majority rule, the best number of clusters is ",
           names(which.max(ss)),  ".\n\n")
     }
-    p <- ggplot(best_nc, aes_string(x= "Number_clusters")) + 
-      ggplot2::geom_bar(fill = barfill, color = barcolor)+
+    df <- data.frame(Number_clusters = names(ss), freq = ss )
+    p <- ggpubr::ggbarplot(df,  x = "Number_clusters", y = "freq", fill = barfill, color = barcolor)+
       labs(x = "Number of clusters k", y = "Frequency among all indices",
            title = paste0("Optimal number of clusters - k = ", names(which.max(ss)) ))
     
