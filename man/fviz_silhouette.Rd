@@ -4,7 +4,7 @@
 \alias{fviz_silhouette}
 \title{Visualize Silhouette Information from Clustering}
 \usage{
-fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE)
+fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE, ...)
 }
 \arguments{
 \item{sil.obj}{an object of class silhouette: pam, clara, fanny [in cluster 
@@ -14,6 +14,8 @@ package]; eclust and hcut [in factoextra].}
 
 \item{print.summary}{logical value. If true a summary of cluster silhouettes 
 are printed in fviz_silhouette().}
+
+\item{...}{other arguments to be passed to the function ggpubr::ggpar().}
 }
 \value{
 return a ggplot
