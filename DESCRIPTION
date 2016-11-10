@@ -35,7 +35,8 @@ Suggests:
     igraph,
     MASS,
     knitr
-Remotes: kassambara/ggpubr
+Remotes: kassambara/ggpubr,
+    slowkow/ggrepel
 URL: http://www.sthda.com/english/rpkgs/factoextra
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
