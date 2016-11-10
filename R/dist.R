@@ -2,13 +2,13 @@
 NULL
 #' Enhanced Distance Matrix Computation and Visualization
 #' @description Clustering methods classify data samples into groups of similar 
-#'   objects. This process requires some methods for measuring the distance or
+#'   objects. This process requires some methods for measuring the distance or 
 #'   the (dis)similarity between the observations. Read more: 
 #'   \href{http://www.sthda.com/english/wiki/clarifying-distance-measures-unsupervised-machine-learning}{STHDA
-#'    website - clarifying distance measures.}. \itemize{ \item get_dist():
-#'   Computes a distance matrix between the rows of a data matrix. Compared to the
-#'   standard \code{\link[stats]{dist}}() function, it supports
-#'   correlation-based distance measures including "pearson", "kendall" and
+#'    website - clarifying distance measures.}. \itemize{ \item get_dist(): 
+#'   Computes a distance matrix between the rows of a data matrix. Compared to
+#'   the standard \code{\link[stats]{dist}}() function, it supports 
+#'   correlation-based distance measures including "pearson", "kendall" and 
 #'   "spearman" methods. \item fviz_dist(): Visualizes a distance matrix }
 #' @param x a numeric matrix or a data frame.
 #' @param method the distance measure to be used. This must be one of 
@@ -18,7 +18,7 @@ NULL
 #'   standardized using the function scale(). Measurements are standardized for 
 #'   each variable (column), by subtracting the variable's mean value and 
 #'   dividing by the variable's standard deviation.
-#' @param ... other arguments to be passed to the function dist().
+#' @param ... other arguments to be passed to the function dist() when using get_dist().
 #' @return \itemize{ \item get_dist(): returns an object of class "dist". \item 
 #'   fviz_dist(): returns a ggplot2 }
 #' @seealso \code{\link[stats]{dist}}
@@ -70,19 +70,19 @@ fviz_dist<- function(dist.obj, order = TRUE, show_labels = TRUE, lab_size = NULL
   rownames(dist.obj ) <- colnames(dist.obj ) <- paste0(rownames(dist.obj), "-")
   
   d <- reshape2::melt(dist.obj)
-  plot <- ggplot(d, aes_string(x = "Var1", y = "Var2"))+ 
+  p <- ggplot(d, aes_string(x = "Var1", y = "Var2"))+ 
     ggplot2::geom_tile(aes_string(fill="value")) 
-  if(is.null(gradient$mid)) plot <- plot + ggplot2::scale_fill_gradient(low=gradient$low, high=gradient$high)
-  else plot <- plot + ggplot2::scale_fill_gradient2(midpoint=mean(dist.obj), low=gradient$low, 
+  if(is.null(gradient$mid)) p <- p + ggplot2::scale_fill_gradient(low=gradient$low, high=gradient$high)
+  else p <- p + ggplot2::scale_fill_gradient2(midpoint=mean(dist.obj), low=gradient$low, 
                                                     mid=gradient$mid, high=gradient$high, space = "Lab")
-  if(show_labels) plot <- plot + theme(axis.title.x = element_blank(), 
+  if(show_labels) p <- p + theme(axis.title.x = element_blank(), 
                                        axis.title.y = element_blank(),
                                        axis.text.x = element_text(angle = 45, hjust = 1, size = lab_size),
                                        axis.text.y = element_text(size = lab_size))
-  else plot <- plot + 
+  else p <- p + 
     theme(axis.text = element_blank(), axis.ticks = element_blank(),
           axis.title.x = element_blank(),
           axis.title.y = element_blank())
   
-  return(plot)
+  return(p)
 }
