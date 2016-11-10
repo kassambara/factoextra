@@ -102,7 +102,7 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
                         "\n Average silhouette width: ", 
                         round(mean(df$sil_width), 2)))+
     ggplot2::ylim(c(NA, 1))+
-    geom_hline(yintercept = sil.obj$silinfo$avg.width, linetype = "dashed", color = "red" )
+    geom_hline(yintercept = mean(df$sil_width), linetype = "dashed", color = "red" )
   p <- ggpubr::ggpar(p, ...)
   # Labels
   if(!label) p <- p + theme(axis.text.x = element_blank(), 
