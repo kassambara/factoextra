@@ -274,7 +274,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                     )
   }
   
-  p <- .fviz_finish(p, X, axes, axes.linetype) 
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
+    labs(title = title)
   p
 }
 
@@ -352,7 +353,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     )
   }
   
-  p <- .fviz_finish(p, X, axes, axes.linetype) 
+  p <- .fviz_finish(p, X, axes, axes.linetype) +
+    labs(title = title)
   p 
 }
 
