@@ -2,11 +2,10 @@
 
 ## New features
     
+- Now `fviz_dend()` returns a ggplot. It can be used to plot circular dendrograms and phylogenic-like trees.
 - New arguments in `fviz_cluster()`:
     - main, xlab, ylab in `fviz_cluster()`: to change the plot main title and axis labels.
-    - as.ggplot: for plotting dendrogram using ggplot2.
     - ellipse, ellipse.type, ellipse.level and ellipse.alpha
-- Now `fviz_cluster()` can be used to plot circular dendrograms and phylogenic-like trees.
     
 - New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #15](https://github.com/kassambara/factoextra/issues/20)).
 - New argument repel in `fviz_add()`.

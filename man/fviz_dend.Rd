@@ -4,13 +4,14 @@
 \alias{fviz_dend}
 \title{Enhanced Visualization of Dendrogram}
 \usage{
-fviz_dend(x, k = NULL, k_colors = NULL, show_labels = TRUE,
-  color_labels_by_k = TRUE, label_cols = NULL, labels_track_height = 1,
-  repel = FALSE, lwd = 1, type = c("rectangle", "triangle", "circular",
-  "phylogenic"), rect = FALSE, rect_border = "gray", rect_lty = 2,
-  rect_lwd = 1.5, as.ggplot = FALSE, ggtheme = theme_classic(),
-  horiz = FALSE, cex = 0.8, main = "Cluster Dendrogram", xlab = "",
-  ylab = "Height", sub = NULL, ...)
+fviz_dend(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,
+  show_labels = TRUE, color_labels_by_k = TRUE, label_cols = NULL,
+  labels_track_height = NULL, repel = FALSE, lwd = 0.7,
+  type = c("rectangle", "circular", "phylogenic"),
+  phylo_layout = "layout.auto", rect = FALSE, rect_border = "gray",
+  rect_lty = 2, rect_fill = FALSE, lower_rect, horiz = FALSE, cex = 0.8,
+  main = "Cluster Dendrogram", xlab = "", ylab = "Height", sub = NULL,
+  ggtheme = theme_classic(), ...)
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or 
@@ -18,10 +19,13 @@ hkmeans.}
 
 \item{k}{the number of groups for cutting the tree.}
 
-\item{k_colors}{a vector containing colors to be used for the groups. It 
-should contains k number of colors. Allowed values include also "grey" for
-grey color palettes; brewer palettes e.g. "RdBu", "Blues", ...;  and
-scientific journal palettes from ggsci R package, e.g.: "npg", "aaas",
+\item{h}{a numeric value. Cut the dendrogram by cutting at height h. (k 
+overrides h)}
+
+\item{k_colors, palette}{a vector containing colors to be used for the groups.
+It should contains k number of colors. Allowed values include also "grey" 
+for grey color palettes; brewer palettes e.g. "RdBu", "Blues", ...;  and 
+scientific journal palettes from ggsci R package, e.g.: "npg", "aaas", 
 "lancet", "jco", "ucscgb", "uchicago", "simpsons" and "rickandmorty".}
 
 \item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default 
@@ -32,30 +36,32 @@ automatically by group when k != NULL.}
 
 \item{label_cols}{a vector containing the colors for labels.}
 
-\item{labels_track_height}{a numeric value for adjusting the room for the 
-labels. Ignored when as.ggplot = FALSE.}
+\item{labels_track_height}{a positive numeric value for adjusting the room for the 
+labels. Used only when type = "rectangle".}
 
 \item{repel}{logical value. Use repel = TRUE to avoid label overplotting when
 type = "phylogenic".}
 
-\item{lwd}{a numeric value specifying branches line width.}
+\item{lwd}{a numeric value specifying branches and rectangle line width.}
 
 \item{type}{type of plot. Allowed values are one of "rectangle", "triangle", 
 "circular", "phylogenic".}
 
+\item{phylo_layout}{the layout to be used for phylogenic trees. Default value
+is "layout.auto". Allowed values include: 
+\code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_with_drl}}, 
+\code{\link[igraph]{layout_as_tree}}, \code{\link[igraph]{layout.gem}},
+\code{\link[igraph]{layout.mds}} and \code{\link[igraph]{layout_with_lgl}}.}
+
 \item{rect}{logical value specifying whether to add a rectangle around 
 groups. Used only when k != NULL.}
 
-\item{rect_border, rect_lty, rect_lwd}{border color, line type and line width 
-for rectangles}
+\item{rect_border, rect_lty}{border color and line type for rectangles.}
 
-\item{as.ggplot}{a logical value. If TRUE, the dendrogram is plotted using 
-ggplot2.}
+\item{rect_fill}{a logical value. If TRUE, fill the rectangle.}
 
-\item{ggtheme}{function, ggplot2 theme name. Ignored when as.ggplot = FALSE. 
-Default value is theme_classic(). Allowed values include ggplot2 official 
-themes: theme_gray(), theme_bw(), theme_minimal(), theme_classic(), 
-theme_void(), ....}
+\item{lower_rect}{a value of how low should the lower part of the rectangle 
+around clusters. Ignored when rect = FALSE.}
 
 \item{horiz}{a logical value. If TRUE, an horizontal dendrogram is drawn.}
 
@@ -66,12 +72,17 @@ theme_void(), ....}
 \item{sub}{Plot subtitle. If NULL, the method used hierarchical clustering is
 shown. To remove the subtitle use sub = "".}
 
+\item{ggtheme}{function, ggplot2 theme name. Default value is 
+theme_classic(). Allowed values include ggplot2 official themes: 
+theme_gray(), theme_bw(), theme_minimal(), theme_classic(), theme_void(), 
+....}
+
 \item{...}{other arguments to be passed to the function plot.dendrogram()}
 }
 \value{
-an object of class fviz_dend with the attributes "dendrogram" 
-  accessible using attr(x, "dendrogram"), where x is the result of
-  fviz_dend().
+an object of class fviz_dend which is a ggplot with the attributes 
+  "dendrogram" accessible using attr(x, "dendrogram"), where x is the result 
+  of fviz_dend().
 }
 \description{
 Draws easily beautiful dendrograms using either R base plot or 
@@ -97,9 +108,6 @@ fviz_dend(res.hc, cex = 0.5, k = 4, color_labels_by_k = TRUE)
 fviz_dend(res.hc, cex = 0.5, k = 4, 
  color_labels_by_k = FALSE, rect = TRUE)
  
-# Triangle
-fviz_dend(res.hc, cex = 0.5, k = 4, type = "triangle")
-
 # Change the color of tree using black color for all groups
 # Change rectangle border colors
 fviz_dend(res.hc, rect = TRUE, k_colors ="black",
