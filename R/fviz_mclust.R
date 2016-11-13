@@ -83,7 +83,8 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
                  main = main, xlab = xlab, ylab = ylab,...)+
     labs(subtitle = paste0("Best model: ", best_model, 
                            " | Optimal clusters: n = ",  number_of_cluster))+
-    geom_vline(xintercept = number_of_cluster, linetype = 2, color = "red")
+    geom_vline(xintercept = number_of_cluster, linetype = 2, color = "red")+
+    theme(legend.title = element_blank())
 
   
   if(missing(legend)) p + theme(legend.position = c(0.7, 0.2), legend.direction = "horizontal",
