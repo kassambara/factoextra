@@ -18,8 +18,9 @@ License: GPL-2
 LazyData: true
 Depends:
     R (>= 3.1.0),
-    ggplot2 (>= 2.1.0)
+    ggplot2 (>= 2.2.0)
 Imports:
+    abind,
     cluster,
     dendextend,
     ggpubr,
@@ -27,14 +28,15 @@ Imports:
     stats,
     reshape2,
     ggrepel,
-    abind
+    tidyr
 Suggests:
     ade4,
     ca,
     FactoMineR,
     igraph,
     MASS,
-    knitr
+    knitr,
+    mclust
 Remotes: kassambara/ggpubr,
     slowkow/ggrepel
 URL: http://www.sthda.com/english/rpkgs/factoextra
@@ -60,6 +62,7 @@ Collate:
     'fviz_hmfa.R'
     'get_mca.R'
     'fviz_mca.R'
+    'fviz_mclust.R'
     'get_mfa.R'
     'fviz_mfa.R'
     'fviz_nbclust.R'
