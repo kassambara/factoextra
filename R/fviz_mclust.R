@@ -27,6 +27,7 @@ fviz_mclust <- function(object,
                         what = c("classification", "uncertainty", "BIC"),
                         ellipse.type = "norm", ellipse.level = 0.4,  ...)
 {
+  uncertainty <- cluster <- NULL
   what <- match.arg(what)
   if(what == "classification")
     p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level, ...)
