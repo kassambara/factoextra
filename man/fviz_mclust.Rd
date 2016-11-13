@@ -6,7 +6,8 @@
 \title{Plot Model-Based Clustering Results using ggplot2}
 \usage{
 fviz_mclust(object, what = c("classification", "uncertainty", "BIC"),
-  ellipse.type = "norm", ellipse.level = 0.4, ...)
+  ellipse.type = "norm", ellipse.level = 0.4, ggtheme = theme_classic(),
+  ...)
 
 fviz_mclust_bic(object, model.names = NULL, shape = 19, color = "model",
   palette = NULL, legend = NULL, main = "Model selection",
@@ -25,6 +26,10 @@ values are 'convex', 'confidence' or types supported by
 \item{ellipse.level}{the size of the concentration ellipse in 
 normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. 
 Ignored in 'convex'. Default value is 0.95.}
+
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{...}{other arguments to be passed to the functions \link{fviz_cluster} and \link[ggpubr]{ggpar}.}
 

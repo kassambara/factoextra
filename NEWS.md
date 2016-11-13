@@ -2,6 +2,7 @@
 
 ## New features
     
+- New function `fviz_mclust()` for plotting model-based clustering using ggplot2
 - Now `fviz_dend()` returns a ggplot. It can be used to plot circular dendrograms and phylogenic-like trees.
 - New arguments in `fviz_cluster()`:
     - main, xlab, ylab in `fviz_cluster()`: to change the plot main title and axis labels.

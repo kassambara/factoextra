@@ -25,17 +25,23 @@
 #' @export
 fviz_mclust <- function(object, 
                         what = c("classification", "uncertainty", "BIC"),
-                        ellipse.type = "norm", ellipse.level = 0.4,  ...)
+                        ellipse.type = "norm", ellipse.level = 0.4, 
+                        ggtheme = theme_classic(), ...)
 {
   uncertainty <- cluster <- NULL
   what <- match.arg(what)
   if(what == "classification")
-    p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level, ...)
+    p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level,
+                      ggtheme = theme_classic(), ...)+
+    labs(subtitle = "Classification")
   if(what == "uncertainty")
-    p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level, ...)+
+    p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level,
+                      ggtheme = theme_classic(), geom = "none", ...)+
     geom_point(aes(size = uncertainty, color = cluster))+
-    scale_size(range =c(0, 2))
-  else if(what == "BIC") fviz_mclust_bic(object, ...)
+    scale_size(range =c(0, 2))+
+    labs(subtitle = "Uncertainty")+
+    guides(size = FALSE)
+  else if(what == "BIC") p <- fviz_mclust_bic(object, ggtheme = theme_classic(),  ...)
   
   return(p)
 }
