@@ -209,11 +209,16 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   
   plot.data <- cbind.data.frame(ind, cluster = cluster)
   label_coord <- cbind.data.frame(label_coord, cluster = cluster)
+  # Augment data
+  if(inherits(object, "Mclust")){
+    plot.data$uncertainty <- object$uncertainty
+    label_coord$uncertainty <- object$uncertainty
+  }
   
   # IF DBSCAN: cluster 0 is outliers. We don't want to make ellipse around
   # these observations. Let's remove them. They will be added to the plot later
   is_outliers = FALSE
-  if(inherits(object, "dbscan")){
+  if(inherits(object, c("dbscan", "Mclust"))){
     outliers <- which(cluster == 0)
     if(length(outliers) > 0){
       is_outliers = TRUE
