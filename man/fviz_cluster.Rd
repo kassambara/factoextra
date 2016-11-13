@@ -4,12 +4,13 @@
 \alias{fviz_cluster}
 \title{Visualize Clustering Results}
 \usage{
-fviz_cluster(object, data = NULL, stand = TRUE, geom = c("point", "text"),
-  repel = FALSE, show.clust.cent = TRUE, ellipse = TRUE,
-  ellipse.type = "convex", ellipse.level = 0.95, ellipse.alpha = 0.2,
-  pointsize = 2, labelsize = 12, main = "Cluster plot", xlab = NULL,
-  ylab = NULL, outlier.color = "black", outlier.shape = 19,
-  ggtheme = theme_grey(), ...)
+fviz_cluster(object, data = NULL, choose.vars = NULL, stand = TRUE,
+  geom = c("point", "text"), repel = FALSE, show.clust.cent = TRUE,
+  ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
+  ellipse.alpha = 0.2, shape = NULL, pointsize = 2, labelsize = 12,
+  main = "Cluster plot", xlab = NULL, ylab = NULL,
+  outlier.color = "black", outlier.shape = 19, ggtheme = theme_grey(),
+  ...)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(), 
@@ -20,6 +21,8 @@ Possible value are also any list object with data and cluster components
 
 \item{data}{the data that has been used for clustering. Required only when 
 object is a class of kmeans or dbscan.}
+
+\item{choose.vars}{a character vector containing variables to be considered for plotting.}
 
 \item{stand}{logical value; if TRUE, data is standardized before principal 
 component analysis}
@@ -47,6 +50,8 @@ Ignored in 'convex'. Default value is 0.95.}
 
 \item{ellipse.alpha}{Alpha for frame specifying the transparency 
 level of fill color. Use alpha = 0 for no fill color.}
+
+\item{shape}{the shape of points.}
 
 \item{pointsize}{the size of points}
 

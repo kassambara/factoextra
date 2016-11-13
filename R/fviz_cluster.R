@@ -14,6 +14,7 @@
 #'  (e.g.: object = list(data = mydata, cluster = myclust)).
 #'@param data the data that has been used for clustering. Required only when 
 #'  object is a class of kmeans or dbscan.
+#' @param choose.vars a character vector containing variables to be considered for plotting.
 #'@param stand logical value; if TRUE, data is standardized before principal 
 #'  component analysis
 #'@param geom a text specifying the geometry to be used for the graph. Allowed 
@@ -34,6 +35,7 @@
 #'@param ellipse.alpha Alpha for frame specifying the transparency 
 #'  level of fill color. Use alpha = 0 for no fill color.
 #'@param labelsize font size for the labels
+#'@param shape the shape of points. 
 #'@param pointsize the size of points
 #'@param outlier.color,outlier.shape the color and the shape of outliers. 
 #'  Outliers can be detected only in DBSCAN clustering.
@@ -100,12 +102,12 @@
 #'@name fviz_cluster
 #'@rdname fviz_cluster
 #'@export
-fviz_cluster <- function(object, data = NULL, stand = TRUE, 
+fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE, 
                          geom = c("point", "text"), repel = FALSE,
                          show.clust.cent = TRUE,
                          ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
                          ellipse.alpha = 0.2,
-                         pointsize = 2, labelsize = 12,
+                         shape = NULL, pointsize = 2, labelsize = 12,
                          main = "Cluster plot",  xlab = NULL, ylab = NULL,
                          outlier.color = "black", outlier.shape = 19,
                          ggtheme = theme_grey(), ...){
@@ -157,6 +159,10 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
     cluster <- object$cluster
   }
   else stop("Can't handle an object of class ", class(object))
+  
+  # Choose variables
+  if(!is.null(choose.vars))
+    data <- data[, choose.vars, drop = FALSE]
   if(stand) data <- scale(data)
   cluster <- as.factor(object$cluster)
   
@@ -236,12 +242,13 @@ fviz_cluster <- function(object, data = NULL, stand = TRUE,
   # ++++++++++++++++++++++++
   lab <- NULL
   if("text" %in% geom) lab <- "name"
+  if(is.null(shape)) shape <- "cluster"
   
   if(inherits(object, "partition") & missing(show.clust.cent))
     show.clust.cent <- FALSE # hide mean point for PAM, CLARA
   
   p <- ggpubr::ggscatter(plot.data, "x", "y",
-                         color="cluster", shape = "cluster", size = pointsize,
+                         color="cluster", shape = shape, size = pointsize,
                          point = "point" %in% geom, 
                          label = lab,
                          font.label = labelsize, repel = repel,
