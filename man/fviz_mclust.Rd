@@ -15,6 +15,17 @@ fviz_mclust_bic(object, model.names = NULL, shape = 19, color = "model",
 \arguments{
 \item{object}{an object of class Mclust}
 
+\item{what}{choose from one of the following three options: "classification" (default), "uncertainty" and "BIC".}
+
+\item{ellipse.type}{Character specifying frame type. Possible 
+values are 'convex', 'confidence' or types supported by 
+\code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm", 
+"euclid").}
+
+\item{ellipse.level}{the size of the concentration ellipse in 
+normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. 
+Ignored in 'convex'. Default value is 0.95.}
+
 \item{...}{other arguments to be passed to the functions \link{fviz_cluster} and \link[ggpubr]{ggpar}.}
 
 \item{model.names}{one or more model names corresponding to models fit in object. The default
@@ -42,8 +53,6 @@ also specified using a numeric vector c(x, y); see details section.}
 respectively. Use xlab = FALSE to hide xlab.}
 
 \item{ylab}{character vector specifying y axis labels. Use ylab = FALSE to hide ylab.}
-
-\item{what:}{choose from one of the following three options: "classification" (default), "uncertainty" and "BIC".}
 }
 \description{
 Plots the classification, the uncertainty and the BIC values returned by the Mclust() function.
@@ -58,6 +67,7 @@ Plots the classification, the uncertainty and the BIC values returned by the Mcl
 
 # Compute model-based-clustering 
 require("mclust")
+data("diabetes")
 mc <- Mclust(diabetes[, -1])
 
 # Visaulize BIC values

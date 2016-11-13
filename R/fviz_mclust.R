@@ -1,8 +1,9 @@
 #' Plot Model-Based Clustering Results using ggplot2
 #' @description Plots the classification, the uncertainty and the BIC values returned by the Mclust() function.
 #' @inheritParams ggpubr::ggpar
+#' @inheritParams fviz_cluster
 #' @param object an object of class Mclust
-#' @param what: choose from one of the following three options: "classification" (default), "uncertainty" and "BIC".
+#' @param what choose from one of the following three options: "classification" (default), "uncertainty" and "BIC".
 #' @param shape point shape. To change point shape by model names use shape = "model".
 #' @param color point and line color.
 #' @param ... other arguments to be passed to the functions \link{fviz_cluster} and \link[ggpubr]{ggpar}.
@@ -11,6 +12,7 @@
 #' 
 #' # Compute model-based-clustering 
 #' require("mclust")
+#' data("diabetes")
 #' mc <- Mclust(diabetes[, -1])
 #' 
 #' # Visaulize BIC values
