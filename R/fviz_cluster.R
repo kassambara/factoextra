@@ -197,7 +197,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     label_coord <- ind
   }
   else if(inherits(data, "HCPC")){
-    ind <- res.hcpc$call$X[, c("Dim 1", "Dim 2", "clust")]
+    ind <- res.hcpc$call$X[, c("Dim.1", "Dim.2", "clust")]
     ind <- cbind.data.frame(name = rownames(ind), ind)
     colnames(ind)[2:3] <-  c("x", "y")
     label_coord <- ind
