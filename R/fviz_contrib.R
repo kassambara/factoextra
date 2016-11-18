@@ -112,7 +112,7 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
   if(length(axes) > 1) {
     # Adjust variable contributions by the Dimension eigenvalues
     eig <- get_eigenvalue(X)[axes,1]
-    theo_contrib <- sum(theo_contrib*eig)
+    theo_contrib <- sum(theo_contrib*eig)/sum(eig)
   }
 
   p <- .ggbarplot(contrib, fill =fill, color = color,

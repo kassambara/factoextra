@@ -171,7 +171,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
       contrib <- t(apply(contrib, 1, 
                          function(var.contrib, pc.eig){var.contrib*pc.eig},
                          eig))
-      contrib <-apply(contrib, 1, sum)
+      contrib <-apply(contrib, 1, sum)/sum(eig)
     }
     res <- cbind(res, contrib = contrib)
   }
