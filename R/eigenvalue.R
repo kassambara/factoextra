@@ -31,8 +31,9 @@
 #'@param addlabels logical value. If TRUE, labels are added at the top of bars 
 #'  or points showing the information retained by each dimension.
 #'@param hjust horizontal adjustment of the labels.
-#'@param ... optional arguments to be passed to the functions geom_bar(), 
-#'  geom_line(), geom_text() or fviz_eig().
+#'@param main,xlab,ylab plot main and axis titles.
+#' @inheritParams ggpubr::ggpar
+#'@param ... optional arguments to be passed to the function \link[ggpubr]{ggpar}.
 #'  
 #'@return \itemize{ \item{get_eig() (or get_eigenvalue()): returns a data.frame 
 #'  containing 3 columns: the eigenvalues, the percentage of variance and  the 
@@ -59,17 +60,15 @@
 #'    # - Add labels
 #'    # - Change line color, bar fill and color. 
 #'    # - Change axis limits and themes
+#'    # possible themes: http://www.sthda.com/english/wiki/ggplot2-themes
 #'    
 #' p <- fviz_eig(res.pca, addlabels = TRUE, hjust = -0.3,
 #'            linecolor = "#FC4E07", 
-#'            barfill="white", barcolor ="darkblue")+ 
-#'      ylim(0, 85)+ # y axis limits
-#'      theme_minimal() # themes: http://www.sthda.com/english/wiki/ggplot2-themes
+#'            barfill="white", barcolor ="darkblue",
+#'            ylim = c(0, 85), # y axis limits
+#'            ggtheme = theme_minimal()
+#'            )
 #' print(p)
-#' 
-#' # Change plot title and axis labels
-#' p + labs(title = "Variances - PCA",
-#'         x = "Principal Components", y = "% of variances")
 #' 
 #'   
 #' # Scree plot - Eigenvalues
@@ -158,21 +157,19 @@ get_eigenvalue <- function(X){
 #' @export
 fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                          barfill="steelblue", barcolor="steelblue", linecolor = "black",
-                         ncp=10, addlabels=FALSE, hjust = 0,  ...)
+                         ncp=10, addlabels=FALSE, hjust = 0, 
+                   main = NULL, xlab = NULL, ylab = NULL, ggtheme = theme_gray(),
+                   ...)
 {
   
   eig <- get_eigenvalue(X)
   eig <-eig[1:min(ncp, nrow(eig)), , drop=FALSE]
   
-  title <- "Scree plot"
-  xlab <- "Dimensions"
-  ylab <- "Percentage of explained variances"
-  
   choice <- choice[1]
   if(choice=="eigenvalue") {
     eig <- eig[,1]
     text_labels <- round(eig,1)
-    ylab <- "Eigenvalue"
+    if(is.null(ylab)) ylab <- "Eigenvalue"
   }
   else if(choice=="variance") {
     eig <- eig[,2]
@@ -183,16 +180,28 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   if(length(intersect(geom, c("bar", "line"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
   
-  df.eig <- data.frame(dim = factor(1:length(eig)), eig=eig )
-  p <- ggplot(df.eig, aes(dim, eig, group=1 ))
-  if("bar" %in% geom) p <- p + geom_bar(stat="identity", fill=barfill, color = barcolor,...)
-  if("line" %in% geom) p <- p + geom_line(color = linecolor, ...)+
-    geom_point(shape=19, color=linecolor)
-  if(addlabels) p <- p + geom_text(label = text_labels,
-                                   vjust=-0.4, hjust = hjust, ...)
-  p <- p + labs(title = title, x = xlab, y = ylab)
   
-  p 
+  
+  df.eig <- data.frame(dim = factor(1:length(eig)), eig=eig )
+  
+  extra_args <- list(...)
+  bar_width <- extra_args$bar_width
+  linetype <- extra_args$linetype
+  if(is.null(linetype)) linetype <- "solid"
+  
+  p <- ggplot(df.eig, aes(dim, eig, group=1 ))
+  if("bar" %in% geom) p <- p + geom_bar(stat="identity", fill= barfill, 
+                                        color = barcolor, width = bar_width)
+  if("line" %in% geom) p <- p + geom_line(color = linecolor, linetype = linetype)+
+    geom_point(shape=19, color=linecolor)
+  if(addlabels) p <- p + geom_text(label = text_labels, vjust=-0.4, hjust = hjust)
+  
+  if(is.null(main)) main <- "Scree plot"
+  if(is.null(xlab)) xlab <- "Dimensions"
+  if(is.null(ylab)) ylab <- "Percentage of explained variances"
+  
+  p <- p + labs(title = main, x = xlab, y = ylab)
+  ggpubr::ggpar(p, ggtheme = ggtheme,  ...)
 }
 
 
