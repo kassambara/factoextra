@@ -14,7 +14,8 @@ get_eigenvalue(X)
 
 fviz_eig(X, choice = c("variance", "eigenvalue"), geom = c("bar", "line"),
   barfill = "steelblue", barcolor = "steelblue", linecolor = "black",
-  ncp = 10, addlabels = FALSE, hjust = 0, ...)
+  ncp = 10, addlabels = FALSE, hjust = 0, main = NULL, xlab = NULL,
+  ylab = NULL, ggtheme = theme_gray(), ...)
 
 fviz_screeplot(...)
 }
@@ -43,8 +44,13 @@ or points showing the information retained by each dimension.}
 
 \item{hjust}{horizontal adjustment of the labels.}
 
-\item{...}{optional arguments to be passed to the functions geom_bar(), 
-geom_line(), geom_text() or fviz_eig().}
+\item{main, xlab, ylab}{plot main and axis titles.}
+
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{...}{optional arguments to be passed to the function \link[ggpubr]{ggpar}.}
 }
 \value{
 \itemize{ \item{get_eig() (or get_eigenvalue()): returns a data.frame 
@@ -84,17 +90,15 @@ fviz_eig(res.pca)
    # - Add labels
    # - Change line color, bar fill and color. 
    # - Change axis limits and themes
+   # possible themes: http://www.sthda.com/english/wiki/ggplot2-themes
    
 p <- fviz_eig(res.pca, addlabels = TRUE, hjust = -0.3,
            linecolor = "#FC4E07", 
-           barfill="white", barcolor ="darkblue")+ 
-     ylim(0, 85)+ # y axis limits
-     theme_minimal() # themes: http://www.sthda.com/english/wiki/ggplot2-themes
+           barfill="white", barcolor ="darkblue",
+           ylim = c(0, 85), # y axis limits
+           ggtheme = theme_minimal()
+           )
 print(p)
-
-# Change plot title and axis labels
-p + labs(title = "Variances - PCA",
-        x = "Principal Components", y = "\% of variances")
 
   
 # Scree plot - Eigenvalues
