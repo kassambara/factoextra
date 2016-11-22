@@ -158,24 +158,21 @@ res.pca <- prcomp(iris[, -5],  scale = TRUE)
 # +++++++++++++++++++++
 
 # Default plot
-fviz_pca_ind(res.pca, col.ind = "#00AFBB")
+# Use repel = TRUE to avoid overplotting (slow if many points)
+fviz_pca_ind(res.pca, col.ind = "#00AFBB",
+   repel = TRUE)
 
  
 # 1. Control automatically the color of individuals 
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the individuals on the factor map
 # 2. To keep only point or text use geom = "point" or geom = "text".
-# 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
+# 3. Change themes using ggtheme: http://www.sthda.com/english/wiki/ggplot2-themes
 
-fviz_pca_ind(res.pca, col.ind="cos2", geom = "point")+
- theme_minimal() 
+fviz_pca_ind(res.pca, col.ind="cos2", geom = "point",
+   gradient.cols = c("white", "#2E9FDF", "#FC4E07" ),
+   ggtheme = theme_minimal())
 
-# Change gradient color
-# Use repel = TRUE to avoid overplotting (slow if many points)
-fviz_pca_ind(res.pca, col.ind="cos2", repel = TRUE, ggtheme = theme_minimal()) + 
-      scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-      high= "#FC4E07", midpoint=0.6, space = "Lab")
-   
 # You can also control the transparency 
 # of the color by the cos2
 fviz_pca_ind(res.pca, alpha.ind="cos2", ggtheme = theme_minimal()) 
@@ -213,9 +210,9 @@ fviz_pca_var(res.pca, col.var = "steelblue",
    ggtheme = theme_minimal())
  
 # Control variable colors using their contributions
-fviz_pca_var(res.pca, col.var = "contrib", ggtheme = theme_minimal())+
- scale_color_gradient2(low="white", mid="blue", 
-           high="red", midpoint=96, space = "Lab")
+fviz_pca_var(res.pca, col.var = "contrib", 
+   gradient.cols = c("white", "blue", "red"),
+   ggtheme = theme_minimal())
  
 # Select variables with select.var argument
    # You can select by contrib, cos2 and name 
