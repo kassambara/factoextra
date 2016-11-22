@@ -189,6 +189,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
                          ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
+                         gradient.cols = NULL,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          title = "Individuals factor map - PCA", axes.linetype = "dashed",
                          ggtheme = ggplot2::theme_grey(),
@@ -245,6 +246,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          ggtheme = ggtheme, ...
   )
   if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
+  if(!is.null(gradient.cols) & col.ind %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
   
   # Add supplementary quantitative individuals
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -258,7 +261,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   }
   
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title)
+    labs(title = title) + theme(legend.position = "right" )
   p
 }
 
@@ -268,7 +271,7 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), 
                          label="all",  invisible ="none", repel = FALSE,
                          labelsize=4, col.var="black", alpha.var=1, 
-                         col.quanti.sup="blue", col.circle ="grey70",
+                         col.quanti.sup="blue", col.circle ="grey70", gradient.cols = NULL,
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                          title = "Variables factor map - PCA", axes.linetype = "dashed", 
                          ggtheme = theme_grey(), ...)
@@ -318,12 +321,17 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                  point = point, label = var_label, 
                  font.label = labelsize*3, repel = repel,
                  ggtheme = ggtheme, main = title, ...)
+  
+  if(!is.null(gradient.cols) & col.var %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
+  
   # Draw arrows
   if("arrow" %in% geom & !hide$var) 
     p <- p + .arrows(data = var, color = col.var, alpha = alpha.var)
   if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
   # Draw correlation circle
   if(scale.unit) p <- .add_corr_circle(p, color = col.circle)
+  
   
   # Add supplementary quantitative variables
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -337,7 +345,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   }
   
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title)
+    labs(title = title)+ theme(legend.position = "right" )
   p 
 }
 
@@ -386,7 +394,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                     labelsize = labelsize, axes.linetype=axes.linetype,
                     col.var = col.var, alpha.var = alpha.var, select.var = select.var,
                     scale.= r*0.7, ggp = p, ggtheme = ggtheme)
-  p+labs(title=title)
+  p+labs(title=title)+ theme(legend.position = "right" )
 }
 
 
@@ -456,3 +464,5 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   }
   list(ind = ind, name.quali = name.quali)
 }
+
+

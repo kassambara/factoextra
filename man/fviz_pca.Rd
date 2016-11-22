@@ -14,15 +14,15 @@ fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   pointshape = 19, habillage = "none", addEllipses = FALSE,
   ellipse.level = 0.95, ellipse.type = "norm", ellipse.alpha = 0.1,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  title = "Individuals factor map - PCA", axes.linetype = "dashed",
+  gradient.cols = NULL, select.ind = list(name = NULL, cos2 = NULL, contrib
+  = NULL), title = "Individuals factor map - PCA", axes.linetype = "dashed",
   ggtheme = ggplot2::theme_grey(), ...)
 
 fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
   invisible = "none", repel = FALSE, labelsize = 4, col.var = "black",
   alpha.var = 1, col.quanti.sup = "blue", col.circle = "grey70",
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  title = "Variables factor map - PCA", axes.linetype = "dashed",
+  gradient.cols = NULL, select.var = list(name = NULL, cos2 = NULL, contrib
+  = NULL), title = "Variables factor map - PCA", axes.linetype = "dashed",
   ggtheme = theme_grey(), ...)
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
@@ -107,6 +107,8 @@ transparency for the individual/variable colors are automatically
 controlled by their qualities ("cos2"), contributions ("contrib"), 
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
 this, make sure that habillage ="none".}
+
+\item{gradient.cols}{vector of colors to use for n-colour gradient.}
 
 \item{select.ind, select.var}{a selection of individuals/variables to be 
 drawn. Allowed values are NULL or a list containing the arguments name, 
