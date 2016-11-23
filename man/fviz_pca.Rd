@@ -10,7 +10,7 @@
 fviz_pca(X, ...)
 
 fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
+  label = "all", invisible = "none", labelsize = 4, pointsize = 1.5,
   pointshape = 19, habillage = "none", addEllipses = FALSE,
   ellipse.level = 0.95, ellipse.type = "norm", ellipse.alpha = 0.1,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
