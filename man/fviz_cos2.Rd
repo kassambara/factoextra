@@ -53,22 +53,13 @@ decathlon2.active <- decathlon2[1:23, 1:10]
 res.pca <- prcomp(decathlon2.active,  scale = TRUE)
 
 # variable cos2 on axis 1
-fviz_cos2(res.pca, choice="var", axes = 1 )
-# sorting
-fviz_cos2(res.pca, choice="var", axes = 1, 
-           sort.val ="asc")
-           
-# select the top 7 contributing variables
-fviz_cos2(res.pca, choice="var", axes = 1, top = 7 )
+fviz_cos2(res.pca, choice="var", axes = 1, top = 10 )
 
 # Change theme and color
 fviz_cos2(res.pca, choice="var", axes = 1,
-         fill = "lightgray", color = "black") +
-         theme_minimal() + 
-         theme(axis.text.x = element_text(angle=45))
+         fill = "lightgray", color = "black",
+         ggtheme = theme_minimal()) 
          
-# Variable cos2 on axis 2
-fviz_cos2(res.pca, choice="var", axes = 2)
 # Variable cos2 on axes 1 + 2
 fviz_cos2(res.pca, choice="var", axes = 1:2)
 
