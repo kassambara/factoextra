@@ -7,7 +7,8 @@
 \usage{
 fviz_contrib(X, choice = c("row", "col", "var", "ind", "quanti.var",
   "quali.var", "group", "partial.axes"), axes = 1, fill = "steelblue",
-  color = "steelblue", sort.val = c("desc", "asc", "none"), top = Inf)
+  color = "steelblue", sort.val = c("desc", "asc", "none"), top = Inf,
+  xtickslab.rt = 45, ggtheme = theme_grey(), ...)
 
 fviz_pca_contrib(X, choice = c("var", "ind"), axes = 1,
   fill = "steelblue", color = "steelblue", sortcontrib = c("desc", "asc",
@@ -30,9 +31,16 @@ Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for des
 
 \item{top}{a numeric value specifying the number of top elements to be shown.}
 
-\item{sortcontrib}{see the argument sort.val}
+\item{xtickslab.rt}{Rotation angle of x and y axis tick labels,
+respectively. Default value is 0.}
 
-\item{...}{not used}
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{...}{other arguments to be passed to the function \link[ggpubr]{ggpar}.}
+
+\item{sortcontrib}{see the argument sort.val}
 }
 \value{
 a ggplot2 plot
@@ -63,13 +71,7 @@ decathlon2.active <- decathlon2[1:23, 1:10]
 res.pca <- prcomp(decathlon2.active,  scale = TRUE)
 
 # variable contributions on axis 1
-fviz_contrib(res.pca, choice="var", axes = 1 )
-# sorting
-fviz_contrib(res.pca, choice="var", axes = 1,
-           sort.val ="asc")
-
-# select the top 7 contributing variables
-fviz_contrib(res.pca, choice="var", axes = 1, top = 7 )
+fviz_contrib(res.pca, choice="var", axes = 1, top = 10 )
 
 # Change theme and color
 fviz_contrib(res.pca, choice="var", axes = 1,

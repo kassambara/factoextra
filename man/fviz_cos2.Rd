@@ -6,7 +6,8 @@
 \usage{
 fviz_cos2(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var",
   "group"), axes = 1, fill = "steelblue", color = "steelblue",
-  sort.val = c("desc", "asc", "none"), top = Inf)
+  sort.val = c("desc", "asc", "none"), top = Inf, xtickslab.rt = 45,
+  ggtheme = theme_grey(), ...)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
@@ -24,6 +25,15 @@ dudi, pca, coa and acm [ade4]; ca [ca package].}
 Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).}
 
 \item{top}{a numeric value specifying the number of top elements to be shown.}
+
+\item{xtickslab.rt}{Rotation angle of x and y axis tick labels,
+respectively. Default value is 0.}
+
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{...}{not used}
 }
 \value{
 a ggplot2 plot

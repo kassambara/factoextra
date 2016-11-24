@@ -7,8 +7,11 @@ NULL
 #' from the results of Principal Component Analysis (PCA),
 #' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
 #' and Multiple Factor Analysis (MFA) functions.
-#' @param ... not used
+#' @param sort.val a string specifying whether the value should be sorted. 
+#' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).
+#' @param ... other arguments to be passed to the function \link[ggpubr]{ggpar}.
 #' @inheritParams fviz_cos2
+#' @inheritParams ggpubr::ggpar
 #' @details
 #' The function fviz_contrib() creates a barplot of row/column contributions.
 #' A reference dashed line is also shown on the barplot. This reference line
@@ -28,14 +31,8 @@ NULL
 #' res.pca <- prcomp(decathlon2.active,  scale = TRUE)
 #'
 #' # variable contributions on axis 1
-#' fviz_contrib(res.pca, choice="var", axes = 1 )
-#' # sorting
-#' fviz_contrib(res.pca, choice="var", axes = 1,
-#'            sort.val ="asc")
-#'
-#' # select the top 7 contributing variables
-#' fviz_contrib(res.pca, choice="var", axes = 1, top = 7 )
-#'
+#' fviz_contrib(res.pca, choice="var", axes = 1, top = 10 )
+#' 
 #' # Change theme and color
 #' fviz_contrib(res.pca, choice="var", axes = 1,
 #'          fill = "lightgray", color = "black") +
@@ -98,9 +95,11 @@ NULL
 #' @export
 fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"), axes=1,
                    fill="steelblue", color = "steelblue",
-                   sort.val = c("desc", "asc", "none"), top = Inf)
+                   sort.val = c("desc", "asc", "none"), top = Inf,
+                   xtickslab.rt = 45, ggtheme = theme_grey(), ...)
 {
 
+  sort.val <- match.arg(sort.val)
   title <- .build_title(choice[1], "Contribution", axes)
 
   dd <- facto_summarize(X, element = choice, result = "contrib", axes = axes)
@@ -114,11 +113,19 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
     eig <- get_eigenvalue(X)[axes,1]
     theo_contrib <- sum(theo_contrib*eig)/sum(eig)
   }
-
-  p <- .ggbarplot(contrib, fill =fill, color = color,
-                  sort.value = sort.val[1], top = top,
-                  title = title, ylab ="Contributions (%)")+
+  df <- data.frame(name = factor(names(contrib), levels = names(contrib)), contrib = contrib)
+  
+  p <- ggpubr::ggbarplot(df, x = "name", y = "contrib", fill = fill, color = color,
+                         sort.val = sort.val, top = top,
+                         main = title, xlab = FALSE, ylab ="Contributions (%)",
+                         xtickslab.rt = xtickslab.rt, ggtheme = ggtheme, ...
+                         )+
     geom_hline(yintercept=theo_contrib, linetype=2, color="red")
+  
+#   p <- .ggbarplot(contrib, fill =fill, color = color,
+#                   sort.value = sort.val[1], top = top,
+#                   title = title, ylab ="Contributions (%)")+
+#     geom_hline(yintercept=theo_contrib, linetype=2, color="red")
 
   p
 }
@@ -138,7 +145,7 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
 
   p <- fviz_contrib(X = X, choice = choice, axes = axes,
                fill = fill, color = color, sort.val = sortcontrib,
-               top = top)
+               top = top, ...)
   p
 }
 

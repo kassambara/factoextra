@@ -16,6 +16,7 @@ NULL
 #' @param sort.val a string specifying whether the value should be sorted. 
 #' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).
 #' @param top a numeric value specifying the number of top elements to be shown.
+#' @inheritParams ggpubr::ggpar
 #'  
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -98,19 +99,24 @@ NULL
 #' @export 
 fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group"), axes=1,
                    fill="steelblue", color = "steelblue",  
-                   sort.val = c("desc", "asc", "none"), top = Inf)
+                   sort.val = c("desc", "asc", "none"), top = Inf, 
+                   xtickslab.rt = 45, ggtheme = theme_grey(), ...)
 {
-
+   sort.val <- match.arg(sort.val)
    title <- .build_title(choice[1], "Cos2", axes)
   
    dd <- facto_summarize(X, element = choice, result = "cos2", axes = axes)
    cos2 <- dd$cos2
    
    names(cos2) <-rownames(dd)
-  p <- .ggbarplot(cos2, fill =fill, color = color,
-                  sort.value = sort.val, top = top,
-                  title = title, ylab ="Cos2 - Quality of representation")
-  
+   
+   df <- data.frame(name = factor(names(cos2), levels = names(cos2)), cos2 = cos2)
+   
+   p <- ggpubr::ggbarplot(df, x = "name", y = "cos2", fill = fill, color = color,
+                          sort.val = sort.val, top = top,
+                          main = title, xlab = FALSE, ylab ="Cos2 - Quality of representation",
+                          xtickslab.rt = xtickslab.rt, ggtheme = ggtheme, ...
+   )
   p 
 }
 
