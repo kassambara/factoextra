@@ -108,7 +108,8 @@ controlled by their qualities ("cos2"), contributions ("contrib"),
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
 this, make sure that habillage ="none".}
 
-\item{gradient.cols}{vector of colors to use for n-colour gradient.}
+\item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
+values include brewer and ggsci color palettes.}
 
 \item{select.ind, select.var}{a selection of individuals/variables to be 
 drawn. Allowed values are NULL or a list containing the arguments name, 

@@ -54,10 +54,11 @@ also specified using a numeric vector c(x, y); see details section.}
 
 \item{main}{plot main title.}
 
-\item{xlab}{character vector specifying x axis labels,
-respectively. Use xlab = FALSE to hide xlab.}
+\item{xlab}{character vector specifying x axis labels, respectively. Use xlab
+= FALSE to hide xlab.}
 
-\item{ylab}{character vector specifying y axis labels. Use ylab = FALSE to hide ylab.}
+\item{ylab}{character vector specifying y axis labels. Use ylab = FALSE to
+hide ylab.}
 }
 \description{
 Plots the classification, the uncertainty and the BIC values returned by the Mclust() function.
