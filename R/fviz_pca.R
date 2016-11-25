@@ -229,10 +229,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   ind_label <- NULL
   if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
   
-  alpha.limits <- NULL
-  if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(ind.all[, alpha.ind])
-  
   p <- ggpubr::ggscatter(data = ind, x = "x", y = "y",
                          color = col.ind, alpha = alpha.ind, shape = pointshape, 
                          point = point, size = pointsize, mean.point = mean.point,
@@ -242,9 +238,11 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          main = title,
                          ggtheme = ggtheme, ...
   )
-  if(!is.null(alpha.limits)) p <- p + scale_alpha(limits = alpha.limits)
+  if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + scale_alpha(limits = range(ind.all[, alpha.ind]))
   if(!is.null(gradient.cols) & col.ind %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + ggpubr:::.gradient_col(gradient.cols)
+  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   
   # Add supplementary quantitative individuals
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -258,7 +256,8 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   }
   
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title) + theme(legend.position = "right" )
+    labs(title = title) 
+  
   p
 }
 
@@ -321,6 +320,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   
   if(!is.null(gradient.cols) & col.var %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + ggpubr:::.gradient_col(gradient.cols)
+  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   
   # Draw arrows
   if("arrow" %in% geom & !hide$var) 
@@ -342,7 +342,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
   }
   
   p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title)+ theme(legend.position = "right" )
+    labs(title = title)
   p 
 }
 
@@ -391,7 +391,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                     labelsize = labelsize, axes.linetype=axes.linetype,
                     col.var = col.var, alpha.var = alpha.var, select.var = select.var,
                     scale.= r*0.7, ggp = p, ggtheme = ggtheme)
-  p+labs(title=title)+ theme(legend.position = "right" )
+  p+labs(title=title)
 }
 
 
