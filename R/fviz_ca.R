@@ -62,13 +62,8 @@ NULL
 #'@param arrows Vector of two logicals specifying if the plot should contain 
 #'  points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 #'  second value sets the columns.
-#'@param jitter a parameter used to jitter the points in order to reduce 
-#'  overplotting. It's a list containing the objects what, width and height (i.e
-#'  jitter = list(what, width, height)). \itemize{ \item what: the element to be
-#'  jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b".
-#'  \item width: degree of jitter in x direction \item height: degree of jitter 
-#'  in y direction }
-#'@param ... optional arguments.
+#' @inheritParams ggpubr::ggpar
+#'@param ...  Arguments to be passed to the functions fviz_ca_biplot() and ggpubr::ggscatter().
 #'@details The default plot of CA is a "symmetric" plot in which both rows and 
 #'  columns are in principal coordinates. In this situation, it's not possible 
 #'  to interpret the distance between row points and column points. To overcome 
@@ -218,16 +213,20 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
                        geom=c("point", "text"),
                        label = "all", invisible="none", labelsize=4, pointsize = 2,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
+                       gradient.cols = NULL,
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric", repel = FALSE,
-                       jitter = list(what = "label", width = NULL, height = NULL),...)
+                       ggtheme = ggplot2::theme_grey(),
+                       ...)
 {
+  # Deprecated arguments: jitter
+  extra_args <- list(...)
+  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
+  
+  .check_axes(axes, .length = 2)
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
-  if(length(axes) > 2) stop("axes should be of length 2")
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   row <- facto_summarize(X, element = "row", 
@@ -245,17 +244,32 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
   lab <- .label(label)
   hide <- .hide(invisible)
   
-  alpha.limits <- NULL
-  if(alpha.row %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(row.all[, alpha.row])
+  point <- ("point" %in% geom) & (!hide$row) # to show row points, should be TRUE
+  row_label <- NULL
+  if(lab$row & "text" %in% geom & !hide$row) row_label <- "name"
+  
   
   p <- ggplot() 
   if(hide$row) p <-ggplot()+geom_blank(data=row, aes_string("x","y"))
-  else p <- .ggscatter(data = row, x = 'x', y = 'y', 
-                       col=col.row,  alpha = alpha.row, repel = repel,
-                       alpha.limits = alpha.limits, shape = shape.row, 
-                       geom = geom, lab = lab$row, labelsize = labelsize,
-                       pointsize = pointsize, jitter = jitter)
+  else p <- ggpubr::ggscatter(data = row, x = 'x', y = 'y', 
+                             color = col.row,  alpha = alpha.row, size = pointsize, 
+                             shape = shape.row, point = point, label = row_label,
+                             font.label = labelsize*3,  repel = repel,
+                             ggtheme = ggtheme, 
+                             ...)
+  
+  if(alpha.row %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + scale_alpha(limits = range(row.all[, alpha.row]))
+  if(!is.null(gradient.cols) & col.row %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
+  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
+  if("arrow" %in% geom) {
+    row$xstart <- row$ystart <- rep(0, nrow(row))
+    p <- p +ggpubr::geom_exec(geom_segment, data = row, x = "xstart", y = "ystart",
+                              xend = "x", yend = "y", color=col.row, alpha=alpha.row,
+                              arrow = grid::arrow(length = grid::unit(0.2, 'cm'))
+    )
+  }
   
   # Add supplementary rows
   if(inherits(X, c('CA', 'ca')) & !hide$row.sup){
@@ -271,7 +285,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), shape.row = 19,
       p <- fviz_add(p, df = row_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.row.sup, shape = shape.row,
                     labelsize = labelsize, addlabel = (lab$row.sup & "text" %in% geom),
-                    pointsize = pointsize, jitter = jitter)
+                    pointsize = pointsize, repel = repel)
       
     }   
   } 
@@ -287,22 +301,24 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
                        geom=c("point", "text"),
                        label = "all", invisible="none", labelsize=4, pointsize = 2,
                        col.col ="red", col.col.sup="darkred",  alpha.col = 1,
+                       gradient.cols = NULL,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric", repel = FALSE,
-                       jitter = list(what = "label", width = NULL, height = NULL), ...)
+                       ggtheme = theme_grey(),
+                       ...)
 {
-  
+  extra_args <- list(...)
+  if(!is.null(extra_args$jitter)) 
+    repel <- .facto_dep("jitter", "repel", TRUE) # Deprecated arguments: jitter
+  .check_axes(axes, .length = 2)
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed")
-  if(length(axes) > 2) stop("axes should be of length 2")
   
-  if(is.null(jitter$what)) jitter$what <- "label"
   
   # data frame to be used for plotting
   col <- facto_summarize(X, element = "col", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(col)[2:3] <-  c("x", "y")
-  
   # scale coords according to the type of map
   col <- .scale_ca(col, res.ca = X,  element = "col", 
                    type = map, axes = axes)
@@ -314,17 +330,32 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
   lab <- .label(label)
   hide <- .hide(invisible)
   
-  alpha.limits <- NULL
-  if(alpha.col %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(col.all[, alpha.col])
+  point <- ("point" %in% geom) & (!hide$col) # to show col points, should be TRUE
+  col_label <- NULL
+  if(lab$col & "text" %in% geom & !hide$col) col_label <- "name"
   
   p <- ggplot() 
   if(hide$col) p <-ggplot()+geom_blank(data=col, aes_string("x","y"))
-  else p <- .ggscatter(data = col, x = 'x', y = 'y', 
-                       col=col.col,  alpha = alpha.col, repel = repel,
-                       alpha.limits = alpha.limits, shape = shape.col, 
-                       geom = geom, lab = lab$col, labelsize = labelsize,
-                       pointsize = pointsize, jitter = jitter)
+  
+  else p <- ggpubr::ggscatter(data = col, x = 'x', y = 'y', 
+                              color = col.col,  alpha = alpha.col, size = pointsize, 
+                              shape = shape.col, point = point, label = col_label,
+                              font.label = labelsize*3,  repel = repel,
+                              ggtheme = ggtheme, 
+                              ...)
+  
+  if(alpha.col %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + scale_alpha(limits = range(col.all[, alpha.col]))
+  if(!is.null(gradient.cols) & col.col %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
+  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
+  if("arrow" %in% geom) {
+    col$xstart <- col$ystart <- rep(0, nrow(col))
+    p <- p +ggpubr::geom_exec(geom_segment, data = col, x = "xstart", y = "ystart",
+                              xend = "x", yend = "y", color=col.col, alpha=alpha.col,
+                              arrow = grid::arrow(length = grid::unit(0.2, 'cm'))
+                              )
+  }
   
   # Add supplementary cols
   if(inherits(X, c('CA', 'ca')) & !hide$col.sup ){
@@ -340,7 +371,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
       p <- fviz_add(p, df = col_sup[, 2:3, drop = FALSE], geom = geom,
                     color = col.col.sup, shape = shape.col,
                     labelsize = labelsize, addlabel = (lab$col.sup & "text" %in% geom),
-                    pointsize = pointsize, jitter = jitter)
+                    pointsize = pointsize, repel = repel)
     }   
   } 
   
@@ -361,76 +392,37 @@ fviz_ca_biplot <-function(X,  axes = c(1,2), shape.row = 19, shape.col = 17,
                        col.row ="blue", col.row.sup="darkblue",  alpha.row = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-                       map ="symmetric", arrows = c(FALSE, FALSE), repel = FALSE, title = "CA factor map - Biplot",
-                       jitter = list(what = "label", width = NULL, height = NULL), ...)
+                       map ="symmetric", arrows = c(FALSE, FALSE), repel = FALSE, 
+                       title = "CA factor map - Biplot", ggtheme = theme_grey(),
+                       ...)
 {
+  
+  extra_args <- list(...)
+  if(!is.null(extra_args$jitter)) 
+    repel <- .facto_dep("jitter", "repel", TRUE) # Deprecated arguments: jitter
+  .check_axes(axes, .length = 2)
   
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
-  if(length(axes) > 2) stop("axes should be of length 2")
   
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  col <- facto_summarize(X, element = "col", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(col)[2:3] <-  c("x", "y")
-  
-  # scale row coords according to the type of map
-  col <- .scale_ca(col, res.ca = X,  element = "col", 
-                   type = map, axes = axes)
-  
-  col.all <- col
-  if(!is.null(select.col)) col <- .select(col, select.col)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.col %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(col.all[, alpha.col])
   
   geom2 <- geom
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_ca_row(X,  axes = axes, shape.row = shape.row, 
         geom=geom2, repel = repel,
         label = label, invisible = invisible, labelsize=labelsize, pointsize = pointsize,
-        col.row =col.row, col.row.sup=col.row.sup,  alpha.row = alpha.row, select.row = select.row,
-        map = map, jitter = jitter)
-  
-  
-  # geom for columns
+        col.row = col.row, col.row.sup=col.row.sup,  alpha.row = alpha.row, select.row = select.row,
+        map = map, ggtheme = ggtheme,  ...)
+  # Add columns
   geom2 <- geom
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
+  p <- fviz_ca_col(X,  axes = axes, shape.col = shape.col, 
+                   geom=geom2, repel = repel,
+                   label = label, invisible = invisible, labelsize=labelsize, pointsize = pointsize,
+                   col.col = col.col, col.col.sup=col.col.sup,  alpha.col = alpha.col, select.col = select.col,
+                   map = map, ggtheme = ggtheme, ggp = p)
   
-  if(!hide$col){
-    p <- .ggscatter(p = p, data = col, x = 'x', y = 'y', 
-                    col=col.col,  alpha = alpha.col, repel = repel,
-                    alpha.limits = alpha.limits, shape = shape.col, 
-                    geom = geom2, lab = lab$col, labelsize = labelsize,
-                    pointsize = pointsize, jitter = jitter)
-  }
-    
-  # Add supplementary cols
-  if(inherits(X, c('CA', 'ca')) & !hide$col.sup ){
-      col_sup <- .get_supp(X, element = "col.sup", axes = axes,
-                         select = select.col)
-      if(!is.null(col_sup)){
-        colnames(col_sup)[2:3] <-  c("x", "y")
-        col_sup <- .scale_ca(col_sup, res.ca = X,  element = "col.sup", 
-                             type = map, axes = axes)
-      }
-    if(!is.null(col_sup)){
-      p <- fviz_add(p, df = col_sup[, 2:3, drop = FALSE], geom = geom2,
-                    color = col.col.sup, shape = shape.col,
-                    labelsize = labelsize, addlabel = (lab$col.sup & "text" %in% geom),
-                    pointsize = pointsize, jitter = jitter)
-    }   
-  }    
-      
-  title2 <- title
-  p + labs(title=title2)
+  p + labs(title=title)
   
 }
 
