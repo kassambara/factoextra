@@ -1,4 +1,4 @@
-#' @include get_pca.R
+#' @include get_pca.R facto_scatter.R
  NULL
 #' Visualize Principal Component Analysis
 #' 
@@ -7,9 +7,9 @@
 #'   multivariate data, to two or three that can be visualized graphically with 
 #'   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
 #'   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
-#'   stats], ii) PCA [in FactoMineR] and iii) dudi.pca [in ade4]. Read more:
+#'   stats], ii) PCA [in FactoMineR] and iii) dudi.pca [in ade4]. Read more: 
 #'   \href{http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining}{Principal
-#'   Component Analysis}
+#'    Component Analysis}
 #'   
 #'   \itemize{ \item{fviz_pca_ind(): Graph of individuals} \item{fviz_pca_var():
 #'   Graph of variables} \item{fviz_pca_biplot(): Biplot of individuals and 
@@ -32,9 +32,6 @@
 #' @param invisible a text specifying the elements to be hidden on the plot. 
 #'   Default value is "none". Allowed values are the combination of c("ind", 
 #'   "ind.sup", "quali", "var", "quanti.sup").
-#' @param labelsize font size for the labels
-#' @param pointsize the size of points
-#' @param pointshape the shape of points
 #' @param title the title of the graph
 #' @param habillage an optional factor variable for coloring the observations by
 #'   groups. Default value is "none". If X is a PCA object from FactoMineR 
@@ -50,7 +47,6 @@
 #'   including one of c("t", "norm", "euclid").
 #' @param ellipse.alpha Alpha for ellipse specifying the transparency level of 
 #'   fill color. Use alpha = 0 for no fill color.
-#' @param axes.linetype linetype of x and y axes.
 #' @param col.ind,col.var color for individuals and variables, respectively. 
 #'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
 #'   this case, the colors for individuals/variables are automatically 
@@ -68,9 +64,6 @@
 #'   coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
 #'   this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
-#' @param col.circle a color for the correlation circle.
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'   labels or not.
 #' @param select.ind,select.var a selection of individuals/variables to be 
 #'   drawn. Allowed values are NULL or a list containing the arguments name, 
 #'   cos2 or contrib: \itemize{ \item name: is a character vector containing 
@@ -80,7 +73,12 @@
 #'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
 #'   individuals/variables with the highest contrib are drawn }
 #' @inheritParams ggpubr::ggpar
-#' @param ... Arguments to be passed to the functions fviz_pca_biplot() and ggpubr::ggscatter().
+#' @inheritParams facto_scatter
+#' @param ... Additional arguments. \itemize{ \item in fviz_pca_ind() and 
+#'   fviz_pca_var(): Additional arguments are passed to the functions 
+#'   facto_scatter() and ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional
+#'   arguments are passed to fviz_pca_ind() and fviz_pca_var().}
+#'   
 #'   
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -180,69 +178,33 @@ fviz_pca <- function(X, ...){
 
 #' @rdname fviz_pca 
 #' @export 
-fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
-                         label = "all", invisible="none", labelsize=4, 
-                         pointsize = 1.5, pointshape = 19,
-                         habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
+fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"), repel = FALSE,
+                         habillage="none", palette = NULL, 
+                         addEllipses=FALSE, ellipse.level = 0.95, 
                          ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
-                         gradient.cols = NULL,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         title = "Individuals factor map - PCA", axes.linetype = "dashed",
-                         ggtheme = ggplot2::theme_grey(),
                          ...)
 {
-  # Deprecated arguments: jitter
-  extra_args <- list(...)
-  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
-  
-  .check_axes(axes, .length = 2)
-  if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
-    stop("The specified value(s) for the argument geom are not allowed ")
-  
-  # Data frame to be used for plotting
-  ind <- facto_summarize(X, element = "ind", axes = axes,
-                         result = c("coord", "contrib", "cos2"))
-  colnames(ind)[2:3] <-  c("x", "y")
  
+  extra_args <- list(...)
+  pointsize <- ifelse(is.null(extra_args$pointsize), 1.5, extra_args$pointsize)
+  pointshape <- ifelse(is.null(extra_args$pointshape), 1.5, extra_args$pointshape)
+  labelsize <- ifelse(is.null(extra_args$labelsize), 4, extra_args$labelsize)
+  label <- ifelse(is.null(extra_args$label), "all", extra_args$label)
+  invisible <- ifelse(is.null(extra_args$invisible), "all", extra_args$invisible)
+  
+  
   # Elements to be labelled or hidden
   lab <- .label(label)
   hide <- .hide(invisible)
-  
-  # Qualitative variable is used to color the individuals by groups
-  if(habillage[1] !="none"){
-    dd <- .add_ind_groups(X, ind, habillage)
-    ind <- dd$ind
-    col.ind <- dd$name.quali
-    if(missing(pointshape)) pointshape <- dd$name.quali
-  }
-  
-  # Selection
-  ind.all <- ind
-  if(!is.null(select.ind)) ind <- .select(ind, select.ind)
-  
-  # Plot
-  #%%%%%%%%%%%%%%%%%%%
-  point <- ("point" %in% geom) & (!hide$ind) # to show individuals point should be TRUE
-  mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide$quali) # to show mean point
-  
-  ind_label <- NULL
-  if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
-  
-  p <- ggpubr::ggscatter(data = ind, x = "x", y = "y",
-                         color = col.ind, alpha = alpha.ind, shape = pointshape, 
-                         point = point, size = pointsize, mean.point = mean.point,
-                         label = ind_label, font.label = labelsize*3, repel = repel,
-                         ellipse = addEllipses, ellipse.type = ellipse.type,
-                         ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
-                         main = title,
-                         ggtheme = ggtheme, ...
-  )
-  if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + scale_alpha(limits = range(ind.all[, alpha.ind]))
-  if(!is.null(gradient.cols) & col.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + ggpubr:::.gradient_col(gradient.cols)
-  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
+  p <- facto_scatter (X, element = "ind", axes = axes, geom = geom,
+                     habillage = habillage, addEllipses = addEllipses, ellipse.level = ellipse.level, 
+                     ellipse.type = ellipse.type, ellipse.alpha = ellipse.alpha,
+                     color = col.ind, alpha = alpha.ind, 
+                     select = select.ind,
+                     repel = repel, palette = palette,
+                     ...)
   
   # Add supplementary quantitative individuals
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,8 +217,6 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                     )
   }
   
-  p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
-    labs(title = title) 
   
   p
 }
@@ -265,71 +225,34 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 #' @rdname fviz_pca
 #' @export 
 fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), 
-                         label="all",  invisible ="none", repel = FALSE,
-                         labelsize=4, col.var="black", alpha.var=1, 
-                         col.quanti.sup="blue", col.circle ="grey70", gradient.cols = NULL,
+                         repel = FALSE,
+                         col.var="black", alpha.var=1, 
+                         col.quanti.sup="blue", col.circle ="grey70", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         title = "Variables factor map - PCA", axes.linetype = "dashed", 
-                         ggtheme = theme_grey(), ...)
+                          ...)
 {
   
-  # Deprecated arguments
-  extra_args <- list(...)
-  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
-  
-  .check_axes(axes, .length = 2)
   scale.unit <- .get_scale_unit(X)
+  extra_args <- list(...)
+  labelsize <- ifelse(is.null(extra_args$labelsize), 4, extra_args$labelsize)
+  label <- ifelse(is.null(extra_args$label), "all", extra_args$label)
+  invisible <- ifelse(is.null(extra_args$invisible), "all", extra_args$invisible)
   
-  # data frame to be used for plotting
-  var <- facto_summarize(X, element = "var", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # Multiple the data by scale. before plotting
-  # Used by fviz_pca_biplot
-  scale. <- 1
-  if(!is.null(extra_args$scale.)) {
-    scale. <- extra_args$scale.
-    scale.unit <- FALSE
-  }
-  var[, c("x", "y")] <- var[, c("x", "y")]*scale.
-  
-  # elements to be labelled or hidden
+  # Elements to be labelled or hidden
   lab <- .label(label)
   hide <- .hide(invisible)
-  
-  # Plot
-  #%%%%%%%%%%%%%%%%%%%%%%%
-  point <- ("point" %in% geom) & (!hide$var) # to show variable point should be TRUE
-  var_label <- NULL
-  if(lab$var & "text" %in% geom & !hide$var) var_label <- "name"
-  # Draw variables
-  p <- ggpubr::ggscatter(data = var, x = 'x', y = 'y', 
-                 color = col.var,  alpha = alpha.var, 
-                 point = point, label = var_label, 
-                 font.label = labelsize*3, repel = repel,
-                 ggtheme = ggtheme, main = title, ...)
-  
-  if(!is.null(gradient.cols) & col.var %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + ggpubr:::.gradient_col(gradient.cols)
-  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
-  
-  # Draw arrows
-  if("arrow" %in% geom & !hide$var) 
-    p <- p + .arrows(data = var, color = col.var, alpha = alpha.var)
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + scale_alpha(limits = range(var.all[, alpha.var]))
-  
-  # Draw correlation circle
-  if(scale.unit) p <- .add_corr_circle(p, color = col.circle)
-  
+  p <- facto_scatter (X, element = "var", axes = axes, geom = geom,
+                      color = col.var, alpha = alpha.var,  select = select.var,
+                      repel = repel, ...)
+
   
   # Add supplementary quantitative variables
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  # Multiple the data by scale. before plotting
+  # Used by fviz_pca_biplot
+  scale. <- 1
+  if(!is.null(extra_args$scale.)) scale. <- extra_args$scale.
+  
   # Available only in FactoMineR
   if(inherits(X, 'PCA') & !hide$quanti ){
     p <- .add_supp (p, X, element = "quanti", axes = axes, select = select.var,
@@ -339,8 +262,6 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
     )
   }
   
-  p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
-    labs(title = title)
   p 
 }
 
@@ -348,21 +269,12 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
 
 #' @rdname fviz_pca
 #' @export
-fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), 
-                  label = "all", invisible="none", labelsize=4, 
-                  pointsize = 2, pointshape = 19,
-                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                  col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
-                  col.var="steelblue",  alpha.var=1, col.quanti.sup="blue",
-                  col.circle ="grey70", repel = FALSE, axes.linetype = "dashed",
-                  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), 
-                  title = "Biplot of variables and individuals",
-                  ggtheme = theme_grey(),
+fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
+                            label = "all", invisible="none", repel = FALSE, 
+                            habillage = "none", palette = NULL, addEllipses=FALSE, 
+                            title = "Biplot of variables and individuals",
                    ...)
 {
-  
-  .check_axes(axes, .length = 2)
   # Data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
@@ -379,59 +291,20 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
   )
   
   # Individuals
-  p <- fviz_pca_ind(X,  axes = axes, geom = geom, repel = repel, label = label, invisible=invisible,
-          labelsize=labelsize, pointsize = pointsize, pointshape = pointshape, axes.linetype=axes.linetype,
-          col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-          habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind, ggtheme = ggtheme, ...)
+  p <- fviz_pca_ind(X,  axes = axes, geom = geom, repel = repel,
+                    label = label, invisible=invisible, habillage = habillage,
+                    addEllipses = addEllipses, palette = palette, ...)
   # Add variables
-  p <- fviz_pca_var(X, axes = axes, geom =  c("arrow", "text"), repel = repel, label = label, invisible = invisible,
-                    labelsize = labelsize, axes.linetype=axes.linetype,
-                    col.var = col.var, alpha.var = alpha.var, select.var = select.var,
-                    scale.= r*0.7, ggp = p, ggtheme = ggtheme)
+  p <- fviz_pca_var(X, axes = axes, geom =  c("arrow", "text"), repel = repel,
+                    label = label, invisible = invisible,
+                    scale.= r*0.7, ggp = p, habillage = "none",
+                    addEllipses = FALSE, palette = NULL, ...)
   p+labs(title=title)
 }
 
 
 
 
-
-#+++++++++++++++++++++
-# Helper functions
-#+++++++++++++++++++++
-
-# X : an object of class PCA, princomp, prcomp, dudi
-# Return TRUE if the data are scaled to unit variance
-.get_scale_unit <-function(X){
-  scale_unit <- FALSE
-  if(inherits(X, 'PCA')) scale_unit <- X$call$scale.unit
-  else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale) 
-  else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1 
-  else if(inherits(X, 'pca') & inherits(X, 'dudi')) scale_unit <- length(unique(X$norm))>1 
-  else stop("Error in .get_scale_unit function : can't handle an object of class ",
-            class(X))
-  scale_unit
-}
-
-# Add correlation circle to variables plot
-.add_corr_circle <- function(p, color = "grey70"){
-  theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
-  p + 
-    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color)
-  
-}
-
-# Add arrow to the plot
-.arrows <- function(data, color = "black", alpha = 1, 
-                    origin = 0, xend = "x", yend = "y"){
-  origin <- rep(origin, nrow(data))
-  dd <- cbind.data.frame(data, xstart = origin, ystart = origin)
-  ggpubr::geom_exec(geom_segment, data = dd, 
-                     x = "xstart", y = "ystart", xend = xend, yend = yend,
-                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
-                     color = color, alpha = alpha)
-}
 
 
 
