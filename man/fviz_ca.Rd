@@ -169,36 +169,31 @@ fviz_ca_row(res.ca)
  # - Change axis limits by specifying the min and max
  # - Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
 
-fviz_ca_row(res.ca, geom = "text", col.row = "#00AFBB") +
-   labs(title = "CA", x = "Dim.1", y ="Dim.2" )+ # titles
-   xlim(-1.3, 1.7) + ylim (-1.5, 1)+ # axis limits
-   theme_minimal() # change theme
-   
+fviz_ca_row(res.ca, geom = "text", col.row = "#00AFBB",
+   title = "CA", xlab = "Dim.1", ylab ="Dim.2", # titles
+   xlim = c(-1.3, 1.7), ylim = c(-1.5, 1), # axis limits
+   ggtheme = theme_minimal() # change theme
+   ) 
    
 # Control automatically the color of row points
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the rows on the factor map
+   # Change gradient color
+   # Use repel = TRUE to avoid overplotting (slow if many points)
+fviz_ca_row(res.ca, col.row = "cos2",
+   gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
+   repel = TRUE,
+   ggtheme = theme_minimal())
 
-fviz_ca_row(res.ca, col.row = "cos2")+
-theme_minimal()
-
-# Change gradient color
-# Use repel = TRUE to avoid overplotting (slow if many points)
-fviz_ca_row(res.ca, col.row = "cos2", repel = TRUE) + 
-      scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-      high = "#FC4E07", midpoint = 0.5, space = "Lab")+
-theme_minimal()
-  
 # Color by the contributions   
-fviz_ca_row(res.ca, col.row = "contrib") + 
-      scale_color_gradient2(low = "white", mid = "#00AFBB", 
-      high="#E7B800", midpoint = 10, space = "Lab")+
-theme_minimal()
+fviz_ca_row(res.ca, col.row = "contrib",
+   gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
+   ggtheme = theme_minimal())
       
 # You can also control the transparency 
 # of the color by the "cos2" or "contrib"
-fviz_ca_row(res.ca, alpha.row="contrib") +
-     theme_minimal()        
+fviz_ca_row(res.ca, alpha.row="contrib",
+   ggtheme = theme_minimal()) 
       
 # Select and visualize some rows with select.row argument.
  # - Rows with cos2 >= 0.5: select.row = list(cos2 = 0.5)
@@ -214,15 +209,14 @@ fviz_ca_row(res.ca, select.row = list(contrib = 7))
 # ++++++++++++++++++++++++++++
 
 # Default plot
-fviz_ca_col(res.ca, col.col = "red")+
-theme_minimal()
+fviz_ca_col(res.ca, col.col = "red",
+   ggtheme = theme_minimal())
 
  
 # Control colors using their contributions
-fviz_ca_col(res.ca, col.col = "contrib")+
- scale_color_gradient2(low = "white", mid = "blue", 
-           high = "red", midpoint = 25, space = "Lab") +
- theme_minimal()    
+fviz_ca_col(res.ca, col.col = "contrib",
+   gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
+   ggtheme = theme_minimal())
        
 # Select columns with select.col argument
    # You can select by contrib, cos2 and name 
@@ -247,20 +241,16 @@ fviz_ca_biplot(res.ca, label ="row")
 fviz_ca_biplot(res.ca, label ="col")
 
 
-# You can hide row or column points using 
-# invisible = "row" or invisible = "col", respectively
-fviz_ca_biplot(res.ca, invisible ="row")
-
 # Control automatically the color of rows using the cos2
-fviz_ca_biplot(res.ca, col.row="cos2") +
-       theme_minimal()
+fviz_ca_biplot(res.ca, col.row="cos2",
+   ggtheme = theme_minimal())
        
 # Select the top 7 contributing rows
 # And the top 3 columns
 fviz_ca_biplot(res.ca,  
                select.row = list(contrib = 7),
-               select.col = list(contrib = 3))+
- theme_minimal() 
+               select.col = list(contrib = 3),
+               ggtheme = theme_minimal())
  
 }
 \author{
