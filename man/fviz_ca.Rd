@@ -8,17 +8,18 @@
 \title{Visualize Correspondence Analysis}
 \usage{
 fviz_ca_row(X, axes = c(1, 2), shape.row = 19, geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
+  label = "all", invisible = "none", labelsize = 4, pointsize = 1.5,
   col.row = "blue", col.row.sup = "darkblue", alpha.row = 1,
   gradient.cols = NULL, select.row = list(name = NULL, cos2 = NULL, contrib
-  = NULL), map = "symmetric", repel = FALSE,
+  = NULL), map = "symmetric", repel = FALSE, title = "Row points - CA",
   ggtheme = ggplot2::theme_grey(), ...)
 
 fviz_ca_col(X, axes = c(1, 2), shape.col = 17, geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.col = "red", col.col.sup = "darkred", alpha.col = 1,
   gradient.cols = NULL, select.col = list(name = NULL, cos2 = NULL, contrib
-  = NULL), map = "symmetric", repel = FALSE, ggtheme = theme_grey(), ...)
+  = NULL), map = "symmetric", repel = FALSE, title = "Column points - CA",
+  ggtheme = theme_grey(), ...)
 
 fviz_ca_biplot(X, axes = c(1, 2), shape.row = 19, shape.col = 17,
   geom = c("point", "text"), label = "all", invisible = "none",
@@ -27,7 +28,7 @@ fviz_ca_biplot(X, axes = c(1, 2), shape.row = 19, shape.col = 17,
   col.row.sup = "darkblue", alpha.row = 1, select.col = list(name = NULL,
   cos2 = NULL, contrib = NULL), select.row = list(name = NULL, cos2 = NULL,
   contrib = NULL), map = "symmetric", arrows = c(FALSE, FALSE),
-  repel = FALSE, title = "CA factor map - Biplot", ggtheme = theme_grey(),
+  repel = FALSE, title = "Biplot - CA factor map", ggtheme = theme_grey(),
   ...)
 
 fviz_ca(X, ...)
@@ -70,6 +71,8 @@ values include brewer and ggsci color palettes.}
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
 
+\item{title}{the title of the graph}
+
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
@@ -102,8 +105,6 @@ top 5 columns/rows with the highest contrib are drawn }}
 \item{arrows}{Vector of two logicals specifying if the plot should contain 
 points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 second value sets the columns.}
-
-\item{title}{the title of the graph}
 }
 \value{
 a ggplot2 plot
