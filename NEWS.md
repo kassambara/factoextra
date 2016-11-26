@@ -11,6 +11,7 @@
     
 - New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #15](https://github.com/kassambara/factoextra/issues/20)).
 - New argument repel in `fviz_add()`.
+- New argument gradient.cols in fviz_*() functions.
      
 ## Minor changing
    
