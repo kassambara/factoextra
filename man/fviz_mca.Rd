@@ -8,22 +8,21 @@
 \title{Visualize Multiple Correspondence Analysis}
 \usage{
 fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, repel = FALSE,
+  invisible = "none", labelsize = 4, pointsize = 1.5, repel = FALSE,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
   ellipse.type = "norm", ellipse.alpha = 0.1, col.ind = "blue",
   col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
-  axes.linetype = "dashed", select.ind = list(name = NULL, cos2 = NULL,
-  contrib = NULL), map = "symmetric",
-  title = "Individuals factor map - MCA", jitter = list(what = "label",
-  width = NULL, height = NULL), ...)
+  gradient.cols = NULL, axes.linetype = "dashed", select.ind = list(name =
+  NULL, cos2 = NULL, contrib = NULL), map = "symmetric",
+  title = "Individuals factor map - MCA", ggtheme = theme_grey(), ...)
 
 fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
   invisible = "none", labelsize = 4, pointsize = 2, col.var = "red",
   alpha.var = 1, shape.var = 17, col.quanti.sup = "blue",
-  col.quali.sup = "darkgreen", repel = FALSE,
+  col.quali.sup = "darkgreen", repel = FALSE, gradient.cols = NULL,
   title = "Variable categories- MCA", select.var = list(name = NULL, cos2 =
   NULL, contrib = NULL), axes.linetype = "dashed", map = "symmetric",
-  jitter = list(what = "label", width = NULL, height = NULL))
+  ggtheme = theme_grey(), ...)
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -34,8 +33,7 @@ fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   shape.var = 17, axes.linetype = "dashed", select.var = list(name = NULL,
   cos2 = NULL, contrib = NULL), select.ind = list(name = NULL, cos2 = NULL,
   contrib = NULL), map = "symmetric", arrows = c(FALSE, FALSE),
-  title = "MCA factor map - Biplot", jitter = list(what = "label", width =
-  NULL, height = NULL), ...)
+  title = "MCA factor map - Biplot", ggtheme = theme_grey(), ...)
 
 fviz_mca(X, ...)
 }
@@ -107,6 +105,9 @@ habillage ="none".}
 
 \item{shape.ind, shape.var}{point shapes of individuals and variables.}
 
+\item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
+values include brewer and ggsci color palettes.}
+
 \item{axes.linetype}{linetype of x and y axes.}
 
 \item{select.ind, select.var}{a selection of individuals/variables to be drawn.
@@ -124,14 +125,11 @@ the highest contrib are drawn }}
 
 \item{title}{the title of the graph}
 
-\item{jitter}{a parameter used to jitter the points in order to reduce 
-overplotting. It's a list containing the objects what, width and height (i.e
-jitter = list(what, width, height)). \itemize{ \item what: the element to be
-jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b" 
-\item width: degree of jitter in x direction \item height: degree of jitter 
-in y direction }}
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
+theme_minimal(), theme_classic(), theme_void(), ....}
 
-\item{...}{Arguments to be passed to the function fviz_mca_biplot()}
+\item{...}{Arguments to be passed to the function fviz_mca_biplot() and ggpubr::ggscatter().}
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative 
 supplementary variables.}

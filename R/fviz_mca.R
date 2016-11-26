@@ -57,19 +57,14 @@ NULL
 #'  then the top 5 individuals/variables with the highest cos2 are drawn. \item 
 #'  contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 #'  the highest contrib are drawn }
-#'@param ... Arguments to be passed to the function fviz_mca_biplot()
+#' @inheritParams ggpubr::ggpar
+#'@param ... Arguments to be passed to the function fviz_mca_biplot() and ggpubr::ggscatter().
 #'@param map character string specifying the map type. Allowed options include: 
 #'  "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
 #'  "colgab", "rowgreen" and "colgreen". See details
 #'@param arrows Vector of two logicals specifying if the plot should contain 
 #'  points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 #'  second value sets the columns.
-#'@param jitter a parameter used to jitter the points in order to reduce 
-#'  overplotting. It's a list containing the objects what, width and height (i.e
-#'  jitter = list(what, width, height)). \itemize{ \item what: the element to be
-#'  jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b" 
-#'  \item width: degree of jitter in x direction \item height: degree of jitter 
-#'  in y direction }
 #'@details The default plot of MCA is a "symmetric" plot in which both rows and 
 #'  columns are in principal coordinates. In this situation, it's not possible 
 #'  to interpret the distance between row points and column points. To overcome 
@@ -221,192 +216,87 @@ NULL
 #'@export
 fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
                          label = "all", invisible="none", 
-                         labelsize=4, pointsize = 2, repel = FALSE,
+                         labelsize=4, pointsize = 1.5, repel = FALSE,
                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                          ellipse.type = "norm", ellipse.alpha = 0.1,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                         shape.ind = 19, axes.linetype = "dashed",
+                         shape.ind = 19, gradient.cols = NULL, axes.linetype = "dashed",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          map ="symmetric", title = "Individuals factor map - MCA",
-                         jitter = list(what = "label", width = NULL, height = NULL), ...)
+                         ggtheme = theme_grey(),
+                         ...)
 {
   
+  # Deprecated arguments: jitter
+  extra_args <- list(...)
+  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
+  
+  .check_axes(axes, .length = 2)
   if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
-  if(length(axes) > 2) stop("axes should be of length 2")
   
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
+  # Data frame to be used for plotting
   ind <- facto_summarize(X, element = "ind", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(ind)[2:3] <-  c("x", "y")
   
-  # scale ind coords according to the type of map
+  # Scale ind coords according to the type of map
   ind <- .scale_ca(ind, res.ca = X,  element = "ind", 
                    type = map, axes = axes)
+  
+  # Elements to be labelled or hidden
+  lab <- .label(label)
+  hide <- .hide(invisible)
+  
+  # Qualitative variable is used to color the individuals by groups
+  if(habillage[1] !="none"){
+    dd <- .add_ind_groups(X, ind, habillage)
+    ind <- dd$ind
+    col.ind <- dd$name.quali
+    if(missing(shape.ind)) shape.ind <- dd$name.quali
+  }
   
   # Selection
   ind.all <- ind
   if(!is.null(select.ind)) ind <- .select(ind, select.ind)
   
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
+  # Plot
+  #%%%%%%%%%%%%%%%%%%%
+  point <- ("point" %in% geom) & (!hide$ind) # to show individuals point should be TRUE
+  mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide$quali) # to show mean point
   
-  alpha.limits <- NULL
+  ind_label <- NULL
+  if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
+  
+  p <- ggpubr::ggscatter(data = ind, x = "x", y = "y",
+                         color = col.ind, alpha = alpha.ind, shape = shape.ind, 
+                         point = point, size = pointsize, mean.point = mean.point,
+                         label = ind_label, font.label = labelsize*3, repel = repel,
+                         ellipse = addEllipses, ellipse.type = ellipse.type,
+                         ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
+                         main = title,
+                         ggtheme = ggtheme, ...
+  )
   if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(ind.all[, alpha.ind])
-  
-  # No qualitative variable to color individuals
-  if(habillage[1]=="none"){ 
-    p <- ggplot() 
-    if(hide$ind) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
-    else p <- .ggscatter(data = ind, x = 'x', y = 'y', 
-                         col=col.ind,  alpha = alpha.ind, repel = repel,
-                         alpha.limits = alpha.limits, shape = shape.ind, 
-                         geom = geom, lab = lab$ind, labelsize = labelsize,
-                         pointsize = pointsize, jitter = jitter)
-  }
-  # qualitative variable is used to color the individuals
-  else{
-    
-    # Plot individuals
-    p <- ggplot()
-    if(hide$ind & hide$quali) p <-ggplot()+geom_blank(data=ind, aes_string('x','y'))
-    
-#     if(is.factor(habillage)){ 
-#       if(nrow(ind)!=length(habillage))
-#         stop("The number of active individuals used in the MCA is different ",
-#              "from the length of the factor habillage. Please, remove the supplementary ",
-#              "individuals in the variable habillage.")
-#       name.quali <- "Groups"
-#       ind <- cbind.data.frame(Groups = habillage, ind)
-#       ind[, 1]<-as.factor(ind[,1])
-#     }
-    
-    # X is from FactoMineR outputs
-    if(inherits(X, c("MCA")) & length(habillage) == 1){
-      data <- X$call$X
-      if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
-      else name.quali <- habillage 
-      ind <- cbind.data.frame(data[rownames(ind),name.quali], ind)
-      colnames(ind)[1]<-name.quali
-      ind[, 1]<-as.factor(ind[,1])
-    }
-    else{
-      if(nrow(ind)!=length(habillage))
-        stop("The number of active individuals used in the PCA is different ",
-             "from the length of the factor habillage. Please, remove the supplementary ",
-             "individuals in the variable habillage.")
-      name.quali <- "Groups"
-      ind <- cbind.data.frame(Groups = habillage, ind)
-      ind[, 1]<-as.factor(ind[,1])
-    }
-    
-    
-    if(!hide$ind) {
-      
-      label_coord <- ind
-      # jittering
-      if(jitter$what %in% c("both", "b")){
-        label_coord <- ind <- .jitter(ind, jitter)
-      }
-      else if(jitter$what %in% c("point", "p")){
-        ind <- .jitter(ind, jitter)
-      }
-      else if(jitter$what %in% c("label", "l")){
-        label_coord <- .jitter(label_coord, jitter)
-      }
-      
-      if("point" %in% geom) 
-        p <- p+geom_point(data = ind, 
-                          aes_string('x', 'y', color=name.quali, shape = name.quali),
-                          size = pointsize)
-      if(lab$ind & "text" %in% geom) {
-        if(repel)
-          p <- p + ggrepel::geom_text_repel(data = label_coord, 
-                                            aes_string('x', 'y', label = 'name',
-                                                       color=name.quali, shape = name.quali),  size = labelsize)
-        else
-          p <- p + geom_text(data = label_coord, 
-                             aes_string('x', 'y', label = 'name',
-                                        color=name.quali, shape = name.quali),  size = labelsize, vjust = -0.7)
-      }
-    }
-    
-    if(!hide$quali){   
-      coord_quali.sup <- .get_coord_quali(ind$x, ind$y, groups = ind[,1])
-      coord_quali.sup <- cbind.data.frame(name = rownames(coord_quali.sup),
-                                          coord_quali.sup)
-      colnames(coord_quali.sup)[1] <- name.quali
-      coord_quali.sup[, 1] <- as.factor(coord_quali.sup[,1])
-      
-      if("point" %in% geom) 
-        p <- p + geom_point(data=coord_quali.sup,
-                            aes_string('x', 'y', color=name.quali, shape=name.quali),
-                            size=pointsize*2)    
-      if(lab$quali & "text" %in% geom) {
-        if(repel)
-          p <- p + ggrepel::geom_text_repel(data=coord_quali.sup, 
-                                            aes_string('x', 'y', color=name.quali),
-                                            label=rownames(coord_quali.sup), size=labelsize)
-        else 
-          p <- p + geom_text(data=coord_quali.sup, 
-                             aes_string('x', 'y', color=name.quali),
-                             label=rownames(coord_quali.sup), size=labelsize, vjust=-1)
-      }
-    }
-    
-#     if(addEllipses){
-#       ell <- .get_ellipse_by_groups(ind$x, ind$y,
-#                                     groups = ind[, name.quali], ellipse.level=ellipse.level)
-#       colnames(ell)<-c(name.quali, "x", "y")
-#       ell[, 1]<-as.factor(ell[,1])
-#       p <- p + geom_path(data = ell, aes_string('x', 'y', color = name.quali, group = name.quali))
-#     }
-    
-    if(addEllipses){
-      if (ellipse.type == 'convex'){
-        frame.data <- .cluster_chull(ind[, c("x", "y")], ind[, name.quali])
-        colnames(frame.data)[which(colnames(frame.data) == "cluster")] <- name.quali
-        mapping = aes_string(x = "x", y = "y", colour =name.quali, fill = name.quali, group = name.quali)
-        p <- p + ggplot2::geom_polygon(data = frame.data,  mapping = mapping, alpha = ellipse.alpha)
-      }
-      else if (ellipse.type %in% c('t', 'norm', 'euclid')) {
-        mapping = aes_string(x = "x", y = "y", colour = name.quali, group = name.quali, fill = name.quali)
-        p <- p + ggplot2::stat_ellipse(mapping = mapping, data = ind,
-                                       level = ellipse.level, type = ellipse.type, alpha = ellipse.alpha,
-                                       geom = 'polygon')
-      }
-    }
-    
-    
-    
-  }
-  
+    p <- p + scale_alpha(limits = range(ind.all[, alpha.ind]))
+  if(!is.null(gradient.cols) & col.ind %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
+  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
+
   # Add supplementary quantitative individuals
-  # Available only in FactoMineR
-  if(inherits(X, c('MCA')) & !hide$ind.sup){
-    ind_sup <- .get_supp(X, element = "ind.sup", axes = axes,
-                         select = select.ind)
-    if(!is.null(ind_sup)) {
-      colnames(ind_sup)[2:3] <-  c("x", "y")
-      ind_sup <- .scale_ca(ind_sup, res.ca = X,  element = "ind.sup", 
-                           type = map, axes = axes)
-    }
-    if(!is.null(ind_sup)){
-      p <- fviz_add(p, df = ind_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom), jitter = jitter )
-    }  
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  # Available only for FactoMineR
+  if(inherits(X, 'MCA') & !hide$ind.sup){
+    p <- .add_supp (p, X, element = "ind.sup", axes = axes, select = select.ind,
+                    geom = geom, color = col.ind.sup, shape = 19, pointsize = pointsize,
+                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom),
+                    repel = repel
+    )
   }
   
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
-  
-  
+  p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
+    labs(title = title)
+
   p
 }
 
@@ -415,69 +305,72 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
 #' @export 
 fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
                          labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
-                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE, title = "Variable categories- MCA",
+                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE, 
+                         gradient.cols = NULL,
+                         title = "Variable categories- MCA",
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
-                         map ="symmetric", jitter = list(what = "label", width = NULL, height = NULL))
+                         map ="symmetric", 
+                         ggtheme = theme_grey(), ...
+                         )
 {
   
-  if(is.null(jitter$what)) jitter$what <- "label"
+  # Deprecated arguments
+  extra_args <- list(...)
+  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
   
-  # data frame to be used for plotting
+  .check_axes(axes, .length = 2)
+  
+  # Data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
   
-  # scale coords according to the type of map
+  # Scale coords according to the type of map
   var <- .scale_ca(var, res.ca = X,  element = "var", 
                    type = map, axes = axes)
   
+  # Elements to be labelled or hidden
+  lab <- .label(label)
+  hide <- .hide(invisible)
   
   # Selection
   var.all <- var
   if(!is.null(select.var)) var <- .select(var, select.var)
   
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
+  # Plot
+  #%%%%%%%%%%%%%%%%%%%%%%%
+  point <- ("point" %in% geom) & (!hide$var) # to show variable point should be TRUE
+  var_label <- NULL
+  if(lab$var & "text" %in% geom & !hide$var) var_label <- "name"
+  # Draw variables
+  p <- ggpubr::ggscatter(data = var, x = 'x', y = 'y', 
+                         color = col.var,  alpha = alpha.var, 
+                         size = pointsize, shape = shape.var,
+                         point = point, label = var_label, 
+                         font.label = labelsize*3, repel = repel,
+                         ggtheme = ggtheme, main = title, ...)
   
-  alpha.limits <- NULL
+  
+  if(!is.null(gradient.cols) & col.var %in% c("cos2","contrib", "coord", "x", "y"))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
+  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
-  
-  p <- ggplot()
-  
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
-                   col=col.var,  alpha = alpha.var, 
-                   alpha.limits = alpha.limits, repel = repel,
-                   geom = geom, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize,
-                   pointsize = pointsize, jitter = jitter)
-  }
+    p <- p + scale_alpha(limits = range(var.all[, alpha.var]))
   
   
   # Add supplementary qualitative variable categories
+  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # Available only in FactoMineR
-  if(inherits(X, c('MCA')) & !hide$quali.sup ){
-    quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
-                            select = select.var)
-    if(!is.null(quali_sup)){
-      colnames(quali_sup)[2:3] <-  c("x", "y")
-      quali_sup <- .scale_ca(quali_sup, res.ca = X,  element = "quali.sup", 
-                           type = map, axes = axes)
-    }
-    if(!is.null(quali_sup)){
-      p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup),
-                    pointsize = pointsize, jitter = jitter)
-    }  
-    
+  if(inherits(X, 'MCA') & !hide$quali.sup ){
+    p <- .add_supp (p, X, element = "quali.sup", axes = axes, select = select.var,
+                    geom = geom, color = col.quali.sup, shape = shape.var,
+                    labelsize = labelsize, addlabel = (lab$quali.sup & "text" %in% geom),
+                    repel = repel, pointsize = pointsize
+    )
   }
   
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
+  p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
+    labs(title = title)
   p 
 }
 
@@ -495,74 +388,34 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
                   select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                   map ="symmetric", arrows = c(FALSE, FALSE), title = "MCA factor map - Biplot",
-                  jitter = list(what = "label", width = NULL, height = NULL), ...)
+                  ggtheme = theme_grey(),
+                   ...)
 {
   
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  var <- facto_summarize(X, element = "var", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # scale coords according to the type of map
-  var <- .scale_ca(var, res.ca = X,  element = "var", 
-                   type = map, axes = axes)
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
-  
+  .check_axes(axes, .length = 2)
   
   # Individuals
   geom2 <- geom
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_mca_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
-          labelsize=labelsize, pointsize = pointsize,
-          col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-          shape.ind=shape.ind, axes.linetype=axes.linetype,
-          habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-          select.ind = select.ind, jitter = jitter, repel = repel)
+                    labelsize=labelsize, pointsize = pointsize,
+                    col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
+                    shape.ind=shape.ind, axes.linetype=axes.linetype,
+                    habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
+                    select.ind = select.ind,  repel = repel, ggtheme = ggtheme, ...)
     
-  # geometry for variable
+  # Variable
   geom2 <- geom
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
+  # Add variables
+  p <- fviz_mca_var(X, axes = axes, geom =  geom2, repel = repel, 
+                    label = label, invisible = invisible,
+                    labelsize = labelsize, pointsize = pointsize, 
+                    col.var = col.var, alpha.var = alpha.var, select.var = select.var,
+                    shape.var = shape.var, axes.linetype=axes.linetype,
+                    ggp = p, ggtheme = ggtheme)
   
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y', 
-                   col=col.var,  alpha = alpha.var, 
-                   alpha.limits = alpha.limits, repel = repel,
-                   geom =  geom2, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize, pointsize = pointsize, jitter = jitter)
-  }
-  
-  # Add supplementary qualitative variable categories
-  # Available only in FactoMineR
-  if(inherits(X, c('MCA')) & !hide$quali.sup ){
-    quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
-                           select = select.var)
-    if(!is.null(quali_sup)){
-      colnames(quali_sup)[2:3] <- c("x", "y")
-      quali_sup <- .scale_ca(quali_sup, res.ca = X,  element = "quali.sup", 
-                             type = map, axes = axes)
-    }
-    if(!is.null(quali_sup)){
-      p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom2,
-                    color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup), pointsize = pointsize, jitter = jitter )
-    }  
-    
-  }
-  title2 <- title
-  p+labs(title=title2)
+  p+labs(title=title)
 }
 
 #' @rdname fviz_mca
@@ -572,66 +425,3 @@ fviz_mca <- function(X, ...){
 }
 
 
-
-#+++++++++++++++++++++
-# Helper functions
-#+++++++++++++++++++++
-
-#+++++++++++
-# .get_ellipse() : Compute the concentration ellipse of the points
-#+++++++++++
-# x : the coordinates of points. It can be a numeric vector, matrix or data.frame
-# y : optional y coordinates of points. y is not required when x
-# is a matrix or data.frame
-# result is a data.frame containing the x and y coordinates of
-# the ellipse. Columns are x, y
-.get_ellipse <- function(x, y=NULL, ellipse.level = 0.95) {
-  if(class(x)%in% c("matrix", "data.frame")){
-    y <- x[,2]
-    x <- x[,1]
-  }
-  sigma <- var(cbind(x, y))
-  mu <- c(mean(x), mean(y))
-  t <- sqrt(qchisq(ellipse.level, df = 2))
-  theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- cbind(cos(theta), sin(theta))
-  data.frame(sweep(circle %*% chol(sigma) * t, 2, mu, FUN = '+'))
-}
-
-#+++++++++++
-# .get_ellipse() : Compute the concentration ellipse of the points by groups
-#+++++++++++
-# x : the coordinates of points. It can be a numeric vector, matrix or data.frame
-# y : optional y coordinates of points. y is not required when x is a matrix or data.frame
-# groups  : a factor variable
-
-# result is a data.frame containing the x and y coordinates of
-# the ellipse by groups. Columns are : groups, x, y
-.get_ellipse_by_groups <-function(x, y=NULL, groups, ellipse.level = 0.95){
-  
-  if(class(x)%in% c("matrix", "data.frame")){
-    y <- x[,2]
-    x <- x[,1]
-  }
-  groups <-as.factor(groups)
-  levs <- levels(groups)
-  len <- summary(groups) # number of cases per group
-  d <- data.frame(x =x, y = y, groups=groups)
-  result <- NULL
-  for(i in 1:length(levs)){
-    res <- .get_ellipse(d[which(groups==levs[i]),, drop=FALSE], ellipse.level=ellipse.level)
-    res <- cbind.data.frame(group=rep(levs[i], nrow(res)), res)
-    result <- rbind.data.frame(result,res)
-  }
-  result
-}
-
-# Return the coordinates of groups levels
-# x : coordinate of individuals on x axis
-# y : coordinate of indiviuals on y axis
-.get_coord_quali<-function(x, y, groups){
-  data.frame(
-    x= tapply(x, groups, mean),
-    y = tapply(y, groups, mean)
-  )
-}
