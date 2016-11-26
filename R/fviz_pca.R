@@ -187,37 +187,13 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"), repel = F
                          ...)
 {
  
-  extra_args <- list(...)
-  pointsize <- ifelse(is.null(extra_args$pointsize), 1.5, extra_args$pointsize)
-  pointshape <- ifelse(is.null(extra_args$pointshape), 1.5, extra_args$pointshape)
-  labelsize <- ifelse(is.null(extra_args$labelsize), 4, extra_args$labelsize)
-  label <- ifelse(is.null(extra_args$label), "all", extra_args$label)
-  invisible <- ifelse(is.null(extra_args$invisible), "all", extra_args$invisible)
-  
-  
-  # Elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
   p <- facto_scatter (X, element = "ind", axes = axes, geom = geom,
                      habillage = habillage, addEllipses = addEllipses, ellipse.level = ellipse.level, 
                      ellipse.type = ellipse.type, ellipse.alpha = ellipse.alpha,
                      color = col.ind, alpha = alpha.ind, 
                      select = select.ind,
                      repel = repel, palette = palette,
-                     ...)
-  
-  # Add supplementary quantitative individuals
-  #%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  # Available only for FactoMineR
-  if(inherits(X, 'PCA') & !hide$ind.sup){
-    p <- .add_supp (p, X, element = "ind.sup", axes = axes, select = select.ind,
-                    geom = geom, color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom),
-                    repel = repel
-                    )
-  }
-  
-  
+                     col.row.sup = col.ind.sup, ...)
   p
 }
 
@@ -231,37 +207,9 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                           ...)
 {
-  
-  scale.unit <- .get_scale_unit(X)
-  extra_args <- list(...)
-  labelsize <- ifelse(is.null(extra_args$labelsize), 4, extra_args$labelsize)
-  label <- ifelse(is.null(extra_args$label), "all", extra_args$label)
-  invisible <- ifelse(is.null(extra_args$invisible), "all", extra_args$invisible)
-  
-  # Elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
   p <- facto_scatter (X, element = "var", axes = axes, geom = geom,
                       color = col.var, alpha = alpha.var,  select = select.var,
-                      repel = repel, ...)
-
-  
-  # Add supplementary quantitative variables
-  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  # Multiple the data by scale. before plotting
-  # Used by fviz_pca_biplot
-  scale. <- 1
-  if(!is.null(extra_args$scale.)) scale. <- extra_args$scale.
-  
-  # Available only in FactoMineR
-  if(inherits(X, 'PCA') & !hide$quanti ){
-    p <- .add_supp (p, X, element = "quanti", axes = axes, select = select.var,
-                    geom = geom, color = col.quanti.sup, linetype =2,
-                    labelsize = labelsize, addlabel = (lab$quanti & "text" %in% geom),
-                    repel = repel, scale. = scale.
-    )
-  }
-  
+                      repel = repel, col.col.sup = col.quanti.sup, ...)
   p 
 }
 
