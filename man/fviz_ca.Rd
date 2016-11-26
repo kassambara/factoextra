@@ -7,29 +7,19 @@
 \alias{fviz_ca_row}
 \title{Visualize Correspondence Analysis}
 \usage{
-fviz_ca_row(X, axes = c(1, 2), shape.row = 19, geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 1.5,
-  col.row = "blue", col.row.sup = "darkblue", alpha.row = 1,
-  gradient.cols = NULL, select.row = list(name = NULL, cos2 = NULL, contrib
-  = NULL), map = "symmetric", repel = FALSE, title = "Row points - CA",
-  ggtheme = ggplot2::theme_grey(), ...)
+fviz_ca_row(X, axes = c(1, 2), geom = c("point", "text"), shape.row = 19,
+  col.row = "blue", alpha.row = 1, col.row.sup = "darkblue",
+  select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
+  map = "symmetric", repel = FALSE, ...)
 
 fviz_ca_col(X, axes = c(1, 2), shape.col = 17, geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   col.col = "red", col.col.sup = "darkred", alpha.col = 1,
-  gradient.cols = NULL, select.col = list(name = NULL, cos2 = NULL, contrib
-  = NULL), map = "symmetric", repel = FALSE, title = "Column points - CA",
-  ggtheme = theme_grey(), ...)
+  select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
+  map = "symmetric", repel = FALSE, ...)
 
-fviz_ca_biplot(X, axes = c(1, 2), shape.row = 19, shape.col = 17,
-  geom = c("point", "text"), label = "all", invisible = "none",
-  labelsize = 4, pointsize = 2, col.col = "red",
-  col.col.sup = "darkred", alpha.col = 1, col.row = "blue",
-  col.row.sup = "darkblue", alpha.row = 1, select.col = list(name = NULL,
-  cos2 = NULL, contrib = NULL), select.row = list(name = NULL, cos2 = NULL,
-  contrib = NULL), map = "symmetric", arrows = c(FALSE, FALSE),
-  repel = FALSE, title = "Biplot - CA factor map", ggtheme = theme_grey(),
-  ...)
+fviz_ca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
+  label = "all", invisible = "none", arrows = c(FALSE, FALSE),
+  repel = FALSE, title = "Biplot - CA factor map", ...)
 
 fviz_ca(X, ...)
 }
@@ -40,29 +30,13 @@ correspondence [MASS].}
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
 plotted.}
 
-\item{shape.row, shape.col}{the point shapes to be used for row/column 
-variables. Default values are 19 for rows and 17 for columns.}
-
 \item{geom}{a character specifying the geometry to be used for the graph. 
 Allowed values are the combination of c("point", "arrow", "text"). Use 
 "point" (to show only points); "text" to show only labels; c("point", 
 "text") or c("arrow", "text") to show both types.}
 
-\item{label}{a character vector specifying the elements to be labelled. 
-Default value is "all". Allowed values are "none" or the combination of 
-c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
-variables; "col.sup" to label only supplementary columns; etc}
-
-\item{invisible}{a character value specifying the elements to be hidden on the
-plot. Default value is "none". Allowed values are the combination of 
-c("row", "row.sup","col", "col.sup").}
-
-\item{labelsize}{font size for the labels}
-
-\item{pointsize}{the size of points}
-
-\item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
-values include brewer and ggsci color palettes.}
+\item{shape.row, shape.col}{the point shapes to be used for row/column 
+variables. Default values are 19 for rows and 17 for columns.}
 
 \item{map}{character string specifying the map type. Allowed options include: 
 "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
@@ -70,12 +44,6 @@ values include brewer and ggsci color palettes.}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
-
-\item{title}{the title of the graph}
-
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
-Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
-theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{...}{Arguments to be passed to the functions fviz_ca_biplot() and ggpubr::ggscatter().}
 
@@ -102,9 +70,20 @@ cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5 columns/rows with
 the highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the 
 top 5 columns/rows with the highest contrib are drawn }}
 
+\item{label}{a character vector specifying the elements to be labelled. 
+Default value is "all". Allowed values are "none" or the combination of 
+c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
+variables; "col.sup" to label only supplementary columns; etc}
+
+\item{invisible}{a character value specifying the elements to be hidden on the
+plot. Default value is "none". Allowed values are the combination of 
+c("row", "row.sup","col", "col.sup").}
+
 \item{arrows}{Vector of two logicals specifying if the plot should contain 
 points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 second value sets the columns.}
+
+\item{title}{the title of the graph}
 }
 \value{
 a ggplot2 plot
