@@ -167,7 +167,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   
   # Special cases: data transformation
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  # Used by fviz_pca_biplot() only:  Multiply the data by scale. before plotting
+  # Used by fviz_pca_biplot() only:  Multiply the variables data by scale. before biplotting
   if(facto.class == "PCA" & element == "var" & !is.null(extra_args$scale.) )
     df[, c("x", "y")] <- df[, c("x", "y")]*extra_args$scale.
   # (M)CA: scale coords according to the type of map
