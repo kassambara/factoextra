@@ -61,8 +61,11 @@ NULL
 #'  points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 #'  second value sets the columns.
 #' @inheritParams ggpubr::ggpar
-#'@param ...  Arguments to be passed to the functions fviz_ca_biplot() and ggpubr::ggscatter().
-#'@details The default plot of CA is a "symmetric" plot in which both rows and 
+#' @param ... Additional arguments. \itemize{ \item in fviz_ca_row() and 
+#'   fviz_ca_col(): Additional arguments are passed to the functions 
+#'   fviz() and ggpubr::ggpar(). \item in fviz_ca_biplot() and fviz_ca(): Additional
+#'   arguments are passed to fviz_ca_row() and fviz_ca_col().}
+#'@details The default plot of (M)CA is a "symmetric" plot in which both rows and 
 #'  columns are in principal coordinates. In this situation, it's not possible 
 #'  to interpret the distance between row points and column points. To overcome 
 #'  this problem, the simplest way is to make an asymmetric plot. This means 

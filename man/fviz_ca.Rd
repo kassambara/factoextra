@@ -45,7 +45,10 @@ variables. Default values are 19 for rows and 17 for columns.}
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
 
-\item{...}{Arguments to be passed to the functions fviz_ca_biplot() and ggpubr::ggscatter().}
+\item{...}{Additional arguments. \itemize{ \item in fviz_ca_row() and 
+fviz_ca_col(): Additional arguments are passed to the functions 
+fviz() and ggpubr::ggpar(). \item in fviz_ca_biplot() and fviz_ca(): Additional
+arguments are passed to fviz_ca_row() and fviz_ca_col().}}
 
 \item{col.col, col.row}{color for column/row points. The default values are 
 "red" and "blue", respectively. Allowed values include also : "cos2", 
@@ -103,7 +106,7 @@ Correspondence analysis (CA) is an extension of Principal
  fviz_ca_biplot()} }
 }
 \details{
-The default plot of CA is a "symmetric" plot in which both rows and 
+The default plot of (M)CA is a "symmetric" plot in which both rows and 
  columns are in principal coordinates. In this situation, it's not possible 
  to interpret the distance between row points and column points. To overcome 
  this problem, the simplest way is to make an asymmetric plot. This means 
