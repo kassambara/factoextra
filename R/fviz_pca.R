@@ -1,4 +1,4 @@
-#' @include get_pca.R facto_scatter.R
+#' @include get_pca.R fviz.R
  NULL
 #' Visualize Principal Component Analysis
 #' 
@@ -40,13 +40,6 @@
 #'   ?PCA in FactoMineR).
 #' @param addEllipses logical value. If TRUE, draws ellipses around the 
 #'   individuals when habillage != "none".
-#' @param ellipse.level the size of the concentration ellipse in normal 
-#'   probability.
-#' @param ellipse.type Character specifying frame type. Possible values are 
-#'   'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-#'   including one of c("t", "norm", "euclid").
-#' @param ellipse.alpha Alpha for ellipse specifying the transparency level of 
-#'   fill color. Use alpha = 0 for no fill color.
 #' @param col.ind,col.var color for individuals and variables, respectively. 
 #'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
 #'   this case, the colors for individuals/variables are automatically 
@@ -73,10 +66,10 @@
 #'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
 #'   individuals/variables with the highest contrib are drawn }
 #' @inheritParams ggpubr::ggpar
-#' @inheritParams facto_scatter
+#' @inheritParams fviz
 #' @param ... Additional arguments. \itemize{ \item in fviz_pca_ind() and 
 #'   fviz_pca_var(): Additional arguments are passed to the functions 
-#'   facto_scatter() and ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional
+#'   fviz() and ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional
 #'   arguments are passed to fviz_pca_ind() and fviz_pca_var().}
 #'   
 #'   
@@ -179,38 +172,33 @@ fviz_pca <- function(X, ...){
 #' @rdname fviz_pca 
 #' @export 
 fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"), repel = FALSE,
-                         habillage="none", palette = NULL, 
-                         addEllipses=FALSE, ellipse.level = 0.95, 
-                         ellipse.type = "norm", ellipse.alpha = 0.1,
+                         habillage="none", palette = NULL, addEllipses=FALSE, 
                          col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          ...)
 {
  
-  p <- facto_scatter (X, element = "ind", axes = axes, geom = geom,
-                     habillage = habillage, addEllipses = addEllipses, ellipse.level = ellipse.level, 
-                     ellipse.type = ellipse.type, ellipse.alpha = ellipse.alpha,
-                     color = col.ind, alpha = alpha.ind, 
-                     select = select.ind,
-                     repel = repel, palette = palette,
-                     col.row.sup = col.ind.sup, ...)
-  p
+  fviz (X, element = "ind", axes = axes, geom = geom,
+                 habillage = habillage, palette = palette, addEllipses = addEllipses, 
+                 color = col.ind, alpha = alpha.ind, col.row.sup = col.ind.sup,
+                select = select.ind, repel = repel,  ...)
+  
 }
 
 
 #' @rdname fviz_pca
 #' @export 
-fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), 
-                         repel = FALSE,
-                         col.var="black", alpha.var=1, 
+fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"), 
+                         repel = FALSE, col.var="black", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                           ...)
 {
-  p <- facto_scatter (X, element = "var", axes = axes, geom = geom,
-                      color = col.var, alpha = alpha.var,  select = select.var,
-                      repel = repel, col.col.sup = col.quanti.sup, ...)
-  p 
+  fviz (X, element = "var", axes = axes, geom = geom,
+                color = col.var, alpha = alpha.var,  select = select.var,
+                repel = repel, col.col.sup = col.quanti.sup, 
+                col.circle = col.circle,...)
+  
 }
 
 
@@ -220,8 +208,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom=c("arrow", "text"),
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             label = "all", invisible="none", repel = FALSE, 
                             habillage = "none", palette = NULL, addEllipses=FALSE, 
-                            title = "Biplot of variables and individuals",
-                   ...)
+                            title = "Biplot of variables and individuals", ...)
 {
   # Data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 

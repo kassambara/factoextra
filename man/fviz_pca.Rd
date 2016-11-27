@@ -11,7 +11,6 @@ fviz_pca(X, ...)
 
 fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   habillage = "none", palette = NULL, addEllipses = FALSE,
-  ellipse.level = 0.95, ellipse.type = "norm", ellipse.alpha = 0.1,
   col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
@@ -31,7 +30,7 @@ dudi and pca [ade4].}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_pca_ind() and 
 fviz_pca_var(): Additional arguments are passed to the functions 
-facto_scatter() and ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional
+fviz() and ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional
 arguments are passed to fviz_pca_ind() and fviz_pca_var().}}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
@@ -60,16 +59,6 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
-
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{ellipse.type}{Character specifying frame type. Possible values are 
-'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-including one of c("t", "norm", "euclid").}
-
-\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
-fill color. Use alpha = 0 for no fill color.}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. 
 Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 

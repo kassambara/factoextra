@@ -205,7 +205,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), geom = c("point", "text"),
                        ...)
 {
   
-  p <- facto_scatter (X, element = "row", axes = axes, geom = geom,
+  p <- fviz (X, element = "row", axes = axes, geom = geom,
                       color = col.row, alpha = alpha.row,
                       pointshape = shape.row, select = select.row, 
                       map = map, repel = repel, 
@@ -224,12 +224,12 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
                        ...)
 {
   
-  p <- facto_scatter (X, element = "col", axes = axes, geom = geom,
-                      color = col.col, alpha = alpha.col,
-                      pointshape = shape.col, select = select.col, 
-                      map = map, repel = repel, 
-                      colcol.sup = col.col.sup, shape.sup = shape.col, ...)
-  p
+  fviz (X, element = "col", axes = axes, geom = geom,
+        color = col.col, alpha = alpha.col,
+        pointshape = shape.col, select = select.col, 
+        map = map, repel = repel, 
+        colcol.sup = col.col.sup, shape.sup = shape.col, ...)
+  
   
 }
 
