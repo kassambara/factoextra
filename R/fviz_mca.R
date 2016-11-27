@@ -42,7 +42,6 @@ NULL
 #'  their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
 #'  , "coord"), x values("x") or y values("y"). To use this, make sure that 
 #'  habillage ="none".
-#'@param axes.linetype linetype of x and y axes.
 #'@param shape.ind,shape.var point shapes of individuals and variables.
 #'@param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative 
 #'  supplementary variables.
@@ -57,8 +56,12 @@ NULL
 #'  then the top 5 individuals/variables with the highest cos2 are drawn. \item 
 #'  contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 #'  the highest contrib are drawn }
-#' @inheritParams ggpubr::ggpar
-#'@param ... Arguments to be passed to the function fviz_mca_biplot() and ggpubr::ggscatter().
+#'@inheritParams ggpubr::ggpar
+#'@inheritParams fviz
+#'@param ... Additional arguments. \itemize{ \item in fviz_mca_ind() and 
+#'  fviz_mca_var(): Additional arguments are passed to the functions fviz() and 
+#'  ggpubr::ggpar(). \item in fviz_mca_biplot() and fviz_mca(): Additional 
+#'  arguments are passed to fviz_mca_ind() and fviz_mca_var().}
 #'@param map character string specifying the map type. Allowed options include: 
 #'  "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
 #'  "colgab", "rowgreen" and "colgreen". See details
@@ -68,23 +71,9 @@ NULL
 #'@details The default plot of MCA is a "symmetric" plot in which both rows and 
 #'  columns are in principal coordinates. In this situation, it's not possible 
 #'  to interpret the distance between row points and column points. To overcome 
-#'  this problem, the simplest way is to make an asymmetric plot. This means 
-#'  that, the column profiles must be presented in row space or vice-versa. The 
-#'  allowed options for the argument map are: \itemize{ \item "rowprincipal" or 
-#'  "colprincipal": asymmetric plots with either rows in principal coordinates 
-#'  and columns in standard coordinates, or vice versa. These plots preserve row
-#'  metric or column metric respectively. \item "symbiplot": Both rows and 
-#'  columns are scaled to have variances equal to the singular values (square 
-#'  roots of eigenvalues), which gives a symmetric biplot but does not preserve 
-#'  row or column metrics. \item "rowgab" or "colgab": Asymmetric maps, proposed
-#'  by Gabriel & Odoroff (1990), with rows (respectively, columns) in principal 
-#'  coordinates and columns (respectively, rows) in standard coordinates 
-#'  multiplied by the mass of the corresponding point. \item "rowgreen" or 
-#'  "colgreen": The so-called contribution biplots showing visually the most 
-#'  contributing points (Greenacre 2006b). These are similar to "rowgab" and 
-#'  "colgab" except that the points in standard coordinates are multiplied by 
-#'  the square root of the corresponding masses, giving reconstructions of the 
-#'  standardized residuals. }
+#'  this problem, the simplest way is to make an asymmetric plot. The argument 
+#'  "map" can be used to change the plot type. For more explanation, read the
+#'  details section of fviz_ca documentation. 
 #'  
 #'@return a ggplot2 plot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -214,206 +203,61 @@ NULL
 #'@name fviz_mca
 #'@rdname fviz_mca
 #'@export
-fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"),
-                         label = "all", invisible="none", 
-                         labelsize=4, pointsize = 1.5, repel = FALSE,
-                         habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                         ellipse.type = "norm", ellipse.alpha = 0.1,
-                         col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                         shape.ind = 19, gradient.cols = NULL, axes.linetype = "dashed",
+fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
+                         habillage = "none", palette = NULL, addEllipses = FALSE, 
+                         col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
+                         shape.ind = 19, map ="symmetric", 
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                         map ="symmetric", title = "Individuals factor map - MCA",
-                         ggtheme = theme_grey(),
                          ...)
 {
   
-  # Deprecated arguments: jitter
-  extra_args <- list(...)
-  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
-  
-  .check_axes(axes, .length = 2)
-  if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
-    stop("The specified value(s) for the argument geom are not allowed ")
-  
-  # Data frame to be used for plotting
-  ind <- facto_summarize(X, element = "ind", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(ind)[2:3] <-  c("x", "y")
-  
-  # Scale ind coords according to the type of map
-  ind <- .scale_ca(ind, res.ca = X,  element = "ind", 
-                   type = map, axes = axes)
-  
-  # Elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  # Qualitative variable is used to color the individuals by groups
-  if(habillage[1] !="none"){
-    dd <- .add_ind_groups(X, ind, habillage)
-    ind <- dd$ind
-    col.ind <- dd$name.quali
-    if(missing(shape.ind)) shape.ind <- dd$name.quali
-  }
-  
-  # Selection
-  ind.all <- ind
-  if(!is.null(select.ind)) ind <- .select(ind, select.ind)
-  
-  # Plot
-  #%%%%%%%%%%%%%%%%%%%
-  point <- ("point" %in% geom) & (!hide$ind) # to show individuals point should be TRUE
-  mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide$quali) # to show mean point
-  
-  ind_label <- NULL
-  if(lab$ind & "text" %in% geom & !hide$ind) ind_label <- "name"
-  
-  p <- ggpubr::ggscatter(data = ind, x = "x", y = "y",
-                         color = col.ind, alpha = alpha.ind, shape = shape.ind, 
-                         point = point, size = pointsize, mean.point = mean.point,
-                         label = ind_label, font.label = labelsize*3, repel = repel,
-                         ellipse = addEllipses, ellipse.type = ellipse.type,
-                         ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
-                         main = title,
-                         ggtheme = ggtheme, ...
-  )
-  if(alpha.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + scale_alpha(limits = range(ind.all[, alpha.ind]))
-  if(!is.null(gradient.cols) & col.ind %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + ggpubr:::.gradient_col(gradient.cols)
-  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
+  fviz (X, element = "ind", axes = axes, geom = geom, habillage = habillage, 
+        addEllipses = addEllipses, palette = palette, pointshape = shape.ind,
+        color = col.ind, alpha = alpha.ind,
+        shape.sup = shape.ind, col.row.sup = col.ind.sup,
+        select = select.ind,  map = map, repel = repel, ...)
 
-  # Add supplementary quantitative individuals
-  #%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  # Available only for FactoMineR
-  if(inherits(X, 'MCA') & !hide$ind.sup){
-    p <- .add_supp (p, X, element = "ind.sup", axes = axes, select = select.ind,
-                    geom = geom, color = col.ind.sup, shape = 19, pointsize = pointsize,
-                    labelsize = labelsize, addlabel = (lab$ind.sup & "text" %in% geom),
-                    repel = repel
-    )
-  }
   
-  p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
-    labs(title = title)
-
-  p
 }
 
 
 #' @rdname fviz_mca
 #' @export 
-fviz_mca_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
-                         labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17, 
-                         col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE, 
-                         gradient.cols = NULL,
-                         title = "Variable categories- MCA",
-                         select.var = list(name = NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
-                         map ="symmetric", 
-                         ggtheme = theme_grey(), ...
-                         )
+fviz_mca_var <- function(X, axes=c(1,2), geom = c("point", "text"), repel = FALSE, 
+                         col.var="red", alpha.var=1, shape.var = 17, col.quanti.sup = "blue", 
+                         col.quali.sup = "darkgreen", map = "symmetric", 
+                         select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 {
-  
-  # Deprecated arguments
-  extra_args <- list(...)
-  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
-  
-  .check_axes(axes, .length = 2)
-  
-  # Data frame to be used for plotting
-  var <- facto_summarize(X, element = "var", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # Scale coords according to the type of map
-  var <- .scale_ca(var, res.ca = X,  element = "var", 
-                   type = map, axes = axes)
-  
-  # Elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # Plot
-  #%%%%%%%%%%%%%%%%%%%%%%%
-  point <- ("point" %in% geom) & (!hide$var) # to show variable point should be TRUE
-  var_label <- NULL
-  if(lab$var & "text" %in% geom & !hide$var) var_label <- "name"
-  # Draw variables
-  p <- ggpubr::ggscatter(data = var, x = 'x', y = 'y', 
-                         color = col.var,  alpha = alpha.var, 
-                         size = pointsize, shape = shape.var,
-                         point = point, label = var_label, 
-                         font.label = labelsize*3, repel = repel,
-                         ggtheme = ggtheme, main = title, ...)
-  
-  
-  if(!is.null(gradient.cols) & col.var %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + ggpubr:::.gradient_col(gradient.cols)
-  if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    p <- p + scale_alpha(limits = range(var.all[, alpha.var]))
-  
-  
-  # Add supplementary qualitative variable categories
-  #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  # Available only in FactoMineR
-  if(inherits(X, 'MCA') & !hide$quali.sup ){
-    p <- .add_supp (p, X, element = "quali.sup", axes = axes, select = select.var,
-                    geom = geom, color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup & "text" %in% geom),
-                    repel = repel, pointsize = pointsize
-    )
-  }
-  
-  p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
-    labs(title = title)
-  p 
+  fviz (X, element = "var", axes = axes, geom = geom,
+        color = col.var, alpha = alpha.var,  pointshape = shape.var, 
+        shape.sup = shape.var, col.col.sup = col.quali.sup, 
+        select = select.var, repel = repel,  map = map, ...)
 }
 
 
 
 #' @rdname fviz_mca
 #' @export
-fviz_mca_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
-                  label = "all", invisible="none", labelsize=4, pointsize = 2,
-                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                  col.var="red", alpha.var=1, col.quanti.sup="blue",
-                  col.quali.sup = "darkgreen", repel = FALSE,
-                  shape.ind = 19, shape.var = 17, axes.linetype = "dashed",
-                  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                  map ="symmetric", arrows = c(FALSE, FALSE), title = "MCA factor map - Biplot",
-                  ggtheme = theme_grey(),
-                   ...)
+fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
+                            repel = FALSE, label = "all", invisible="none",
+                            habillage="none", addEllipses=FALSE, palette = NULL,
+                            arrows = c(FALSE, FALSE), map ="symmetric", 
+                            title = "MCA factor map - Biplot", ...)
 {
-  
-  .check_axes(axes, .length = 2)
   
   # Individuals
   geom2 <- geom
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
-  p <- fviz_mca_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
-                    labelsize=labelsize, pointsize = pointsize,
-                    col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-                    shape.ind=shape.ind, axes.linetype=axes.linetype,
-                    habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-                    select.ind = select.ind,  repel = repel, ggtheme = ggtheme, ...)
+  p <- fviz_mca_ind(X,  axes = axes, geom = geom2, repel = repel,
+                    label = label, invisible=invisible, habillage = habillage,
+                    addEllipses = addEllipses, palette = palette,  ...)
     
   # Variable
   geom2 <- geom
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   # Add variables
   p <- fviz_mca_var(X, axes = axes, geom =  geom2, repel = repel, 
-                    label = label, invisible = invisible,
-                    labelsize = labelsize, pointsize = pointsize, 
-                    col.var = col.var, alpha.var = alpha.var, select.var = select.var,
-                    shape.var = shape.var, axes.linetype=axes.linetype,
-                    ggp = p, ggtheme = ggtheme)
+                    label = label, invisible = invisible, ggp = p, ...)
   
   p+labs(title=title)
 }
