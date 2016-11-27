@@ -232,8 +232,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   # Add variables
   p <- fviz_pca_var(X, axes = axes, geom =  c("arrow", "text"), repel = repel,
                     label = label, invisible = invisible,
-                    scale.= r*0.7, ggp = p, habillage = "none",
-                    addEllipses = FALSE, palette = NULL, ...)
+                    scale.= r*0.7, ggp = p,  ...)
   p+labs(title=title)
 }
 
