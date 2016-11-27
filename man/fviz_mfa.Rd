@@ -171,7 +171,7 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle.}
+\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).

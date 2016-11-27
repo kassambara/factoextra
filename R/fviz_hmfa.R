@@ -16,6 +16,7 @@ NULL
 #' @param X an object of class HMFA [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
+#' @inheritParams fviz
 #' @param label a text specifying the elements to be labelled.
 #'  Default value is "all".
 #'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
