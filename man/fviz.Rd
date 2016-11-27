@@ -115,7 +115,7 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 a ggplot
 }
 \description{
-Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA and MCA.
+Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA, MCA and MFA.
 }
 \examples{
 \donttest{

@@ -1,7 +1,7 @@
 #' @include utilities.R
 NULL
 #' Visualizing Multivariate Analyse Outputs
-#' @description Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA and MCA.
+#' @description Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA, MCA and MFA.
 #' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
 #'  dudi, pca, coa and acm [ade4]; ca [ca package].
 #' @param element the element to subset from the output X. Possible values are
