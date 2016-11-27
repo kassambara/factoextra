@@ -100,16 +100,16 @@ NULL
 # axes: axes of interest
 # scale.: numeric, the data is multiplied by scale. before ploting
 # select: a selection of individuals/variables to be drawn.
-# mca_map,mca_element: applied to mca only, see fviz_mca map argument
+# ca_map: applied to (m)ca only, see fviz_ca map argument
 .add_supp <- function(p, X, element, axes, select, scale.=1, 
-                       mca_map = NULL,
+                       ca_map = NULL,
                       ...){
   dd <- .get_supp(X, element = element, axes = axes, select = select)
   
   if(!is.null(dd)){
     colnames(dd)[2:3] <-  c("x", "y")
-    if(!is.null(mca_map)) dd <- .scale_ca(dd, res.ca = X,  element = element, 
-                         type = mca_map, axes = axes)
+    if(!is.null(ca_map)) dd <- .scale_ca(dd, res.ca = X,  element = element, 
+                         type = ca_map, axes = axes)
     p <- fviz_add(p, df = dd[, 2:3, drop = FALSE]*scale., ...)
   }
   p
