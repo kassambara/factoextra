@@ -55,6 +55,7 @@ Collate:
     'fviz_cluster.R'
     'eclust.R'
     'facto_summarize.R'
+    'fviz.R'
     'fviz_ca.R'
     'fviz_contrib.R'
     'fviz_cos2.R'
