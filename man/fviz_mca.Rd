@@ -21,7 +21,7 @@ fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = FALSE, label = "all", invisible = "none", habillage = "none",
   addEllipses = FALSE, palette = NULL, arrows = c(FALSE, FALSE),
-  map = "symmetric", title = "MCA factor map - Biplot", ...)
+  map = "symmetric", title = "MCA - Biplot", ...)
 
 fviz_mca(X, ...)
 }

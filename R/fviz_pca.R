@@ -208,7 +208,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"),
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             label = "all", invisible="none", repel = FALSE, 
                             habillage = "none", palette = NULL, addEllipses=FALSE, 
-                            title = "Biplot of variables and individuals", ...)
+                            title = "PCA - Biplot", ...)
 {
   # Data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 

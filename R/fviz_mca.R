@@ -242,7 +242,7 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             repel = FALSE, label = "all", invisible="none",
                             habillage="none", addEllipses=FALSE, palette = NULL,
                             arrows = c(FALSE, FALSE), map ="symmetric", 
-                            title = "MCA factor map - Biplot", ...)
+                            title = "MCA - Biplot", ...)
 {
   
   # Individuals

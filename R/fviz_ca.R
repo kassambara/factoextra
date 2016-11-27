@@ -243,7 +243,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
 #' @export 
 fviz_ca_biplot <-function(X,  axes = c(1,2), geom=c("point", "text"), 
                           label = "all", invisible="none", arrows = c(FALSE, FALSE),
-                          repel = FALSE, title = "Biplot - CA factor map",
+                          repel = FALSE, title = "CA - Biplot",
                        ...)
 {
   # Rows
