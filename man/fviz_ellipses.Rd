@@ -4,14 +4,14 @@
 \alias{fviz_ellipses}
 \title{Draw confidence ellipses around the categories}
 \usage{
-fviz_ellipses(X, keepvar, axes = c(1, 2), addEllipses = TRUE,
+fviz_ellipses(X, habillage, axes = c(1, 2), addEllipses = TRUE,
   ellipse.type = "confidence", palette = NULL, pointsize = 1,
   geom = c("point", "text"), ggtheme = theme_bw(), ...)
 }
 \arguments{
 \item{X}{an object of class MCA, PCA or MFA.}
 
-\item{keepvar}{a numeric vector of indexes of variables or a
+\item{habillage}{a numeric vector of indexes of variables or a
 character vector of names of variables. Can be also a data frame containing grouping variables.}
 
 \item{axes}{a numeric vector specifying the axes of interest. Default values
