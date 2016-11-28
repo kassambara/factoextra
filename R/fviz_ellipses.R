@@ -5,7 +5,7 @@ NULL
 #' @inheritParams fviz
 #' @inheritParams ggpubr::ggpar
 #' @param X an object of class MCA, PCA or MFA.
-#' @param keepvar a numeric vector of indexes of variables or a
+#' @param habillage a numeric vector of indexes of variables or a
 #'   character vector of names of variables. Can be also a data frame containing grouping variables.
 #' @param geom a text specifying the geometry to be used for the graph.  Allowed
 #'   values are the combination of c("point", "text"). Use "point" (to show only
@@ -32,7 +32,7 @@ NULL
 #' 
 #'  }
 #' @export
-fviz_ellipses <- function(X, keepvar, axes = c(1,2), 
+fviz_ellipses <- function(X, habillage, axes = c(1,2), 
                           addEllipses = TRUE, ellipse.type = "confidence",
                           palette = NULL, pointsize = 1, geom = c("point", "text"),
                           ggtheme = theme_bw(),...){
@@ -40,11 +40,11 @@ fviz_ellipses <- function(X, keepvar, axes = c(1,2),
   df <- facto_summarize(X, element = "ind", axes = axes, result = c("coord"))
   colnames(df)[2:3] <-  c("x", "y")
   # augment data, if qualitative variable is used to color points by groups
-  dd <- .add_ind_groups(X, df, keepvar)
+  dd <- .add_ind_groups(X, df, habillage)
   df <- dd$ind
   color <- dd$name.quali
   
-  if(length(keepvar)==1 | is.factor(keepvar)) legend. <- "right" else legend. = "none"
+  if(length(habillage)==1 | is.factor(habillage)) legend. <- "right" else legend. = "none"
   
   label <- NULL
   if("text" %in% geom) label <- "name"
