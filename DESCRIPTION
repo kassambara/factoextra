@@ -59,6 +59,7 @@ Collate:
     'fviz_ca.R'
     'fviz_contrib.R'
     'fviz_cos2.R'
+    'fviz_ellipses.R'
     'get_hmfa.R'
     'fviz_hmfa.R'
     'get_mca.R'
