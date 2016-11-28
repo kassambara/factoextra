@@ -49,7 +49,7 @@ fviz_ellipses <- function(X, keepvar, axes = c(1,2),
   label <- NULL
   if("text" %in% geom) label <- "name"
   p <- ggpubr::ggscatter(df, x = "x", y = "y", color = color,
-                    ellipse = addEllipse, ellipse.type = ellipse.type,
+                    ellipse = addEllipses, ellipse.type = ellipse.type,
                     legend = legend., ggtheme = ggtheme, mean.point = TRUE,
                     label = label, size = pointsize, ...)
   
