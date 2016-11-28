@@ -236,6 +236,9 @@ fviz_mca_var <- function(X, axes=c(1,2), geom = c("point", "text"), repel = FALS
 {
   
   col.col.sup <- col.quanti.sup
+  extra_args <- list(...)
+  if(missing(choice) & !is.null(extra_args$choix))
+    choice <- extra_args$choix
   
   # Define plot types
   choice <- match.arg(choice)
