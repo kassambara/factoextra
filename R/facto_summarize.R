@@ -2,32 +2,35 @@
 NULL
 #' Subset and summarize the output of factor analyses
 #' 
-#' @description
-#'  Subset and summarize the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and
-#' Multiple Factor Analysis (MFA) functions from several packages.
-#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-#'  dudi, pca, coa and acm [ade4]; ca [ca package].
-#' @param element the element to subset from the output. Possible values are
-#'  "row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA
+#' @description Subset and summarize the results of Principal Component Analysis
+#' (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
+#' and Multiple Factor Analysis (MFA) functions from several packages.
+#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and
+#'   princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].
+#' @param element the element to subset from the output. Possible values are 
+#'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
+#'   'quanti.var', 'quali.var' or 'ind' for MFA
 #' @param result the result to be extracted for the element. Possible values are
-#'  the combination of c("cos2", "contrib", "coord")
-#' @param group.names a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).
+#'   the combination of c("cos2", "contrib", "coord")
+#' @param group.names a vector containing the name of the groups (by default,
+#'   NULL and the group are named group.1, group.2 and so on).
 #' @param node.level a single number indicating the HMFA node level.
-#' @param axes a numeric vector specifying the axes of interest. Default values are 1:2
-#'  for axes 1 and 2.
-#' @param select a selection of variables. Allowed values are NULL or a list containing the arguments
-#'  name, cos2 or contrib. Default is list(name = NULL, cos2 = NULL, contrib = NULL):
-#'  \itemize{
-#'  \item name: is a character vector containing variable names to be selected
-#'  \item cos2: if cos2 is in [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected.
-#'   if cos2 > 1, ex: 5, then the top 5 variables with the highest cos2 are selected
-#' \item contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest cos2 are selected. 
-#'  }
-#' @return A data frame containing the (total) coord, cos2 and the contribution for the axes.
-#' @details If length(axes) > 1, then the columns contrib and cos2 correspond to the total contributions and total cos2
-#'  of the axes. In this case, the column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the coordinates of
-#'  the points on the specified axes.
+#' @param axes a numeric vector specifying the axes of interest. Default values
+#'   are 1:2 for axes 1 and 2.
+#' @param select a selection of variables. Allowed values are NULL or a list
+#'   containing the arguments name, cos2 or contrib. Default is list(name =
+#'   NULL, cos2 = NULL, contrib = NULL): \itemize{ \item name: is a character
+#'   vector containing variable names to be selected \item cos2: if cos2 is in
+#'   [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected. if cos2 >
+#'   1, ex: 5, then the top 5 variables with the highest cos2 are selected \item
+#'   contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest
+#'   cos2 are selected. }
+#' @return A data frame containing the (total) coord, cos2 and the contribution
+#'   for the axes.
+#' @details If length(axes) > 1, then the columns contrib and cos2 correspond to
+#'   the total contributions and total cos2 of the axes. In this case, the
+#'   column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the
+#'   coordinates of the points on the specified axes.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
@@ -92,15 +95,20 @@ NULL
 #' res <- facto_summarize(res.mfa, "ind", axes = 1:2)
 #' head(res)
 #'  }
-#' @export 
+#' @export
 facto_summarize <- function(X, element, node.level = 1, group.names, 
                             result = c("coord", "cos2", "contrib"),
                             axes=1:2, select = NULL)
                             
   { 
   # check element
-  if(!element %in% c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes", "partial.node"))
-    stop('Te argument element should be one of "row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes", "partial.node"')
+  allowed_elmts <- c("row", "col", "var", "ind", "quanti.var", "quali.var",
+                     "mca.cor", "quanti.sup",  "group", "partial.axes", "partial.node")
+  if(!element %in% allowed_elmts) stop("Can't handle element = '", element, "'") 
+  if(element %in% c("mca.cor", "quanti.sup")) {
+    if(!inherits(X, "MCA")) stop("element = 'mca_cor' is supported only for FactoMineR::MCA().")
+    result <- NULL
+  }
   
   # check and get the classe of X
   facto_class <- .get_facto_class(X)
@@ -118,6 +126,14 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   else if(facto_class=="MCA"){
     if(element %in% c("var", "col")) elmt<- get_mca_var(X)
     else if(element %in% c("ind", "row")) elmt <- get_mca_ind(X)
+    else if(element == "mca.cor") {
+      elmt <- list(coord = X$var$eta2)
+      class(elmt) <- c("factoextra", "mca.cor")
+    }
+    else if(element == "quanti.sup") {
+      elmt <- X$quanti.sup
+      class(elmt) <- c("factoextra", "quanti.sup")
+    }
   }
   else if (facto_class == "MFA") {
   if (element %in% c("quanti.var", "col")) elmt <- get_mfa_quanti_var(X)
@@ -147,6 +163,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   
   # summarize the result
   res = NULL
+  if(element %in% c("mca.cor", "quanti.sup")) res <- elmt$coord
   
   # 1.Extract the coordinates x, y and coord
   if("coord" %in% result){
