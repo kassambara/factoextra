@@ -14,9 +14,10 @@ fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   NULL, contrib = NULL), ...)
 
 fviz_mca_var(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen", map = "symmetric",
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+  choice = c("var.cat", "mca.cor", "var", "quanti.sup"), col.var = "red",
+  alpha.var = 1, shape.var = 17, col.quanti.sup = "blue",
+  col.quali.sup = "darkgreen", map = "symmetric", select.var = list(name =
+  NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = FALSE, label = "all", invisible = "none", habillage = "none",
@@ -87,10 +88,16 @@ then the top 5 individuals/variables with the highest cos2 are drawn. \item
 contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 the highest contrib are drawn }}
 
-\item{...}{Additional arguments. \itemize{ \item in fviz_mca_ind() and 
-fviz_mca_var(): Additional arguments are passed to the functions fviz() and 
-ggpubr::ggpar(). \item in fviz_mca_biplot() and fviz_mca(): Additional 
-arguments are passed to fviz_mca_ind() and fviz_mca_var().}}
+\item{...}{Additional arguments. \itemize{ \item in fviz_mca_ind(), 
+fviz_mca_var() and fviz_mca_cor(): Additional arguments are passed to the 
+functions fviz() and ggpubr::ggpar(). \item in fviz_mca_biplot() and 
+fviz_mca(): Additional arguments are passed to fviz_mca_ind() and 
+fviz_mca_var().}}
+
+\item{choice}{the graph to plot. Allowed values include: i) "var" and 
+"mca.cor" for plotting the correlation between variables and principal
+dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
+supplementary quantitative variables.}
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative 
 supplementary variables.}
@@ -126,14 +133,14 @@ Multiple Correspondence Analysis (MCA) is an extension of simple
  
  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
  Graph of variables} \item{fviz_mca_biplot(): Biplot of individuals and 
- variables} \item{fviz_mca(): An alias of fviz_mca_biplot()} }
+ variables} \item{fviz_mca(): An alias of fviz_mca_biplot()}}
 }
 \details{
 The default plot of MCA is a "symmetric" plot in which both rows and 
  columns are in principal coordinates. In this situation, it's not possible 
  to interpret the distance between row points and column points. To overcome 
  this problem, the simplest way is to make an asymmetric plot. The argument 
- "map" can be used to change the plot type. For more explanation, read the
+ "map" can be used to change the plot type. For more explanation, read the 
  details section of fviz_ca documentation.
 }
 \examples{

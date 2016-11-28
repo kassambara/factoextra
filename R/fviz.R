@@ -2,12 +2,7 @@
 NULL
 #' Visualizing Multivariate Analyse Outputs
 #' @description Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA, MCA and MFA.
-#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-#'  dudi, pca, coa and acm [ade4]; ca [ca package].
-#' @param element the element to subset from the output X. Possible values are
-#'  "row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA
-#' @param axes a numeric vector of length 2 specifying the dimensions to be 
-#'   plotted.
+#' @inheritParams facto_summarize
 #' @param geom a text specifying the geometry to be used for the graph. Default value is "auto". Allowed 
 #'   values are the combination of c("point", "arrow", "text"). Use "point" (to 
 #'   show only points); "text" to show only labels; c("point", "text") or 
@@ -134,7 +129,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Define title if NULL
   if(is.null(title)){
     element_desc <- list(ind = "Individuals", var = "Variables",
-                         col = "Column points", row = "Row points")
+                         col = "Column points", row = "Row points",
+                         mca.cor = "Variables", quanti.sup = "Quantitative variables")
+    if(facto.class == "MCA") element_desc$var <- "Variable categories"
     title <- paste0(element_desc[[element]], " - ", facto.class)
   }
   # Define geometry if auto
@@ -145,7 +142,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Define color if missing
   if(facto.class %in% c("CA", "MCA")){
     if(element %in% c("row", "ind") & missing(color)) color = "blue"
-    else if(element %in% c("col", "var") & missing(color)) color = "red"
+    else if(element %in% c("col", "var", "mca.cor") & missing(color)) color = "red"
   }
 
   # Data preparation
@@ -155,7 +152,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          result = c("coord", "contrib", "cos2"))
   colnames(df)[2:3] <-  c("x", "y")
   # augment data, if qualitative variable is used to color points by groups
-  if(habillage[1] !="none"){
+  if(!("none" %in% habillage)){
     dd <- .add_ind_groups(X, df, habillage)
     df <- dd$ind
     color <- dd$name.quali
@@ -171,15 +168,14 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(facto.class == "PCA" & element == "var" & !is.null(extra_args$scale.) )
     df[, c("x", "y")] <- df[, c("x", "y")]*extra_args$scale.
   # (M)CA: scale coords according to the type of map
-  if(facto.class %in% c("CA", "MCA")){
+  if(facto.class %in% c("CA", "MCA") & !(element %in% c("mca.cor", "quanti.sup"))){
   if(!is.null(extra_args$map)) df <- .scale_ca(df, res.ca = X,  element = element, 
                                                type = extra_args$map, axes = axes)
   }
- 
   # Main plot
   #%%%%%%%%%%%%%%%%%%%
   point <- ("point" %in% geom) & (!hide[[element]]) # to show points, should be TRUE
-  mean.point <- (habillage[1] !="none") & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
+  mean.point <- (!("none" %in% habillage)) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
   
   label <- NULL
   if(lab[[element]] & "text" %in% geom & !hide[[element]]) label <- "name"
@@ -206,17 +202,37 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
       p <- .add_corr_circle(p, color = col.circle)
   }
+  else if(facto.class == "MCA" & element == "quanti.sup"){
+      p <- .add_corr_circle(p, color = col.circle)
+  }
+  # Faceting when multiple variables are used to color individuals
+  # (e.g., habillage = 1:2, or data.frame)
+  # in this case there is a column "facet_vars" in df
+  if("facet_vars" %in% colnames(df)){
+    groups <- c("facet_vars", "Groups")
+    xx <- ggpubr::desc_statby(df, measure.var = "x", grps = groups)[, c(groups, "mean")]
+    colnames(xx)[ncol(xx)] <- "x"
+    yy <- ggpubr::desc_statby(df, measure.var = "y", grps = groups)[, c(groups, "mean")]
+    xx$y <- yy$mean
+    grp_coord <- xx
+   
+    p <- p+ggpubr::geom_exec(geom_text, data = grp_coord, x = "x", y = "y",
+                             label = "Groups", color = color) 
+    p <- p + facet_wrap(~facet_vars) + theme(legend.position = "none") 
+  }
   
   # Supplementary elements: available only for FactoMineR
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   scale. <- ifelse(is.null(extra_args$scale.), 1, extra_args$scale.)
   esup <- .define_element_sup(X, element, geom = geom, lab = lab, hide = hide,
                               col.row.sup = col.row.sup, col.col.sup = col.col.sup,...) 
+  ca_map = extra_args$map
+  if(element == "mca.cor") ca_map = NULL
   
   if(!is.null(esup)) p <- .add_supp (p, X, element = esup$name, axes = axes, select = select,
                                 geom = geom, color = esup$color, shape = esup$shape, pointsize = pointsize,
                                 labelsize = labelsize, addlabel = esup$addlabel, repel = repel, linetype = 2,
-                                scale. = scale., ca_map = extra_args$map)
+                                scale. = scale., ca_map = ca_map)
   
   
   p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
@@ -286,7 +302,11 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     res <- list(name = "quanti", color = col.col.sup, shape = shape.sup, 
                 addlabel = (lab$quanti & "text" %in% geom))
   }
-  else if(element == "var" & inherits(X, 'MCA') & !hide$quali.sup){
+  else if(element == "mca.cor" & inherits(X, 'MCA') & !hide$quanti){
+    res <- list(name = c("quanti.sup", "quali.sup$eta2"), color = col.col.sup, shape = shape.sup, 
+                addlabel = (lab$quanti & "text" %in% geom))
+  }
+  else if(element %in% "var" & inherits(X, 'MCA') & !hide$quali.sup){
     res <- list(name = "quali.sup", color = col.col.sup, shape = shape.sup, 
                 addlabel = (lab$quali.sup & "text" %in% geom))
   }

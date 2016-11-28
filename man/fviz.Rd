@@ -14,14 +14,15 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   col.circle = "grey70", ggtheme = theme_gray(), ...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-dudi, pca, coa and acm [ade4]; ca [ca package].}
+\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and
+princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].}
 
-\item{element}{the element to subset from the output X. Possible values are
-"row" or "col" for CA; "var" or "ind" for PCA and MCA; 'quanti.var', 'quali.var' or 'ind' for MFA}
+\item{element}{the element to subset from the output. Possible values are 
+"row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
+'quanti.var', 'quali.var' or 'ind' for MFA}
 
-\item{axes}{a numeric vector of length 2 specifying the dimensions to be 
-plotted.}
+\item{axes}{a numeric vector specifying the axes of interest. Default values
+are 1:2 for axes 1 and 2.}
 
 \item{geom}{a text specifying the geometry to be used for the graph. Default value is "auto". Allowed 
 values are the combination of c("point", "arrow", "text"). Use "point" (to 

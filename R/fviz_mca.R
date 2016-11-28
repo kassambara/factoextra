@@ -11,7 +11,7 @@ NULL
 #'  
 #'  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
 #'  Graph of variables} \item{fviz_mca_biplot(): Biplot of individuals and 
-#'  variables} \item{fviz_mca(): An alias of fviz_mca_biplot()} }
+#'  variables} \item{fviz_mca(): An alias of fviz_mca_biplot()}}
 #'@param X an object of class MCA [FactoMineR], acm [ade4].
 #'@inheritParams fviz_pca
 #'@param label a text specifying the elements to be labelled. Default value is 
@@ -47,6 +47,10 @@ NULL
 #'  supplementary variables.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'  labels or not.
+#'@param choice the graph to plot. Allowed values include: i) "var" and 
+#'  "mca.cor" for plotting the correlation between variables and principal
+#'  dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
+#'  supplementary quantitative variables.
 #'@param title the title of the graph
 #'@param select.ind,select.var a selection of individuals/variables to be drawn.
 #'  Allowed values are NULL or a list containing the arguments name, cos2 or 
@@ -58,10 +62,11 @@ NULL
 #'  the highest contrib are drawn }
 #'@inheritParams ggpubr::ggpar
 #'@inheritParams fviz
-#'@param ... Additional arguments. \itemize{ \item in fviz_mca_ind() and 
-#'  fviz_mca_var(): Additional arguments are passed to the functions fviz() and 
-#'  ggpubr::ggpar(). \item in fviz_mca_biplot() and fviz_mca(): Additional 
-#'  arguments are passed to fviz_mca_ind() and fviz_mca_var().}
+#'@param ... Additional arguments. \itemize{ \item in fviz_mca_ind(), 
+#'  fviz_mca_var() and fviz_mca_cor(): Additional arguments are passed to the 
+#'  functions fviz() and ggpubr::ggpar(). \item in fviz_mca_biplot() and 
+#'  fviz_mca(): Additional arguments are passed to fviz_mca_ind() and 
+#'  fviz_mca_var().}
 #'@param map character string specifying the map type. Allowed options include: 
 #'  "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
 #'  "colgab", "rowgreen" and "colgreen". See details
@@ -72,8 +77,8 @@ NULL
 #'  columns are in principal coordinates. In this situation, it's not possible 
 #'  to interpret the distance between row points and column points. To overcome 
 #'  this problem, the simplest way is to make an asymmetric plot. The argument 
-#'  "map" can be used to change the plot type. For more explanation, read the
-#'  details section of fviz_ca documentation. 
+#'  "map" can be used to change the plot type. For more explanation, read the 
+#'  details section of fviz_ca documentation.
 #'  
 #'@return a ggplot2 plot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -224,13 +229,29 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 #' @rdname fviz_mca
 #' @export 
 fviz_mca_var <- function(X, axes=c(1,2), geom = c("point", "text"), repel = FALSE, 
+                         choice = c("var.cat", "mca.cor", "var", "quanti.sup"), 
                          col.var="red", alpha.var=1, shape.var = 17, col.quanti.sup = "blue", 
-                         col.quali.sup = "darkgreen", map = "symmetric", 
+                         col.quali.sup = "darkgreen",  map = "symmetric", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 {
-  fviz (X, element = "var", axes = axes, geom = geom,
+  
+  col.col.sup <- col.quanti.sup
+  
+  # Define plot types
+  choice <- match.arg(choice)
+  if(choice == "var.cat") choice <- "var"
+  else if(choice == "var") choice <- "mca.cor"
+  # Define color for supplementary element
+  if(choice == "mca.cor") col.col.sup <- col.quanti.sup 
+  else if(choice == "var") col.col.sup <- col.quali.sup
+  # Define geometry for supplementary quantitative variables
+  if(choice == "quanti.sup") {
+    if(missing(geom)) geom <- c("arrow", "text")
+    if(missing(col.var)) col.var <- col.quanti.sup
+  }
+  fviz (X, element = choice, axes = axes, geom = geom,
         color = col.var, alpha = alpha.var,  pointshape = shape.var, 
-        shape.sup = shape.var, col.col.sup = col.quali.sup, 
+        shape.sup = shape.var, col.col.sup = col.col.sup, 
         select = select.var, repel = repel,  map = map, ...)
 }
 
@@ -267,5 +288,6 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 fviz_mca <- function(X, ...){
   fviz_mca_biplot(X, ...)
 }
+
 
 
