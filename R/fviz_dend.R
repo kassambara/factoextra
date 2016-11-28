@@ -433,7 +433,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if (length(h) > 1L | length(k) > 1L) 
     stop("'k' and 'h' must be a scalar(i.e.: of length 1)")
   tree_heights <- dendextend::heights_per_k.dendrogram(dend)[-1]
-  tree_order <- order.dendrogram(dend)
+  tree_order <- stats::order.dendrogram(dend)
   if (!is.null(h)) {
     if (!is.null(k)) 
       stop("specify exactly one of 'k' and 'h'")
