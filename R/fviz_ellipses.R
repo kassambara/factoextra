@@ -3,7 +3,7 @@ NULL
 #' Draw confidence ellipses around the categories
 #' @description Draw confidence ellipses around the categories
 #' @inheritParams fviz
-#' @inheritParams ggpar
+#' @inheritParams ggpubr::ggpar
 #' @param X an object of class MCA, PCA or MFA.
 #' @param keepvar a numeric vector of indexes of variables or a
 #'   character vector of names of variables. Can be also a data frame containing grouping variables.
