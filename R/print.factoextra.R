@@ -112,9 +112,9 @@ print.factoextra<-function(x, ...){
     cat("Multiple Factor Analysis Results for groups\n",
         "===================================================\n")
     res <- array(data="", dim=c(4,2), dimnames=list(1:4, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for categories")
-    res[2, ] <- c("$cos2", "Cos2 for categories")
-    res[3, ] <- c("$contrib", "contributions of categories")
+    res[1, ] <- c("$coord", "Coordinates of groups")
+    res[2, ] <- c("$cos2", "Cos2 of goups")
+    res[3, ] <- c("$contrib", "contributions of groups")
     res[4, ] <- c("$correlation", "correlation between each group and each factor")
     print(res[1:4,])
   }
