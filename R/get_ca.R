@@ -51,7 +51,7 @@ NULL
 #' @rdname get_ca
 #' @export 
 get_ca <- function(res.ca, element = c("row", "col")){
- elmt <- element[1]
+ elmt <- match.arg(element)
  if(elmt =="row") get_ca_row(res.ca)
  else if(elmt == "col") get_ca_col(res.ca)
  else stop("Allowed values for the argument element are: 'row' or 'col'.")
