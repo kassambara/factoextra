@@ -8,7 +8,7 @@
 fviz_contrib(X, choice = c("row", "col", "var", "ind", "quanti.var",
   "quali.var", "group", "partial.axes"), axes = 1, fill = "steelblue",
   color = "steelblue", sort.val = c("desc", "asc", "none"), top = Inf,
-  xtickslab.rt = 45, ggtheme = theme_grey(), ...)
+  xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
 
 fviz_pca_contrib(X, choice = c("var", "ind"), axes = 1,
   fill = "steelblue", color = "steelblue", sortcontrib = c("desc", "asc",
