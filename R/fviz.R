@@ -111,7 +111,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           col.row.sup = "darkblue", col.col.sup="darkred",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
                           title = NULL, axes.linetype = "dashed",
-                          repel = FALSE, col.circle ="grey70", ggtheme = theme_gray(),
+                          repel = FALSE, col.circle ="grey70", ggtheme = theme_minimal(),
                            ...)
   {
   

@@ -11,7 +11,7 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   alpha = 1, gradient.cols = NULL, col.row.sup = "darkblue",
   col.col.sup = "darkred", select = list(name = NULL, cos2 = NULL, contrib =
   NULL), title = NULL, axes.linetype = "dashed", repel = FALSE,
-  col.circle = "grey70", ggtheme = theme_gray(), ...)
+  col.circle = "grey70", ggtheme = theme_minimal(), ...)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and
