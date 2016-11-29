@@ -9,13 +9,13 @@ NULL
 #'   c("arrow", "text") to show both types.
 #' @param label a text specifying the elements to be labelled. Default value is 
 #'   "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
-#'   "quali", "var", "quanti.sup"). "ind" can be used to label only active 
+#'   "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only active 
 #'   individuals. "ind.sup" is for supplementary individuals. "quali" is for 
 #'   supplementary qualitative variables. "var" is for active variables. 
 #'   "quanti.sup" is for quantitative supplementary variables.
 #' @param invisible a text specifying the elements to be hidden on the plot. 
 #'   Default value is "none". Allowed values are the combination of c("ind", 
-#'   "ind.sup", "quali", "var", "quanti.sup").
+#'   "ind.sup", "quali", "var", "quanti.sup", "group.sup").
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
 #' @param pointshape the shape of points
@@ -130,7 +130,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(is.null(title)){
     element_desc <- list(ind = "Individuals", var = "Variables",
                          col = "Column points", row = "Row points",
-                         mca.cor = "Variables", quanti.sup = "Quantitative variables")
+                         mca.cor = "Variables", quanti.sup = "Quantitative variables",
+                         group = "Variable groups")
     if(facto.class == "MCA") element_desc$var <- "Variable categories"
     title <- paste0(element_desc[[element]], " - ", facto.class)
   }
@@ -291,35 +292,30 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   
   extra_args <- list(...)
   shape.sup <- ifelse(is.null(extra_args$shape.sup), 19, extra_args$shape.sup)
+  color <- col.row.sup
+  if(element %in% c("var", "mca.cor", "col", "group")) color <- col.col.sup
+    
   res <- NULL
   # Supplementary individuals
-  if(element == "ind" & inherits(X, c('PCA', "MCA")) & !hide$ind.sup) {
-    res <- list(name = "ind.sup", color = col.row.sup, shape = shape.sup,
-                addlabel = (lab$ind.sup & "text" %in% geom))
-  }
+  if(element == "ind" & inherits(X, c('PCA', "MCA")) & !hide$ind.sup)
+    res <- list(name = "ind.sup", addlabel = (lab$ind.sup & "text" %in% geom))
   # Supplementary quantitative variables
-  else if(element == "var" & inherits(X, 'PCA') & !hide$quanti){
-    res <- list(name = "quanti", color = col.col.sup, shape = shape.sup, 
-                addlabel = (lab$quanti & "text" %in% geom))
-  }
-  else if(element == "mca.cor" & inherits(X, 'MCA') & !hide$quanti){
-    res <- list(name = c("quanti.sup", "quali.sup$eta2"), color = col.col.sup, shape = shape.sup, 
-                addlabel = (lab$quanti & "text" %in% geom))
-  }
-  else if(element %in% "var" & inherits(X, 'MCA') & !hide$quali.sup){
-    res <- list(name = "quali.sup", color = col.col.sup, shape = shape.sup, 
-                addlabel = (lab$quali.sup & "text" %in% geom))
-  }
-  # Supplementary rows
-  else if(element == "row" & inherits(X, c('CA', 'ca')) & !hide$row.sup){
-    res <- list(name = "row.sup", color = col.row.sup, shape = shape.sup,
-                addlabel = (lab$row.sup & "text" %in% geom))
-  }
-  # Supplementary cols
-  else if(element == "col" & inherits(X, c('CA', 'ca')) & !hide$row.sup){
-    res <- list(name = "col.sup", color = col.col.sup, shape = shape.sup,
-                addlabel = (lab$col.sup & "text" %in% geom))
-  }
+  else if(element == "var" & inherits(X, 'PCA') & !hide$quanti)
+    res <- list(name = "quanti", addlabel = (lab$quanti & "text" %in% geom))
+  else if(element == "mca.cor" & inherits(X, 'MCA') & !hide$quanti)
+    res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti & "text" %in% geom))
+  else if(element %in% "var" & inherits(X, 'MCA') & !hide$quali.sup)
+    res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
+  # CA
+  else if(element == "row" & inherits(X, c('CA', 'ca')) & !hide$row.sup)
+    res <- list(name = "row.sup", addlabel = (lab$row.sup & "text" %in% geom))
+  else if(element == "col" & inherits(X, c('CA', 'ca')) & !hide$row.sup)
+    res <- list(name = "col.sup", addlabel = (lab$col.sup & "text" %in% geom))
+  else if(element == "group" & inherits(X, c('MFA')) & !hide$group.sup)
+    res <- list(name = "group", addlabel = (lab$group.sup & "text" %in% geom))
+  
+  res$color <- color
+  res$shape <- shape.sup
   res
 }
 
