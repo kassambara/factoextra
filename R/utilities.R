@@ -45,9 +45,9 @@ NULL
 .get_supp <- function(X, element = NULL, axes = 1:2, 
                       result = c("coord", "cos2"), select = NULL){
   
- 
-  
-  if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA"))) {
+  if(inherits(X, "MFA") & element == "group")
+    elmt <- .get_mfa_group_sup(X)
+  else if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -153,6 +153,17 @@ NULL
                                      cos2 = cos2[index, , drop = FALSE]) 
   }
   rows
+}
+
+# get supplementary groups from MFA
+.get_mfa_group_sup <- function(res.mfa){
+  res <- NULL
+  # supplementary points
+  coord <- res.mfa$group$coord.sup
+  if(!is.null(coord)){
+    res <- list(coord = coord, cos2 = res.mfa$group$cos2.sup) 
+  }
+ res
 }
 
 # Scale row coordinates depending on the map type
