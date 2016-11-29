@@ -228,8 +228,8 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 
 #' @rdname fviz_mca
 #' @export 
-fviz_mca_var <- function(X, axes=c(1,2), geom = c("point", "text"), repel = FALSE, 
-                         choice = c("var.cat", "mca.cor", "var", "quanti.sup"), 
+fviz_mca_var <- function(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"), 
+                         axes=c(1,2), geom = c("point", "text"), repel = FALSE, 
                          col.var="red", alpha.var=1, shape.var = 17, col.quanti.sup = "blue", 
                          col.quali.sup = "darkgreen",  map = "symmetric", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
