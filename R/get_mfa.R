@@ -8,8 +8,8 @@ NULL
 #' \itemize{
 #' \item get_mfa(): Extract the results for variables and individuals
 #' \item get_mfa_ind(): Extract the results for individuals only
-#' \item get_mfa_var_qanti(): Extract the results for quantitative variables only
-#' \item get_mfa_var_qali(): Extract the results for qualitative variables only
+#' \item get_mfa_var_quanti(): Extract the results for quantitative variables only
+#' \item get_mfa_var_quali(): Extract the results for qualitative variables only
 #' \item get_mfa_group(): Extract the results for groups only
 #' \item get_mfa_partial_axes(): Extract the results for partial axes only
 #' }
