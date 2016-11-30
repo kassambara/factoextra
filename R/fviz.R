@@ -131,6 +131,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     element_desc <- list(ind = "Individuals", var = "Variables",
                          col = "Column points", row = "Row points",
                          mca.cor = "Variables", quanti.sup = "Quantitative variables",
+                         quanti.var = "Quantitative variables",
                          group = "Variable groups")
     if(facto.class == "MCA") element_desc$var <- "Variable categories"
     title <- paste0(element_desc[[element]], " - ", facto.class)
@@ -203,7 +204,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
       p <- .add_corr_circle(p, color = col.circle)
   }
-  else if(facto.class == "MCA" & element == "quanti.sup"){
+  else if(facto.class %in% c("MCA", "MFA") & element %in% c("quanti.sup", "quanti.var")){
       p <- .add_corr_circle(p, color = col.circle)
   }
   # Faceting when multiple variables are used to color individuals
@@ -293,7 +294,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   extra_args <- list(...)
   shape.sup <- ifelse(is.null(extra_args$shape.sup), 19, extra_args$shape.sup)
   color <- col.row.sup
-  if(element %in% c("var", "mca.cor", "col", "group")) color <- col.col.sup
+  if(element %in% c("var", "mca.cor", "col", "group", "quanti.var")) color <- col.col.sup
     
   res <- NULL
   # Supplementary individuals
@@ -313,6 +314,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     res <- list(name = "col.sup", addlabel = (lab$col.sup & "text" %in% geom))
   else if(element == "group" & inherits(X, c('MFA')) & !hide$group.sup)
     res <- list(name = "group", addlabel = (lab$group.sup & "text" %in% geom))
+  else if(element == "quanti.var" & inherits(X, c('MFA')) & !hide$quanti.var.sup)
+    res <- list(name = "quanti.var.sup", addlabel = (lab$quanti.var.sup & "text" %in% geom))
   
   res$color <- color
   res$shape <- shape.sup
