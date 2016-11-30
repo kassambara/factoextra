@@ -102,9 +102,9 @@ print.factoextra<-function(x, ...){
     cat("Multiple Factor Analysis Results for quantitative variables\n",
         "===================================================\n")
     res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for the individuals")
-    res[2, ] <- c("$cos2", "Cos2 for the individuals")
-    res[3, ] <- c("$contrib", "contributions of the individuals")
+    res[1, ] <- c("$coord", "Coordinates")
+    res[2, ] <- c("$cos2", "Cos2: quality of the representation")
+    res[3, ] <- c("$contrib", "Contributions to the dimensions")
     print(res[1:3,], ...)
   }
   # correlation coefficients added
