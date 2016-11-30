@@ -156,10 +156,10 @@ get_eigenvalue <- function(X){
 #' @rdname eigenvalue
 #' @export
 fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
-                         barfill="steelblue", barcolor="steelblue", linecolor = "black",
-                         ncp=10, addlabels=FALSE, hjust = 0, 
-                   main = NULL, xlab = NULL, ylab = NULL, ggtheme = theme_gray(),
-                   ...)
+                  barfill="steelblue", barcolor="steelblue", linecolor = "black",
+                  ncp=10, addlabels=FALSE, hjust = 0, 
+                   main = NULL, xlab = NULL, ylab = NULL, 
+                  ggtheme = theme_minimal(), ...)
 {
   
   eig <- get_eigenvalue(X)
