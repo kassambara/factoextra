@@ -93,13 +93,15 @@ NULL
 #'
 #'  }
 #' @export
-fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"), axes=1,
-                   fill="steelblue", color = "steelblue",
-                   sort.val = c("desc", "asc", "none"), top = Inf,
-                   xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
+fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"),
+                         axes=1, fill="steelblue", color = "steelblue", 
+                         sort.val = c("desc", "asc", "none"), top = Inf,
+                         xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
 {
 
   sort.val <- match.arg(sort.val)
+  choice = match.arg(choice)
+  
   title <- .build_title(choice[1], "Contribution", axes)
 
   dd <- facto_summarize(X, element = choice, result = "contrib", axes = axes)
@@ -115,10 +117,18 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
   }
   df <- data.frame(name = factor(names(contrib), levels = names(contrib)), contrib = contrib)
   
+  # Define color if quanti.var
+  if(choice == "quanti.var") {
+    df$Groups <- .get_quanti_var_groups (X)
+    if(missing(fill)) fill <- "Groups"
+    if(missing(color)) color <- "Groups"
+  }
+  
   p <- ggpubr::ggbarplot(df, x = "name", y = "contrib", fill = fill, color = color,
                          sort.val = sort.val, top = top,
                          main = title, xlab = FALSE, ylab ="Contributions (%)",
-                         xtickslab.rt = xtickslab.rt, ggtheme = ggtheme, ...
+                         xtickslab.rt = xtickslab.rt, ggtheme = ggtheme,
+                         sort.by.groups = FALSE, ...
                          )+
     geom_hline(yintercept=theo_contrib, linetype=2, color="red")
   
