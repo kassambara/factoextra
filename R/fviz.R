@@ -178,6 +178,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   #%%%%%%%%%%%%%%%%%%%
   point <- ("point" %in% geom) & (!hide[[element]]) # to show points, should be TRUE
   mean.point <- (!("none" %in% habillage)) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
+  if(element == "quanti.var") mean.point <- FALSE # MFA, don't show the mean point of groups of variables
   
   label <- NULL
   if(lab[[element]] & "text" %in% geom & !hide[[element]]) label <- "name"
