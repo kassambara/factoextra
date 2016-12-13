@@ -9,25 +9,16 @@
 \alias{fviz_mfa_quali_biplot}
 \alias{fviz_mfa_quali_var}
 \alias{fviz_mfa_quanti_var}
+\alias{fviz_mfa_var}
 \title{Visualize Multiple Factor Analysis}
 \usage{
-fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, ellipse.type = "norm",
-  ellipse.alpha = 0.1, col.ind = "blue", col.ind.sup = "darkblue",
-  alpha.ind = 1, shape.ind = 19, repel = FALSE,
-  axes.linetype = "dashed", select.ind = list(name = NULL, cos2 = NULL,
-  contrib = NULL), title = "Individuals factor map - MFA",
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
+  habillage = "none", palette = NULL, addEllipses = FALSE,
+  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
+  shape.ind = 19, col.quali.var.sup = "black", select.ind = list(name =
+  NULL, cos2 = NULL, contrib = NULL), ...)
 
-fviz_mfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen",
-  col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), axes.linetype = "dashed",
-  title = "Quantitative Variable categories - MFA", repel = FALSE,
-  jitter = list(what = "label", width = NULL, height = NULL))
+fviz_mfa_quanti_var(X, ...)
 
 fviz_mfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -61,20 +52,17 @@ fviz_mfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   title = "Individuals factor map - MFA", jitter = list(what = "label",
   width = NULL, height = NULL), ...)
 
-fviz_mfa_group(X, axes = c(1, 2), geom = c("point", "text"),
-  alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
-  labelsize = 4, pointsize = 2, col.group = "blue",
-  col.group.sup = "darkgreen", repel = FALSE, select.group = list(name =
-  NULL, cos2 = NULL, contrib = NULL), title = "MFA - Groups Representations",
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+fviz_mfa_var(X, choice = c("quanti.var", "group"), axes = c(1, 2),
+  geom = c("point", "text"), repel = FALSE, col.var = "red",
+  alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
+  palette = NULL, select.var = list(name = NULL, cos2 = NULL, contrib =
+  NULL), ...)
 
-fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, col.axes = "red",
-  alpha.axes = 1, col.circle = "grey70", select.axes = list(name = NULL,
-  contrib = NULL), axes.linetype = "dashed",
-  title = "MFA - Partial Axes Representations", arrows = c(FALSE, FALSE),
-  repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL),
-  ...)
+fviz_mfa_group(X, ...)
+
+fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"),
+  col.axes = NULL, alpha.axes = 1, col.circle = "grey70",
+  select.axes = list(name = NULL, contrib = NULL), repel = FALSE, ...)
 
 fviz_mfa(X, ...)
 }
@@ -88,6 +76,56 @@ plotted.}
 values are the combination of c("point", "arrow", "text"). Use "point" (to 
 show only points); "text" to show only labels; c("point", "text") or 
 c("arrow", "text") to show both types.}
+
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
+
+\item{habillage}{an optional factor variable for coloring
+the observations by groups. Default value is "none".
+If X is an MFA object from FactoMineR package, habillage can also specify
+the index of the factor variable in the data.}
+
+\item{palette}{the color palette to be used for coloring or filling by
+groups. Allowed values include "grey" for grey color palettes; brewer
+palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
+"red"); and scientific journal palettes from ggsci R package, e.g.: "npg",
+"aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and
+"rickandmorty".}
+
+\item{addEllipses}{logical value. If TRUE, draws ellipses around the 
+individuals when habillage != "none".}
+
+\item{col.ind, col.partial, col.var, col.axes}{color for individuals, partial individuals, variables, 
+groups and axes, respectively.
+ Possible values include also : "cos2", "contrib", "coord", "x" or "y".
+ In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
+ contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
+ To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+
+\item{col.ind.sup}{color for supplementary individuals}
+
+\item{alpha.ind, alpha.partial, alpha.var, alpha.axes}{controls the transparency of
+ individual, partial individual, variable, group and axes colors, respectively.
+The value can variate from 0 (total transparency) to 1 (no transparency).
+Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
+ In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
+ contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
+ To use this, make sure that habillage ="none".}
+
+\item{shape.ind, shape.var}{point shapes of individuals, variables, groups and axes}
+
+\item{col.quali.var.sup}{color for supplementary qualitative variables. Default is "black".}
+
+\item{select.ind, select.partial, select.var, select.axes}{a selection of individuals/partial individuals/
+variables/groups/axes to be drawn.
+Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
+\itemize{
+\item name is a character vector containing individuals/variables to be drawn
+\item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn.
+if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
+\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
+}}
+
+\item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
 
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
@@ -106,56 +144,9 @@ Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "q
 
 \item{pointsize}{the size of points}
 
-\item{habillage}{an optional factor variable for coloring
-the observations by groups. Default value is "none".
-If X is an MFA object from FactoMineR package, habillage can also specify
-the index of the factor variable in the data.}
-
-\item{addEllipses}{logical value. If TRUE, draws ellipses around the 
-individuals when habillage != "none".}
-
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{ellipse.type}{Character specifying frame type. Possible values are 
-'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-including one of c("t", "norm", "euclid").}
-
-\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
-fill color. Use alpha = 0 for no fill color.}
-
-\item{col.ind, col.partial, col.var, col.group, col.group.sup, col.axes}{color for individuals, partial individuals, variables, 
-groups and axes, respectively.
- Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
- To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
-
-\item{col.ind.sup}{color for supplementary individuals}
-
-\item{alpha.ind, alpha.partial, alpha.var, alpha.group, alpha.axes}{controls the transparency of
- individual, partial individual, variable, group and axes colors, respectively.
-The value can variate from 0 (total transparency) to 1 (no transparency).
-Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
- To use this, make sure that habillage ="none".}
-
-\item{shape.ind, shape.var, shape.group}{point shapes of individuals, variables, groups and axes}
-
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
+\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
 
 \item{axes.linetype}{linetype of x and y axes.}
-
-\item{select.ind, select.partial, select.var, select.group, select.axes}{a selection of individuals/partial individuals/
-variables/groups/axes to be drawn.
-Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
-\itemize{
-\item name is a character vector containing individuals/variables to be drawn
-\item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn.
-if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
-}}
 
 \item{title}{the title of the graph}
 
@@ -167,11 +158,8 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item height: degree of jitter in y direction
 }}
 
-\item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
-
-\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
-
-\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
+\item{ellipse.level}{the size of the concentration ellipse in normal 
+probability.}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).
@@ -180,6 +168,22 @@ First value sets the rows and the second value sets the columns.}
 \item{legend.partial.title}{the title of the partal groups legend.}
 
 \item{linesize}{size of partial point connecting line.}
+
+\item{ellipse.type}{Character specifying frame type. Possible values are 
+'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
+including one of c("t", "norm", "euclid").}
+
+\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
+fill color. Use alpha = 0 for no fill color.}
+
+\item{choice}{the graph to plot. Allowed values include: i) "var" and 
+"mca.cor" for plotting the correlation between variables and principal
+dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
+supplementary quantitative variables.}
+
+\item{col.var.sup}{color for supplementary variables.}
+
+\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
 }
 \value{
 a ggplot2 plot
