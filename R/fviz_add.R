@@ -53,6 +53,7 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
   
   if(!inherits(df, c("data.frame", "matrix")))
      stop("df should be a data frame or a matrix")
+  if(!inherits(df, "data.frame")) df <- as.data.frame(df)
      
   if(ncol(df) < 2)
     stop("df should have at least two columns (x and y coordinates)")
@@ -60,14 +61,16 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
   if(length(intersect(geom, c("point", "arrow", "text"))) == 0)
     stop("The specified value(s) for the argument geom are not allowed ")
   
-  df <- data.frame(name = rownames(df), x = df[,axes[1]], y = df[,axes[2]]) 
+  if(is.null(df$name)) df$name <- rownames(df)
+  if(is.null(df$x)) df$x <- df[,axes[1]]
+  if(is.null(df$y)) df$y <- df[,axes[1]]
   
   # Plot
   #%%%%%%%%%%%%%%%%%%%%%%
   hjust <- vjust <- 0.5
   if("point" %in% geom) {
-    p <-  ggp + geom_point(data = df, aes_string("x", "y"), 
-                           color = color, shape = shape, size = pointsize)
+    p <- ggp + ggpubr::geom_exec(geom_point, data = df, x = "x", y = "y",
+                                 color = color, shape = shape, size = pointsize)
     vjust <- -0.7
   }
   else if("arrow" %in% geom){
@@ -85,11 +88,18 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
   
   if(addlabel | "text" %in% geom){
     if(repel){
-      p <- p + ggrepel::geom_text_repel(data = df, aes_string('x', 'y', label = 'name'), 
-                                        color = color, size = labelsize)
+      p <- p + ggpubr::geom_exec(ggrepel::geom_text_repel, data = df, x = "x", y = "y", 
+                                 label = "name", color = color, size = labelsize)
     }
-    else p <- p + geom_text(data = df, aes_string("x", "y"), color = color,
-                       label = df$name, size = labelsize, vjust=vjust, hjust = hjust)
+    else{
+      p <- p + ggpubr::geom_exec(geom_text, data = df, x = "x", y = "y", 
+                                 label = "name", color = color, size = labelsize,
+                                 vjust=vjust, hjust = hjust)
+      
+#       p <- p + geom_text(data = df, aes_string("x", "y"), color = color,
+#                          label = df$name, size = labelsize, vjust=vjust, hjust = hjust)
+      
+    } 
   }
   
   
