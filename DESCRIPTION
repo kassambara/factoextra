@@ -23,6 +23,7 @@ Imports:
     abind,
     cluster,
     dendextend,
+    FactoMineR,
     ggpubr,
     grid,
     stats,
@@ -32,7 +33,6 @@ Imports:
 Suggests:
     ade4,
     ca,
-    FactoMineR,
     igraph,
     MASS,
     knitr,
