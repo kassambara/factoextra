@@ -132,7 +132,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          col = "Column points", row = "Row points",
                          mca.cor = "Variables", quanti.sup = "Quantitative variables",
                          quanti.var = "Quantitative variables",
-                         group = "Variable groups")
+                         group = "Variable groups", partial.axes = "Partial axes")
     if(facto.class == "MCA") element_desc$var <- "Variable categories"
     title <- paste0(element_desc[[element]], " - ", facto.class)
   }
@@ -150,8 +150,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Data preparation
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # Data frame to be used for plotting
-  df <- facto_summarize(X, element = element, axes = axes,
-                         result = c("coord", "contrib", "cos2"))
+  summary.res <- c("coord", "contrib", "cos2")
+  if(element == "partial.axes") summary.res <- c("coord", "contrib")
+  df <- facto_summarize(X, element = element, axes = axes, result = summary.res)
   colnames(df)[2:3] <-  c("x", "y")
   # augment data, if qualitative variable is used to color points by groups
   if(!("none" %in% habillage)){
@@ -186,7 +187,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   p <- ggplot() 
   if(hide[[element]]) p <-ggplot()+geom_blank(data = df, aes_string("x","y"))
   else p <- ggpubr::ggscatter(data = df, x = "x", y = "y",
-                         color = color, alpha = alpha, shape = pointshape, 
+                         color = color,  alpha = alpha, shape = pointshape, 
                          point = point, size = pointsize, mean.point = mean.point,
                          label = label, font.label = labelsize*3, repel = repel,
                          ellipse = addEllipses, ellipse.type = ellipse.type,
@@ -205,7 +206,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
       p <- .add_corr_circle(p, color = col.circle)
   }
-  else if(facto.class %in% c("MCA", "MFA") & element %in% c("quanti.sup", "quanti.var")){
+  else if(facto.class %in% c("MCA", "MFA") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
       p <- .add_corr_circle(p, color = col.circle)
   }
   # Faceting when multiple variables are used to color individuals
