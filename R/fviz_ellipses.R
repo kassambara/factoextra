@@ -48,7 +48,7 @@ fviz_ellipses <- function(X, habillage, axes = c(1,2),
   
   label <- NULL
   if("text" %in% geom) label <- "name"
-  p <- ggpubr::ggscatter(df, x = "x", y = "y", color = color,
+  p <- ggpubr::ggscatter(df, x = "x", y = "y", color = color, palette = palette,
                     ellipse = addEllipses, ellipse.type = ellipse.type,
                     legend = legend., ggtheme = ggtheme, mean.point = TRUE,
                     label = label, size = pointsize, ...)
@@ -63,6 +63,7 @@ fviz_ellipses <- function(X, habillage, axes = c(1,2),
     xx$y <- yy$mean
     grp_coord <- xx
     p <- ggpubr::ggtext(grp_coord, x = "x", y = "y", color = color,
+                             palette = palette,
                            legend = legend., ggtheme = ggtheme,
                            label = "Groups",  ggp = p, ...) 
     p <- p + facet_wrap(~facet_vars) 
