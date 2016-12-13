@@ -463,7 +463,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   
   k <- .get_k(dend, k, h)
   tree_heights <- dendextend::heights_per_k.dendrogram(dend)[-1]
-  tree_order <- order.dendrogram(dend)
+  tree_order <- stats::order.dendrogram(dend)
   
   if (is.null(k)) stop("specify k")
   if (k < 2) {
