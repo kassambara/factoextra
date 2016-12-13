@@ -920,34 +920,18 @@ NULL
 ## Returns a list 
 .label <- function(label){
   lab  <- list()
-  # var - PCA, MCA, MFA
-  lab$var <- lab$quanti <- lab$quali.sup <- lab$mca.cor <- lab$quanti.sup <- FALSE
-  if(label[1]=="all" | "var" %in% label) lab$var =TRUE
-  if(label[1]=="all" | "quanti.sup" %in% label) lab$quanti =TRUE
-  if(label[1]=="all" | "quali.sup" %in% label) lab$quali.sup =TRUE
-  if(label[1]=="all" | "quanti.sup" %in% label) lab$quanti.sup =TRUE
-  # ind - PCA, MCA, MFA
-  lab$ind <- lab$ind.sup <- lab$quali <- FALSE
-  if(label[1]=="all" | "ind" %in% label) lab$ind =TRUE
-  if(label[1]=="all" | "ind.sup" %in% label) lab$ind.sup =TRUE
-  if(label[1]=="all" | "quali" %in% label) lab$quali =TRUE
-  if(label[1]=="all" | "mca.cor" %in% label) lab$mca.cor =TRUE
-  # group - MFA, HMFA
-  lab$group <- lab$group.sup <- FALSE
-  if(label[1]=="all" | "group" %in% label) lab$group =TRUE
-  if(label[1]=="all" | "group.sup" %in% label) lab$group.sup =TRUE
-  # partial.axes - MFA
-  lab$partial.axes <- FALSE
-  if(label[1]=="all" | "partial.axes" %in% label) lab$partial.axes =TRUE
-  # row - ca
-  lab$row <- lab$row.sup <- FALSE
-  if(label[1]=="all" | "row" %in% label) lab$row =TRUE
-  if(label[1]=="all" | "row.sup" %in% label) lab$row.sup =TRUE
-  # col - ca
-  lab$col <- lab$col.sup <- FALSE
-  if(label[1]=="all" | "col" %in% label) lab$col =TRUE
-  if(label[1]=="all" | "col.sup" %in% label) lab$col.sup =TRUE
-  
+  element <- c("var", "quanti.sup", "quali.sup", "quanti.sup","quanti", # var - PCA, MCA, MFA
+               "quanti.var.sup", "quanti.var", # MFA
+               "ind", "ind.sup", "quali", "mca.cor",  # ind - PCA, MCA, MFA
+               "group", "group.sup", # group - MFA, HMFA
+               "partial.axes", # partial.axes - MFA
+               "row", "row.sup", # row - ca
+               "col", "col.sup" # col - ca
+               )
+  for(el in element){
+    if(label[1] == "all" | el %in% label) lab[[el]] <- TRUE
+    else lab[[el]] <- FALSE
+  }
   lab
 }
 
@@ -960,34 +944,18 @@ NULL
 ## Returns a list 
 .hide <- function(invisible){
   hide  <- list()
-  # var - PCA, MCA, MFA, HMFA
-  hide$var <- hide$quanti <- hide$quali.sup <-hide$mca.cor <- hide$quanti.sup <- FALSE
-  if("var" %in% invisible) hide$var =TRUE
-  if("quanti.sup" %in% invisible) hide$quanti =TRUE
-  if("quali.sup" %in% invisible) hide$quali.sup = TRUE
-  # ind - PCA, MCA, MFA, HMFA
-  hide$ind <- hide$ind.sup <- hide$quali <- FALSE
-  if("ind" %in% invisible) hide$ind =TRUE
-  if("ind.sup" %in% invisible) hide$ind.sup =TRUE
-  if("quali" %in% invisible) hide$quali =TRUE
-  if("mca.cor" %in% invisible) hide$mca.cor =TRUE
-  if("quanti.sup" %in% invisible) hide$quanti.sup =TRUE
-  # group - MFA, HMFA
-  hide$group <- hide$group.sup <- FALSE
-  if("group" %in% invisible) hide$group =TRUE
-  if("group.sup" %in% invisible) hide$group.sup =TRUE
-  # partial.axes - MFA
-  hide$partial.axes <- FALSE
-  if("partial.axes" %in% invisible) hide$partial.axes =TRUE
-  # row - ca
-  hide$row <- hide$row.sup <- FALSE
-  if("row" %in% invisible) hide$row =TRUE
-  if("row.sup" %in% invisible) hide$row.sup =TRUE
-  # col - ca
-  hide$col <- hide$col.sup <- FALSE
-  if("col" %in% invisible) hide$col =TRUE
-  if("col.sup" %in% invisible) hide$col.sup =TRUE
-  
+  element <- c("var", "quanti.sup", "quali.sup", "quanti.sup","quanti", # var - PCA, MCA, MFA
+               "quanti.var.sup", "quanti.var", # MFA
+               "ind", "ind.sup", "quali", "mca.cor",  # ind - PCA, MCA, MFA
+               "group", "group.sup", # group - MFA, HMFA
+               "partial.axes", # partial.axes - MFA
+               "row", "row.sup", # row - ca
+               "col", "col.sup" # col - ca
+  )
+  for(el in element){
+    if(el %in% invisible) hide[[el]] <- TRUE
+    else hide[[el]] <- FALSE
+  }
   hide
 }
 
@@ -1061,7 +1029,7 @@ NULL
 # grp: group column index or factor
 .add_ind_groups <- function(X, ind, grp){
  
-  if(inherits(X, c("PCA", "MCA")) & length(grp) > 1){
+  if(inherits(X, c("PCA", "MCA", "MFA")) & length(grp) > 1){
     if(is.numeric(grp) | is.character(grp)) grp <- as.data.frame(X$call$X[rownames(ind), grp, drop = FALSE])
     #if(!is.null(X$call$ind.sup)) grp <- grp[-X$call$ind.sup, , drop = FALSE]
   }
@@ -1080,7 +1048,7 @@ NULL
   }
   else{
     # X is from FactoMineR outputs
-    if(inherits(X, c("PCA", "MCA")) & length(habillage) == 1){
+    if(inherits(X, c("PCA", "MCA", "MFA")) & length(habillage) == 1){
       data <- X$call$X
       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
       else name.quali <- habillage 
@@ -1102,3 +1070,40 @@ NULL
   list(ind = ind, name.quali = name.quali, is_multiple_habillage = is.data.frame(grp))
 }
 
+
+# MFA: get quantitative variables groups
+# For plotting
+.get_quanti_var_groups <- function(X){
+  group <- data.frame(name = rownames(X$group$Lg[-nrow(X$group$Lg),,drop=FALSE]),
+                      nvar = X$call$group, type = X$call$type)
+  is.group.sup <- !is.null(X$call$num.group.sup)
+  if(is.group.sup) group <- group[-X$call$num.group.sup, , drop = FALSE]
+  group <- subset(group, group$type == "c")
+  group <- rep(group$name, group$nvar)
+  group
+}
+
+# Get qualitative supplementary variables
+# Each variables is repeated xtimes = levels(variables)
+# Used to color variable categories by variables
+.get_quali_var_sup_names <- function(X){
+  group <- data.frame(name = rownames(X$group$Lg[-nrow(X$group$Lg),,drop=FALSE]),
+                      nvar = X$call$group, type = X$call$type)
+  is.group.sup <- !is.null(X$call$num.group.sup)
+  res <- NULL
+  if(is.group.sup){
+    # Get group sup names
+    group.sup <- group[X$call$num.group.sup, , drop = FALSE]
+    group.sup <- subset(group.sup, group.sup$type == "n", drop = FALSE)
+    group.sup.name <- as.character(group.sup$name)
+    # Names of variables in the data
+    data <- X$call$X
+    vars <- colnames(data)
+    vars.groups <- rep(group$name, group$nvar)
+    group.sup.vars <- vars[vars.groups %in% group.sup.name]
+    for(v in group.sup.vars){
+      res <- c(res, rep(v, length(levels(data[,v]))))
+    }
+  }
+  res
+}
