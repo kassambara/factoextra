@@ -71,6 +71,8 @@ Plots the classification, the uncertainty and the BIC values returned by the Mcl
 }}
 \examples{
 
+if(require("mclust")){
+
 # Compute model-based-clustering 
 require("mclust")
 data("diabetes")
@@ -81,6 +83,7 @@ fviz_mclust_bic(mc)
 
 # Visualize classification
 fviz_mclust(mc, "classification", geom = "point")
+}
 
 }
 

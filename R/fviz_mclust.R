@@ -10,6 +10,8 @@
 #' 
 #' @examples
 #' 
+#' if(require("mclust")){
+#' 
 #' # Compute model-based-clustering 
 #' require("mclust")
 #' data("diabetes")
@@ -20,6 +22,7 @@
 #' 
 #' # Visualize classification
 #' fviz_mclust(mc, "classification", geom = "point")
+#' }
 #' 
 #' @describeIn fviz_mclust Plots classification and uncertainty.
 #' @export
