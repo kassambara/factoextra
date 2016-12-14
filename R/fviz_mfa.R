@@ -683,7 +683,7 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group"), axes = c(1,2),
   choice <- match.arg(choice)
  
  
-  # Define habillage if quanti.var
+  # Define habillage if quanti.var. Quantitative variables are colored by groups
   habillage <- "none"
   if(choice == "quanti.var") {
     .check_if_quanti_exists(X)
