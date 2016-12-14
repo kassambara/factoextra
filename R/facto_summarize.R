@@ -197,7 +197,14 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   if("coord.partial" %in% result){
     dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE])
     # groupnames 
-    groupnames <- data.frame(do.call('rbind', strsplit(as.character(rownames(dd)), '.', fixed = TRUE)))
+    groupnames <- lapply(rownames(dd), 
+                          function(x){
+                            # split at the first instance of "."
+                            str_split <- strsplit(sub(".", "\01", x, fixed = TRUE), "\01", fixed = TRUE)
+                            unlist(str_split)
+                          }
+                    )
+    groupnames <- as.data.frame(do.call(rbind, groupnames))
     colnames(groupnames) <- c("name", "group.name")
     coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
     res.partial <- data.frame(groupnames, dd, coord.partial)
