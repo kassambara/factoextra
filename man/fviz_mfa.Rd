@@ -16,7 +16,10 @@ fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   habillage = "none", palette = NULL, addEllipses = FALSE,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
   shape.ind = 19, col.quali.var.sup = "black", select.ind = list(name =
-  NULL, cos2 = NULL, contrib = NULL), ...)
+  NULL, cos2 = NULL, contrib = NULL), partial = NULL, col.partial = "group",
+  ...)
+
+fviz_mfa_ind_starplot(X, partial = "All", ...)
 
 fviz_mfa_quanti_var(X, ...)
 
@@ -39,14 +42,6 @@ fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   axes.linetype = "dashed", title = "MFA factor map - Biplot",
   arrows = c(FALSE, FALSE), repel = FALSE, jitter = list(what = "label",
   width = NULL, height = NULL), ...)
-
-fviz_mfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
-  repel = FALSE, legend.partial.title = NULL, labelsize = 4,
-  pointsize = 1.5, linesize = 0.5, col.ind = "black",
-  col.ind.sup = "darkblue", col.partial = "black", alpha.ind = 1,
-  shape.ind = 19, alpha.partial = 1, select.ind = list(name = NULL, cos2 =
-  NULL, contrib = NULL), select.partial = list(name = NULL, cos2 = NULL,
-  contrib = NULL), title = "Individuals factor map - MFA", ...)
 
 fviz_mfa_var(X, choice = c("quanti.var", "group"), axes = c(1, 2),
   geom = c("point", "text"), repel = FALSE, col.var = "red",
@@ -99,8 +94,8 @@ groups and axes, respectively.
 
 \item{col.ind.sup}{color for supplementary individuals}
 
-\item{alpha.ind, alpha.partial, alpha.var, alpha.axes}{controls the transparency of
- individual, partial individual, variable, group and axes colors, respectively.
+\item{alpha.ind, alpha.var, alpha.axes}{controls the transparency of
+ individual, variable, group and axes colors, respectively.
 The value can variate from 0 (total transparency) to 1 (no transparency).
 Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
@@ -111,7 +106,7 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
 
 \item{col.quali.var.sup}{color for supplementary qualitative variables. Default is "black".}
 
-\item{select.ind, select.partial, select.var, select.axes}{a selection of individuals/partial individuals/
+\item{select.ind, select.var, select.axes}{a selection of individuals/partial individuals/
 variables/groups/axes to be drawn.
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
 \itemize{
@@ -120,6 +115,10 @@ Allowed values are NULL or a list containing the arguments name, cos2 or contrib
 if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
 \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 }}
+
+\item{partial}{list of the individuals for which the partial points should be drawn. 
+(by default, partial = NULL and no partial points are drawn). 
+Use partial = "All" to visualize partial points for all individuals.}
 
 \item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
 
@@ -161,10 +160,6 @@ probability.}
 points (FALSE, default) or arrows (TRUE).
 First value sets the rows and the second value sets the columns.}
 
-\item{legend.partial.title}{the title of the partal groups legend.}
-
-\item{linesize}{size of partial point connecting line.}
-
 \item{choice}{the graph to plot. Allowed values include: i) "var" and 
 "mca.cor" for plotting the correlation between variables and principal
 dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
@@ -181,7 +176,9 @@ a ggplot2 plot
 Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 \itemize{
 \item{fviz_mfa_ind(): Graph of individuals}
-\item{fviz_mfa_ind_starplot(): Star graph of individuals}
+\item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
+Deprecated function. It will be removed in the next version. 
+Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
 \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
 \item{fviz_mfa_quali_var(): Graph of qualitative variables}
 \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
@@ -317,23 +314,8 @@ fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
                
 # Graph of partial individuals (starplot)
 # +++++++++++++++++++++++++++++++++++++++
-fviz_mfa_ind_starplot(res.mfa, col.partial = "group.name")+
-scale_color_brewer(palette = "Dark2")+
-theme_minimal()
+fviz_mfa_ind(res.mfa, partial = "all")
 
-\dontrun{
-# Select the partial points of the top 5
-# contributing individuals
-fviz_mfa_ind_starplot(res.mfa, 
-                      select.partial = list(contrib = 2)) +
-                      theme_minimal()
-                      
-# Change colours of star segments
-fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
-                      col.partial = "group.name") +
-                      scale_color_brewer(palette = "Dark2") +
-                      theme_minimal() 
-}
 
  
 # Graph of groups (correlation square)

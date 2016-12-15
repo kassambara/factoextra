@@ -6,7 +6,9 @@ NULL
 #' Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 #' \itemize{
 #' \item{fviz_mfa_ind(): Graph of individuals}
-#' \item{fviz_mfa_ind_starplot(): Star graph of individuals}
+#' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
+#' Deprecated function. It will be removed in the next version. 
+#' Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
 #' \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
 #' \item{fviz_mfa_quali_var(): Graph of qualitative variables}
 #' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
@@ -41,20 +43,18 @@ NULL
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
 #' @param col.var.sup color for supplementary variables.
-#' @param alpha.ind,alpha.partial,alpha.var,alpha.axes controls the transparency of
-#'  individual, partial individual, variable, group and axes colors, respectively.
+#' @param alpha.ind,alpha.var,alpha.axes controls the transparency of
+#'  individual, variable, group and axes colors, respectively.
 #' The value can variate from 0 (total transparency) to 1 (no transparency).
 #' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use this, make sure that habillage ="none".
-#' @param legend.partial.title the title of the partal groups legend.
-#' @param linesize size of partial point connecting line.
 #' @param shape.ind,shape.var point shapes of individuals, variables, groups and axes
 #' @param col.quali.var.sup color for supplementary qualitative variables. Default is "black".
 #' @param title the title of the graph
 #' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
-#' @param select.ind,select.partial,select.var,select.axes a selection of individuals/partial individuals/
+#' @param select.ind,select.var,select.axes a selection of individuals/partial individuals/
 #' variables/groups/axes to be drawn.
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
 #' \itemize{
@@ -75,6 +75,9 @@ NULL
 #' \item width: degree of jitter in x direction
 #' \item height: degree of jitter in y direction
 #' }
+#' @param partial list of the individuals for which the partial points should be drawn. 
+#' (by default, partial = NULL and no partial points are drawn). 
+#' Use partial = "All" to visualize partial points for all individuals.
 #'
 #' @return a ggplot2 plot
 #' @author Fabian Mundt \email{f.mundt@inventionate.de}
@@ -208,23 +211,8 @@ NULL
 #' # Graph of partial individuals (starplot)
 #' # +++++++++++++++++++++++++++++++++++++++
 # # Change colours of star segments by group.name
-#' fviz_mfa_ind_starplot(res.mfa, col.partial = "group.name")+
-#' scale_color_brewer(palette = "Dark2")+
-#' theme_minimal()
+#' fviz_mfa_ind(res.mfa, partial = "all")
 #' 
-#' \dontrun{
-#' # Select the partial points of the top 5
-#' # contributing individuals
-#' fviz_mfa_ind_starplot(res.mfa, 
-#'                       select.partial = list(contrib = 2)) +
-#'                       theme_minimal()
-#'                       
-#' # Change colours of star segments
-#' fviz_mfa_ind_starplot(res.mfa, select.partial = list(contrib = 5), 
-#'                       col.partial = "group.name") +
-#'                       scale_color_brewer(palette = "Dark2") +
-#'                       theme_minimal() 
-#'}
 #'
 #'  
 #' # Graph of groups (correlation square)
@@ -242,9 +230,14 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
                          shape.ind = 19, col.quali.var.sup = "black",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         partial = NULL, col.partial = "group",
                          ...)
 {
   extra_args <- list(...)
+  
+  if(col.ind %in% c("cos2","contrib", "coord")) partial = NULL
+  if(!is.null(partial) & missing(col.ind)) col.ind <- "black"
+  
   p <- fviz (X, element = "ind", axes = axes, geom = geom, habillage = habillage, 
         addEllipses = addEllipses, palette = palette, pointshape = shape.ind,
         color = col.ind, alpha = alpha.ind,
@@ -252,7 +245,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
         select = select.ind, repel = repel, ...)
   
   # Add supplementary qualitative variables if they exist
-  show.quali.var <- !("quali.var" %in% extra_args$invisible)
+  show.quali.var <- !("quali.var" %in% extra_args$invisible) & is.null(partial)
   is_habillage <- habillage != "none" 
   if(!is.null(X$quali.var.sup) & show.quali.var){
     if(!(col.ind %in% c("cos2", "contrib")) & !is_habillage) col.quali.var.sup  = "quali.sup"
@@ -265,10 +258,59 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     
   }
   
+  # Add partial points
+  if(!is.null(partial)){
+    invisible <- ifelse(is.null(extra_args$invisible), "none", extra_args$invisible)
+    if(!(partial[1] %in% c("All", "all"))) select.partial = list(name = partial)
+    else select.partial <- NULL
+    if(col.partial %in% c("group", "groups")) col.partial <- "group.name"
+    
+    # Data for individuals
+    ind.sum <- facto_summarize(X, element = "ind",
+                               result = c("coord", "contrib", "cos2", "coord.partial"), axes = axes)
+    ind <- ind.sum$res
+    colnames(ind)[2:3] <-  c("x", "y")
+    # partial points
+    ind.partial <- ind.sum$res.partial
+    colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
+    ind.partial <- merge(ind, ind.partial, by = "name")
+    # Selection
+    ind.all <- ind
+    if(!is.null(select.ind)) ind <- .select(ind, select.ind)
+    if(!is.null(select.partial)) {
+      if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
+      ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial)$name, , drop = FALSE]
+    }
+    # elements to be hidden
+    hide <- .hide(invisible)
+    # Plot
+    if(!hide$ind & "point" %in% geom) {
+      # Partial point
+      p <- p + ggpubr::geom_exec(geom_point, data = ind.partial,
+                                 x = "x.partial", y = "y.partial", 
+                                 colour = col.partial,
+                                 shape = shape.ind, size = 1)
+      # Partial segments
+      p <- p + ggpubr::geom_exec(geom_segment, data = ind.partial,
+                                 x = "x", y = "y", xend = 'x.partial', yend = 'y.partial',
+                                 linetype = "group.name", colour = col.partial, size = 0.5)
+    }
+    # Edit plot title and legend title
+    p  + labs(color = "Groups", linetype = "Groups")
+  }
+  
   p
   
 }
 
+#' @rdname fviz_mfa
+#' @export
+fviz_mfa_ind_starplot <- function(X,  partial = "All",  ...){
+  warning("This function is deprecated. ", 
+          "It will be removed in the next version. ",
+           "Use fviz_mfa_ind(res.mfa, partial = 'All') instead.")
+  fviz_mfa_ind (X, partial = partial, ...)
+}
 
 #' @rdname fviz_mfa
 #' @export
@@ -451,75 +493,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 }
 
 
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
-                                  legend.partial.title = NULL,
-                                  labelsize=4, pointsize = 1.5, linesize = 0.5, 
-                                  col.ind = "black", col.ind.sup = "darkblue", col.partial = "black",
-                                  alpha.ind = 1, shape.ind = 19, alpha.partial = 1,
-                                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  select.partial = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                   title = "Individuals factor map - MFA",# map ="symmetric",
-                                   ...)
-{
-  extra_args = list(...)
-  invisible <- ifelse(is.null(extra_args$invisible), "none", extra_args$invisible)
-  if(length(intersect(geom, c("point", "text", "arrow"))) == 0)
-    stop("The specified value(s) for the argument geom are not allowed ")
-  
-  # Data for individuals
-  ind.sum <- facto_summarize(X, element = "ind",
-                             result = c("coord", "contrib", "cos2", "coord.partial"), axes = axes)
-  ind <- ind.sum$res
-  colnames(ind)[2:3] <-  c("x", "y")
-  
-  # partial points
-  ind.partial <- ind.sum$res.partial
-  colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
-  ind.partial <- merge(ind, ind.partial, by = "name")
-  
-  # Selection
-  ind.all <- ind
-  if(!is.null(select.ind))
-    ind <- .select(ind, select.ind)
-  
-  if(!is.null(select.partial)) {
-    if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
-    ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial)$name, , drop = FALSE]
-  }
-  
-  # elements to be labelled or hidden
-  hide <- .hide(invisible)
-  
-  # partial points
-  if(col.ind %in% c("cos2","contrib", "coord")) col.partial <- col.ind
-  else if(is.null(col.partial)) col.partial <- "group.name"
-  
-  # Plot of individuals
-  p <- fviz_mfa_ind (X,  axes = axes, geom = geom, repel = repel,
-                     habillage = "none", col.ind = col.ind, col.ind.sup = col.ind.sup, 
-                     alpha.ind = alpha.ind, shape.ind = shape.ind, 
-                     select.ind = select.ind , invisible = "quali.var", ...)
-  
-  # Add partial points
-  if(!hide$ind & "point" %in% geom) {
-    # Partial point
-    p <- p + ggpubr::geom_exec(geom_point, data = ind.partial,
-                               x = "x.partial", y = "y.partial", 
-                               colour = col.partial,
-                               shape = shape.ind, size = pointsize)
-    # Partial segments
-    p <- p + ggpubr::geom_exec(geom_segment, data = ind.partial,
-                               x = "x", y = "y", xend = 'x.partial', yend = 'y.partial',
-                               linetype = "group.name", colour = col.partial, size = linesize)
-  }
-  
-  # Edit plot title and legend title
-  p  + labs(title = title, color = legend.partial.title, linetype = legend.partial.title)
-  
-  p
-}
+
 
 #' @rdname fviz_mfa
 #' @export
