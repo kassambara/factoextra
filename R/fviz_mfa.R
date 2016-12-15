@@ -296,7 +296,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                                  linetype = "group.name", colour = col.partial, size = 0.5)
     }
     # Edit plot title and legend title
-    p  + labs(color = "Groups", linetype = "Groups")
+    p <- p  + labs(colour = "Groups", linetype = "Groups")
   }
   
   p
