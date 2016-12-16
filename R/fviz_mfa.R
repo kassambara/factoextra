@@ -221,93 +221,18 @@ fviz_mfa_ind_starplot <- function(X,  partial = "All",  ...){
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
-                                  label = "all", invisible="none", labelsize=4, pointsize = 2,
-                                  habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
-                                  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind =1,
-                                  col.var="red", alpha.var=1, col.quanti.sup="blue",
-                                  col.quali.sup = "darkgreen",
-                                  shape.ind = 19, shape.var = 17,
-                                  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-                                  axes.linetype = "dashed", title = "MFA factor map - Biplot",# map ="symmetric", 
-                                  arrows = c(FALSE, FALSE), repel = FALSE,
-                                  jitter = list(what = "label", width = NULL, height = NULL), ...)
+fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = repel,
+                                  title = "Biplot of individuals and qualitative variables - MFA", ...)
 {
-  
-  # Check if there are qualitative variables.
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(!("n" %in% group.all))
-    stop("There are no qualitative variables to plot.")
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  var <- facto_summarize(X, element = "quali.var",
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # scale coords according to the type of map
-  # var <- .scale_ca(var, res.ca = X,  element = "quali.var",
-  #                  type = map, axes = axes)
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
-  
-  
   # Individuals
-  geom2 <- geom
-  if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
-  p <- fviz_mfa_ind(X,  axes = axes, geom = geom2, label = label, invisible=invisible,
-                    labelsize=labelsize, pointsize = pointsize,
-                    col.ind = col.ind, col.ind.sup = col.ind.sup, alpha.ind=alpha.ind,
-                    shape.ind=shape.ind, repel = repel, axes.linetype=axes.linetype,
-                    habillage=habillage, addEllipses=addEllipses, ellipse.level=ellipse.level,
-                    select.ind = select.ind, jitter = jitter)
+  p <- fviz_mfa_ind(X,  axes = axes, geom = geom, repel = repel,  ...)
   
-  # geometry for variable
-  geom2 <- geom
-  if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
+  # Variable
+  # Add variables
+  p <- fviz_mfa_var(X, "quali.var", axes = axes, geom =  geom, repel = repel, 
+                  ggp = p, ...)
   
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
-                   col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits, repel = repel,
-                   geom =  geom2, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize, pointsize = pointsize, jitter = jitter)
-  }
-  
-  # Add supplementary qualitative variable categories
-  # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$quali.sup ){
-    quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
-                           select = select.var)
-    if(!is.null(quali_sup)){
-      colnames(quali_sup)[2:3] <- c("x", "y")
-      # quali_sup <- .scale_ca(quali_sup, res.ca = X,  element = "quali.sup",
-      #                      type = map, axes = axes)
-    }
-    if(!is.null(quali_sup)){
-      p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom2,
-                    color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup), pointsize = pointsize, jitter = jitter )
-    }
-    
-  }
-  title2 <- title
-  p+labs(title=title2)
+  p+labs(title=title)
 }
 
 

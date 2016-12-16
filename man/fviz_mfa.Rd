@@ -22,16 +22,8 @@ fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
 fviz_mfa_ind_starplot(X, partial = "All", ...)
 
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
-  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  col.var = "red", alpha.var = 1, col.quanti.sup = "blue",
-  col.quali.sup = "darkgreen", shape.ind = 19, shape.var = 17,
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  axes.linetype = "dashed", title = "MFA factor map - Biplot",
-  arrows = c(FALSE, FALSE), repel = FALSE, jitter = list(what = "label",
-  width = NULL, height = NULL), ...)
+  repel = repel,
+  title = "Biplot of individuals and qualitative variables - MFA", ...)
 
 fviz_mfa_var(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,
   2), geom = c("point", "text"), repel = FALSE, col.var = "red",
@@ -116,6 +108,17 @@ Use partial = "All" to visualize partial points for all individuals.}
 
 \item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
 
+\item{title}{the title of the graph}
+
+\item{choice}{the graph to plot. Allowed values include: i) "var" and 
+"mca.cor" for plotting the correlation between variables and principal
+dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
+supplementary quantitative variables.}
+
+\item{col.var.sup}{color for supplementary variables.}
+
+\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
+
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -129,18 +132,9 @@ Use partial = "All" to visualize partial points for all individuals.}
 Default value is "none".
 Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
 
-\item{labelsize}{font size for the labels}
-
-\item{pointsize}{the size of points}
-
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
-
 \item{axes.linetype}{linetype of x and y axes.}
 
-\item{title}{the title of the graph}
+\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).
@@ -153,15 +147,6 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}
-
-\item{choice}{the graph to plot. Allowed values include: i) "var" and 
-"mca.cor" for plotting the correlation between variables and principal
-dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
-supplementary quantitative variables.}
-
-\item{col.var.sup}{color for supplementary variables.}
-
-\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
 }
 \value{
 a ggplot2 plot
