@@ -21,16 +21,6 @@ fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
 
 fviz_mfa_ind_starplot(X, partial = "All", ...)
 
-fviz_mfa_quanti_var(X, ...)
-
-fviz_mfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen", repel = FALSE,
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",
-  jitter = list(what = "label", width = NULL, height = NULL))
-
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
   habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
@@ -43,13 +33,17 @@ fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   arrows = c(FALSE, FALSE), repel = FALSE, jitter = list(what = "label",
   width = NULL, height = NULL), ...)
 
-fviz_mfa_var(X, choice = c("quanti.var", "group"), axes = c(1, 2),
-  geom = c("point", "text"), repel = FALSE, col.var = "red",
+fviz_mfa_var(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,
+  2), geom = c("point", "text"), repel = FALSE, col.var = "red",
   alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
   palette = NULL, select.var = list(name = NULL, cos2 = NULL, contrib =
   NULL), ...)
 
 fviz_mfa_group(X, ...)
+
+fviz_mfa_quanti_var(X, ...)
+
+fviz_mfa_quali_var(X, ...)
 
 fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"),
   col.axes = NULL, alpha.axes = 1, col.circle = "grey70",
@@ -139,11 +133,18 @@ Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "q
 
 \item{pointsize}{the size of points}
 
+\item{ellipse.level}{the size of the concentration ellipse in normal 
+probability.}
+
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
 
 \item{axes.linetype}{linetype of x and y axes.}
 
 \item{title}{the title of the graph}
+
+\item{arrows}{Vector of two logicals specifying if the plot should contain
+points (FALSE, default) or arrows (TRUE).
+First value sets the rows and the second value sets the columns.}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
@@ -152,13 +153,6 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}
-
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{arrows}{Vector of two logicals specifying if the plot should contain
-points (FALSE, default) or arrows (TRUE).
-First value sets the rows and the second value sets the columns.}
 
 \item{choice}{the graph to plot. Allowed values include: i) "var" and 
 "mca.cor" for plotting the correlation between variables and principal
@@ -204,8 +198,7 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 # Default plot
 # Use repel = TRUE to avoid overplotting (slow if many points)
 # Color of individuals: col.ind = "#2E9FDF"
-fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")+
-theme_minimal()
+fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")
    
 \dontrun{
 # 1. Control automatically the color of individuals 
@@ -221,8 +214,7 @@ fviz_mfa_ind(res.mfa, col.ind = "cos2")+
 # Use repel = TRUE to avoid overplotting (slow if many points)
 fviz_mfa_ind(res.mfa, col.ind="cos2", repel = TRUE) + 
       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-      high= "#FC4E07", midpoint=0.4, space = "Lab")+
- theme_minimal()
+      high= "#FC4E07", midpoint=0.4, space = "Lab")
 }
 
 # Color individuals by groups, add concentration ellipses
@@ -231,20 +223,6 @@ grp <- as.factor(poison[, "Vomiting"])
 p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
        addEllipses=TRUE, ellipse.level=0.95)
 print(p)
- 
- \dontrun{
-# Change group colors using RColorBrewer color palettes
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-p + scale_color_brewer(palette="Paired") +
-    scale_fill_brewer(palette="Paired") +
-     theme_minimal()
- }
-     
-# Change group colors manually
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-p + scale_color_manual(values=c("#999999", "#E69F00"))+
- scale_fill_manual(values=c("#999999", "#E69F00"))+
- theme_minimal()  
  
  \dontrun{
 # Select and visualize some individuals (ind) with select.ind argument.
@@ -265,15 +243,13 @@ res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
                num.group.sup=c(1,6), graph=FALSE)
                
 # Default plot
-fviz_mfa_quanti_var(res.mfa, col.var = "#FC4E07")+
-theme_minimal()
+fviz_mfa_var(res.mfa, "quanti.var",  col.var = "#FC4E07")
    
 \dontrun{
 # Control variable colors using their contributions
 fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
  scale_color_gradient2(low = "white", mid = "blue",
-           high = "red", midpoint = 20) +
- theme_minimal()
+           high = "red", midpoint = 20)
  
 # Select variables with select.var argument
    # You can select by contrib, cos2 and name 
@@ -291,15 +267,14 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 
 # Plot
 # Control variable colors using their contributions
-fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
+fviz_mfa_var(res.mfa, "quali.var", col.var = "contrib")+
  scale_color_gradient2(low = "white", mid = "blue",
-           high = "red", midpoint = 2) +
- theme_minimal()
+           high = "red", midpoint = 2) 
  
  
  \dontrun{
 # Select the top 10 contributing variable categories
-fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
+fviz_mfa_var(res.mfa,  "quali.var", select.var = list(contrib = 10))
 }
 
 

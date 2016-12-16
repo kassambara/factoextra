@@ -132,6 +132,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          col = "Column points", row = "Row points",
                          mca.cor = "Variables", quanti.sup = "Quantitative variables",
                          quanti.var = "Quantitative variables",
+                         quali.var = "Qualitative variable categories",
                          group = "Variable groups", partial.axes = "Partial axes")
     if(facto.class == "MCA") element_desc$var <- "Variable categories"
     title <- paste0(element_desc[[element]], " - ", facto.class)
@@ -308,6 +309,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   else if(element == "mca.cor" & inherits(X, 'MCA') & !hide$quanti)
     res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti & "text" %in% geom))
   else if(element %in% "var" & inherits(X, 'MCA') & !hide$quali.sup)
+    res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
+  else if(element %in% "quali.var" & inherits(X, 'MFA') & !hide$quali.sup)
     res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
   # CA
   else if(element == "row" & inherits(X, c('CA', 'ca')) & !hide$row.sup)

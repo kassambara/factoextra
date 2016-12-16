@@ -100,8 +100,7 @@ NULL
 #' # Default plot
 #' # Use repel = TRUE to avoid overplotting (slow if many points)
 #' # Color of individuals: col.ind = "#2E9FDF"
-#' fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")+
-#' theme_minimal()
+#' fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")
 #'    
 #' \dontrun{
 #' # 1. Control automatically the color of individuals 
@@ -117,8 +116,7 @@ NULL
 #' # Use repel = TRUE to avoid overplotting (slow if many points)
 #' fviz_mfa_ind(res.mfa, col.ind="cos2", repel = TRUE) + 
 #'       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-#'       high= "#FC4E07", midpoint=0.4, space = "Lab")+
-#'  theme_minimal()
+#'       high= "#FC4E07", midpoint=0.4, space = "Lab")
 #' }
 #'
 #' # Color individuals by groups, add concentration ellipses
@@ -127,20 +125,6 @@ NULL
 #' p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
 #'        addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
-#'  
-#'  \dontrun{
-#' # Change group colors using RColorBrewer color palettes
-#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-#' p + scale_color_brewer(palette="Paired") +
-#'     scale_fill_brewer(palette="Paired") +
-#'      theme_minimal()
-#'  }
-#'      
-#' # Change group colors manually
-#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
-#' p + scale_color_manual(values=c("#999999", "#E69F00"))+
-#'  scale_fill_manual(values=c("#999999", "#E69F00"))+
-#'  theme_minimal()  
 #'  
 #'  \dontrun{
 #' # Select and visualize some individuals (ind) with select.ind argument.
@@ -161,15 +145,13 @@ NULL
 #'                num.group.sup=c(1,6), graph=FALSE)
 #'                
 #' # Default plot
-#' fviz_mfa_quanti_var(res.mfa, col.var = "#FC4E07")+
-#' theme_minimal()
+#' fviz_mfa_var(res.mfa, "quanti.var",  col.var = "#FC4E07")
 #'    
 #' \dontrun{
 #' # Control variable colors using their contributions
 #' fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
-#'            high = "red", midpoint = 20) +
-#'  theme_minimal()
+#'            high = "red", midpoint = 20)
 #'  
 #' # Select variables with select.var argument
 #'    # You can select by contrib, cos2 and name 
@@ -187,15 +169,14 @@ NULL
 #'
 #' # Plot
 #' # Control variable colors using their contributions
-#' fviz_mfa_quali_var(res.mfa, col.var = "contrib")+
+#' fviz_mfa_var(res.mfa, "quali.var", col.var = "contrib")+
 #'  scale_color_gradient2(low = "white", mid = "blue",
-#'            high = "red", midpoint = 2) +
-#'  theme_minimal()
+#'            high = "red", midpoint = 2) 
 #'  
 #'  
 #'  \dontrun{
 #' # Select the top 10 contributing variable categories
-#' fviz_mfa_quali_var(res.mfa, select.var = list(contrib = 10))
+#' fviz_mfa_var(res.mfa,  "quali.var", select.var = list(contrib = 10))
 #' }
 #' 
 #' 
@@ -312,93 +293,6 @@ fviz_mfa_ind_starplot <- function(X,  partial = "All",  ...){
   fviz_mfa_ind (X, partial = partial, ...)
 }
 
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_quanti_var <- function(X, ...){
-  fviz_mfa_var(X, choice = "quanti.var", ...)
-}
-
-
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
-                               labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
-                               col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
-                               select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                               axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",# map ="symmetric", 
-                               jitter = list(what = "label", width = NULL, height = NULL))
-{
-  
-  # Check if there are qualitative variables.
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(!("n" %in% group.all))
-      stop("There are no qualitative variables to plot.")
-  
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  var <- facto_summarize(X, element = "quali.var",
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # scale coords according to the type of map
-  # var <- .scale_ca(var, res.ca = X,  element = "quali.var",
-  #                  type = map, axes = axes)
-  
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
-  
-  p <- ggplot()
-  
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
-                   col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits, repel = repel,
-                   geom = geom, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize,
-                   pointsize = pointsize, jitter = jitter)
-  }
-  
-  
-  # Add supplementary qualitative variable categories
-  # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$quali.sup ){
-    quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
-                           select = select.var)
-    if(!is.null(quali_sup)){
-      colnames(quali_sup)[2:3] <-  c("x", "y")
-      
-      # quali_sup <- .scale_ca(quali_sup, res.ca = X,  element = "quali.sup",
-      #                       type = map, axes = axes)
-    }
-    if(!is.null(quali_sup)){
-      p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup),
-                    pointsize = pointsize, jitter = jitter)
-    }
-    
-  }
-  
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
-  p
-}
 
 
 #' @rdname fviz_mfa
@@ -497,7 +391,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"),
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_var <- function(X, choice = c("quanti.var", "group"), axes = c(1,2), 
+fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,2), 
                          geom = c("point", "text"), repel = FALSE,
                          col.var ="red", alpha.var=1, shape.var = 17, 
                          col.var.sup = "darkgreen", palette = NULL,
@@ -521,6 +415,9 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group"), axes = c(1,2),
     group <- subset(group, group$type == "c")
     habillage <- rep(group$name, group$nvar)
   }
+  else if(choice== "quali.var"){
+    .check_if_quali_exists(X)
+  }
   if(!missing(col.var)) habillage = "none"
   # Main plot
   fviz (X, element = choice, axes = axes, geom = geom,
@@ -534,8 +431,25 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group"), axes = c(1,2),
 #' @rdname fviz_mfa
 #' @export
 fviz_mfa_group <- function(X,  ...){
+  warning("Deprecated function. Use fviz_mfa_var(res.mfa, 'group') instead.")
   fviz_mfa_var(X, choice = "group", ...)
 }
+
+#' @rdname fviz_mfa
+#' @export
+fviz_mfa_quanti_var <- function(X, ...){
+  warning("Deprecated function. Use fviz_mfa_var(res.mfa, 'quanti.var') instead.")
+  fviz_mfa_var(X, choice = "quanti.var", ...)
+}
+
+
+#' @rdname fviz_mfa
+#' @export
+fviz_mfa_quali_var <- function(X, ...){
+  warning("Deprecated function. Use fviz_mfa_var(res.mfa, 'quali.var') instead.")
+  fviz_mfa_var(X, choice = "quali.var", ...)
+}
+
 
 
 
@@ -586,6 +500,17 @@ fviz_mfa <- function(X, ...){
     if(!c("s" %in% group.all)) 
       stop("There are no quantitative variables to plot.")
   
+}
+
+# Check if qualitative variables exists
+.check_if_quali_exists <- function (X){
+  # Check if there are qualitative variables.
+  if(!is.null(X$call$num.group.sup))
+    group.all <- X$call$type[-X$call$num.group.sup]
+  else
+    group.all <- X$call$type
+  if(!("n" %in% group.all))
+    stop("There are no qualitative variables to plot.")
 }
 
 

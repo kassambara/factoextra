@@ -921,7 +921,7 @@ NULL
 .label <- function(label){
   lab  <- list()
   element <- c("var", "quanti.sup", "quali.sup", "quanti.sup","quanti", # var - PCA, MCA, MFA
-               "quanti.var.sup", "quanti.var", # MFA
+               "quanti.var.sup", "quanti.var", "quali.var", # MFA
                "ind", "ind.sup", "quali", "mca.cor",  # ind - PCA, MCA, MFA
                "group", "group.sup", # group - MFA, HMFA
                "partial.axes", # partial.axes - MFA
@@ -945,7 +945,7 @@ NULL
 .hide <- function(invisible){
   hide  <- list()
   element <- c("var", "quanti.sup", "quali.sup", "quanti.sup","quanti", # var - PCA, MCA, MFA
-               "quanti.var.sup", "quanti.var", # MFA
+               "quanti.var.sup", "quanti.var",  "quali.var", # MFA
                "ind", "ind.sup", "quali", "mca.cor",  # ind - PCA, MCA, MFA
                "group", "group.sup", # group - MFA, HMFA
                "partial.axes", # partial.axes - MFA
