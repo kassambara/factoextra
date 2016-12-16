@@ -84,82 +84,30 @@ NULL
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
-#' # Multiple Factor Analysis
-#' # ++++++++++++++++++++++++
-#' # Install and load FactoMineR to compute MFA
-#' # install.packages("FactoMineR")
+#' # Compute Multiple Factor Analysis
 #' library("FactoMineR")
-#' data(poison)
-#' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
-#'                name.group=c("desc","desc2","symptom","eat"),
-#'                num.group.sup=1:2, graph=FALSE)
-#'
-#' # Graph of individuals
-#' # ++++++++++++++++++++
-#' 
-#' # Default plot
-#' # Use repel = TRUE to avoid overplotting (slow if many points)
-#' # Color of individuals: col.ind = "#2E9FDF"
-#' fviz_mfa_ind(res.mfa, repel = TRUE, col.ind = "#2E9FDF")
-#'    
-#' \dontrun{
-#' # 1. Control automatically the color of individuals 
-#'    # using the "cos2" or the contributions "contrib"
-#'    # cos2 = the quality of the individuals on the factor map
-#' # 2. To keep only point or text use geom = "point" or geom = "text".
-#' # 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
-#' 
-#' fviz_mfa_ind(res.mfa, col.ind = "cos2")+
-#'  theme_minimal()
-#'
-#' # Change gradient color
-#' # Use repel = TRUE to avoid overplotting (slow if many points)
-#' fviz_mfa_ind(res.mfa, col.ind="cos2", repel = TRUE) + 
-#'       scale_color_gradient2(low = "white", mid = "#2E9FDF", 
-#'       high= "#FC4E07", midpoint=0.4, space = "Lab")
-#' }
-#'
-#' # Color individuals by groups, add concentration ellipses
-#' # Remove labels: label = "none".
-#' grp <- as.factor(poison[, "Vomiting"])
-#' p <- fviz_mfa_ind(res.mfa, label="none", habillage=grp,
-#'        addEllipses=TRUE, ellipse.level=0.95)
-#' print(p)
-#'  
-#'  \dontrun{
-#' # Select and visualize some individuals (ind) with select.ind argument.
-#'  # - ind with cos2 >= 0.4: select.ind = list(cos2 = 0.4)
-#'  # - Top 20 ind according to the cos2: select.ind = list(cos2 = 20)
-#'  # - Top 20 contributing individuals: select.ind = list(contrib = 20)
-#'  # - Select ind by names: select.ind = list(name = c("44", "38", "53",  "39") )
-#'  
-#' # Example: Select the top 20 according to the cos2
-#' fviz_mfa_ind(res.mfa, select.ind = list(cos2 = 20))
-#' }
-#'
-#' # Graph of qantitative variable categories
-#' # ++++++++++++++++++++++++++++++++++++++++
 #' data(wine)
 #' res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
 #'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
 #'                num.group.sup=c(1,6), graph=FALSE)
 #'                
-#' # Default plot
-#' fviz_mfa_var(res.mfa, "quanti.var",  col.var = "#FC4E07")
-#'    
-#' \dontrun{
-#' # Control variable colors using their contributions
-#' fviz_mfa_quanti_var(res.mfa, col.var = "contrib")+
-#'  scale_color_gradient2(low = "white", mid = "blue",
-#'            high = "red", midpoint = 20)
-#'  
-#' # Select variables with select.var argument
-#'    # You can select by contrib, cos2 and name 
-#'    # as previously described for ind
-#' # Select the top 10 contributing variables
-#' fviz_mfa_quanti_var(res.mfa, select.var = list(contrib = 10))
-#' }
-#'  
+#' # Eigenvalues/variances of dimensions
+#' fviz_screeplot(res.mfa)
+#' # Group of variables
+#' fviz_mfa_var(res.mfa, "group")
+#' # Quantitative variables
+#' fviz_mfa_var(res.mfa, "quanti.var", palette = "jco", 
+#'   col.var.sup = "violet", repel = TRUE)
+#' # Graph of individuals colored by cos2
+#' fviz_mfa_ind(res.mfa, col.ind = "cos2", 
+#'   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+#'   repel = TRUE)
+#' # Partial individuals
+#' fviz_mfa_ind(res.mfa, partial = "all") 
+#' # Partial axes
+#' fviz_mfa_axes(res.mfa)
+#' 
+#'
 #' # Graph of categorical variable categories
 #' # ++++++++++++++++++++++++++++++++++++++++
 #' data(poison)
@@ -167,42 +115,18 @@ NULL
 #'                name.group=c("desc","desc2","symptom","eat"),
 #'                num.group.sup=1:2, graph=FALSE)
 #'
-#' # Plot
-#' # Control variable colors using their contributions
-#' fviz_mfa_var(res.mfa, "quali.var", col.var = "contrib")+
-#'  scale_color_gradient2(low = "white", mid = "blue",
-#'            high = "red", midpoint = 2) 
+#' # Plot of qualitative variables
+#' fviz_mfa_var(res.mfa, "quali.var")
 #'  
 #'  
-#'  \dontrun{
-#' # Select the top 10 contributing variable categories
-#' fviz_mfa_var(res.mfa,  "quali.var", select.var = list(contrib = 10))
-#' }
-#' 
 #' 
 #' # Biplot of categorical variable categories and individuals
 #' # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #'  # Use repel = TRUE to avoid overplotting
 #' grp <- as.factor(poison[, "Vomiting"])
 #' fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
-#'    habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)+
-#'  theme_minimal()
+#'    habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)
 #' 
-#'                
-#' # Graph of partial individuals (starplot)
-#' # +++++++++++++++++++++++++++++++++++++++
-# # Change colours of star segments by group.name
-#' fviz_mfa_ind(res.mfa, partial = "all")
-#' 
-#'
-#'  
-#' # Graph of groups (correlation square)
-#' # ++++++++++++++++++++++++++++++++++++
-#' fviz_mfa_group(res.mfa)
-#' 
-#' #' # Graph of partial axes
-#' # ++++++++++++++++++++++++
-#' fviz_mfa_axes(res.mfa)
 #' @name fviz_mfa
 #' @rdname fviz_mfa
 #' @export
