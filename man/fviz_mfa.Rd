@@ -26,10 +26,10 @@ fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   title = "Biplot of individuals and qualitative variables - MFA", ...)
 
 fviz_mfa_var(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,
-  2), geom = c("point", "text"), repel = FALSE, col.var = "red",
-  alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
-  palette = NULL, select.var = list(name = NULL, cos2 = NULL, contrib =
-  NULL), ...)
+  2), geom = c("point", "text"), repel = FALSE, habillage = "none",
+  col.var = "red", alpha.var = 1, shape.var = 17,
+  col.var.sup = "darkgreen", palette = NULL, select.var = list(name =
+  NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_mfa_group(X, ...)
 
@@ -41,7 +41,7 @@ fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"),
   col.axes = NULL, alpha.axes = 1, col.circle = "grey70",
   select.axes = list(name = NULL, contrib = NULL), repel = FALSE, ...)
 
-fviz_mfa(X, ...)
+fviz_mfa(X, partial = "all", ...)
 }
 \arguments{
 \item{X}{an object of class MFA [FactoMineR].}
@@ -106,47 +106,15 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 (by default, partial = NULL and no partial points are drawn). 
 Use partial = "All" to visualize partial points for all individuals.}
 
-\item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
+\item{...}{Arguments to be passed to the function fviz()}
 
 \item{title}{the title of the graph}
 
-\item{choice}{the graph to plot. Allowed values include: i) "var" and 
-"mca.cor" for plotting the correlation between variables and principal
-dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
-supplementary quantitative variables.}
+\item{choice}{The graph to plot. Allowed values include one of c("quanti.var", "group", "quali.var").}
 
 \item{col.var.sup}{color for supplementary variables.}
 
 \item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
-
-\item{label}{a text specifying the elements to be labelled.
- Default value is "all".
- Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
- "ind" can be used to label only active individuals.
- "ind.sup" is for supplementary individuals.
-"var" is for active variable categories.
- "quali.sup" is for supplementary qualitative variable categories.
-"quanti.sup" is for quantitative supplementary variables.}
-
-\item{invisible}{a text specifying the elements to be hidden on the plot.
-Default value is "none".
-Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
-
-\item{axes.linetype}{linetype of x and y axes.}
-
-\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative supplementary variables.}
-
-\item{arrows}{Vector of two logicals specifying if the plot should contain
-points (FALSE, default) or arrows (TRUE).
-First value sets the rows and the second value sets the columns.}
-
-\item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
-It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
-\itemize{
-\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
-\item width: degree of jitter in x direction
-\item height: degree of jitter in y direction
-}}
 }
 \value{
 a ggplot2 plot
@@ -155,15 +123,17 @@ a ggplot2 plot
 Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 \itemize{
 \item{fviz_mfa_ind(): Graph of individuals}
+\item{fviz_mfa_var(): Graph of variables}
+\item{fviz_mfa_group(): Graph of the groups representation}
+\item{fviz_mfa_axes(): Graph of partial axes}
+\item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
+
 \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
 Deprecated function. It will be removed in the next version. 
 Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
 \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
 \item{fviz_mfa_quali_var(): Graph of qualitative variables}
 \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-\item{fviz_mfa_group(): Graph of the groups representation}
-\item{fviz_mfa_axes(): Graph of partial axes}
-\item{fviz_mfa(): An alias of fviz_mfa_ind_starplot()}
 }
 }
 \examples{

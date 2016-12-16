@@ -6,36 +6,27 @@ NULL
 #' Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 #' \itemize{
 #' \item{fviz_mfa_ind(): Graph of individuals}
+#' \item{fviz_mfa_var(): Graph of variables}
+#' \item{fviz_mfa_group(): Graph of the groups representation}
+#' \item{fviz_mfa_axes(): Graph of partial axes}
+#' \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
+#' 
 #' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
 #' Deprecated function. It will be removed in the next version. 
 #' Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
 #' \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
 #' \item{fviz_mfa_quali_var(): Graph of qualitative variables}
 #' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-#' \item{fviz_mfa_group(): Graph of the groups representation}
-#' \item{fviz_mfa_axes(): Graph of partial axes}
-#' \item{fviz_mfa(): An alias of fviz_mfa_ind_starplot()}
 #' }
 #' @param X an object of class MFA [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
 #' @inheritParams fviz
-#' @param label a text specifying the elements to be labelled.
-#'  Default value is "all".
-#'  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
-#'  "ind" can be used to label only active individuals.
-#'  "ind.sup" is for supplementary individuals.
-#' "var" is for active variable categories.
-#'  "quali.sup" is for supplementary qualitative variable categories.
-#' "quanti.sup" is for quantitative supplementary variables.
-#' @param invisible a text specifying the elements to be hidden on the plot.
-#'  Default value is "none".
-#'  Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
+#' @param choice The graph to plot. Allowed values include one of c("quanti.var", "group", "quali.var").
 #' @param habillage an optional factor variable for coloring
 #'  the observations by groups. Default value is "none".
 #'  If X is an MFA object from FactoMineR package, habillage can also specify
 #'  the index of the factor variable in the data.
-#' @param axes.linetype linetype of x and y axes.
 #' @param col.ind,col.partial,col.var,col.axes color for individuals, partial individuals, variables, 
 #' groups and axes, respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
@@ -53,7 +44,6 @@ NULL
 #' @param shape.ind,shape.var point shapes of individuals, variables, groups and axes
 #' @param col.quali.var.sup color for supplementary qualitative variables. Default is "black".
 #' @param title the title of the graph
-#' @param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative supplementary variables.
 #' @param select.ind,select.var,select.axes a selection of individuals/partial individuals/
 #' variables/groups/axes to be drawn.
 #' Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
@@ -63,18 +53,8 @@ NULL
 #' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
 #' \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 #' }
-#' @param ... Arguments to be passed to the function fviz_mfa_quali_biplot()
-#' @param arrows Vector of two logicals specifying if the plot should contain
-#'  points (FALSE, default) or arrows (TRUE).
-#'  First value sets the rows and the second value sets the columns.
+#' @param ... Arguments to be passed to the function fviz()
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
-#' @param jitter a parameter used to jitter the points in order to reduce overplotting. 
-#' It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
-#' \itemize{
-#' \item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
-#' \item width: degree of jitter in x direction
-#' \item height: degree of jitter in y direction
-#' }
 #' @param partial list of the individuals for which the partial points should be drawn. 
 #' (by default, partial = NULL and no partial points are drawn). 
 #' Use partial = "All" to visualize partial points for all individuals.
@@ -241,7 +221,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), re
 #' @rdname fviz_mfa
 #' @export
 fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,2), 
-                         geom = c("point", "text"), repel = FALSE,
+                         geom = c("point", "text"), repel = FALSE, habillage = "none",
                          col.var ="red", alpha.var=1, shape.var = 17, 
                          col.var.sup = "darkgreen", palette = NULL,
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
@@ -253,7 +233,6 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes
  
  
   # Define habillage if quanti.var. Quantitative variables are colored by groups
-  habillage <- "none"
   if(choice == "quanti.var") {
     .check_if_quanti_exists(X)
     if(missing(geom)) geom <- c("arrow", "text")
@@ -301,9 +280,6 @@ fviz_mfa_quali_var <- function(X, ...){
 
 
 
-
-
-
 #' @rdname fviz_mfa
 #' @export
 fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
@@ -329,8 +305,8 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa <- function(X, ...){
-  fviz_mfa_ind_starplot(X, ...)
+fviz_mfa <- function(X, partial = "all", ...){
+  fviz_mfa_ind(X, partial = partial, ...)
 }
 
 
