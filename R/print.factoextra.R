@@ -83,12 +83,14 @@ print.factoextra<-function(x, ...){
   else if(inherits(x, "mfa_ind")){
     cat("Multiple Factor Analysis Results for individuals\n",
         "===================================================\n")
-    res <- array(data="", dim=c(4,2), dimnames=list(1:4, c("Name", "Description")))
+    res <- array(data="", dim=c(6,2), dimnames=list(1:6, c("Name", "Description")))
     res[1, ] <- c("$coord", "Coordinates for the individuals")
     res[2, ] <- c("$cos2", "Cos2 for the individuals")
     res[3, ] <- c("$contrib", "Contributions of the individuals")
     res[4, ] <- c("$coord.partiel", "Partial coordinates of the individuals")
-    print(res[1:4,], ...)
+    res[5, ] <- c("$within.inertia", "Within inertia")
+    res[6, ] <- c("$within.partial.inertia", "Within partial inertia")
+    print(res[1:6,], ...)
   }
   else if(inherits(x, "mfa_quali_var")){
     cat("Multiple Factor Analysis Results for qualitative variables\n",
