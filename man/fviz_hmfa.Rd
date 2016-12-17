@@ -10,14 +10,11 @@
 \alias{fviz_hmfa_quanti_var}
 \title{Visualize Hierarchical Multiple Factor Analysis}
 \usage{
-fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), label = "all",
-  invisible = "none", labelsize = 4, pointsize = 2, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, ellipse.type = "norm",
-  ellipse.alpha = 0.1, col.ind = "blue", col.ind.sup = "darkblue",
-  alpha.ind = 1, shape.ind = 19, repel = FALSE,
-  axes.linetype = "dashed", select.ind = list(name = NULL, cos2 = NULL,
-  contrib = NULL), title = "Individuals factor map - HMFA",
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
+  habillage = "none", addEllipses = FALSE, shape.ind = 19,
+  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  title = "Individuals factor map - HMFA", ...)
 
 fviz_hmfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -81,22 +78,7 @@ values are the combination of c("point", "arrow", "text"). Use "point" (to
 show only points); "text" to show only labels; c("point", "text") or 
 c("arrow", "text") to show both types.}
 
-\item{label}{a text specifying the elements to be labelled.
- Default value is "all".
- Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
- "ind" can be used to label only active individuals.
- "ind.sup" is for supplementary individuals.
-"var" is for active variable categories.
- "quali.sup" is for supplementary qualitative variable categories.
-"quanti.sup" is for quantitative supplementary variables.}
-
-\item{invisible}{a text specifying the elements to be hidden on the plot.
-Default value is "none".
-Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
-
-\item{labelsize}{font size for the labels}
-
-\item{pointsize}{the size of points}
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
 
 \item{habillage}{an optional factor variable for coloring 
 the observations by groups. Default value is "none".
@@ -106,15 +88,7 @@ the index of the factor variable in the data.}
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
 
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{ellipse.type}{Character specifying frame type. Possible values are 
-'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-including one of c("t", "norm", "euclid").}
-
-\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
-fill color. Use alpha = 0 for no fill color.}
+\item{shape.ind, shape.var, shape.group}{point shapes of individuals, variables, groups and axes}
 
 \item{col.ind, col.partial, col.var, col.group}{color for individuals, partial individuals, variables, 
 groups and axes, respectively.
@@ -133,12 +107,6 @@ Default value is 1. Possible values include also : "cos2", "contrib", "coord", "
  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
  To use this, make sure that habillage ="none".}
 
-\item{shape.ind, shape.var, shape.group}{point shapes of individuals, variables, groups and axes}
-
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
-
-\item{axes.linetype}{linetype of x and y axes.}
-
 \item{select.ind, select.partial, select.var, select.group}{a selection of individuals/partial individuals/
 variables/groups/axes to be drawn.
 Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
@@ -151,6 +119,31 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 
 \item{title}{the title of the graph}
 
+\item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
+
+\item{label}{a text specifying the elements to be labelled.
+ Default value is "all".
+ Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
+ "ind" can be used to label only active individuals.
+ "ind.sup" is for supplementary individuals.
+"var" is for active variable categories.
+ "quali.sup" is for supplementary qualitative variable categories.
+"quanti.sup" is for quantitative supplementary variables.}
+
+\item{invisible}{a text specifying the elements to be hidden on the plot.
+Default value is "none".
+Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
+
+\item{labelsize}{font size for the labels}
+
+\item{pointsize}{the size of points}
+
+\item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
+
+\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
+
+\item{axes.linetype}{linetype of x and y axes.}
+
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
 \itemize{
@@ -159,11 +152,8 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item height: degree of jitter in y direction
 }}
 
-\item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
-
-\item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
-
-\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
+\item{ellipse.level}{the size of the concentration ellipse in normal 
+probability.}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain
 points (FALSE, default) or arrows (TRUE).
@@ -174,6 +164,13 @@ First value sets the rows and the second value sets the columns.}
 \item{legend.partial.title}{the title of the partal groups legend.}
 
 \item{linesize}{size of partial point connecting line.}
+
+\item{ellipse.type}{Character specifying frame type. Possible values are 
+'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
+including one of c("t", "norm", "euclid").}
+
+\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
+fill color. Use alpha = 0 for no fill color.}
 
 \item{node.level}{a single number indicating the HMFA node level to plot.}
 }
