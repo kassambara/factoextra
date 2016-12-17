@@ -229,7 +229,7 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
 
 #' @rdname fviz_hmfa
 #' @export
-fviz_hmfa_var <- function(X, choice = c("quanti.var", "quali.var"), axes=c(1,2), geom=c("point", "text"), repel = FALSE, 
+fviz_hmfa_var <- function(X, choice = c("quanti.var", "quali.var", "group"), axes=c(1,2), geom=c("point", "text"), repel = FALSE, 
                           col.var = "red", alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen", 
                           select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 {
@@ -506,52 +506,10 @@ fviz_hmfa_ind_starplot <- function(X,  axes = c(1,2), geom=c("point", "text"), g
 
 #' @rdname fviz_hmfa
 #' @export
-fviz_hmfa_group <- function(X,  axes = c(1,2), geom=c("point", "text"), alpha.group=1, shape.group = 17,
-                           label = "all", invisible="none", labelsize=4, pointsize = 2,
-                           col.group="blue",  col.group.sup = "darkgreen", repel = FALSE,
-                           select.group = list(name = NULL, cos2 = NULL, contrib = NULL),
-                           title = "MFA - Groups Representations",# map ="symmetric", 
-                           jitter = list(what = "label", width = NULL, height = NULL), ...)
+fviz_hmfa_group <- function(X,  ...)
 {
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  group <- facto_summarize(X, element = "group",
-                           result = c("coord"), axes = axes)
-  colnames(group)[2:3] <-  c("x", "y")
-  
-  # Selection
-  group.all <- group
-  if(!is.null(select.group)) group <- .select(group, select.group)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.group %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(group.all[, alpha.group])
-  
-  p <- ggplot()
-  
-  if(!hide$group){
-    p <-.ggscatter(p = p, data = group, x = 'x', y = 'y',
-                   col=col.group,  alpha = alpha.group,
-                   alpha.limits = alpha.limits,
-                   geom = geom, shape = shape.group,
-                   lab = lab$group, labelsize = labelsize,
-                   pointsize = pointsize, jitter = jitter,
-                   repel = repel)
-  }
-  
-  # Set fix dimensions
-  p <- p + scale_x_continuous(expand = c(0,0), limits = c(0,1)) + 
-    scale_y_continuous(expand = c(0,0), limits = c(0,1)) +
-    theme(panel.border = element_rect(linetype = "solid", fill = "transparent")) 
-  
-  title2 <- title
-  p + labs(title=title2)
+  warning("Deprecated function. Use fviz_hmfa_var(X, 'group') instead.")
+  fviz_hmfa_var(X, choice = "group", ...)
 }
 
 # 

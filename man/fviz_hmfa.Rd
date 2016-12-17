@@ -16,8 +16,8 @@ fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
-fviz_hmfa_var(X, choice = c("quanti.var", "quali.var"), axes = c(1, 2),
-  geom = c("point", "text"), repel = FALSE, col.var = "red",
+fviz_hmfa_var(X, choice = c("quanti.var", "quali.var", "group"), axes = c(1,
+  2), geom = c("point", "text"), repel = FALSE, col.var = "red",
   alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
@@ -42,12 +42,7 @@ fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   title = "Individuals factor map - MFA", jitter = list(what = "label",
   width = NULL, height = NULL), ...)
 
-fviz_hmfa_group(X, axes = c(1, 2), geom = c("point", "text"),
-  alpha.group = 1, shape.group = 17, label = "all", invisible = "none",
-  labelsize = 4, pointsize = 2, col.group = "blue",
-  col.group.sup = "darkgreen", repel = FALSE, select.group = list(name =
-  NULL, cos2 = NULL, contrib = NULL), title = "MFA - Groups Representations",
-  jitter = list(what = "label", width = NULL, height = NULL), ...)
+fviz_hmfa_group(X, ...)
 
 fviz_hmfa(X, ...)
 }
