@@ -1058,7 +1058,7 @@ NULL
     }
     else{
       if(nrow(ind)!=length(habillage))
-        stop("The number of active individuals used in the PCA is different ",
+        stop("The number of active individuals is different ",
              "from the length of the factor habillage. Please, remove the supplementary ",
              "individuals in the variable habillage.")
       name.quali <- "Groups"
