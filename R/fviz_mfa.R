@@ -131,7 +131,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   
   # Add supplementary qualitative variables if they exist
   show.quali.var <- !("quali.var" %in% extra_args$invisible) & is.null(partial)
-  is_habillage <- habillage != "none" 
+  is_habillage <- habillage[1] != "none" 
   if(!is.null(X$quali.var.sup) & show.quali.var){
     if(!(col.ind %in% c("cos2", "contrib")) & !is_habillage) col.quali.var.sup  = "quali.sup"
     quali.sup <- .get_supp(X, element = "quali.var.sup", axes = axes)
