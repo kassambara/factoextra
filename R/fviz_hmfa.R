@@ -7,16 +7,16 @@ NULL
 #' \itemize{
 #' \item{fviz_hmfa_ind(): Graph of individuals}
 #' \item{fviz_hmfa_var(): Graph of variables}
+#' \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
 #' \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 #' }
 #' 
 #' Deprecated functions:
 #' \itemize{
-#' \item{fviz_hmfa_ind_starplot(): Graph of partial individuals.)}
-#' \item{fviz_hmfa_quanti_var(): Graph of quantitative variables}
-#' \item{fviz_hmfa_quali_var(): Graph of qualitative variables}
-#' \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
-#' \item{fviz_hmfa_group(): Graph of the groups representation}
+#' \item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
+#' \item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
+#' \item{fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.}
+#' \item{fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.}
 #' }
 #' @param X an object of class HMFA [FactoMineR].
 #' @inheritParams fviz_mca
@@ -24,14 +24,15 @@ NULL
 #' @inheritParams fviz
 #' @param habillage an optional factor variable for coloring 
 #'  the observations by groups. Default value is "none".
-#'  If X is an MFA object from FactoMineR package, habillage can also specify
+#'  If X is an HMFA object from FactoMineR package, habillage can also specify
 #'  the index of the factor variable in the data.
-#' @param col.ind,col.partial,col.var color for individuals, partial individuals and variables, 
+#' @param col.ind,col.var color for individuals, partial individuals and variables, 
 #' respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
+#' @param col.partial color for partial individuals. By default, points are colored according to the groups.
 #' @param alpha.ind,alpha.var controls the transparency of
 #'  individual, partial individual and variable, respectively.
 #' The value can variate from 0 (total transparency) to 1 (no transparency).

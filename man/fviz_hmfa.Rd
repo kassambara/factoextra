@@ -52,7 +52,7 @@ c("arrow", "text") to show both types.}
 
 \item{habillage}{an optional factor variable for coloring 
 the observations by groups. Default value is "none".
-If X is an MFA object from FactoMineR package, habillage can also specify
+If X is an HMFA object from FactoMineR package, habillage can also specify
 the index of the factor variable in the data.}
 
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
@@ -60,7 +60,7 @@ individuals when habillage != "none".}
 
 \item{shape.ind, shape.var}{point shapes of individuals and variables, respectively.}
 
-\item{col.ind, col.partial, col.var}{color for individuals, partial individuals and variables, 
+\item{col.ind, col.var}{color for individuals, partial individuals and variables, 
 respectively.
  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
@@ -91,6 +91,8 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 (by default, partial = NULL and no partial points are drawn). 
 Use partial = "All" to visualize partial points for all individuals.}
 
+\item{col.partial}{color for partial individuals. By default, points are colored according to the groups.}
+
 \item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
 
 \item{node.level}{a single number indicating the HMFA node level to plot.}
@@ -114,16 +116,16 @@ Graph of individuals and variables from the output of Hierarchical Multiple Fact
 \itemize{
 \item{fviz_hmfa_ind(): Graph of individuals}
 \item{fviz_hmfa_var(): Graph of variables}
+\item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
 \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 }
 
 Deprecated functions:
 \itemize{
-\item{fviz_hmfa_ind_starplot(): Graph of partial individuals.)}
-\item{fviz_hmfa_quanti_var(): Graph of quantitative variables}
-\item{fviz_hmfa_quali_var(): Graph of qualitative variables}
-\item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
-\item{fviz_hmfa_group(): Graph of the groups representation}
+\item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
+\item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
+\item{fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.}
+\item{fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.}
 }
 }
 \examples{
