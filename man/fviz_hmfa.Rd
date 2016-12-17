@@ -14,7 +14,9 @@
 fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   habillage = "none", addEllipses = FALSE, shape.ind = 19,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  partial = NULL, col.partial = "group", group.names = NULL,
+  node.level = 1, ...)
 
 fviz_hmfa_var(X, choice = c("quanti.var", "quali.var", "group"), axes = c(1,
   2), geom = c("point", "text"), repel = FALSE, col.var = "red",
@@ -29,18 +31,7 @@ fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = FALSE,
   title = "Biplot of individuals and qualitative variables - HMFA", ...)
 
-fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
-  group.names = NULL, label = "all", invisible = "none",
-  legend.partial.title = NULL, labelsize = 4, pointsize = 2,
-  linesize = 0.5, repel = FALSE, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, ellipse.type = "norm",
-  ellipse.alpha = 0.1, col.ind = "black", col.ind.sup = "darkblue",
-  col.partial = "black", alpha.ind = 1, shape.ind = 19,
-  alpha.partial = 1, node.level = 1, select.ind = list(name = NULL, cos2 =
-  NULL, contrib = NULL), select.partial = list(name = NULL, cos2 = NULL,
-  contrib = NULL), axes.linetype = "dashed",
-  title = "Individuals factor map - MFA", jitter = list(what = "label",
-  width = NULL, height = NULL), ...)
+fviz_hmfa_ind_starplot(X, ...)
 
 fviz_hmfa_group(X, ...)
 
@@ -96,6 +87,10 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 }}
 
+\item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
+
+\item{node.level}{a single number indicating the HMFA node level to plot.}
+
 \item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
 
 \item{choice}{the graph to plot. Allowed values include: i) "var" and 
@@ -104,8 +99,6 @@ dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
 supplementary quantitative variables.}
 
 \item{title}{the title of the graph}
-
-\item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
 
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
@@ -120,27 +113,17 @@ supplementary quantitative variables.}
 Default value is "none".
 Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
 
+\item{axes.linetype}{linetype of x and y axes.}
+
+\item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
+
 \item{legend.partial.title}{the title of the partal groups legend.}
-
-\item{labelsize}{font size for the labels}
-
-\item{pointsize}{the size of points}
 
 \item{linesize}{size of partial point connecting line.}
 
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{ellipse.type}{Character specifying frame type. Possible values are 
-'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-including one of c("t", "norm", "euclid").}
-
-\item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
-fill color. Use alpha = 0 for no fill color.}
-
-\item{node.level}{a single number indicating the HMFA node level to plot.}
-
-\item{axes.linetype}{linetype of x and y axes.}
+\item{arrows}{Vector of two logicals specifying if the plot should contain
+points (FALSE, default) or arrows (TRUE).
+First value sets the rows and the second value sets the columns.}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
@@ -149,12 +132,6 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}
-
-\item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
-
-\item{arrows}{Vector of two logicals specifying if the plot should contain
-points (FALSE, default) or arrows (TRUE).
-First value sets the rows and the second value sets the columns.}
 }
 \value{
 a ggplot2 plot
