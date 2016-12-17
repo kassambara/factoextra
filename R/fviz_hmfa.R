@@ -217,7 +217,6 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
                           alpha.ind = 1,
                           select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 {
-  
   p <- fviz (X, element = "ind", axes = axes, geom = geom, habillage = habillage, 
              addEllipses = addEllipses, pointshape = shape.ind,
              color = col.ind, alpha = alpha.ind,
@@ -230,152 +229,36 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
 
 #' @rdname fviz_hmfa
 #' @export
-fviz_hmfa_quanti_var <- function(X, axes=c(1,2), geom=c("arrow", "text"), label="all",  invisible ="none",
-                                labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
-                                col.quanti.sup="blue",  col.quali.sup = "darkgreen", col.circle = "grey70",
-                                select.var = list(name = NULL, cos2 = NULL, contrib = NULL), axes.linetype = "dashed",
-                                # map ="symmetric", 
-                                title = "Quantitative Variable categories - MFA",repel = FALSE, jitter = list(what = "label", width = NULL, height = NULL))
+fviz_hmfa_var <- function(X, choice = c("quanti.var", "quali.var"), axes=c(1,2), geom=c("point", "text"), repel = FALSE, 
+                          col.var = "black", alpha.var = 1, shape.var = 17, col.var.sup = "blue", 
+                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 {
   
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  var <- facto_summarize(X, element = "quanti.var",
-                         result = c("coord", "contrib", "cos2"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # scale coords according to the type of map
-  # var <- .scale_ca(var, res.ca = X,  element = "quanti.var",
-  #                  type = map, axes = axes)
-  
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
-  
-  p <- ggplot()
-  
-  # Draw correlation circle
-  theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
-  p <- ggplot(data = circle, aes_string("xcircle", "ycircle")) +
-    geom_path(aes_string("xcircle", "ycircle"), color=col.circle)+
-    geom_hline(yintercept = 0, linetype=axes.linetype)+
-    geom_vline(xintercept = 0, linetype=axes.linetype)    
-  
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
-                   col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits, repel = repel,
-                   geom = geom, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize,
-                   pointsize = pointsize, jitter = jitter)
+  choice <- match.arg(choice)
+  if(choice == "quanti.var") {
+    if(missing(geom)) geom <- c("arrow", "text")
   }
   
-  
-  # Add supplementary qualitative variable categories
-  # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$quali.sup ){
-    quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
-                           select = select.var)
-    if(!is.null(quali_sup)){
-      colnames(quali_sup)[2:3] <-  c("x", "y")
-      # quali_sup <- .scale_ca(quali_sup, res.ca = X,  element = "quali.sup",
-      #                       type = map, axes = axes)
-    }
-    if(!is.null(quali_sup)){
-      p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup),
-                    pointsize = pointsize, jitter = jitter)
-    }
-    
-  }
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
-  p
+  fviz (X, element = choice, axes = axes, geom = geom,
+        color = col.var, alpha = alpha.var,  pointshape = shape.var, 
+        shape.sup = shape.var, col.col.sup = col.var.sup, 
+        select = select.var, repel = repel,  ...)
 }
 
+#' @rdname fviz_hmfa
+#' @export
+fviz_hmfa_quanti_var <- function(X, ...){
+  warning("Deprecated function. Use fviz_hmfa_var(X, 'quanti.var') instead.")
+  fviz_hmfa_var(X, "quanti.var", ...)
+}
 
 
 #' @rdname fviz_hmfa
 #' @export
-fviz_hmfa_quali_var <- function(X, axes=c(1,2), geom=c("point", "text"), label="all",  invisible ="none",
-                               labelsize=4, pointsize = 2, col.var="red", alpha.var=1, shape.var = 17,
-                               col.quanti.sup="blue",  col.quali.sup = "darkgreen", repel = FALSE,
-                               select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-                               axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",# map ="symmetric", 
-                               jitter = list(what = "label", width = NULL, height = NULL))
+fviz_hmfa_quali_var <- function(X, ... )
 {
-  
-  if(is.null(jitter$what)) jitter$what <- "label"
-  
-  # data frame to be used for plotting
-  var <- facto_summarize(X, element = "quali.var",
-                         result = c("coord", "contrib"), axes = axes)
-  colnames(var)[2:3] <-  c("x", "y")
-  
-  # scale coords according to the type of map
-  # var <- .scale_ca(var, res.ca = X,  element = "quali.var",
-  #                  type = map, axes = axes)
-  
-  
-  # Selection
-  var.all <- var
-  if(!is.null(select.var)) var <- .select(var, select.var)
-  
-  # elements to be labelled or hidden
-  lab <- .label(label)
-  hide <- .hide(invisible)
-  
-  alpha.limits <- NULL
-  if(alpha.var %in% c("cos2","contrib", "coord", "x", "y"))
-    alpha.limits = range(var.all[, alpha.var])
-  
-  p <- ggplot()
-  
-  if(!hide$var){
-    p <-.ggscatter(p = p, data = var, x = 'x', y = 'y',
-                   col=col.var,  alpha = alpha.var,
-                   alpha.limits = alpha.limits, repel = repel,
-                   geom = geom, shape = shape.var,
-                   lab = lab$var, labelsize = labelsize,
-                   pointsize = pointsize, jitter = jitter)
-  }
-  
-  
-  # Add supplementary qualitative variable categories
-  # Available only in FactoMineR
-  if(inherits(X, 'MFA') & !hide$quali.sup ){
-    quali_sup <- .get_supp(X, element = "quali.sup", axes = axes,
-                           select = select.var)
-    if(!is.null(quali_sup)){
-      colnames(quali_sup)[2:3] <-  c("x", "y")
-      # quali_sup <- .scale_ca(quali_sup, res.ca = X,  element = "quali.sup",
-      #                       type = map, axes = axes)
-    }
-    if(!is.null(quali_sup)){
-      p <- fviz_add(p, df = quali_sup[, 2:3, drop = FALSE], geom = geom,
-                    color = col.quali.sup, shape = shape.var,
-                    labelsize = labelsize, addlabel = (lab$quali.sup),
-                    pointsize = pointsize, jitter = jitter)
-    }
-    
-  }
-  title2 <- title
-  p <- .fviz_finish(p, X, axes, axes.linetype) +
-    labs(title = title2)
-  p
+  warning("Deprecated function. Use fviz_hmfa_var(X, 'quali.var') instead.")
+  fviz_hmfa_var(X, "quali.var", ...)
 }
 
 

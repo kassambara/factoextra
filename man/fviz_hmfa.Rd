@@ -8,30 +8,22 @@
 \alias{fviz_hmfa_quali_biplot}
 \alias{fviz_hmfa_quali_var}
 \alias{fviz_hmfa_quanti_var}
+\alias{fviz_hmfa_var}
 \title{Visualize Hierarchical Multiple Factor Analysis}
 \usage{
 fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   habillage = "none", addEllipses = FALSE, shape.ind = 19,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  title = "Individuals factor map - HMFA", ...)
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
-fviz_hmfa_quanti_var(X, axes = c(1, 2), geom = c("arrow", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen",
-  col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), axes.linetype = "dashed",
-  title = "Quantitative Variable categories - MFA", repel = FALSE,
-  jitter = list(what = "label", width = NULL, height = NULL))
+fviz_hmfa_var(X, choice = c("quanti.var", "quali.var"), axes = c(1, 2),
+  geom = c("point", "text"), repel = FALSE, col.var = "black",
+  alpha.var = 1, shape.var = 17, col.var.sup = "blue",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
-fviz_hmfa_quali_var(X, axes = c(1, 2), geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen", repel = FALSE,
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
-  axes.linetype = "dashed", title = "Qualitative Variable categories - MFA",
-  jitter = list(what = "label", width = NULL, height = NULL))
+fviz_hmfa_quanti_var(X, ...)
+
+fviz_hmfa_quali_var(X, ...)
 
 fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   label = "all", invisible = "none", labelsize = 4, pointsize = 2,
@@ -117,9 +109,12 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 }}
 
-\item{title}{the title of the graph}
-
 \item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
+
+\item{choice}{the graph to plot. Allowed values include: i) "var" and 
+"mca.cor" for plotting the correlation between variables and principal
+dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
+supplementary quantitative variables.}
 
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
@@ -138,11 +133,18 @@ Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "q
 
 \item{pointsize}{the size of points}
 
+\item{ellipse.level}{the size of the concentration ellipse in normal 
+probability.}
+
 \item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
-
 \item{axes.linetype}{linetype of x and y axes.}
+
+\item{arrows}{Vector of two logicals specifying if the plot should contain
+points (FALSE, default) or arrows (TRUE).
+First value sets the rows and the second value sets the columns.}
+
+\item{title}{the title of the graph}
 
 \item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
 It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
@@ -151,13 +153,6 @@ It's a list containing the objects what, width and height (i.e jitter = list(wha
 \item width: degree of jitter in x direction
 \item height: degree of jitter in y direction
 }}
-
-\item{ellipse.level}{the size of the concentration ellipse in normal 
-probability.}
-
-\item{arrows}{Vector of two logicals specifying if the plot should contain
-points (FALSE, default) or arrows (TRUE).
-First value sets the rows and the second value sets the columns.}
 
 \item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
 
