@@ -154,6 +154,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   summary.res <- c("coord", "contrib", "cos2")
   if(element == "partial.axes" | (element == "quali.var" & facto.class == "HMFA")) 
     summary.res <- c("coord", "contrib")
+  else if(element == "group" & facto.class == "HMFA") summary.res <- "coord"
   df <- facto_summarize(X, element = element, axes = axes, result = summary.res)
   colnames(df)[2:3] <-  c("x", "y")
   # augment data, if qualitative variable is used to color points by groups
