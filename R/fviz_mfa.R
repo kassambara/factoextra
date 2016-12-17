@@ -190,11 +190,11 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_ind_starplot <- function(X,  partial = "All",  ...){
+fviz_mfa_ind_starplot <- function(X,   ...){
   warning("This function is deprecated. ", 
           "It will be removed in the next version. ",
            "Use fviz_mfa_ind(res.mfa, partial = 'All') instead.")
-  fviz_mfa_ind (X, partial = partial, ...)
+  fviz_mfa_ind (X, partial = "all", ...)
 }
 
 

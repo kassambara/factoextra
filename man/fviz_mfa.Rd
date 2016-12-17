@@ -19,7 +19,7 @@ fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   NULL, cos2 = NULL, contrib = NULL), partial = NULL, col.partial = "group",
   ...)
 
-fviz_mfa_ind_starplot(X, partial = "All", ...)
+fviz_mfa_ind_starplot(X, ...)
 
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = repel,
