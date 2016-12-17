@@ -301,7 +301,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     
   res <- NULL
   # Supplementary individuals
-  if(element == "ind" & inherits(X, c('PCA', "MCA")) & !hide$ind.sup)
+  if(element == "ind" & inherits(X, c('PCA', "MCA", "MFA")) & !hide$ind.sup)
     res <- list(name = "ind.sup", addlabel = (lab$ind.sup & "text" %in% geom))
   # Supplementary quantitative variables
   else if(element == "var" & inherits(X, 'PCA') & !hide$quanti)
