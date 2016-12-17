@@ -207,7 +207,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
       p <- .add_corr_circle(p, color = col.circle)
   }
-  else if(facto.class %in% c("MCA", "MFA") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
+  else if(facto.class %in% c("MCA", "MFA", "HMFA") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
       p <- .add_corr_circle(p, color = col.circle)
   }
   # Faceting when multiple variables are used to color individuals
