@@ -17,8 +17,8 @@ fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_hmfa_var(X, choice = c("quanti.var", "quali.var"), axes = c(1, 2),
-  geom = c("point", "text"), repel = FALSE, col.var = "black",
-  alpha.var = 1, shape.var = 17, col.var.sup = "blue",
+  geom = c("point", "text"), repel = FALSE, col.var = "red",
+  alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_hmfa_quanti_var(X, ...)
@@ -26,16 +26,8 @@ fviz_hmfa_quanti_var(X, ...)
 fviz_hmfa_quali_var(X, ...)
 
 fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  label = "all", invisible = "none", labelsize = 4, pointsize = 2,
-  habillage = "none", addEllipses = FALSE, ellipse.level = 0.95,
-  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  col.var = "red", alpha.var = 1, col.quanti.sup = "blue",
-  col.quali.sup = "darkgreen", axes.linetype = "dashed", shape.ind = 19,
-  shape.var = 17, select.var = list(name = NULL, cos2 = NULL, contrib =
-  NULL), select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
-  arrows = c(FALSE, FALSE), repel = FALSE,
-  title = "HMFA factor map - Biplot", jitter = list(what = "label", width =
-  NULL, height = NULL), ...)
+  repel = FALSE,
+  title = "Biplot of individuals and qualitative variables - HMFA", ...)
 
 fviz_hmfa_ind_starplot(X, axes = c(1, 2), geom = c("point", "text"),
   group.names = NULL, label = "all", invisible = "none",
@@ -116,6 +108,10 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
 supplementary quantitative variables.}
 
+\item{title}{the title of the graph}
+
+\item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
+
 \item{label}{a text specifying the elements to be labelled.
  Default value is "all".
  Allowed values are "none" or the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").
@@ -129,36 +125,16 @@ supplementary quantitative variables.}
 Default value is "none".
 Allowed values are the combination of c("ind", "ind.sup","var", "quali.sup",  "quanti.sup").}
 
+\item{legend.partial.title}{the title of the partal groups legend.}
+
 \item{labelsize}{font size for the labels}
 
 \item{pointsize}{the size of points}
 
+\item{linesize}{size of partial point connecting line.}
+
 \item{ellipse.level}{the size of the concentration ellipse in normal 
 probability.}
-
-\item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
-
-\item{axes.linetype}{linetype of x and y axes.}
-
-\item{arrows}{Vector of two logicals specifying if the plot should contain
-points (FALSE, default) or arrows (TRUE).
-First value sets the rows and the second value sets the columns.}
-
-\item{title}{the title of the graph}
-
-\item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
-It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
-\itemize{
-\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
-\item width: degree of jitter in x direction
-\item height: degree of jitter in y direction
-}}
-
-\item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
-
-\item{legend.partial.title}{the title of the partal groups legend.}
-
-\item{linesize}{size of partial point connecting line.}
 
 \item{ellipse.type}{Character specifying frame type. Possible values are 
 'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
@@ -168,6 +144,22 @@ including one of c("t", "norm", "euclid").}
 fill color. Use alpha = 0 for no fill color.}
 
 \item{node.level}{a single number indicating the HMFA node level to plot.}
+
+\item{axes.linetype}{linetype of x and y axes.}
+
+\item{jitter}{a parameter used to jitter the points in order to reduce overplotting. 
+It's a list containing the objects what, width and height (i.e jitter = list(what, width, height)).
+\itemize{
+\item what: the element to be jittered. Possible values are "point" or "p"; "label" or "l"; "both" or "b"
+\item width: degree of jitter in x direction
+\item height: degree of jitter in y direction
+}}
+
+\item{col.quanti.sup, col.quali.sup, col.group.sup}{a color for the quantitative/qualitative supplementary variables.}
+
+\item{arrows}{Vector of two logicals specifying if the plot should contain
+points (FALSE, default) or arrows (TRUE).
+First value sets the rows and the second value sets the columns.}
 }
 \value{
 a ggplot2 plot
