@@ -71,12 +71,11 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
 
-\item{col.ind, col.partial, col.var, col.axes}{color for individuals, partial individuals, variables, 
-groups and axes, respectively.
- Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
- To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+\item{col.ind, col.var, col.axes}{color for individuals, variables and col.axes respectively.
+Possible values include also : "cos2", "contrib", "coord", "x" or "y".
+In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
+contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
+To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
@@ -106,6 +105,8 @@ if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 a
 (by default, partial = NULL and no partial points are drawn). 
 Use partial = "All" to visualize partial points for all individuals.}
 
+\item{col.partial}{color for partial individuals. By default, points are colored according to the groups.}
+
 \item{...}{Arguments to be passed to the function fviz()}
 
 \item{title}{the title of the graph}
@@ -120,20 +121,22 @@ Use partial = "All" to visualize partial points for all individuals.}
 a ggplot2 plot
 }
 \description{
-Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
+Graph of individuals/variables/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 \itemize{
 \item{fviz_mfa_ind(): Graph of individuals}
 \item{fviz_mfa_var(): Graph of variables}
 \item{fviz_mfa_group(): Graph of the groups representation}
 \item{fviz_mfa_axes(): Graph of partial axes}
 \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
-
-\item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
-Deprecated function. It will be removed in the next version. 
-Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
-\item{fviz_mfa_quanti_var(): Graph of quantitative variables}
-\item{fviz_mfa_quali_var(): Graph of qualitative variables}
 \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
+}
+
+Deprecated functions: 
+\itemize{
+\item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
+Deprecated. Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
+\item{fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.}
+\item{fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.}
 }
 }
 \examples{

@@ -3,20 +3,22 @@ NULL
 #' Visualize Multiple Factor Analysis
 #'
 #' @description
-#' Graph of individuals/quantitative variables/qualitative variables/group/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
+#' Graph of individuals/variables/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
 #' \itemize{
 #' \item{fviz_mfa_ind(): Graph of individuals}
 #' \item{fviz_mfa_var(): Graph of variables}
 #' \item{fviz_mfa_group(): Graph of the groups representation}
 #' \item{fviz_mfa_axes(): Graph of partial axes}
 #' \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
-#' 
-#' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
-#' Deprecated function. It will be removed in the next version. 
-#' Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
-#' \item{fviz_mfa_quanti_var(): Graph of quantitative variables}
-#' \item{fviz_mfa_quali_var(): Graph of qualitative variables}
 #' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
+#' }
+#' 
+#' Deprecated functions: 
+#' \itemize{
+#' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
+#' Deprecated. Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
+#' \item{fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.}
+#' \item{fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.}
 #' }
 #' @param X an object of class MFA [FactoMineR].
 #' @inheritParams fviz_mca
@@ -27,12 +29,12 @@ NULL
 #'  the observations by groups. Default value is "none".
 #'  If X is an MFA object from FactoMineR package, habillage can also specify
 #'  the index of the factor variable in the data.
-#' @param col.ind,col.partial,col.var,col.axes color for individuals, partial individuals, variables, 
-#' groups and axes, respectively.
+#' @param col.ind,col.var,col.axes color for individuals, variables and col.axes respectively.
 #'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
 #'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
 #'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
 #'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
+#' @param col.partial color for partial individuals. By default, points are colored according to the groups.
 #' @param col.var.sup color for supplementary variables.
 #' @param alpha.ind,alpha.var,alpha.axes controls the transparency of
 #'  individual, variable, group and axes colors, respectively.
