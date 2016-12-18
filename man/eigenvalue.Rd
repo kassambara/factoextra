@@ -84,22 +84,7 @@ res.pca <- prcomp(iris[, -5],  scale = TRUE)
 get_eig(res.pca)
 
 # Default plot
-fviz_eig(res.pca)
-
-# Customize the plot
-   # - Add labels
-   # - Change line color, bar fill and color. 
-   # - Change axis limits and themes
-   # possible themes: http://www.sthda.com/english/wiki/ggplot2-themes
-   
-p <- fviz_eig(res.pca, addlabels = TRUE, hjust = -0.3,
-           linecolor = "#FC4E07", 
-           barfill="white", barcolor ="darkblue",
-           ylim = c(0, 85), # y axis limits
-           ggtheme = theme_minimal()
-           )
-print(p)
-
+fviz_eig(res.pca, addlabels = TRUE, ylim = c(0, 85))
   
 # Scree plot - Eigenvalues
 fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
@@ -115,8 +100,7 @@ data(housetasks)
 res.ca <- CA(housetasks, graph = FALSE)
 get_eig(res.ca)
 fviz_eig(res.ca, linecolor = "#FC4E07",
-   barcolor = "#00AFBB", barfill = "#00AFBB")+
-   theme_minimal()
+   barcolor = "#00AFBB", barfill = "#00AFBB")
 
 # Multiple Correspondence Analysis
 # +++++++++++++++++++++++++++++++++
@@ -126,8 +110,7 @@ res.mca <- MCA(poison, quanti.sup = 1:2,
               quali.sup = 3:4, graph=FALSE)
 get_eig(res.mca)
 fviz_eig(res.mca, linecolor = "#FC4E07",
-   barcolor = "#2E9FDF", barfill = "#2E9FDF")+
-   theme_minimal()
+   barcolor = "#2E9FDF", barfill = "#2E9FDF")
  
  
 # Multiple Factor Analysis
@@ -139,8 +122,7 @@ res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
                num.group.sup=c(1,6), graph=FALSE)
 get_eig(res.mfa)
 fviz_eig(res.mfa, linecolor = "#FC4E07",
-   barcolor = "#E7B800", barfill = "#E7B800")+
-   theme_minimal()
+   barcolor = "#E7B800", barfill = "#E7B800")
 
 
 }
