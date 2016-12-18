@@ -3,7 +3,7 @@ NULL
 #' Visualize the contributions of row/column elements
 #'
 #' @description
-#' This function can be used to visualize the quality of representation (cos2) of rows/columns
+#' This function can be used to visualize the contribution of rows/columns
 #' from the results of Principal Component Analysis (PCA),
 #' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
 #' and Multiple Factor Analysis (MFA) functions.
@@ -47,6 +47,7 @@ NULL
 #' # Contributions of individuals on axis 1
 #' fviz_contrib(res.pca, choice="ind", axes = 1)
 #'
+#'\dontrun{
 #' # Correspondence Analysis
 #' # ++++++++++++++++++++++++++
 #' # Install and load FactoMineR to compute CA
@@ -57,8 +58,6 @@ NULL
 #'
 #' # Visualize row contributions on axes 1
 #' fviz_contrib(res.ca, choice ="row", axes = 1)
-#' # Visualize row contributions on axes 1 + 2
-#' fviz_contrib(res.ca, choice ="row", axes = 1:2)
 #' # Visualize column contributions on axes 1
 #' fviz_contrib(res.ca, choice ="col", axes = 1)
 #'
@@ -71,8 +70,6 @@ NULL
 #'
 #' # Visualize individual contributions on axes 1
 #' fviz_contrib(res.mca, choice ="ind", axes = 1)
-#' # Select the top 20
-#' fviz_contrib(res.mca, choice ="ind", axes = 1, top = 20)
 #' # Visualize variable categorie contributions on axes 1
 #' fviz_contrib(res.mca, choice ="var", axes = 1)
 #'
@@ -85,11 +82,10 @@ NULL
 #'                num.group.sup=1:2, graph=FALSE)
 #'
 #' # Visualize individual contributions on axes 1
-#' fviz_contrib(res.mfa, choice ="ind", axes = 1)
-#' # Select the top 20
 #' fviz_contrib(res.mfa, choice ="ind", axes = 1, top = 20)
 #' # Visualize catecorical variable categorie contributions on axes 1
 #' fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
+#' }
 #'
 #'  }
 #' @export
