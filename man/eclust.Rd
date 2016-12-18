@@ -80,7 +80,7 @@ data("USArrests")
 df <- scale(USArrests)
 
 # Enhanced k-means clustering
-res.km <- eclust(df, "kmeans")
+res.km <- eclust(df, "kmeans", nboot = 10)
 # Silhouette plot
 fviz_silhouette(res.km)
 # Optimal number of clusters using gap statistics
@@ -89,7 +89,7 @@ res.km$nbclust
  res.km
  
  # Enhanced hierarchical clustering
- res.hc <- eclust(df, "hclust") # compute hclust
+ res.hc <- eclust(df, "hclust", nboot = 10) # compute hclust
   fviz_dend(res.hc) # dendrogam
   fviz_silhouette(res.hc) # silhouette plot
  
