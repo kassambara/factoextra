@@ -97,7 +97,7 @@ Use partial = "All" to visualize partial points for all individuals.}
 
 \item{node.level}{a single number indicating the HMFA node level to plot.}
 
-\item{...}{Arguments to be passed to the function fviz_mfa_quali_biplot()}
+\item{...}{Arguments to be passed to the function fviz() and ggpubr::ggpar()}
 
 \item{choice}{the graph to plot. Allowed values include: i) "var" and 
 "mca.cor" for plotting the correlation between variables and principal
@@ -109,7 +109,7 @@ supplementary quantitative variables.}
 \item{title}{the title of the graph}
 }
 \value{
-a ggplot2 plot
+a ggplot
 }
 \description{
 Graph of individuals and variables from the output of Hierarchical Multiple Factor Analysis (HMFA).\cr\cr
@@ -120,7 +120,7 @@ Graph of individuals and variables from the output of Hierarchical Multiple Fact
 \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 }
 
-Deprecated functions:
+Deprecated functions. Will be removed in the next version: 
 \itemize{
 \item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
 \item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}

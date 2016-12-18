@@ -167,8 +167,7 @@ fviz_mca_ind(res.mca, col.ind = "steelblue")
 # 2. To keep only point or text use geom = "point" or geom = "text".
 # 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
 
-fviz_mca_ind(res.mca, col.ind = "cos2", repel = TRUE)+
-theme_minimal()
+fviz_mca_ind(res.mca, col.ind = "cos2", repel = TRUE)
 
 \dontrun{     
 # You can also control the transparency 
@@ -188,14 +187,12 @@ print(p)
 # Change group colors using RColorBrewer color palettes
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_brewer(palette="Dark2") +
-    scale_fill_brewer(palette="Dark2") +
-     theme_minimal()
+    scale_fill_brewer(palette="Dark2") 
      
 # Change group colors manually
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_manual(values=c("#999999", "#E69F00"))+
- scale_fill_manual(values=c("#999999", "#E69F00"))+
- theme_minimal()  
+ scale_fill_manual(values=c("#999999", "#E69F00"))
              
              
 # Select and visualize some individuals (ind) with select.ind argument.
@@ -211,29 +208,19 @@ fviz_mca_ind(res.mca, select.ind = list(cos2 = 20))
 # Graph of variable categories
 # ++++++++++++++++++++++++++++
 # Default plot: use repel = TRUE to avoid overplotting
-fviz_mca_var(res.mca, col.var = "#FC4E07")+
-theme_minimal()
+fviz_mca_var(res.mca, col.var = "#FC4E07")
 
 # Control variable colors using their contributions
 # use repel = TRUE to avoid overplotting
-fviz_mca_var(res.mca, col.var = "contrib")+
- scale_color_gradient2(low="white", mid="blue", 
-           high="red", midpoint=2, space = "Lab") +
- theme_minimal()      
+fviz_mca_var(res.mca, col.var = "contrib",
+  gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
         
-   
-# Select variables with select.var argument
-   # You can select by contrib, cos2 and name 
-   # as previously described for ind
-# Select the top 10 contributing variables
-fviz_mca_var(res.mca, select.var = list(contrib = 10))
     
 # Biplot
 # ++++++++++++++++++++++++++
 grp <- as.factor(poison.active[, "Vomiting"])
 fviz_mca_biplot(res.mca, repel = TRUE, col.var = "#E7B800",
- habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)+
- theme_minimal()
+ habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)
  
  \dontrun{
 # Keep only the labels for variable categories: 

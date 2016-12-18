@@ -11,7 +11,7 @@ NULL
 #' \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 #' }
 #' 
-#' Deprecated functions:
+#' Deprecated functions. Will be removed in the next version: 
 #' \itemize{
 #' \item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
 #' \item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
@@ -53,13 +53,13 @@ NULL
 #' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
 #' \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
 #' }
-#' @param ... Arguments to be passed to the function fviz_mfa_quali_biplot()
+#' @param ... Arguments to be passed to the function fviz() and ggpubr::ggpar()
 #' @param partial list of the individuals for which the partial points should be drawn. 
 #' (by default, partial = NULL and no partial points are drawn). 
 #' Use partial = "All" to visualize partial points for all individuals.
 #' @param col.var.sup color for supplementary variables.
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
-#' @return a ggplot2 plot
+#' @return a ggplot
 #' @author Fabian Mundt \email{f.mundt@inventionate.de}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com

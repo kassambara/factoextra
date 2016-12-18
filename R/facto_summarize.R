@@ -5,11 +5,11 @@ NULL
 #' @description Subset and summarize the results of Principal Component Analysis
 #' (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
 #' and Multiple Factor Analysis (MFA) functions from several packages.
-#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and
+#' @param X an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
 #'   princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].
 #' @param element the element to subset from the output. Possible values are 
 #'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
-#'   'quanti.var', 'quali.var' or 'ind' for MFA
+#'   'quanti.var', 'quali.var' , 'group' or 'ind' for MFA and HMFA.
 #' @param result the result to be extracted for the element. Possible values are
 #'   the combination of c("cos2", "contrib", "coord")
 #' @param group.names a vector containing the name of the groups (by default,

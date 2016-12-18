@@ -14,12 +14,12 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   col.circle = "grey70", ggtheme = theme_minimal(), ...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and
+\item{X}{an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
 princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].}
 
 \item{element}{the element to subset from the output. Possible values are 
 "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
-'quanti.var', 'quali.var' or 'ind' for MFA}
+'quanti.var', 'quali.var' , 'group' or 'ind' for MFA and HMFA.}
 
 \item{axes}{a numeric vector specifying the axes of interest. Default values
 are 1:2 for axes 1 and 2.}

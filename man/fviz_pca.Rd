@@ -143,13 +143,8 @@ fviz_pca_ind(res.pca, col.ind = "#00AFBB",
 # 3. Change themes using ggtheme: http://www.sthda.com/english/wiki/ggplot2-themes
 
 fviz_pca_ind(res.pca, col.ind="cos2", geom = "point",
-   gradient.cols = c("white", "#2E9FDF", "#FC4E07" ),
-   ggtheme = theme_minimal())
+   gradient.cols = c("white", "#2E9FDF", "#FC4E07" ))
 
-# You can also control the transparency 
-# of the color by the cos2
-fviz_pca_ind(res.pca, alpha.ind="cos2", ggtheme = theme_minimal()) 
-             
 # Color individuals by groups, add concentration ellipses
 # Change group colors using RColorBrewer color palettes
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
@@ -162,8 +157,7 @@ fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
      addEllipses=TRUE, ellipse.level=0.95,
-     palette = c("#999999", "#E69F00", "#56B4E9"),
-     ggtheme = theme_minimal())
+     palette = c("#999999", "#E69F00", "#56B4E9"))
       
 # Select and visualize some individuals (ind) with select.ind argument.
  # - ind with cos2 >= 0.96: select.ind = list(cos2 = 0.96)
@@ -179,25 +173,16 @@ fviz_pca_ind(res.pca, select.ind = list(cos2 = 40))
 # ++++++++++++++++++++++++++++
   
 # Default plot
-fviz_pca_var(res.pca, col.var = "steelblue", 
-   ggtheme = theme_minimal())
+fviz_pca_var(res.pca, col.var = "steelblue")
  
 # Control variable colors using their contributions
 fviz_pca_var(res.pca, col.var = "contrib", 
    gradient.cols = c("white", "blue", "red"),
    ggtheme = theme_minimal())
  
-# Select variables with select.var argument
-   # You can select by contrib, cos2 and name 
-   # as previously described for ind
-# Select the top 3 contributing variables
-fviz_pca_var(res.pca, select.var = list(contrib = 3))
-
     
 # Biplot of individuals and variables
 # ++++++++++++++++++++++++++
-fviz_pca_biplot(res.pca)
-
 # Keep only the labels for variables
 # Change the color by groups, add ellipses
 fviz_pca_biplot(res.pca, label = "var", habillage=iris$Species,

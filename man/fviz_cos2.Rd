@@ -36,7 +36,7 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 \item{...}{not used}
 }
 \value{
-a ggplot2 plot
+a ggplot
 }
 \description{
 This function can be used to visualize the quality of representation (cos2) of rows/columns 
@@ -55,10 +55,9 @@ res.pca <- prcomp(decathlon2.active,  scale = TRUE)
 # variable cos2 on axis 1
 fviz_cos2(res.pca, choice="var", axes = 1, top = 10 )
 
-# Change theme and color
+# Change color
 fviz_cos2(res.pca, choice="var", axes = 1,
-         fill = "lightgray", color = "black",
-         ggtheme = theme_minimal()) 
+         fill = "lightgray", color = "black") 
          
 # Variable cos2 on axes 1 + 2
 fviz_cos2(res.pca, choice="var", axes = 1:2)

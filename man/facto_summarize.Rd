@@ -8,12 +8,12 @@ facto_summarize(X, element, node.level = 1, group.names, result = c("coord",
   "cos2", "contrib"), axes = 1:2, select = NULL)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and
+\item{X}{an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
 princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].}
 
 \item{element}{the element to subset from the output. Possible values are 
 "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
-'quanti.var', 'quali.var' or 'ind' for MFA}
+'quanti.var', 'quali.var' , 'group' or 'ind' for MFA and HMFA.}
 
 \item{node.level}{a single number indicating the HMFA node level.}
 

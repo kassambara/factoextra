@@ -13,7 +13,7 @@ NULL
 #' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
 #' }
 #' 
-#' Deprecated functions: 
+#' Deprecated functions. Will be removed in the next version:  
 #' \itemize{
 #' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
 #' Deprecated. Use fviz_mfa_ind(res.mfa, partial = "All") instead.}

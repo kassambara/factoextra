@@ -18,7 +18,7 @@ NULL
 #' @param top a numeric value specifying the number of top elements to be shown.
 #' @inheritParams ggpubr::ggpar
 #'  
-#' @return a ggplot2 plot
+#' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references http://www.sthda.com
 #' @examples
@@ -32,10 +32,9 @@ NULL
 #' # variable cos2 on axis 1
 #' fviz_cos2(res.pca, choice="var", axes = 1, top = 10 )
 #' 
-#' # Change theme and color
+#' # Change color
 #' fviz_cos2(res.pca, choice="var", axes = 1,
-#'          fill = "lightgray", color = "black",
-#'          ggtheme = theme_minimal()) 
+#'          fill = "lightgray", color = "black") 
 #'          
 #' # Variable cos2 on axes 1 + 2
 #' fviz_cos2(res.pca, choice="var", axes = 1:2)
