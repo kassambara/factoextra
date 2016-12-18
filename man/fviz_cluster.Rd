@@ -96,7 +96,7 @@ iris.scaled <- scale(iris[, -5])
 
 # K-means clustering
 # +++++++++++++++++++++
-km.res <- kmeans(iris.scaled, 3, nstart = 25)
+km.res <- kmeans(iris.scaled, 3, nstart = 10)
 
 # Visualize kmeans clustering
 # use repel = TRUE to avoid overplotting
@@ -119,7 +119,6 @@ require(cluster)
 pam.res <- pam(iris.scaled, 3)
  # Visualize pam clustering
 fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
-}
 
 # Hierarchical clustering
 # ++++++++++++++++++++++++
@@ -129,6 +128,8 @@ hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 # Visualize cluster
 fviz_cluster(hc.cut, ellipse.type = "convex")
+
+}
 
 
 

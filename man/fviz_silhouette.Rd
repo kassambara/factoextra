@@ -55,7 +55,7 @@ iris.scaled <- scale(iris[, -5])
 
 # K-means clustering
 # +++++++++++++++++++++
-km.res <- kmeans(iris.scaled, 3, nstart = 25)
+km.res <- kmeans(iris.scaled, 3, nstart = 10)
 
 # Visualize kmeans clustering
 fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")+
