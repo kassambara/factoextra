@@ -5,3 +5,5 @@
 ^cran-comments\.md$
 ^factoextra-r-package\.png$
 ^\.travis\.yml$
+^docs$
+^_pkgdown\.yml$

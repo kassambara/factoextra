@@ -1,0 +1,52 @@
+templates:
+  params:
+    bootswatch: flatly
+
+reference:
+  - title: Visualizing Dimension Reduction Analysis Outputs
+    desc:  Visualization of PCA, CA, MCA, MFA and HMFA.
+    contents:
+      - eigenvalue
+      - fviz_pca
+      - fviz_ca
+      - fviz_mca
+      - fviz_mfa
+      - fviz_hmfa
+      - fviz_cos2
+      - fviz_contrib
+  - title: Extracting Data from Dimension Reduction Analysis Outputs
+    desc: Extracting data from the output of PCA, CA, MCA, MFA and HMFA.
+    contents:
+      - facto_summarize
+      - get_pca
+      - get_ca
+      - get_mca
+      - get_mfa
+      - get_hmfa
+  - title: Clustering
+    desc: Computing and visualizing clustering
+    contents: 
+      - dist
+      - get_clust_tendency
+      - fviz_nbclust
+      - fviz_dend
+      - fviz_cluster
+      - fviz_silhouette
+      - hcut
+      - hkmeans
+      - eclust
+      - fviz_mclust
+  - title: Data
+    desc: Data sets included in factoextra and used in examples.
+    contents: 
+      - decathlon2
+      - housetasks
+      - poison
+      - multishapes
+  - title: Others
+    contents: 
+      - fviz_add
+      - print.factoextra
+    
+
+
