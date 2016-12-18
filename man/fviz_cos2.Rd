@@ -7,7 +7,7 @@
 fviz_cos2(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var",
   "group"), axes = 1, fill = "steelblue", color = "steelblue",
   sort.val = c("desc", "asc", "none"), top = Inf, xtickslab.rt = 45,
-  ggtheme = theme_grey(), ...)
+  ggtheme = theme_minimal(), ...)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
@@ -66,18 +66,15 @@ fviz_cos2(res.pca, choice="var", axes = 1:2)
 # cos2 of individuals on axis 1
 fviz_cos2(res.pca, choice="ind", axes = 1)
 
+\dontrun{
 # Correspondence Analysis
 # ++++++++++++++++++++++++++
-# Install and load FactoMineR to compute CA
-# install.packages("FactoMineR")
 library("FactoMineR")
 data("housetasks")
 res.ca <- CA(housetasks, graph = FALSE)
 
 # Visualize row cos2 on axes 1
 fviz_cos2(res.ca, choice ="row", axes = 1)
-# Visualize row cos2 on axes 1 + 2
-fviz_cos2(res.ca, choice ="row", axes = 1:2)
 # Visualize column cos2 on axes 1
 fviz_cos2(res.ca, choice ="col", axes = 1)
 
@@ -89,8 +86,6 @@ res.mca <- MCA(poison, quanti.sup = 1:2,
               quali.sup = 3:4, graph=FALSE)
               
 # Visualize individual cos2 on axes 1
-fviz_cos2(res.mca, choice ="ind", axes = 1)
-# Select the top 20
 fviz_cos2(res.mca, choice ="ind", axes = 1, top = 20)
 # Visualize variable categorie cos2 on axes 1
 fviz_cos2(res.mca, choice ="var", axes = 1)
@@ -103,11 +98,11 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
                name.group=c("desc","desc2","symptom","eat"),
                num.group.sup=1:2, graph=FALSE)
 # Visualize individual cos2 on axes 1
-fviz_cos2(res.mfa, choice ="ind", axes = 1)
 # Select the top 20
 fviz_cos2(res.mfa, choice ="ind", axes = 1, top = 20)
 # Visualize catecorical variable categorie cos2 on axes 1
 fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
+}
                
  }
 }
