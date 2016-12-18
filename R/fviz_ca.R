@@ -105,19 +105,6 @@ NULL
 #' 
 #' # Default plot
 #' fviz_ca_row(res.ca)
-#' 
-#' # Customize the plot
-#'  # - Show text only: geom = "text" (to show point only: geom = "point")
-#'  # - Change color: col.row ="#00AFBB"
-#'  # - Change title and axis labels
-#'  # - Change axis limits by specifying the min and max
-#'  # - Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
-#' 
-#' fviz_ca_row(res.ca, geom = "text", col.row = "#00AFBB",
-#'    title = "CA", xlab = "Dim.1", ylab ="Dim.2", # titles
-#'    xlim = c(-1.3, 1.7), ylim = c(-1.5, 1), # axis limits
-#'    ggtheme = theme_minimal() # change theme
-#'    ) 
 #'    
 #' # Control automatically the color of row points
 #'    # using the "cos2" or the contributions "contrib"
@@ -126,18 +113,15 @@ NULL
 #'    # Use repel = TRUE to avoid overplotting (slow if many points)
 #' fviz_ca_row(res.ca, col.row = "cos2",
 #'    gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
-#'    repel = TRUE,
-#'    ggtheme = theme_minimal())
+#'    repel = TRUE)
 #' 
 #' # Color by the contributions   
 #' fviz_ca_row(res.ca, col.row = "contrib",
-#'    gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
-#'    ggtheme = theme_minimal())
+#'    gradient.cols = c("white", "#2E9FDF", "#FC4E07"))
 #'       
 #' # You can also control the transparency 
 #' # of the color by the "cos2" or "contrib"
-#' fviz_ca_row(res.ca, alpha.row="contrib",
-#'    ggtheme = theme_minimal()) 
+#' fviz_ca_row(res.ca, alpha.row="contrib") 
 #'       
 #' # Select and visualize some rows with select.row argument.
 #'  # - Rows with cos2 >= 0.5: select.row = list(cos2 = 0.5)
@@ -186,15 +170,13 @@ NULL
 #' 
 #' 
 #'# Control automatically the color of rows using the cos2
-#' fviz_ca_biplot(res.ca, col.row="cos2",
-#'    ggtheme = theme_minimal())
+#' fviz_ca_biplot(res.ca, col.row="cos2")
 #'        
 #' # Select the top 7 contributing rows
 #' # And the top 3 columns
 #' fviz_ca_biplot(res.ca,  
 #'                select.row = list(contrib = 7),
-#'                select.col = list(contrib = 3),
-#'                ggtheme = theme_minimal())
+#'                select.col = list(contrib = 3))
 #'  
 #'@name fviz_ca
 #'  
