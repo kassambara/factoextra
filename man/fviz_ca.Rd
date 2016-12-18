@@ -89,7 +89,7 @@ second value sets the columns.}
 \item{title}{the title of the graph}
 }
 \value{
-a ggplot2 plot
+a ggplot
 }
 \description{
 Correspondence analysis (CA) is an extension of Principal 
@@ -138,75 +138,6 @@ data(housetasks)
 head(housetasks)
 res.ca <- CA(housetasks, graph=FALSE)
 
-# Graph of row variables
-# +++++++++++++++++++++
-
-# Default plot
-fviz_ca_row(res.ca)
-
-# Customize the plot
- # - Show text only: geom = "text" (to show point only: geom = "point")
- # - Change color: col.row ="#00AFBB"
- # - Change title and axis labels
- # - Change axis limits by specifying the min and max
- # - Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
-
-fviz_ca_row(res.ca, geom = "text", col.row = "#00AFBB",
-   title = "CA", xlab = "Dim.1", ylab ="Dim.2", # titles
-   xlim = c(-1.3, 1.7), ylim = c(-1.5, 1), # axis limits
-   ggtheme = theme_minimal() # change theme
-   ) 
-   
-# Control automatically the color of row points
-   # using the "cos2" or the contributions "contrib"
-   # cos2 = the quality of the rows on the factor map
-   # Change gradient color
-   # Use repel = TRUE to avoid overplotting (slow if many points)
-fviz_ca_row(res.ca, col.row = "cos2",
-   gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
-   repel = TRUE,
-   ggtheme = theme_minimal())
-
-# Color by the contributions   
-fviz_ca_row(res.ca, col.row = "contrib",
-   gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
-   ggtheme = theme_minimal())
-      
-# You can also control the transparency 
-# of the color by the "cos2" or "contrib"
-fviz_ca_row(res.ca, alpha.row="contrib",
-   ggtheme = theme_minimal()) 
-      
-# Select and visualize some rows with select.row argument.
- # - Rows with cos2 >= 0.5: select.row = list(cos2 = 0.5)
- # - Top 7 rows according to the cos2: select.row = list(cos2 = 7)
- # - Top 7 contributing rows: select.row = list(contrib = 7)
- # - Select rows by names: select.row = list(name = c("Breakfeast", "Repairs", "Holidays"))
- 
- # Example: Select the top 7 contributing rows
-fviz_ca_row(res.ca, select.row = list(contrib = 7))
-
- 
-# Graph of column points
-# ++++++++++++++++++++++++++++
-
-# Default plot
-fviz_ca_col(res.ca, col.col = "red",
-   ggtheme = theme_minimal())
-
- 
-# Control colors using their contributions
-fviz_ca_col(res.ca, col.col = "contrib",
-   gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
-   ggtheme = theme_minimal())
-       
-# Select columns with select.col argument
-   # You can select by contrib, cos2 and name 
-   # as previously described for ind
-# Select the top 3 contributing columns
-fviz_ca_col(res.ca, select.col = list(contrib = 3))
-    
-    
 # Biplot of rows and columns
 # ++++++++++++++++++++++++++
 # Symetric Biplot of rows and columns
@@ -222,17 +153,54 @@ fviz_ca_biplot(res.ca, label ="row")
 # Keep only labels for column points
 fviz_ca_biplot(res.ca, label ="col")
 
-
-# Control automatically the color of rows using the cos2
-fviz_ca_biplot(res.ca, col.row="cos2",
-   ggtheme = theme_minimal())
        
 # Select the top 7 contributing rows
 # And the top 3 columns
 fviz_ca_biplot(res.ca,  
                select.row = list(contrib = 7),
-               select.col = list(contrib = 3),
-               ggtheme = theme_minimal())
+               select.col = list(contrib = 3))
+
+# Graph of row variables
+# +++++++++++++++++++++
+   
+# Control automatically the color of row points
+   # using the "cos2" or the contributions "contrib"
+   # cos2 = the quality of the rows on the factor map
+   # Change gradient color
+   # Use repel = TRUE to avoid overplotting (slow if many points)
+fviz_ca_row(res.ca, col.row = "cos2",
+   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+   repel = TRUE)
+
+# You can also control the transparency 
+# of the color by the "cos2" or "contrib"
+fviz_ca_row(res.ca, alpha.row="contrib") 
+      
+# Select and visualize some rows with select.row argument.
+ # - Rows with cos2 >= 0.5: select.row = list(cos2 = 0.5)
+ # - Top 7 rows according to the cos2: select.row = list(cos2 = 7)
+ # - Top 7 contributing rows: select.row = list(contrib = 7)
+ # - Select rows by names: select.row = list(name = c("Breakfeast", "Repairs", "Holidays"))
+ 
+ # Example: Select the top 7 contributing rows
+fviz_ca_row(res.ca, select.row = list(contrib = 7))
+
+ 
+# Graph of column points
+# ++++++++++++++++++++++++++++
+
+ 
+# Control colors using their contributions
+fviz_ca_col(res.ca, col.col = "contrib",
+   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
+       
+# Select columns with select.col argument
+   # You can select by contrib, cos2 and name 
+   # as previously described for ind
+# Select the top 3 contributing columns
+fviz_ca_col(res.ca, select.col = list(contrib = 3))
+    
+    
  
 }
 \author{

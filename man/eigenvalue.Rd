@@ -92,7 +92,7 @@ fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
 # Use only bar  or line plot: geom = "bar" or geom = "line"
 fviz_eig(res.pca, geom="line")
  
-        
+\dontrun{         
 # Correspondence Analysis
 # +++++++++++++++++++++++++++++++++
 library(FactoMineR)
@@ -123,7 +123,7 @@ res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
 get_eig(res.mfa)
 fviz_eig(res.mfa, linecolor = "#FC4E07",
    barcolor = "#E7B800", barfill = "#E7B800")
-
+}
 
 }
 \author{

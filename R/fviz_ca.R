@@ -85,7 +85,7 @@ NULL
 #'  "colgab" except that the points in standard coordinates are multiplied by 
 #'  the square root of the corresponding masses, giving reconstructions of the 
 #'  standardized residuals. }
-#'@return a ggplot2 plot
+#'@return a ggplot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}
 #'@references http://www.sthda.com
@@ -100,11 +100,30 @@ NULL
 #' head(housetasks)
 #' res.ca <- CA(housetasks, graph=FALSE)
 #' 
+#' # Biplot of rows and columns
+#' # ++++++++++++++++++++++++++
+#' # Symetric Biplot of rows and columns
+#' fviz_ca_biplot(res.ca)
+#' 
+#' # Asymetric biplot, use arrows for columns
+#' fviz_ca_biplot(res.ca, map ="rowprincipal",
+#'  arrow = c(FALSE, TRUE))
+#'  
+#' # Keep only the labels for row points
+#' fviz_ca_biplot(res.ca, label ="row")
+#' 
+#' # Keep only labels for column points
+#' fviz_ca_biplot(res.ca, label ="col")
+#' 
+#'        
+#' # Select the top 7 contributing rows
+#' # And the top 3 columns
+#' fviz_ca_biplot(res.ca,  
+#'                select.row = list(contrib = 7),
+#'                select.col = list(contrib = 3))
+#' 
 #' # Graph of row variables
 #' # +++++++++++++++++++++
-#' 
-#' # Default plot
-#' fviz_ca_row(res.ca)
 #'    
 #' # Control automatically the color of row points
 #'    # using the "cos2" or the contributions "contrib"
@@ -112,13 +131,9 @@ NULL
 #'    # Change gradient color
 #'    # Use repel = TRUE to avoid overplotting (slow if many points)
 #' fviz_ca_row(res.ca, col.row = "cos2",
-#'    gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
+#'    gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
 #'    repel = TRUE)
 #' 
-#' # Color by the contributions   
-#' fviz_ca_row(res.ca, col.row = "contrib",
-#'    gradient.cols = c("white", "#2E9FDF", "#FC4E07"))
-#'       
 #' # You can also control the transparency 
 #' # of the color by the "cos2" or "contrib"
 #' fviz_ca_row(res.ca, alpha.row="contrib") 
@@ -136,15 +151,10 @@ NULL
 #' # Graph of column points
 #' # ++++++++++++++++++++++++++++
 #' 
-#' # Default plot
-#' fviz_ca_col(res.ca, col.col = "red",
-#'    ggtheme = theme_minimal())
-#' 
 #'  
 #' # Control colors using their contributions
 #' fviz_ca_col(res.ca, col.col = "contrib",
-#'    gradient.cols = c("white", "#2E9FDF", "#FC4E07"),
-#'    ggtheme = theme_minimal())
+#'    gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"))
 #'        
 #' # Select columns with select.col argument
 #'    # You can select by contrib, cos2 and name 
@@ -153,30 +163,6 @@ NULL
 #' fviz_ca_col(res.ca, select.col = list(contrib = 3))
 #'     
 #'     
-#' # Biplot of rows and columns
-#' # ++++++++++++++++++++++++++
-#' # Symetric Biplot of rows and columns
-#' fviz_ca_biplot(res.ca)
-#' 
-#' # Asymetric biplot, use arrows for columns
-#' fviz_ca_biplot(res.ca, map ="rowprincipal",
-#'  arrow = c(FALSE, TRUE))
-#'  
-#' # Keep only the labels for row points
-#' fviz_ca_biplot(res.ca, label ="row")
-#' 
-#' # Keep only labels for column points
-#' fviz_ca_biplot(res.ca, label ="col")
-#' 
-#' 
-#'# Control automatically the color of rows using the cos2
-#' fviz_ca_biplot(res.ca, col.row="cos2")
-#'        
-#' # Select the top 7 contributing rows
-#' # And the top 3 columns
-#' fviz_ca_biplot(res.ca,  
-#'                select.row = list(contrib = 7),
-#'                select.col = list(contrib = 3))
 #'  
 #'@name fviz_ca
 #'  
