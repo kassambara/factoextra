@@ -7,7 +7,7 @@
 fviz_cluster(object, data = NULL, choose.vars = NULL, stand = TRUE,
   geom = c("point", "text"), repel = FALSE, show.clust.cent = TRUE,
   ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
-  ellipse.alpha = 0.2, shape = NULL, pointsize = 2, labelsize = 12,
+  ellipse.alpha = 0.2, shape = NULL, pointsize = 1.5, labelsize = 12,
   main = "Cluster plot", xlab = NULL, ylab = NULL,
   outlier.color = "black", outlier.shape = 19, ggtheme = theme_grey(),
   ...)
