@@ -14,8 +14,8 @@ fviz_dend(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,
   ggtheme = theme_classic(), ...)
 }
 \arguments{
-\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut or 
-hkmeans.}
+\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut, 
+hkmeans or HCPC (FactoMineR).}
 
 \item{k}{the number of groups for cutting the tree.}
 

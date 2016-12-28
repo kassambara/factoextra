@@ -3,8 +3,8 @@
 #' @description Draws easily beautiful dendrograms using either R base plot or 
 #'   ggplot2. Provides also an option for drawing a circular dendrogram and 
 #'   phylogenic trees.
-#' @param x an object of class dendrogram, hclust, agnes, diana, hcut or 
-#'   hkmeans.
+#' @param x an object of class dendrogram, hclust, agnes, diana, hcut, 
+#'   hkmeans or HCPC (FactoMineR).
 #' @param k the number of groups for cutting the tree.
 #' @param h a numeric value. Cut the dendrogram by cutting at height h. (k 
 #'   overrides h)
@@ -107,7 +107,11 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   phylogenic <- type == "phylogenic"
   rectangle <- type == "rectangle"
   
-  
+  if(inherits(x, "HCPC")){
+    k <- x$call$t$nb.clust
+    x <- x$call$t$tree #hclust
+  }
+    
   if(inherits(x, "hcut")){
     k <- x$nbclust
     dend <- as.dendrogram(x)
