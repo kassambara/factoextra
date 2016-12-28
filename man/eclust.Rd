@@ -7,7 +7,7 @@
 eclust(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes",
   "diana"), k = NULL, k.max = 10, stand = FALSE, graph = TRUE,
   hc_metric = "euclidean", hc_method = "ward.D2", gap_maxSE = list(method
-  = "firstmax", SE.factor = 1), nboot = 100, verbose = interactive(),
+  = "firstSEmax", SE.factor = 1), nboot = 100, verbose = interactive(),
   seed = 123, ...)
 }
 \arguments{
