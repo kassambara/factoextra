@@ -135,6 +135,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
       class(elmt) <- c("factoextra", "quanti.sup")
     }
   }
+  else if (facto_class == "FAMD") elmt <- get_famd(X, element)
   else if (facto_class == "MFA") {
   if (element %in% c("quanti.var", "col")) elmt <- get_mfa_quanti_var(X)
   else if (element %in% c("quali.var", "col")) elmt <- get_mfa_quali_var(X)
@@ -239,6 +240,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     name <- rownames(elmt$coord)
     if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
     res <- cbind.data.frame(name = name, res)
+    rownames(res) <- name
     if(!is.null(select)) res <- .select(res, select)
     if("coord.partial" %in% result){
     res = list(res = res, res.partial = res.partial)

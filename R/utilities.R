@@ -48,7 +48,7 @@ NULL
   
   if(inherits(X, "MFA") & element == "group")
     elmt <- .get_mfa_group_sup(X)
-  else if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA"))) {
+  else if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA", "FAMD"))) {
     exprs <- paste0("X$", element)
     elmt <- eval(parse(text=exprs ))
   }
@@ -1030,7 +1030,7 @@ NULL
 # grp: group column index or factor
 .add_ind_groups <- function(X, ind, grp){
  
-  if(inherits(X, c("PCA", "MCA", "MFA")) & length(grp) > 1){
+  if(inherits(X, c("PCA", "MCA", "MFA", "FAMD")) & length(grp) > 1){
     if(is.numeric(grp) | is.character(grp)) grp <- as.data.frame(X$call$X[rownames(ind), grp, drop = FALSE])
     #if(!is.null(X$call$ind.sup)) grp <- grp[-X$call$ind.sup, , drop = FALSE]
   }
@@ -1049,7 +1049,7 @@ NULL
   }
   else{
     # X is from FactoMineR outputs
-    if(inherits(X, c("PCA", "MCA", "MFA")) & length(habillage) == 1){
+    if(inherits(X, c("PCA", "MCA", "MFA", "FAMD")) & length(habillage) == 1){
       data <- X$call$X
       if (is.numeric(habillage)) name.quali <- colnames(data)[habillage]
       else name.quali <- habillage 

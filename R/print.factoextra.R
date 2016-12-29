@@ -79,7 +79,16 @@ print.factoextra<-function(x, ...){
     res[3, ] <- c("$contrib", "contributions of categories")
     print(res[1:3,])
   }
-  
+  else if(inherits(x, "famd")){
+    element <- attr(x, "element") # description
+    cat("FAMD results for", element, "\n",
+        "===================================================\n")
+    res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
+    res[1, ] <- c("$coord", "Coordinates")
+    res[2, ] <- c("$cos2", "Cos2, quality of representation")
+    res[3, ] <- c("$contrib", "Contributions")
+    print(res[1:3,])
+  }
   else if(inherits(x, "mfa_ind")){
     cat("Multiple Factor Analysis Results for individuals\n",
         "===================================================\n")

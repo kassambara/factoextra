@@ -209,7 +209,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
       p <- .add_corr_circle(p, color = col.circle)
   }
-  else if(facto.class %in% c("MCA", "MFA", "HMFA") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
+  else if(facto.class %in% c("MCA", "MFA", "HMFA", "FAMD") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
       p <- .add_corr_circle(p, color = col.circle)
   }
   # Faceting when multiple variables are used to color individuals
@@ -303,7 +303,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     
   res <- NULL
   # Supplementary individuals
-  if(element == "ind" & inherits(X, c('PCA', "MCA", "MFA")) & !hide$ind.sup)
+  if(element == "ind" & inherits(X, c('PCA', "MCA", "MFA", "FAMD")) & !hide$ind.sup)
     res <- list(name = "ind.sup", addlabel = (lab$ind.sup & "text" %in% geom))
   # Supplementary quantitative variables
   else if(element == "var" & inherits(X, 'PCA') & !hide$quanti)
@@ -314,6 +314,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
   else if(element %in% "quali.var" & inherits(X, 'MFA') & !hide$quali.sup)
     res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
+  else if(element %in% "var" & inherits(X, 'FAMD') & !hide$quanti.sup)
+    res <- list(name = "quanti.sup", addlabel = (lab$quanti.sup & "text" %in% geom))
   # CA
   else if(element == "row" & inherits(X, c('CA', 'ca')) & !hide$row.sup)
     res <- list(name = "row.sup", addlabel = (lab$row.sup & "text" %in% geom))
