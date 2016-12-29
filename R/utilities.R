@@ -28,6 +28,7 @@ NULL
   else if(inherits(X, c("MCA", "acm"))) facto_class = "MCA"
   else if(inherits(X, c("MFA","mfa"))) facto_class = "MFA"
   else if(inherits(X, c("HMFA"))) facto_class = "HMFA"
+  else if(inherits(X, c("FAMD"))) facto_class = "FAMD"
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
