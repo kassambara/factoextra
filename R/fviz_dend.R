@@ -155,13 +155,14 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if(xlab =="") xlab <- NULL
   if(ylab=="") ylab <- NULL
   
-  if(missing(labels_track_height)){
-    max_height <- max(dendextend::get_branches_heights(dend))
+  max_height <- max(dendextend::get_branches_heights(dend))
+  if(missing(labels_track_height))
     labels_track_height <- max_height/8
-  }
+  if(max_height < 1) offset_labels <- -max_height/100
+  else offset_labels <- -0.1
   
   if(rectangle | circular){
-    p <- .ggplot_dend(dend, type = "rectangle", offset_labels = -0.1, nodes = FALSE,
+    p <- .ggplot_dend(dend, type = "rectangle", offset_labels = offset_labels, nodes = FALSE,
                       ggtheme = ggtheme, horiz = horiz, circular = circular, palette = palette,
                       labels = show_labels, label_cols = label_cols, 
                       labels_track_height = labels_track_height, ...)
