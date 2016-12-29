@@ -9,7 +9,8 @@
     - ellipse, ellipse.type, ellipse.level and ellipse.alpha
     - choose.vars: a character vector containing variables to be considered for plotting.
 - New function `fviz()`: Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA and MCA, MFA, ...
-- New functions `fviz_mfa_var()` and `fviz_hmfa_var()` for plotting MFA and HMFA variables, respectively
+- New functions `fviz_mfa_var()` and `fviz_hmfa_var()` for plotting MFA and HMFA variables, respectively.
+- New functions added for extracting and visualizing the results of FAMD (factor analysis of mixed data): `get_famd_ind()`, `get_famd_var()`, `fviz_famd_ind()` and `fviz_famd_var()`.
 - New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #15](https://github.com/kassambara/factoextra/issues/20)).
 - New argument repel in `fviz_add()`.
 - New argument gradient.cols in fviz_*() functions.
