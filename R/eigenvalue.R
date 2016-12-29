@@ -16,7 +16,7 @@
 #'  (HMFA) functions.
 #'  
 #'  
-#'@param X an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp 
+#'@param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
 #'  and princomp [stats]; dudi, pca, coa and acm [ade4]; ca and mjca [ca 
 #'  package].
 #'@param choice a text specifying the data to be plotted. Allowed values are 

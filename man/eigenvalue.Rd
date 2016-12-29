@@ -20,7 +20,7 @@ fviz_eig(X, choice = c("variance", "eigenvalue"), geom = c("bar", "line"),
 fviz_screeplot(...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp 
+\item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
 and princomp [stats]; dudi, pca, coa and acm [ade4]; ca and mjca [ca 
 package].}
 
