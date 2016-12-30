@@ -19,6 +19,7 @@ NULL
 #' @param labelsize font size for the labels
 #' @param pointsize the size of points
 #' @param pointshape the shape of points
+#' @param arrowsize the size of arrows. Controls the thickness of arrows.
 #' @param title the title of the graph
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'   labels or not.
@@ -104,7 +105,7 @@ NULL
 #' @export
 fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           label = "all", invisible="none", labelsize=4, 
-                          pointsize = 1.5, pointshape = 19,
+                          pointsize = 1.5, pointshape = 19, arrowsize = 0.5,
                           habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
                           ellipse.type = "norm", ellipse.alpha = 0.1,
                           color = "black", alpha = 1, gradient.cols = NULL,
@@ -203,7 +204,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
   if("arrow" %in% geom & !hide[[element]]) 
-    p <- p + .arrows(data = df, color = color, alpha = alpha)
+    p <- p + .arrows(data = df, color = color, alpha = alpha, size = arrowsize)
   # Add correlation circle if PCA & element = "var" & scale = TRUE
   if(facto.class == "PCA" & element == "var"){
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
@@ -278,14 +279,14 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 }
 
 # Add arrow to the plot
-.arrows <- function(data, color = "black", alpha = 1, 
+.arrows <- function(data, color = "black", alpha = 1, size =0.5,
                     origin = 0, xend = "x", yend = "y"){
   origin <- rep(origin, nrow(data))
   dd <- cbind.data.frame(data, xstart = origin, ystart = origin)
   ggpubr::geom_exec(geom_segment, data = dd, 
                     x = "xstart", y = "ystart", xend = xend, yend = yend,
                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
-                    color = color, alpha = alpha)
+                    color = color, alpha = alpha, size = size)
 }
 
 
