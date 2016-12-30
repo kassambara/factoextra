@@ -40,7 +40,7 @@ NULL
 #' res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
 #'  
 #'  # Extract the results for qualitative variable categories
-#'  var <- get_hmfa_quali_var(res.hmfa)
+#'  var <- get_hmfa_var(res.hmfa, "quali.var")
 #'  print(var)
 #'  head(var$coord) # coordinates of qualitative variables
 #'  head(var$cos2) # cos2 of qualitative variables
@@ -87,7 +87,7 @@ get_hmfa_ind <- function(res.hmfa){
 get_hmfa_var <- function(res.hmfa, element = c( "quanti.var", "quali.var", "group")){
   
   choice <- match.arg(element)
-  if(!inherits(res.hmfa, "MFA"))
+  if(!inherits(res.hmfa, "HMFA"))
     stop("An object of class : ", class(res.hmfa), " can't be handled.")
   
   if(choice == "quanti.var" & is.null(res.hmfa$quanti.var)) 

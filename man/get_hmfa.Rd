@@ -65,7 +65,7 @@ hierar <- list(c(2,5,3,10,9,2), c(4,2))
 res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
  
  # Extract the results for qualitative variable categories
- var <- get_hmfa_quali_var(res.hmfa)
+ var <- get_hmfa_var(res.hmfa, "quali.var")
  print(var)
  head(var$coord) # coordinates of qualitative variables
  head(var$cos2) # cos2 of qualitative variables
