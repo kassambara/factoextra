@@ -89,57 +89,30 @@ print.factoextra<-function(x, ...){
     res[3, ] <- c("$contrib", "Contributions")
     print(res[1:3,])
   }
-  else if(inherits(x, "mfa_ind")){
-    cat("Multiple Factor Analysis Results for individuals\n",
+  else if(inherits(x, "mfa")){
+    # result: nrows x 2 cols
+    if(inherits(x, "mfa_ind")) nrows <- 6
+    else if(inherits(x, c("mfa_quali_var", "mfa_quanti_var", "mfa_partial_axes"))) nrows <-3
+    else if(inherits(x, "mfa_group")) nrows <- 4
+    res <- array(data="", dim = c(nrows, 2), dimnames=list(1:nrows, c("Name", "Description")))
+    
+    # Element
+    element <- attr(x, "element") # description
+    cat("Multiple Factor Analysis results for", element, "\n",
         "===================================================\n")
-    res <- array(data="", dim=c(6,2), dimnames=list(1:6, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for the individuals")
-    res[2, ] <- c("$cos2", "Cos2 for the individuals")
-    res[3, ] <- c("$contrib", "Contributions of the individuals")
-    res[4, ] <- c("$coord.partiel", "Partial coordinates of the individuals")
-    res[5, ] <- c("$within.inertia", "Within inertia")
-    res[6, ] <- c("$within.partial.inertia", "Within partial inertia")
-    print(res[1:6,], ...)
-  }
-  else if(inherits(x, "mfa_quali_var")){
-    cat("Multiple Factor Analysis Results for qualitative variables\n",
-        "===================================================\n")
-    res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for categories")
-    res[2, ] <- c("$cos2", "Cos2 for categories")
-    res[3, ] <- c("$contrib", "contributions of categories")
-    print(res[1:3,])
-  }
-  else if(inherits(x, "mfa_quanti_var")){
-    cat("Multiple Factor Analysis Results for quantitative variables\n",
-        "===================================================\n")
-    res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
     res[1, ] <- c("$coord", "Coordinates")
-    res[2, ] <- c("$cos2", "Cos2: quality of the representation")
-    res[3, ] <- c("$contrib", "Contributions to the dimensions")
-    print(res[1:3,], ...)
+    res[2, ] <- c("$cos2", "Cos2, quality of representation")
+    res[3, ] <- c("$contrib", "Contributions")
+    
+    if(inherits(x, "mfa_group")) 
+      res[4, ] <- c("$correlation", "Correlation between groups and principal dimensions")
+    else if(inherits(x, "mfa_ind")){
+      res[4, ] <- c("$coord.partiel", "Partial coordinates")
+      res[5, ] <- c("$within.inertia", "Within inertia")
+      res[6, ] <- c("$within.partial.inertia", "Within partial inertia")
+    }
+    print(res[1:nrows,], ...)
   }
-  # correlation coefficients added
-  else if(inherits(x, "mfa_group")){
-    cat("Multiple Factor Analysis Results for groups\n",
-        "===================================================\n")
-    res <- array(data="", dim=c(4,2), dimnames=list(1:4, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates of groups")
-    res[2, ] <- c("$cos2", "Cos2 of goups")
-    res[3, ] <- c("$contrib", "contributions of groups")
-    res[4, ] <- c("$correlation", "correlation between each group and each factor")
-    print(res[1:4,])
-  }
-  else if(inherits(x, "mfa_partial_axes")){
-    cat("Multiple Factor Analysis Results for partial axes\n",
-        "===================================================\n")
-    res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for categories")
-    res[2, ] <- c("$cos2", "Cos2 for categories")
-    res[3, ] <- c("$contrib", "contributions of categories")
-    print(res[1:3,])
-  }
-  
   else if(inherits(x, "hmfa_ind")){
     cat("Hierarchical Multiple Factor Analysis Results for individuals\n",
         "===================================================\n")
