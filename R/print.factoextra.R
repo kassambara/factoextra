@@ -5,14 +5,11 @@
 #' @param x an object of class factoextra
 #' @param ... further arguments to be passed to print method
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
 #' @examples
-#' \donttest{
 #'  data(iris)
-#'  res.pca <- princomp(iris[, -5],  cor = TRUE)
+#'  res.pca <- prcomp(iris[, -5],  scale = TRUE)
 #'  ind <- get_pca_ind(res.pca, data = iris[, -5])
 #'  print(ind)
-#'  }
 #'  
 #' @export
 print.factoextra<-function(x, ...){
