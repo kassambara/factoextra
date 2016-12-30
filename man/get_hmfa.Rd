@@ -7,11 +7,14 @@
 \alias{get_hmfa_partial}
 \alias{get_hmfa_quali_var}
 \alias{get_hmfa_quanti_var}
-\title{Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - HMFA}
+\alias{get_hmfa_var}
+\title{Extract the results for individuals/variables/group/partial axes - HMFA}
 \usage{
 get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group"))
 
 get_hmfa_ind(res.hmfa)
+
+get_hmfa_var(res.hmfa, element = c("quanti.var", "quali.var", "group"))
 
 get_hmfa_quanti_var(res.hmfa)
 
@@ -36,17 +39,22 @@ individuals/quantitative variable categories/qualitative variable categories/gro
 }
 \description{
 Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals/quantitative variable categories/qualitative variable categories/groups/partial axes from Hierarchical Multiple Factor Analysis (HMFA) outputs.\cr\cr
+for the active individuals/quantitative variables/qualitative variable categories/groups/partial axes from Hierarchical Multiple Factor Analysis (HMFA) outputs.\cr\cr
 \itemize{
 \item get_hmfa(): Extract the results for variables and individuals
 \item get_hmfa_ind(): Extract the results for individuals only
-\item get_hmfa_var_qanti(): Extract the results for quantitative variables only
-\item get_hmfa_var_qali(): Extract the results for qualitative variables only
-\item get_hmfa_group(): Extract the results for groups only
+\item get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
+}
+
+  
+Deprecated functions. Will be removed in the next version:
+\itemize{
+\item get_hmfa_var_quanti(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var") instead.
+\item get_hmfa_var_quali().  Deprecated. Use get_hmfa_var(res.hmfa, "quali.var") instead.
+\item get_hmfa_group(). Deprecated. Use get_hmfa_var(res.hmfa, "group") instead.
 }
 }
 \examples{
-\donttest{
 # Multiple Factor Analysis
 # ++++++++++++++++++++++++
 # Install and load FactoMineR to compute MFA
@@ -73,15 +81,11 @@ res.hmfa <- HMFA(wine, H = hierar, type=c("n",rep("s",5)), graph = FALSE)
  # You can also use the function get_hmfa()
  get_hmfa(res.hmfa, "ind") # Results for individuals
  get_hmfa(res.hmfa, "quali.var") # Results for qualitative variable categories
- }
  
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 
 Fabian Mundt \email{f.mundt@inventionate.de}
-}
-\references{
-http://www.sthda.com
 }
 
