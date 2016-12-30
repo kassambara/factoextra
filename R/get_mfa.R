@@ -78,7 +78,8 @@ get_mfa_ind <- function(res.mfa){
   # @todo ade4 Support muss noch eingebaut werden!
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_ind()")
-  class(ind)<-c("factoextra", "mfa_ind")
+  class(ind)<-c("factoextra", "mfa", "mfa_ind")
+  attr(ind, "element") <- "individuals"
   return(ind)
 }
 
@@ -140,6 +141,7 @@ get_mfa_partial_axes <- function(res.mfa){
   if(inherits(res.mfa, c("MFA"))) partial_axes <- res.mfa$partial.axes
   else stop("An object of class : ", class(res.mfa), 
             " can't be handled by the function get_mfa_partial_axes()")
-  class(partial_axes)<-c("factoextra", "mfa_partial_axes")
+  class(partial_axes)<-c("factoextra", "mfa", "mfa_partial_axes")
+  attr(partial_axes, "element") <- "partial axes"
   return(partial_axes)
 }
