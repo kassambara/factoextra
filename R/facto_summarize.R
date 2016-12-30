@@ -136,13 +136,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     }
   }
   else if (facto_class == "FAMD") elmt <- get_famd(X, element)
-  else if (facto_class == "MFA") {
-  if (element %in% c("quanti.var", "col")) elmt <- get_mfa_quanti_var(X)
-  else if (element %in% c("quali.var", "col")) elmt <- get_mfa_quali_var(X)
-  else if (element %in% c("group", "col")) elmt <- get_mfa_group(X)
-  else if (element %in% c("partial.axes","col")) elmt <- get_mfa_partial_axes(X) 
-  else if (element %in% c("ind", "row")) elmt <- get_mfa_ind(X)
-  }
+  else if (facto_class == "MFA") elmt <- get_mfa(X, element)
   else if (facto_class == "HMFA") {
     if (element %in% c("quanti.var", "col")) elmt <- get_hmfa_quanti_var(X)
     else if (element %in% c("quali.var", "col")) elmt <- get_hmfa_quali_var(X)

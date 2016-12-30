@@ -7,12 +7,15 @@
 \alias{get_mfa_partial_axes}
 \alias{get_mfa_quali_var}
 \alias{get_mfa_quanti_var}
-\title{Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - MFA}
+\alias{get_mfa_var}
+\title{Extract the results for individuals/variables/group/partial axes - MFA}
 \usage{
 get_mfa(res.mfa, element = c("ind", "quanti.var", "quali.var", "group",
   "partial.axes"))
 
 get_mfa_ind(res.mfa)
+
+get_mfa_var(res.mfa, element = c("quanti.var", "quali.var", "group"))
 
 get_mfa_quanti_var(res.mfa)
 
@@ -37,18 +40,21 @@ individuals/quantitative variable categories/qualitative variable categories/gro
 }
 \description{
 Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals/quantitative variable categories/qualitative variable categories/groups/partial axes from Multiple Factor Analysis (MFA) outputs.\cr\cr
+for the active individuals/quantitative variables/qualitative variable categories/groups/partial axes from Multiple Factor Analysis (MFA) outputs.\cr\cr
 \itemize{
 \item get_mfa(): Extract the results for variables and individuals
 \item get_mfa_ind(): Extract the results for individuals only
-\item get_mfa_var_quanti(): Extract the results for quantitative variables only
-\item get_mfa_var_quali(): Extract the results for qualitative variables only
-\item get_mfa_group(): Extract the results for groups only
+\item get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
 \item get_mfa_partial_axes(): Extract the results for partial axes only
+}\cr
+Deprecated functions. Will be removed in the next version:
+\itemize{
+\item get_mfa_var_quanti(). Deprecated. Use get_mfa_var(res.mfa, "quanti.var") instead.
+\item get_mfa_var_quali().  Deprecated. Use get_mfa_var(res.mfa, "quali.var") instead.
+\item get_mfa_group(). Deprecated. Use get_mfa_var(res.mfa, "group") instead.
 }
 }
 \examples{
-\donttest{
 # Multiple Factor Analysis
 # ++++++++++++++++++++++++
 # Install and load FactoMineR to compute MFA
@@ -60,7 +66,7 @@ name.group=c("desc","desc2","symptom","eat"), num.group.sup=1:2,
 graph = FALSE)
  
  # Extract the results for qualitative variable categories
- var <- get_mfa_quali_var(res.mfa)
+ var <- get_mfa_var(res.mfa, "quali.var")
  print(var)
  head(var$coord) # coordinates of qualitative variables
  head(var$cos2) # cos2 of qualitative variables
@@ -76,15 +82,11 @@ graph = FALSE)
  # You can also use the function get_mfa()
  get_mfa(res.mfa, "ind") # Results for individuals
  get_mfa(res.mfa, "quali.var") # Results for qualitative variable categories
- }
  
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 
 Fabian Mundt \email{f.mundt@inventionate.de}
-}
-\references{
-http://www.sthda.com
 }
 
