@@ -10,7 +10,8 @@ NULL
 #' \item get_mfa_ind(): Extract the results for individuals only
 #' \item get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
 #' \item get_mfa_partial_axes(): Extract the results for partial axes only
-#' }\cr
+#' }   
+#'     
 #' Deprecated functions. Will be removed in the next version:
 #' \itemize{
 #' \item get_mfa_var_quanti(). Deprecated. Use get_mfa_var(res.mfa, "quanti.var") instead.
