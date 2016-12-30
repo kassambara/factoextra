@@ -270,21 +270,6 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
 }
 
 
-# Compute convex hull for each cluster
-# ++++++++++++++++++++++++++++++++
-# x,y: numeric vector corresponding to the coordinates of points
-# cluster: groups of observations
-.cluster_chull <- function(x, cluster){
-  cluster <- as.factor(cluster)
-  levs <- levels(cluster)
-  res = NULL
-  for(lev in levs){
-    dd <- x[which(cluster == lev), , drop = FALSE]
-    cc <- chull(dd)
-    res <- rbind(res, cbind(dd[cc, , drop = FALSE], cluster = rep(lev, length(cc))))
-  }
-  as.data.frame(res)
-}
 
 # Add outliers to cluster plot (for dbscan only)
 .add_outliers <-function(p, outliers_data, outliers_labs, 
