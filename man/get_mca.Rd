@@ -6,33 +6,34 @@
 \alias{get_mca_var}
 \title{Extract the results for individuals/variables - MCA}
 \usage{
-get_mca(res.mca, element = c("var", "ind"))
+get_mca(res.mca, element = c("var", "ind", "mca.cor", "quanti.sup"))
 
-get_mca_var(res.mca)
+get_mca_var(res.mca, element = c("var", "mca.cor", "quanti.sup"))
 
 get_mca_ind(res.mca)
 }
 \arguments{
 \item{res.mca}{an object of class MCA [FactoMineR], acm [ade4].}
 
-\item{element}{the element to subset from the output. Possible values are "var" or "ind".}
+\item{element}{the element to subset from the output. Possible values are 
+"var" for variables, "ind" for individuals, "mca.cor" for correlation
+between variables and principal dimensions, "quanti.sup" for quantitative supplementary variables.}
 }
 \value{
 a list of matrices containing the results for the active 
-individuals/variable categories including : 
-\item{coord}{coordinates for the individuals/variable categories}
-\item{cos2}{cos2 for the individuals/variable categories}
-\item{contrib}{contributions of the individuals/variable categories}
-\item{inertia}{inertia of the individuals/variable categories}
+  individuals/variable categories including : \item{coord}{coordinates for 
+  the individuals/variable categories} \item{cos2}{cos2 for the 
+  individuals/variable categories} \item{contrib}{contributions of the 
+  individuals/variable categories} \item{inertia}{inertia of the 
+  individuals/variable categories}
 }
 \description{
-Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals/variable categories from Multiple Correspondence Analysis (MCA) outputs.\cr\cr
-\itemize{
-\item get_mca(): Extract the results for variables and individuals
-\item get_mca_ind(): Extract the results for individuals only
-\item get_mca_var(): Extract the results for variables only
-}
+Extract all the results (coordinates, squared cosine and 
+  contributions) for the active individuals/variable categories from Multiple
+  Correspondence Analysis (MCA) outputs.\cr\cr \itemize{ \item get_mca(): 
+  Extract the results for variables and individuals \item get_mca_ind(): 
+  Extract the results for individuals only \item get_mca_var(): Extract the 
+  results for variables only }
 }
 \examples{
 \donttest{
