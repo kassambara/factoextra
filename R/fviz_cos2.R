@@ -2,25 +2,28 @@
 NULL
 #' Visualize the quality of representation of rows/columns
 #' 
-#' @description
-#' This function can be used to visualize the quality of representation (cos2) of rows/columns 
-#' from the results of Principal Component Analysis (PCA), 
-#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and 
-#' Multiple Factor Analysis (MFA) functions.
-#' @param X an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-#'  dudi, pca, coa and acm [ade4]; ca [ca package].
-#' @param choice allowed values are "row" and "col" for CA;  "var" and "ind" for PCA or MCA
+#' @description This function can be used to visualize the quality of
+#' representation (cos2) of rows/columns from the results of Principal Component
+#' Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
+#' Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
+#' Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.
+#' @param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];
+#'   prcomp and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca
+#'   package].
+#' @param choice allowed values are "row" and "col" for CA;  "var" and "ind" for
+#'   PCA or MCA; "var", "ind", "quanti.var", "quali.var" and "group" for FAMD, MFA and HMFA.
 #' @param axes a numeric vector specifying the dimension(s) of interest.
 #' @param fill a fill color for the bar plot.
 #' @param color an outline color for the bar plot.
 #' @param sort.val a string specifying whether the value should be sorted. 
-#' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).
+#'   Allowed values are "none" (no sorting), "asc" (for ascending) or "desc"
+#'   (for descending).
 #' @param top a numeric value specifying the number of top elements to be shown.
 #' @inheritParams ggpubr::ggpar
-#'  
+#'   
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references http://www.sthda.com/english/
 #' @examples
 #' \donttest{
 #' # Principal component analysis
@@ -81,7 +84,7 @@ NULL
 #' }
 #'                
 #'  }
-#' @export 
+#' @export
 fviz_cos2 <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group"), axes=1,
                    fill="steelblue", color = "steelblue",  
                    sort.val = c("desc", "asc", "none"), top = Inf, 

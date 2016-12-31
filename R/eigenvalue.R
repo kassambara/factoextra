@@ -1,9 +1,7 @@
 #'Extract and visualize the eigenvalues/variances of dimensions
 #'
 #'@description Eigenvalues correspond to the amount of the variation explained 
-#'  by each principal component (PC). Read more: 
-#'  \href{http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining}{Principal
-#'   Component Analysis}
+#'  by each principal component (PC). 
 #'  
 #'  \itemize{ \item{get_eig(): Extract the eigenvalues/variances of the 
 #'  principal dimensions} \item{fviz_eig(): Plot the eigenvalues/variances 
@@ -11,7 +9,7 @@
 #'  get_eig()} \item{fviz_screeplot(): an alias of fviz_eig()} }
 #'  
 #'  These functions support the results of Principal Component Analysis (PCA), 
-#'  Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), 
+#'  Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 #'  Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis 
 #'  (HMFA) functions.
 #'  
@@ -43,7 +41,7 @@
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
 #'  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
-#'@references http://www.sthda.com
+#'@references http://www.sthda.com/english/
 #' @examples
 #' # Principal Component Analysis
 #' # ++++++++++++++++++++++++++
@@ -81,18 +79,6 @@
 #' get_eig(res.mca)
 #' fviz_eig(res.mca, linecolor = "#FC4E07",
 #'    barcolor = "#2E9FDF", barfill = "#2E9FDF")
-#'  
-#'  
-#' # Multiple Factor Analysis
-#' # +++++++++++++++++++++++++++++++++
-#' library(FactoMineR)
-#' data(wine)
-#' res.mfa <- MFA(wine, group=c(2,5,3,10,9,2), type=c("n",rep("s",5)),
-#'                ncp=5, name.group=c("orig","olf","vis","olfag","gust","ens"),
-#'                num.group.sup=c(1,6), graph=FALSE)
-#' get_eig(res.mfa)
-#' fviz_eig(res.mfa, linecolor = "#FC4E07",
-#'    barcolor = "#E7B800", barfill = "#E7B800")
 #' }
 #' 
 #'@name eigenvalue

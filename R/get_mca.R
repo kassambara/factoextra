@@ -19,7 +19,7 @@ NULL
 #' \item{contrib}{contributions of the individuals/variable categories}
 #' \item{inertia}{inertia of the individuals/variable categories}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references http://www.sthda.com/english/
 #' @examples
 #' \donttest{
 #' # Multiple Correspondence Analysis

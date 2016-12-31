@@ -15,14 +15,14 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   ggtheme = theme_minimal(), ...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
-princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].}
+\item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
+and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].}
 
 \item{element}{the element to subset from the output. Possible values are 
-"row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
-'quanti.var', 'quali.var' , 'group' or 'ind' for MFA and HMFA.}
+"row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
+'quanti.var', 'quali.var' , 'group' or 'ind' for FAMD, MFA and HMFA.}
 
-\item{axes}{a numeric vector specifying the axes of interest. Default values
+\item{axes}{a numeric vector specifying the axes of interest. Default values 
 are 1:2 for axes 1 and 2.}
 
 \item{geom}{a text specifying the geometry to be used for the graph. Default value is "auto". Allowed 

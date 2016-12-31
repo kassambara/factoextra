@@ -99,7 +99,9 @@ Use partial = "All" to visualize partial points for all individuals.}
 
 \item{title}{the title of the graph}
 
-\item{choice}{The graph to plot. Allowed values include one of c("quanti.var", "group", "quali.var").}
+\item{choice}{the graph to plot. Allowed values include one of c("quanti.var",
+"quali.var", "group") for plotting quantitative variables, qualitative
+variables and group of variables, respectively.}
 
 \item{col.var.sup}{color for supplementary variables.}
 
@@ -169,6 +171,6 @@ Fabian Mundt \email{f.mundt@inventionate.de}
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://www.sthda.com
+http://www.sthda.com/english/
 }
 

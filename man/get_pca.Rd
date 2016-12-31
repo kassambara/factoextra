@@ -65,6 +65,6 @@ the active individuals/variables from Principal Component Analysis (PCA) outputs
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://www.sthda.com
+http://www.sthda.com/english/
 }
 

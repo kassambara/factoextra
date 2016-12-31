@@ -5,7 +5,7 @@ NULL
 #' @description
 #' This function can be used to visualize the contribution of rows/columns
 #' from the results of Principal Component Analysis (PCA),
-#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
+#' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 #' and Multiple Factor Analysis (MFA) functions.
 #' @param sort.val a string specifying whether the value should be sorted. 
 #' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).
@@ -21,7 +21,7 @@ NULL
 #'
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references http://www.sthda.com/english/
 #' @examples
 #' \donttest{
 #' # Principal component analysis

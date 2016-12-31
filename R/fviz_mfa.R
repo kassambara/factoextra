@@ -17,7 +17,9 @@ NULL
 #' @inheritParams fviz_pca
 #' @inheritParams fviz
 #' @inheritParams ggpubr::ggpar
-#' @param choice The graph to plot. Allowed values include one of c("quanti.var", "group", "quali.var").
+#'@param choice the graph to plot. Allowed values include one of c("quanti.var",
+#'  "quali.var", "group") for plotting quantitative variables, qualitative
+#'  variables and group of variables, respectively.
 #' @param habillage an optional factor variable for coloring
 #'  the observations by groups. Default value is "none".
 #'  If X is an MFA object from FactoMineR package, habillage can also specify
@@ -57,7 +59,7 @@ NULL
 #' @return a ggplot2 plot
 #' @author Fabian Mundt \email{f.mundt@inventionate.de}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references http://www.sthda.com/english/
 #' @examples
 #' # Compute Multiple Factor Analysis
 #' library("FactoMineR")

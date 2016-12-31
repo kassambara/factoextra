@@ -20,7 +20,7 @@ NULL
 #' \item{cos2}{cos2 for the individuals/variables}
 #' \item{contrib}{contributions of the individuals/variables}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references http://www.sthda.com/english/
 #' @examples
 #' \donttest{
 #' # Principal Component Analysis

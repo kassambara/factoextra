@@ -10,10 +10,12 @@ fviz_cos2(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var",
   ggtheme = theme_minimal(), ...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-dudi, pca, coa and acm [ade4]; ca [ca package].}
+\item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];
+prcomp and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca
+package].}
 
-\item{choice}{allowed values are "row" and "col" for CA;  "var" and "ind" for PCA or MCA}
+\item{choice}{allowed values are "row" and "col" for CA;  "var" and "ind" for
+PCA or MCA; "var", "ind", "quanti.var", "quali.var" and "group" for FAMD, MFA and HMFA.}
 
 \item{axes}{a numeric vector specifying the dimension(s) of interest.}
 
@@ -22,7 +24,8 @@ dudi, pca, coa and acm [ade4]; ca [ca package].}
 \item{color}{an outline color for the bar plot.}
 
 \item{sort.val}{a string specifying whether the value should be sorted. 
-Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).}
+Allowed values are "none" (no sorting), "asc" (for ascending) or "desc"
+(for descending).}
 
 \item{top}{a numeric value specifying the number of top elements to be shown.}
 
@@ -39,10 +42,11 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 a ggplot
 }
 \description{
-This function can be used to visualize the quality of representation (cos2) of rows/columns 
-from the results of Principal Component Analysis (PCA), 
-Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and 
-Multiple Factor Analysis (MFA) functions.
+This function can be used to visualize the quality of
+representation (cos2) of rows/columns from the results of Principal Component
+Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
+Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
+Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.
 }
 \examples{
 \donttest{
@@ -109,6 +113,6 @@ fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://www.sthda.com
+http://www.sthda.com/english/
 }
 

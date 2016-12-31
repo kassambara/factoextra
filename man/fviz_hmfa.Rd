@@ -36,61 +36,65 @@ values are the combination of c("point", "arrow", "text"). Use "point" (to
 show only points); "text" to show only labels; c("point", "text") or 
 c("arrow", "text") to show both types.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text labels or not.}
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
+labels or not.}
 
-\item{habillage}{an optional factor variable for coloring 
-the observations by groups. Default value is "none".
-If X is an HMFA object from FactoMineR package, habillage can also specify
-the index of the factor variable in the data.}
+\item{habillage}{an optional factor variable for coloring the observations by 
+groups. Default value is "none". If X is an HMFA object from FactoMineR 
+package, habillage can also specify the index of the factor variable in the 
+data.}
 
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
 
-\item{shape.ind, shape.var}{point shapes of individuals and variables, respectively.}
+\item{shape.ind, shape.var}{point shapes of individuals and variables, 
+respectively.}
 
-\item{col.ind, col.var}{color for individuals, partial individuals and variables, 
-respectively.
- Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
- To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".}
+\item{col.ind, col.var}{color for individuals, partial individuals and 
+variables, respectively. Possible values include also : "cos2", "contrib", 
+"coord", "x" or "y". In this case, the colors for individuals/variables are 
+automatically controlled by their qualities ("cos2"), contributions 
+("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y 
+values("y"). To use automatic coloring (by cos2, contrib, ....), make sure 
+that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
-\item{alpha.ind, alpha.var}{controls the transparency of
- individual, partial individual and variable, respectively.
-The value can variate from 0 (total transparency) to 1 (no transparency).
-Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
- In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
- contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
- To use this, make sure that habillage ="none".}
+\item{alpha.ind, alpha.var}{controls the transparency of individual, partial 
+individual and variable, respectively. The value can variate from 0 (total 
+transparency) to 1 (no transparency). Default value is 1. Possible values 
+include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+transparency for individual/variable colors are automatically controlled by 
+their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
+, "coord"), x values("x") or y values("y"). To use this, make sure that 
+habillage ="none".}
 
-\item{select.ind, select.var}{a selection of individuals and
-variables to be drawn.
-Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
-\itemize{
-\item name is a character vector containing individuals/variables to be drawn
-\item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn.
-if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-\item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
-}}
+\item{select.ind, select.var}{a selection of individuals and variables to be 
+drawn. Allowed values are NULL or a list containing the arguments name, cos2
+or contrib: \itemize{ \item name is a character vector containing 
+individuals/variables to be drawn \item cos2 if cos2 is in [0, 1], ex: 0.6, 
+then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, 
+then the top 5 individuals/variables with the highest cos2 are drawn. \item 
+contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
+the highest cos2 are drawn }}
 
-\item{partial}{list of the individuals for which the partial points should be drawn. 
-(by default, partial = NULL and no partial points are drawn). 
-Use partial = "All" to visualize partial points for all individuals.}
+\item{partial}{list of the individuals for which the partial points should be 
+drawn. (by default, partial = NULL and no partial points are drawn). Use 
+partial = "All" to visualize partial points for all individuals.}
 
-\item{col.partial}{color for partial individuals. By default, points are colored according to the groups.}
+\item{col.partial}{color for partial individuals. By default, points are 
+colored according to the groups.}
 
-\item{group.names}{a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).}
+\item{group.names}{a vector containing the name of the groups (by default, 
+NULL and the group are named group.1, group.2 and so on).}
 
 \item{node.level}{a single number indicating the HMFA node level to plot.}
 
 \item{...}{Arguments to be passed to the function fviz() and ggpubr::ggpar()}
 
-\item{choice}{the graph to plot. Allowed values include: i) "var" and 
-"mca.cor" for plotting the correlation between variables and principal
-dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
-supplementary quantitative variables.}
+\item{choice}{the graph to plot. Allowed values include one of c("quanti.var",
+"quali.var", "group") for plotting quantitative variables, qualitative
+variables and group of variables, respectively.}
 
 \item{col.var.sup}{color for supplementary variables.}
 
@@ -100,13 +104,11 @@ supplementary quantitative variables.}
 a ggplot
 }
 \description{
-Graph of individuals and variables from the output of Hierarchical Multiple Factor Analysis (HMFA).\cr\cr
-\itemize{
-\item{fviz_hmfa_ind(): Graph of individuals}
-\item{fviz_hmfa_var(): Graph of variables}
-\item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
-\item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
-}
+Graph of individuals and variables from the output of 
+ Hierarchical Multiple Factor Analysis (HMFA).\cr\cr \itemize{ 
+ \item{fviz_hmfa_ind(): Graph of individuals} \item{fviz_hmfa_var(): Graph of
+ variables} \item{fviz_hmfa_quali_biplot(): Biplot of individuals and 
+ qualitative variables} \item{fviz_hmfa(): An alias of fviz_hmfa_ind()} }
 }
 \examples{
 # Hierarchical Multiple Factor Analysis

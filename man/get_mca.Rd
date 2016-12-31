@@ -70,6 +70,6 @@ res.mca <- MCA(poison.active, graph=FALSE)
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://www.sthda.com
+http://www.sthda.com/english/
 }
 

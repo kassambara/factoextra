@@ -3,38 +3,38 @@ NULL
 #' Subset and summarize the output of factor analyses
 #' 
 #' @description Subset and summarize the results of Principal Component Analysis
-#' (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
-#' and Multiple Factor Analysis (MFA) functions from several packages.
-#' @param X an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
-#'   princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].
+#'   (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis
+#'   (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor Analysis
+#'   (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions from several packages.
+#' @param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
+#'   and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].
 #' @param element the element to subset from the output. Possible values are 
-#'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA;
-#'   'quanti.var', 'quali.var' , 'group' or 'ind' for MFA and HMFA.
+#'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
+#'   'quanti.var', 'quali.var' , 'group' or 'ind' for FAMD, MFA and HMFA.
 #' @param result the result to be extracted for the element. Possible values are
 #'   the combination of c("cos2", "contrib", "coord")
-#' @param group.names a vector containing the name of the groups (by default,
+#' @param group.names a vector containing the name of the groups (by default, 
 #'   NULL and the group are named group.1, group.2 and so on).
 #' @param node.level a single number indicating the HMFA node level.
-#' @param axes a numeric vector specifying the axes of interest. Default values
+#' @param axes a numeric vector specifying the axes of interest. Default values 
 #'   are 1:2 for axes 1 and 2.
-#' @param select a selection of variables. Allowed values are NULL or a list
-#'   containing the arguments name, cos2 or contrib. Default is list(name =
-#'   NULL, cos2 = NULL, contrib = NULL): \itemize{ \item name: is a character
-#'   vector containing variable names to be selected \item cos2: if cos2 is in
-#'   [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected. if cos2 >
+#' @param select a selection of variables. Allowed values are NULL or a list 
+#'   containing the arguments name, cos2 or contrib. Default is list(name = 
+#'   NULL, cos2 = NULL, contrib = NULL): \itemize{ \item name: is a character 
+#'   vector containing variable names to be selected \item cos2: if cos2 is in 
+#'   [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected. if cos2 > 
 #'   1, ex: 5, then the top 5 variables with the highest cos2 are selected \item
-#'   contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest
+#'   contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest 
 #'   cos2 are selected. }
-#' @return A data frame containing the (total) coord, cos2 and the contribution
+#' @return A data frame containing the (total) coord, cos2 and the contribution 
 #'   for the axes.
 #' @details If length(axes) > 1, then the columns contrib and cos2 correspond to
-#'   the total contributions and total cos2 of the axes. In this case, the
-#'   column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the
+#'   the total contributions and total cos2 of the axes. In this case, the 
+#'   column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the 
 #'   coordinates of the points on the specified axes.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references http://www.sthda.com/english/
 #' @examples
-#' \donttest{
 #' # Principal component analysis
 #' # +++++++++++++++++++++++++++++
 #' data(decathlon2)
@@ -94,7 +94,6 @@ NULL
 #' # Summarize individuals on axes 1:2
 #' res <- facto_summarize(res.mfa, "ind", axes = 1:2)
 #' head(res)
-#'  }
 #' @export
 facto_summarize <- function(X, element, node.level = 1, group.names, 
                             result = c("coord", "cos2", "contrib"),

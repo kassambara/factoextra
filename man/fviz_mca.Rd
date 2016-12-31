@@ -172,8 +172,7 @@ fviz_mca_ind(res.mca, col.ind = "cos2", repel = TRUE)
 \dontrun{     
 # You can also control the transparency 
 # of the color by the cos2
-fviz_mca_ind(res.mca, alpha.ind="cos2") +
-     theme_minimal()  
+fviz_mca_ind(res.mca, alpha.ind="cos2") 
 }
      
 # Color individuals by groups, add concentration ellipses
@@ -236,13 +235,11 @@ fviz_mca_biplot(res.mca, invisible ="var")
 fviz_mca_biplot(res.mca, invisible ="ind")
 
 # Control automatically the color of individuals using the cos2
-fviz_mca_biplot(res.mca, label ="var", col.ind="cos2") +
-       theme_minimal()
+fviz_mca_biplot(res.mca, label ="var", col.ind="cos2")
        
 # Change the color by groups, add ellipses
 fviz_mca_biplot(res.mca, label="var", col.var ="blue",
-   habillage=grp, addEllipses=TRUE, ellipse.level=0.95) + 
-   theme_minimal() 
+   habillage=grp, addEllipses=TRUE, ellipse.level=0.95)
                
 # Select the top 30 contributing individuals
 # And the top 10 variables

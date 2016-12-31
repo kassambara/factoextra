@@ -15,10 +15,12 @@ fviz_pca_contrib(X, choice = c("var", "ind"), axes = 1,
   "none"), top = Inf, ...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-dudi, pca, coa and acm [ade4]; ca [ca package].}
+\item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];
+prcomp and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca
+package].}
 
-\item{choice}{allowed values are "row" and "col" for CA;  "var" and "ind" for PCA or MCA}
+\item{choice}{allowed values are "row" and "col" for CA;  "var" and "ind" for
+PCA or MCA; "var", "ind", "quanti.var", "quali.var" and "group" for FAMD, MFA and HMFA.}
 
 \item{axes}{a numeric vector specifying the dimension(s) of interest.}
 
@@ -48,7 +50,7 @@ a ggplot2 plot
 \description{
 This function can be used to visualize the contribution of rows/columns
 from the results of Principal Component Analysis (PCA),
-Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
+Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 and Multiple Factor Analysis (MFA) functions.
 }
 \details{
@@ -133,6 +135,6 @@ fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://www.sthda.com
+http://www.sthda.com/english/
 }
 
