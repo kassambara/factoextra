@@ -7,23 +7,16 @@ NULL
 #' \itemize{
 #' \item{fviz_mfa_ind(): Graph of individuals}
 #' \item{fviz_mfa_var(): Graph of variables}
-#' \item{fviz_mfa_group(): Graph of the groups representation}
 #' \item{fviz_mfa_axes(): Graph of partial axes}
 #' \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
 #' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
 #' }
 #' 
-#' Deprecated functions. Will be removed in the next version:  
-#' \itemize{
-#' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
-#' Deprecated. Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
-#' \item{fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.}
-#' \item{fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.}
-#' }
 #' @param X an object of class MFA [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
 #' @inheritParams fviz
+#' @inheritParams ggpubr::ggpar
 #' @param choice The graph to plot. Allowed values include one of c("quanti.var", "group", "quali.var").
 #' @param habillage an optional factor variable for coloring
 #'  the observations by groups. Default value is "none".
@@ -190,15 +183,6 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   
 }
 
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_ind_starplot <- function(X,   ...){
-  warning("This function is deprecated. ", 
-          "It will be removed in the next version. ",
-           "Use fviz_mfa_ind(res.mfa, partial = 'All') instead.")
-  fviz_mfa_ind (X, partial = "all", ...)
-}
-
 
 
 #' @rdname fviz_mfa
@@ -255,29 +239,6 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes
         shape.sup = shape.var, col.col.sup = col.var.sup, 
         habillage = habillage,  palette = palette,
         select = select.var, repel = repel,  ...)
-}
-
-
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_group <- function(X,  ...){
-  warning("Deprecated function. Use fviz_mfa_var(res.mfa, 'group') instead.")
-  fviz_mfa_var(X, choice = "group", ...)
-}
-
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_quanti_var <- function(X, ...){
-  warning("Deprecated function. Use fviz_mfa_var(res.mfa, 'quanti.var') instead.")
-  fviz_mfa_var(X, choice = "quanti.var", ...)
-}
-
-
-#' @rdname fviz_mfa
-#' @export
-fviz_mfa_quali_var <- function(X, ...){
-  warning("Deprecated function. Use fviz_mfa_var(res.mfa, 'quali.var') instead.")
-  fviz_mfa_var(X, choice = "quali.var", ...)
 }
 
 

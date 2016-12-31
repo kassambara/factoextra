@@ -3,12 +3,8 @@
 \name{fviz_mfa}
 \alias{fviz_mfa}
 \alias{fviz_mfa_axes}
-\alias{fviz_mfa_group}
 \alias{fviz_mfa_ind}
-\alias{fviz_mfa_ind_starplot}
 \alias{fviz_mfa_quali_biplot}
-\alias{fviz_mfa_quali_var}
-\alias{fviz_mfa_quanti_var}
 \alias{fviz_mfa_var}
 \title{Visualize Multiple Factor Analysis}
 \usage{
@@ -19,8 +15,6 @@ fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   NULL, cos2 = NULL, contrib = NULL), partial = NULL, col.partial = "group",
   ...)
 
-fviz_mfa_ind_starplot(X, ...)
-
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = repel,
   title = "Biplot of individuals and qualitative variables - MFA", ...)
@@ -30,12 +24,6 @@ fviz_mfa_var(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,
   col.var = "red", alpha.var = 1, shape.var = 17,
   col.var.sup = "darkgreen", palette = NULL, select.var = list(name =
   NULL, cos2 = NULL, contrib = NULL), ...)
-
-fviz_mfa_group(X, ...)
-
-fviz_mfa_quanti_var(X, ...)
-
-fviz_mfa_quali_var(X, ...)
 
 fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"),
   col.axes = NULL, alpha.axes = 1, col.circle = "grey70",
@@ -125,18 +113,9 @@ Graph of individuals/variables/partial axes from the output of Multiple Factor A
 \itemize{
 \item{fviz_mfa_ind(): Graph of individuals}
 \item{fviz_mfa_var(): Graph of variables}
-\item{fviz_mfa_group(): Graph of the groups representation}
 \item{fviz_mfa_axes(): Graph of partial axes}
 \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
 \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-}
-
-Deprecated functions. Will be removed in the next version:  
-\itemize{
-\item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
-Deprecated. Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
-\item{fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.}
-\item{fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.}
 }
 }
 \examples{

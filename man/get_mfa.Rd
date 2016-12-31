@@ -2,11 +2,8 @@
 % Please edit documentation in R/get_mfa.R
 \name{get_mfa}
 \alias{get_mfa}
-\alias{get_mfa_group}
 \alias{get_mfa_ind}
 \alias{get_mfa_partial_axes}
-\alias{get_mfa_quali_var}
-\alias{get_mfa_quanti_var}
 \alias{get_mfa_var}
 \title{Extract the results for individuals/variables/group/partial axes - MFA}
 \usage{
@@ -16,12 +13,6 @@ get_mfa(res.mfa, element = c("ind", "quanti.var", "quali.var", "group",
 get_mfa_ind(res.mfa)
 
 get_mfa_var(res.mfa, element = c("quanti.var", "quali.var", "group"))
-
-get_mfa_quanti_var(res.mfa)
-
-get_mfa_quali_var(res.mfa)
-
-get_mfa_group(res.mfa)
 
 get_mfa_partial_axes(res.mfa)
 }
@@ -46,13 +37,6 @@ for the active individuals/quantitative variables/qualitative variable categorie
 \item get_mfa_ind(): Extract the results for individuals only
 \item get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
 \item get_mfa_partial_axes(): Extract the results for partial axes only
-}   
-    
-Deprecated functions. Will be removed in the next version:
-\itemize{
-\item get_mfa_var_quanti(). Deprecated. Use get_mfa_var(res.mfa, "quanti.var") instead.
-\item get_mfa_var_quali().  Deprecated. Use get_mfa_var(res.mfa, "quali.var") instead.
-\item get_mfa_group(). Deprecated. Use get_mfa_var(res.mfa, "group") instead.
 }
 }
 \examples{

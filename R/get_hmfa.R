@@ -11,13 +11,6 @@ NULL
 #' variables (quantitatives, qualitatives and groups) 
 #' \item get_hmfa_partial(): Extract the results for partial.node. }
 #' 
-#' 
-#' Deprecated functions. Will be removed in the next version: \itemize{ \item
-#' get_hmfa_var_quanti(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var")
-#' instead. \item get_hmfa_var_quali().  Deprecated. Use get_hmfa_var(res.hmfa,
-#' "quali.var") instead. \item get_hmfa_group(). Deprecated. Use
-#' get_hmfa_var(res.hmfa, "group") instead. }
-#' 
 #' @param res.hmfa an object of class HMFA [FactoMineR].
 #' @param element the element to subset from the output. Possible values are
 #'   "ind", "quanti.var", "quali.var", "group" or "partial.node".
@@ -108,27 +101,6 @@ get_hmfa_var <- function(res.hmfa, element = c( "quanti.var", "quali.var", "grou
   class(vars)<-c("factoextra",  "hmfa", paste0("hmfa_", gsub(".", "_", choice, fixed = TRUE)))
   attr(vars, "element") <- element_desc
   return(vars)
-}
-
-#' @rdname get_hmfa
-#' @export
-get_hmfa_quanti_var <- function(res.hmfa){
-  warning("Deprecated function. Use get_hmfa_var(res.hmfa, 'quanti.var') instead.")
-  get_hmfa_var(res.hmfa, "quanti.var")
-}
-
-#' @rdname get_hmfa
-#' @export
-get_hmfa_quali_var <- function(res.hmfa){  
-  warning("Deprecated function. Use get_hmfa_var(res.hmfa, 'quali.var') instead.")
-  get_hmfa_var(res.hmfa, "quali.var")
-}
-
-#' @rdname get_hmfa
-#' @export
-get_hmfa_group <- function(res.hmfa){
-  warning("Deprecated function. Use get_hmfa_var(res.hmfa, 'group') instead.")
-  get_hmfa_var(res.hmfa, "group")
 }
 
 #' @rdname get_hmfa

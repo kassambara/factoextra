@@ -10,14 +10,6 @@ NULL
 #' \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
 #' \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
 #' }
-#' 
-#' Deprecated functions. Will be removed in the next version: 
-#' \itemize{
-#' \item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
-#' \item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
-#' \item{fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.}
-#' \item{fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.}
-#' }
 #' @param X an object of class HMFA [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
@@ -194,22 +186,6 @@ fviz_hmfa_var <- function(X, choice = c("quanti.var", "quali.var", "group"), axe
         select = select.var, repel = repel,  ...)
 }
 
-#' @rdname fviz_hmfa
-#' @export
-fviz_hmfa_quanti_var <- function(X, ...){
-  warning("Deprecated function. Use fviz_hmfa_var(X, 'quanti.var') instead.")
-  fviz_hmfa_var(X, "quanti.var", ...)
-}
-
-
-#' @rdname fviz_hmfa
-#' @export
-fviz_hmfa_quali_var <- function(X, ... )
-{
-  warning("Deprecated function. Use fviz_hmfa_var(X, 'quali.var') instead.")
-  fviz_hmfa_var(X, "quali.var", ...)
-}
-
 
 #' @rdname fviz_hmfa
 #' @export
@@ -226,24 +202,6 @@ fviz_hmfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), r
                     ggp = p, ...)
   
   p+labs(title=title)
-}
-
-#' @rdname fviz_hmfa
-#' @export
-fviz_hmfa_ind_starplot <- function(X, ...){
-  
-  warning("This function is deprecated. ", 
-          "Use fviz_hmfa_ind(X, partial = 'all') instead.")
-  fviz_hmfa_ind (X, partial = "all", ...)
-}
-
-
-#' @rdname fviz_hmfa
-#' @export
-fviz_hmfa_group <- function(X,  ...)
-{
-  warning("Deprecated function. Use fviz_hmfa_var(X, 'group') instead.")
-  fviz_hmfa_var(X, choice = "group", ...)
 }
 
 #' @rdname fviz_hmfa

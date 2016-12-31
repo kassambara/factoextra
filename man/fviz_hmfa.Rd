@@ -2,12 +2,8 @@
 % Please edit documentation in R/fviz_hmfa.R
 \name{fviz_hmfa}
 \alias{fviz_hmfa}
-\alias{fviz_hmfa_group}
 \alias{fviz_hmfa_ind}
-\alias{fviz_hmfa_ind_starplot}
 \alias{fviz_hmfa_quali_biplot}
-\alias{fviz_hmfa_quali_var}
-\alias{fviz_hmfa_quanti_var}
 \alias{fviz_hmfa_var}
 \title{Visualize Hierarchical Multiple Factor Analysis}
 \usage{
@@ -23,17 +19,9 @@ fviz_hmfa_var(X, choice = c("quanti.var", "quali.var", "group"), axes = c(1,
   alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
-fviz_hmfa_quanti_var(X, ...)
-
-fviz_hmfa_quali_var(X, ...)
-
 fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = FALSE, habillage = "none",
   title = "Biplot of individuals and qualitative variables - HMFA", ...)
-
-fviz_hmfa_ind_starplot(X, ...)
-
-fviz_hmfa_group(X, ...)
 
 fviz_hmfa(X, ...)
 }
@@ -118,14 +106,6 @@ Graph of individuals and variables from the output of Hierarchical Multiple Fact
 \item{fviz_hmfa_var(): Graph of variables}
 \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables}
 \item{fviz_hmfa(): An alias of fviz_hmfa_ind()}
-}
-
-Deprecated functions. Will be removed in the next version: 
-\itemize{
-\item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
-\item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
-\item{fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.}
-\item{fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.}
 }
 }
 \examples{

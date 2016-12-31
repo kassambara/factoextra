@@ -12,12 +12,6 @@ NULL
 #' \item get_mfa_partial_axes(): Extract the results for partial axes only
 #' }   
 #'     
-#' Deprecated functions. Will be removed in the next version:
-#' \itemize{
-#' \item get_mfa_var_quanti(). Deprecated. Use get_mfa_var(res.mfa, "quanti.var") instead.
-#' \item get_mfa_var_quali().  Deprecated. Use get_mfa_var(res.mfa, "quali.var") instead.
-#' \item get_mfa_group(). Deprecated. Use get_mfa_var(res.mfa, "group") instead.
-#' }
 #' 
 #' @param res.mfa an object of class MFA [FactoMineR].
 #' @param element the element to subset from the output. Possible values are "ind", "quanti.var", "quali.var", "group" or "partial.axes".
@@ -111,27 +105,6 @@ get_mfa_var <- function(res.mfa, element = c( "quanti.var", "quali.var", "group"
   class(vars)<-c("factoextra",  "mfa", paste0("mfa_", gsub(".", "_", choice, fixed = TRUE)))
   attr(vars, "element") <- element_desc
   return(vars)
-}
-
-#' @rdname get_mfa
-#' @export
-get_mfa_quanti_var <- function(res.mfa){
-  warning("Deprecated function. Use get_mfa_var(res.mfa, 'quanti.var') instead.")
-  get_mfa_var(res.mfa, "quanti.var")
-}
-
-#' @rdname get_mfa
-#' @export
-get_mfa_quali_var <- function(res.mfa){
-  warning("Deprecated function. Use get_mfa_var(res.mfa, 'quanti.var') instead.")
-  get_mfa_var(res.mfa, "quali.var")
-}
-
-#' @rdname get_mfa
-#' @export
-get_mfa_group <- function(res.mfa){
-  warning("Deprecated function. Use get_mfa_var(res.mfa, 'group') instead.")
-  get_mfa_var(res.mfa, "group")
 }
 
 #' @rdname get_mfa

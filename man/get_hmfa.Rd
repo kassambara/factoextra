@@ -2,11 +2,8 @@
 % Please edit documentation in R/get_hmfa.R
 \name{get_hmfa}
 \alias{get_hmfa}
-\alias{get_hmfa_group}
 \alias{get_hmfa_ind}
 \alias{get_hmfa_partial}
-\alias{get_hmfa_quali_var}
-\alias{get_hmfa_quanti_var}
 \alias{get_hmfa_var}
 \title{Extract the results for individuals/variables/group/partial axes - HMFA}
 \usage{
@@ -16,12 +13,6 @@ get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group",
 get_hmfa_ind(res.hmfa)
 
 get_hmfa_var(res.hmfa, element = c("quanti.var", "quali.var", "group"))
-
-get_hmfa_quanti_var(res.hmfa)
-
-get_hmfa_quali_var(res.hmfa)
-
-get_hmfa_group(res.hmfa)
 
 get_hmfa_partial(res.hmfa)
 }
@@ -46,13 +37,6 @@ results for variables and individuals \item get_hmfa_ind(): Extract the
 results for individuals only \item get_mfa_var(): Extract the results for
 variables (quantitatives, qualitatives and groups) 
 \item get_hmfa_partial(): Extract the results for partial.node. }
-
-
-Deprecated functions. Will be removed in the next version: \itemize{ \item
-get_hmfa_var_quanti(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var")
-instead. \item get_hmfa_var_quali().  Deprecated. Use get_hmfa_var(res.hmfa,
-"quali.var") instead. \item get_hmfa_group(). Deprecated. Use
-get_hmfa_var(res.hmfa, "group") instead. }
 }
 \examples{
 # Multiple Factor Analysis
