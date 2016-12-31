@@ -79,24 +79,11 @@
 </li>
 <li>fviz_mfa_var(): Graph of variables
 </li>
-<li>fviz_mfa_group(): Graph of the groups representation
-</li>
 <li>fviz_mfa_axes(): Graph of partial axes
 </li>
 <li>fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = &quot;all&quot;)
 </li>
 <li>fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables
-</li>
-</ul></p>
-
-    <p>Deprecated functions. Will be removed in the next version:  
-<ul>
-<li>fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
-Deprecated. Use fviz_mfa_ind(res.mfa, partial = &quot;All&quot;) instead.
-</li>
-<li>fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, &quot;quanti.var&quot;) instead.
-</li>
-<li>fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, &quot;quali.var&quot;) instead.
 </li>
 </ul></p>
     
@@ -108,8 +95,6 @@ Deprecated. Use fviz_mfa_ind(res.mfa, partial = &quot;All&quot;) instead.
   <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>partial</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>col.partial</span> <span class='kw'>=</span> <span class='st'>"group"</span>,
   <span class='no'>...</span>)
 
-<span class='fu'>fviz_mfa_ind_starplot</span>(<span class='no'>X</span>, <span class='no'>...</span>)
-
 <span class='fu'>fviz_mfa_quali_biplot</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>),
   <span class='kw'>repel</span> <span class='kw'>=</span> <span class='no'>repel</span>,
   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Biplot of individuals and qualitative variables - MFA"</span>, <span class='no'>...</span>)
@@ -119,12 +104,6 @@ Deprecated. Use fviz_mfa_ind(res.mfa, partial = &quot;All&quot;) instead.
   <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>alpha.var</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>shape.var</span> <span class='kw'>=</span> <span class='fl'>17</span>,
   <span class='kw'>col.var.sup</span> <span class='kw'>=</span> <span class='st'>"darkgreen"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>select.var</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span>
   <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
-
-<span class='fu'>fviz_mfa_group</span>(<span class='no'>X</span>, <span class='no'>...</span>)
-
-<span class='fu'>fviz_mfa_quanti_var</span>(<span class='no'>X</span>, <span class='no'>...</span>)
-
-<span class='fu'>fviz_mfa_quali_var</span>(<span class='no'>X</span>, <span class='no'>...</span>)
 
 <span class='fu'>fviz_mfa_axes</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"arrow"</span>, <span class='st'>"text"</span>),
   <span class='kw'>col.axes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>alpha.axes</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>,
@@ -206,7 +185,9 @@ Use partial = &quot;All&quot; to visualize partial points for all individuals.</
       <dt>title</dt>
       <dd>the title of the graph</dd>
       <dt>choice</dt>
-      <dd>The graph to plot. Allowed values include one of c(&quot;quanti.var&quot;, &quot;group&quot;, &quot;quali.var&quot;).</dd>
+      <dd>the graph to plot. Allowed values include one of c(&quot;quanti.var&quot;,
+&quot;quali.var&quot;, &quot;group&quot;) for plotting quantitative variables, qualitative
+variables and group of variables, respectively.</dd>
       <dt>col.var.sup</dt>
       <dd>color for supplementary variables.</dd>
       <dt>col.circle</dt>
@@ -219,7 +200,7 @@ Use partial = &quot;All&quot; to visualize partial points for all individuals.</
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>http://www.sthda.com</p>
+    <p>http://www.sthda.com/english/</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

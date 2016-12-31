@@ -75,7 +75,7 @@
     
     <p>This function can be used to visualize the contribution of rows/columns
 from the results of Principal Component Analysis (PCA),
-Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
+Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 and Multiple Factor Analysis (MFA) functions.</p>
     
 
@@ -91,10 +91,12 @@ and Multiple Factor Analysis (MFA) functions.</p>
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>X</dt>
-      <dd>an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
+      <dd>an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];
+prcomp and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca
+package].</dd>
       <dt>choice</dt>
-      <dd>allowed values are &quot;row&quot; and &quot;col&quot; for CA;  &quot;var&quot; and &quot;ind&quot; for PCA or MCA</dd>
+      <dd>allowed values are &quot;row&quot; and &quot;col&quot; for CA;  &quot;var&quot; and &quot;ind&quot; for
+PCA or MCA; &quot;var&quot;, &quot;ind&quot;, &quot;quanti.var&quot;, &quot;quali.var&quot; and &quot;group&quot; for FAMD, MFA and HMFA.</dd>
       <dt>axes</dt>
       <dd>a numeric vector specifying the dimension(s) of interest.</dd>
       <dt>fill</dt>
@@ -140,7 +142,7 @@ considered as important in contributing to the dimension.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>http://www.sthda.com</p>
+    <p>http://www.sthda.com/english/</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

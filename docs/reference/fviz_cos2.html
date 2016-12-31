@@ -73,10 +73,11 @@
     </div>
 
     
-    <p>This function can be used to visualize the quality of representation (cos2) of rows/columns 
-from the results of Principal Component Analysis (PCA), 
-Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA) and 
-Multiple Factor Analysis (MFA) functions.</p>
+    <p>This function can be used to visualize the quality of
+representation (cos2) of rows/columns from the results of Principal Component
+Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
+Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
+Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.</p>
     
 
     <pre><span class='fu'>fviz_cos2</span>(<span class='no'>X</span>, <span class='kw'>choice</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"row"</span>, <span class='st'>"col"</span>, <span class='st'>"var"</span>, <span class='st'>"ind"</span>, <span class='st'>"quanti.var"</span>, <span class='st'>"quali.var"</span>,
@@ -87,10 +88,12 @@ Multiple Factor Analysis (MFA) functions.</p>
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>X</dt>
-      <dd>an object of class PCA, CA, MCA and MFA [FactoMineR]; prcomp and princomp [stats]; 
-dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
+      <dd>an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];
+prcomp and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca
+package].</dd>
       <dt>choice</dt>
-      <dd>allowed values are &quot;row&quot; and &quot;col&quot; for CA;  &quot;var&quot; and &quot;ind&quot; for PCA or MCA</dd>
+      <dd>allowed values are &quot;row&quot; and &quot;col&quot; for CA;  &quot;var&quot; and &quot;ind&quot; for
+PCA or MCA; &quot;var&quot;, &quot;ind&quot;, &quot;quanti.var&quot;, &quot;quali.var&quot; and &quot;group&quot; for FAMD, MFA and HMFA.</dd>
       <dt>axes</dt>
       <dd>a numeric vector specifying the dimension(s) of interest.</dd>
       <dt>fill</dt>
@@ -99,7 +102,8 @@ dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
       <dd>an outline color for the bar plot.</dd>
       <dt>sort.val</dt>
       <dd>a string specifying whether the value should be sorted. 
-Allowed values are &quot;none&quot; (no sorting), &quot;asc&quot; (for ascending) or &quot;desc&quot; (for descending).</dd>
+Allowed values are &quot;none&quot; (no sorting), &quot;asc&quot; (for ascending) or &quot;desc&quot;
+(for descending).</dd>
       <dt>top</dt>
       <dd>a numeric value specifying the number of top elements to be shown.</dd>
       <dt>xtickslab.rt</dt>
@@ -119,7 +123,7 @@ theme_minimal(), theme_classic(), theme_void(), ....</dd>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>http://www.sthda.com</p>
+    <p>http://www.sthda.com/english/</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

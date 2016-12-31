@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - MFA — get_mfa • factoextra</title>
+<title>Extract the results for individuals/variables/group/partial axes - MFA — get_mfa • factoextra</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -69,22 +69,18 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - MFA</h1>
+    <h1>Extract the results for individuals/variables/group/partial axes - MFA</h1>
     </div>
 
     
     <p>Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals/quantitative variable categories/qualitative variable categories/groups/partial axes from Multiple Factor Analysis (MFA) outputs.
+for the active individuals/quantitative variables/qualitative variable categories/groups/partial axes from Multiple Factor Analysis (MFA) outputs.
 <ul>
 <li> get_mfa(): Extract the results for variables and individuals
 </li>
 <li> get_mfa_ind(): Extract the results for individuals only
 </li>
-<li> get_mfa_var_quanti(): Extract the results for quantitative variables only
-</li>
-<li> get_mfa_var_quali(): Extract the results for qualitative variables only
-</li>
-<li> get_mfa_group(): Extract the results for groups only
+<li> get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
 </li>
 <li> get_mfa_partial_axes(): Extract the results for partial axes only
 </li>
@@ -96,11 +92,7 @@ for the active individuals/quantitative variable categories/qualitative variable
 
 <span class='fu'>get_mfa_ind</span>(<span class='no'>res.mfa</span>)
 
-<span class='fu'>get_mfa_quanti_var</span>(<span class='no'>res.mfa</span>)
-
-<span class='fu'>get_mfa_quali_var</span>(<span class='no'>res.mfa</span>)
-
-<span class='fu'>get_mfa_group</span>(<span class='no'>res.mfa</span>)
+<span class='fu'>get_mfa_var</span>(<span class='no'>res.mfa</span>, <span class='kw'>element</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"quanti.var"</span>, <span class='st'>"quali.var"</span>, <span class='st'>"group"</span>))
 
 <span class='fu'>get_mfa_partial_axes</span>(<span class='no'>res.mfa</span>)</pre>
     
@@ -117,10 +109,6 @@ for the active individuals/quantitative variable categories/qualitative variable
     <p>a list of matrices containing the results for the active 
 individuals/quantitative variable categories/qualitative variable categories/groups/partial axes including :</p>
     
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>http://www.sthda.com</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># Multiple Factor Analysis</span>
@@ -134,13 +122,13 @@ individuals/quantitative variable categories/qualitative variable categories/gro
 <span class='kw'>graph</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 
  <span class='co'># Extract the results for qualitative variable categories</span>
- <span class='no'>var</span> <span class='kw'>&lt;-</span> <span class='fu'>get_mfa_quali_var</span>(<span class='no'>res.mfa</span>)
- <span class='fu'>print</span>(<span class='no'>var</span>)</div><div class='output co'>#&gt; Multiple Factor Analysis Results for qualitative variables
+ <span class='no'>var</span> <span class='kw'>&lt;-</span> <span class='fu'>get_mfa_var</span>(<span class='no'>res.mfa</span>, <span class='st'>"quali.var"</span>)
+ <span class='fu'>print</span>(<span class='no'>var</span>)</div><div class='output co'>#&gt; Multiple Factor Analysis results for qualitative variable categories 
 #&gt;  ===================================================
-#&gt;   Name       Description                  
-#&gt; 1 &quot;$coord&quot;   &quot;Coordinates for categories&quot; 
-#&gt; 2 &quot;$cos2&quot;    &quot;Cos2 for categories&quot;        
-#&gt; 3 &quot;$contrib&quot; &quot;contributions of categories&quot;</div><div class='input'> <span class='fu'>head</span>(<span class='no'>var</span>$<span class='no'>coord</span>) <span class='co'># coordinates of qualitative variables</span></div><div class='output co'>#&gt;               Dim.1        Dim.2       Dim.3       Dim.4       Dim.5
+#&gt;   Name       Description                      
+#&gt; 1 &quot;$coord&quot;   &quot;Coordinates&quot;                    
+#&gt; 2 &quot;$cos2&quot;    &quot;Cos2, quality of representation&quot;
+#&gt; 3 &quot;$contrib&quot; &quot;Contributions&quot;                  </div><div class='input'> <span class='fu'>head</span>(<span class='no'>var</span>$<span class='no'>coord</span>) <span class='co'># coordinates of qualitative variables</span></div><div class='output co'>#&gt;               Dim.1        Dim.2       Dim.3       Dim.4       Dim.5
 #&gt; Nausea_n  0.2995559 -0.008263233 -0.15087999 -0.05120534  0.02684045
 #&gt; Nausea_y -1.0734086  0.029609918  0.54065330  0.18348582 -0.09617827
 #&gt; Vomit_n   0.4923055 -0.335833158  0.06315216  0.20249017  0.03344304
@@ -161,15 +149,15 @@ individuals/quantitative variable categories/qualitative variable categories/gro
 #&gt; Abdo_y    5.035018 0.451343984 0.007035322 0.1330933 0.01539236</div><div class='input'>
  <span class='co'># Extract the results for individuals</span>
  <span class='no'>ind</span> <span class='kw'>&lt;-</span> <span class='fu'>get_mfa_ind</span>(<span class='no'>res.mfa</span>)
- <span class='fu'>print</span>(<span class='no'>ind</span>)</div><div class='output co'>#&gt; Multiple Factor Analysis Results for individuals
+ <span class='fu'>print</span>(<span class='no'>ind</span>)</div><div class='output co'>#&gt; Multiple Factor Analysis results for individuals 
 #&gt;  ===================================================
-#&gt;   Name                      Description                             
-#&gt; 1 &quot;$coord&quot;                  &quot;Coordinates for the individuals&quot;       
-#&gt; 2 &quot;$cos2&quot;                   &quot;Cos2 for the individuals&quot;              
-#&gt; 3 &quot;$contrib&quot;                &quot;Contributions of the individuals&quot;      
-#&gt; 4 &quot;$coord.partiel&quot;          &quot;Partial coordinates of the individuals&quot;
-#&gt; 5 &quot;$within.inertia&quot;         &quot;Within inertia&quot;                        
-#&gt; 6 &quot;$within.partial.inertia&quot; &quot;Within partial inertia&quot;                </div><div class='input'> <span class='fu'>head</span>(<span class='no'>ind</span>$<span class='no'>coord</span>) <span class='co'># coordinates of individuals</span></div><div class='output co'>#&gt;        Dim.1       Dim.2       Dim.3       Dim.4      Dim.5
+#&gt;   Name                      Description                      
+#&gt; 1 &quot;$coord&quot;                  &quot;Coordinates&quot;                    
+#&gt; 2 &quot;$cos2&quot;                   &quot;Cos2, quality of representation&quot;
+#&gt; 3 &quot;$contrib&quot;                &quot;Contributions&quot;                  
+#&gt; 4 &quot;$coord.partiel&quot;          &quot;Partial coordinates&quot;            
+#&gt; 5 &quot;$within.inertia&quot;         &quot;Within inertia&quot;                 
+#&gt; 6 &quot;$within.partial.inertia&quot; &quot;Within partial inertia&quot;         </div><div class='input'> <span class='fu'>head</span>(<span class='no'>ind</span>$<span class='no'>coord</span>) <span class='co'># coordinates of individuals</span></div><div class='output co'>#&gt;        Dim.1       Dim.2       Dim.3       Dim.4      Dim.5
 #&gt; 1 -0.8980293 -0.19968268  0.10527090 -0.06375957 -0.2468778
 #&gt; 2  1.6550439 -0.41095346 -0.16606815 -0.49335618  1.4414215
 #&gt; 3 -0.8673037  0.09906989 -0.27126101 -0.42418672 -0.2250902
@@ -189,21 +177,20 @@ individuals/quantitative variable categories/qualitative variable categories/gro
 #&gt; 5 0.9397448 0.02114689  0.188593192  0.50609384 0.1619465
 #&gt; 6 1.5752786 2.48715469 46.713592970 42.70323449 2.8836218</div><div class='input'>
  <span class='co'># You can also use the function get_mfa()</span>
- <span class='fu'>get_mfa</span>(<span class='no'>res.mfa</span>, <span class='st'>"ind"</span>) <span class='co'># Results for individuals</span></div><div class='output co'>#&gt; Multiple Factor Analysis Results for individuals
+ <span class='fu'>get_mfa</span>(<span class='no'>res.mfa</span>, <span class='st'>"ind"</span>) <span class='co'># Results for individuals</span></div><div class='output co'>#&gt; Multiple Factor Analysis results for individuals 
 #&gt;  ===================================================
-#&gt;   Name                      Description                             
-#&gt; 1 &quot;$coord&quot;                  &quot;Coordinates for the individuals&quot;       
-#&gt; 2 &quot;$cos2&quot;                   &quot;Cos2 for the individuals&quot;              
-#&gt; 3 &quot;$contrib&quot;                &quot;Contributions of the individuals&quot;      
-#&gt; 4 &quot;$coord.partiel&quot;          &quot;Partial coordinates of the individuals&quot;
-#&gt; 5 &quot;$within.inertia&quot;         &quot;Within inertia&quot;                        
-#&gt; 6 &quot;$within.partial.inertia&quot; &quot;Within partial inertia&quot;                </div><div class='input'> <span class='fu'>get_mfa</span>(<span class='no'>res.mfa</span>, <span class='st'>"quali.var"</span>) <span class='co'># Results for qualitative variable categories</span></div><div class='output co'>#&gt; Multiple Factor Analysis Results for qualitative variables
+#&gt;   Name                      Description                      
+#&gt; 1 &quot;$coord&quot;                  &quot;Coordinates&quot;                    
+#&gt; 2 &quot;$cos2&quot;                   &quot;Cos2, quality of representation&quot;
+#&gt; 3 &quot;$contrib&quot;                &quot;Contributions&quot;                  
+#&gt; 4 &quot;$coord.partiel&quot;          &quot;Partial coordinates&quot;            
+#&gt; 5 &quot;$within.inertia&quot;         &quot;Within inertia&quot;                 
+#&gt; 6 &quot;$within.partial.inertia&quot; &quot;Within partial inertia&quot;         </div><div class='input'> <span class='fu'>get_mfa</span>(<span class='no'>res.mfa</span>, <span class='st'>"quali.var"</span>) <span class='co'># Results for qualitative variable categories</span></div><div class='output co'>#&gt; Multiple Factor Analysis results for qualitative variable categories 
 #&gt;  ===================================================
-#&gt;   Name       Description                  
-#&gt; 1 &quot;$coord&quot;   &quot;Coordinates for categories&quot; 
-#&gt; 2 &quot;$cos2&quot;    &quot;Cos2 for categories&quot;        
-#&gt; 3 &quot;$contrib&quot; &quot;contributions of categories&quot;</div><div class='input'> 
- 
+#&gt;   Name       Description                      
+#&gt; 1 &quot;$coord&quot;   &quot;Coordinates&quot;                    
+#&gt; 2 &quot;$cos2&quot;    &quot;Cos2, quality of representation&quot;
+#&gt; 3 &quot;$contrib&quot; &quot;Contributions&quot;                  </div><div class='input'> 
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -212,8 +199,6 @@ individuals/quantitative variable categories/qualitative variable categories/gro
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#references">References</a></li>
       
       <li><a href="#examples">Examples</a></li>
     </ul>

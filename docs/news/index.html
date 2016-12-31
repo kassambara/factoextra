@@ -80,18 +80,20 @@
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"> </a>New features</h2>
-<ul><li>New function <code><a href="../reference/fviz_mclust.html">fviz_mclust()</a></code> for plotting model-based clustering using ggplot2</li>
-<li>Now <code><a href="../reference/fviz_dend.html">fviz_dend()</a></code> returns a ggplot. It can be used to plot circular dendrograms and phylogenic-like trees.</li>
+<ul><li><p>New function <code><a href="../reference/fviz_mclust.html">fviz_mclust()</a></code> for plotting model-based clustering using ggplot2.</p></li>
+<li><p>New function <code><a href="../reference/fviz.html">fviz()</a></code>: Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA and MCA, MFA, …</p></li>
+<li><p>New functions <code><a href="../reference/fviz_mfa.html">fviz_mfa_var()</a></code> and <code><a href="../reference/fviz_hmfa.html">fviz_hmfa_var()</a></code> for plotting MFA and HMFA variables, respectively.</p></li>
+<li><p>New function <code><a href="../reference/get_mfa.html">get_mfa_var()</a></code>: Extract the results for variables (quantitatives, qualitatives and groups). Deprecated functions: <code>get_mfa_var_quanti()</code>, <code>get_mfa_var_quali()</code> and <code><a href="../reference/deprecated.html">get_mfa_group()</a></code>.</p></li>
+<li><p>New functions added for extracting and visualizing the results of FAMD (factor analysis of mixed data): <code><a href="../reference/get_famd.html">get_famd_ind()</a></code>, <code><a href="../reference/get_famd.html">get_famd_var()</a></code>, <code><a href="../reference/fviz_famd.html">fviz_famd_ind()</a></code> and <code><a href="../reference/fviz_famd.html">fviz_famd_var()</a></code>.</p></li>
+<li><p>Now <code><a href="../reference/fviz_dend.html">fviz_dend()</a></code> returns a ggplot. It can be used to plot circular dendrograms and phylogenic-like trees. Additionnally, it supports an object of class HCPC (from FactoMineR).</p></li>
 <li>New arguments in <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code>:
 <ul><li>main, xlab, ylab in <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code>: to change the plot main title and axis labels.</li>
 <li>ellipse, ellipse.type, ellipse.level and ellipse.alpha</li>
 <li>choose.vars: a character vector containing variables to be considered for plotting.</li>
 </ul></li>
-<li>New function <code><a href="../reference/fviz.html">fviz()</a></code>: Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA and MCA, MFA, …</li>
-<li>New functions <code><a href="../reference/fviz_mfa.html">fviz_mfa_var()</a></code> and <code><a href="../reference/fviz_hmfa.html">fviz_hmfa_var()</a></code> for plotting MFA and HMFA variables, respectively</li>
 <li>New argument pointshape in <code><a href="../reference/fviz_pca.html">fviz_pca()</a></code>. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage (<a href="https://github.com/kassambara/factoextra/issues/20">@raynamharris, #15</a>).</li>
 <li>New argument repel in <code><a href="../reference/fviz_add.html">fviz_add()</a></code>.</li>
-<li>New argument gradient.cols in fviz_*() functions.</li>
+<li><p>New argument gradient.cols in fviz_*() functions.</p></li>
 </ul></div>
 <div id="minor-changing" class="section level2">
 <h2 class="hasAnchor">

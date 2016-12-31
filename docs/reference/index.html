@@ -75,7 +75,7 @@
 
     <div class="contents">
       <h2 id="section-visualizing-dimension-reduction-analysis-outputs" class="hasAnchor"><a href="#section-visualizing-dimension-reduction-analysis-outputs" class="anchor"></a>Visualizing Dimension Reduction Analysis Outputs</h2>
-      <p class="section-desc"><p>Visualization of PCA, CA, MCA, MFA and HMFA.</p></p>
+      <p class="section-desc"><p>Visualization of PCA, CA, MCA, FAMD, MFA and HMFA.</p></p>
 
       
       <p><a href="eigenvalue.html">Extract and visualize the eigenvalues/variances of dimensions</a></p>
@@ -98,9 +98,14 @@
         <li><code><a href="fviz_cos2.html">fviz_cos2</a></code></li>
       </ul>
       
+      <p><a href="fviz_famd.html">Visualize Factor Analysis of Mixed Data</a></p>
+      <ul>
+        <li><code><a href="fviz_famd.html">fviz_famd</a></code></li><li><code><a href="fviz_famd.html">fviz_famd_ind</a></code></li><li><code><a href="fviz_famd.html">fviz_famd_var</a></code></li>
+      </ul>
+      
       <p><a href="fviz_hmfa.html">Visualize Hierarchical Multiple Factor Analysis</a></p>
       <ul>
-        <li><code><a href="fviz_hmfa.html">fviz_hmfa</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_group</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_ind</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_ind_starplot</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_quali_biplot</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_quali_var</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_quanti_var</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_var</a></code></li>
+        <li><code><a href="fviz_hmfa.html">fviz_hmfa</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_ind</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_quali_biplot</a></code></li><li><code><a href="fviz_hmfa.html">fviz_hmfa_var</a></code></li>
       </ul>
       
       <p><a href="fviz_mca.html">Visualize Multiple Correspondence Analysis</a></p>
@@ -110,7 +115,7 @@
       
       <p><a href="fviz_mfa.html">Visualize Multiple Factor Analysis</a></p>
       <ul>
-        <li><code><a href="fviz_mfa.html">fviz_mfa</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_axes</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_group</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_ind</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_ind_starplot</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_quali_biplot</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_quali_var</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_quanti_var</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_var</a></code></li>
+        <li><code><a href="fviz_mfa.html">fviz_mfa</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_axes</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_ind</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_quali_biplot</a></code></li><li><code><a href="fviz_mfa.html">fviz_mfa_var</a></code></li>
       </ul>
       
       <p><a href="fviz_pca.html">Visualize Principal Component Analysis</a></p>
@@ -118,7 +123,7 @@
         <li><code><a href="fviz_pca.html">fviz_pca</a></code></li><li><code><a href="fviz_pca.html">fviz_pca_biplot</a></code></li><li><code><a href="fviz_pca.html">fviz_pca_ind</a></code></li><li><code><a href="fviz_pca.html">fviz_pca_var</a></code></li>
       </ul>
           <h2 id="section-extracting-data-from-dimension-reduction-analysis-outputs" class="hasAnchor"><a href="#section-extracting-data-from-dimension-reduction-analysis-outputs" class="anchor"></a>Extracting Data from Dimension Reduction Analysis Outputs</h2>
-      <p class="section-desc"><p>Extracting data from the output of PCA, CA, MCA, MFA and HMFA.</p></p>
+      <p class="section-desc"><p>Extracting data from the output of PCA, CA, MCA, FAMD, MFA and HMFA.</p></p>
 
       
       <p><a href="facto_summarize.html">Subset and summarize the output of factor analyses</a></p>
@@ -131,9 +136,14 @@
         <li><code><a href="get_ca.html">get_ca</a></code></li><li><code><a href="get_ca.html">get_ca_col</a></code></li><li><code><a href="get_ca.html">get_ca_row</a></code></li>
       </ul>
       
-      <p><a href="get_hmfa.html">Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - HMFA</a></p>
+      <p><a href="get_famd.html">Extract the results for individuals and variables - FAMD</a></p>
       <ul>
-        <li><code><a href="get_hmfa.html">get_hmfa</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_group</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_ind</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_partial</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_quali_var</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_quanti_var</a></code></li>
+        <li><code><a href="get_famd.html">get_famd</a></code></li><li><code><a href="get_famd.html">get_famd_ind</a></code></li><li><code><a href="get_famd.html">get_famd_var</a></code></li>
+      </ul>
+      
+      <p><a href="get_hmfa.html">Extract the results for individuals/variables/group/partial axes - HMFA</a></p>
+      <ul>
+        <li><code><a href="get_hmfa.html">get_hmfa</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_ind</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_partial</a></code></li><li><code><a href="get_hmfa.html">get_hmfa_var</a></code></li>
       </ul>
       
       <p><a href="get_mca.html">Extract the results for individuals/variables - MCA</a></p>
@@ -141,9 +151,9 @@
         <li><code><a href="get_mca.html">get_mca</a></code></li><li><code><a href="get_mca.html">get_mca_ind</a></code></li><li><code><a href="get_mca.html">get_mca_var</a></code></li>
       </ul>
       
-      <p><a href="get_mfa.html">Extract the results for individuals/quantitative variables/qualitative variables/group/partial axes - MFA</a></p>
+      <p><a href="get_mfa.html">Extract the results for individuals/variables/group/partial axes - MFA</a></p>
       <ul>
-        <li><code><a href="get_mfa.html">get_mfa</a></code></li><li><code><a href="get_mfa.html">get_mfa_group</a></code></li><li><code><a href="get_mfa.html">get_mfa_ind</a></code></li><li><code><a href="get_mfa.html">get_mfa_partial_axes</a></code></li><li><code><a href="get_mfa.html">get_mfa_quali_var</a></code></li><li><code><a href="get_mfa.html">get_mfa_quanti_var</a></code></li>
+        <li><code><a href="get_mfa.html">get_mfa</a></code></li><li><code><a href="get_mfa.html">get_mfa_ind</a></code></li><li><code><a href="get_mfa.html">get_mfa_partial_axes</a></code></li><li><code><a href="get_mfa.html">get_mfa_var</a></code></li>
       </ul>
       
       <p><a href="get_pca.html">Extract the results for individuals/variables - PCA</a></p>

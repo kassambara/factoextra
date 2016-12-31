@@ -274,8 +274,7 @@ second value sets the columns.</dd>
 <span class='co'>#      </span>
 <span class='co'># # You can also control the transparency </span>
 <span class='co'># # of the color by the cos2</span>
-<span class='co'># fviz_mca_ind(res.mca, alpha.ind="cos2") +</span>
-<span class='co'>#      theme_minimal()  </span>
+<span class='co'># fviz_mca_ind(res.mca, alpha.ind="cos2") </span>
 <span class='co'>## ---------------------------------------------</span>
 
 <span class='co'># Color individuals by groups, add concentration ellipses</span>
@@ -331,13 +330,11 @@ second value sets the columns.</dd>
 <span class='co'># fviz_mca_biplot(res.mca, invisible ="ind")</span>
 <span class='co'># </span>
 <span class='co'># # Control automatically the color of individuals using the cos2</span>
-<span class='co'># fviz_mca_biplot(res.mca, label ="var", col.ind="cos2") +</span>
-<span class='co'>#        theme_minimal()</span>
+<span class='co'># fviz_mca_biplot(res.mca, label ="var", col.ind="cos2")</span>
 <span class='co'>#        </span>
 <span class='co'># # Change the color by groups, add ellipses</span>
 <span class='co'># fviz_mca_biplot(res.mca, label="var", col.var ="blue",</span>
-<span class='co'>#    habillage=grp, addEllipses=TRUE, ellipse.level=0.95) + </span>
-<span class='co'>#    theme_minimal() </span>
+<span class='co'>#    habillage=grp, addEllipses=TRUE, ellipse.level=0.95)</span>
 <span class='co'>#                </span>
 <span class='co'># # Select the top 30 contributing individuals</span>
 <span class='co'># # And the top 10 variables</span>

@@ -74,8 +74,9 @@
 
     
     <p>Subset and summarize the results of Principal Component Analysis
-(PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA)
-and Multiple Factor Analysis (MFA) functions from several packages.</p>
+  (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis
+  (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor Analysis
+  (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions from several packages.</p>
     
 
     <pre><span class='fu'>facto_summarize</span>(<span class='no'>X</span>, <span class='no'>element</span>, <span class='kw'>node.level</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='no'>group.names</span>, <span class='kw'>result</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"coord"</span>,
@@ -84,34 +85,34 @@ and Multiple Factor Analysis (MFA) functions from several packages.</p>
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>X</dt>
-      <dd>an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
-princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
+      <dd>an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
+and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
       <dt>element</dt>
       <dd>the element to subset from the output. Possible values are 
-&quot;row&quot; or &quot;col&quot; for CA; &quot;var&quot; or &quot;ind&quot; for PCA and MCA; &quot;mca.cor&quot; for MCA;
-&#39;quanti.var&#39;, &#39;quali.var&#39; , &#39;group&#39; or &#39;ind&#39; for MFA and HMFA.</dd>
+&quot;row&quot; or &quot;col&quot; for CA; &quot;var&quot; or &quot;ind&quot; for PCA and MCA; &quot;mca.cor&quot; for MCA; 
+&#39;quanti.var&#39;, &#39;quali.var&#39; , &#39;group&#39; or &#39;ind&#39; for FAMD, MFA and HMFA.</dd>
       <dt>node.level</dt>
       <dd>a single number indicating the HMFA node level.</dd>
       <dt>group.names</dt>
-      <dd>a vector containing the name of the groups (by default,
+      <dd>a vector containing the name of the groups (by default, 
 NULL and the group are named group.1, group.2 and so on).</dd>
       <dt>result</dt>
       <dd>the result to be extracted for the element. Possible values are
 the combination of c(&quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;)</dd>
       <dt>axes</dt>
-      <dd>a numeric vector specifying the axes of interest. Default values
+      <dd>a numeric vector specifying the axes of interest. Default values 
 are 1:2 for axes 1 and 2.</dd>
       <dt>select</dt>
-      <dd>a selection of variables. Allowed values are NULL or a list
-containing the arguments name, cos2 or contrib. Default is list(name =
+      <dd>a selection of variables. Allowed values are NULL or a list 
+containing the arguments name, cos2 or contrib. Default is list(name = 
 NULL, cos2 = NULL, contrib = NULL): <ul>
-<li> name: is a character
+<li> name: is a character 
 vector containing variable names to be selected </li>
-<li> cos2: if cos2 is in
-[0, 1], ex: 0.6, then variables with a cos2 &gt; 0.6 are selected. if cos2 &gt;
+<li> cos2: if cos2 is in 
+[0, 1], ex: 0.6, then variables with a cos2 &gt; 0.6 are selected. if cos2 &gt; 
 1, ex: 5, then the top 5 variables with the highest cos2 are selected </li>
 <li>
-contrib: if contrib &gt; 1, ex: 5,  then the top 5 variables with the highest
+contrib: if contrib &gt; 1, ex: 5,  then the top 5 variables with the highest 
 cos2 are selected. </li>
 </ul>
 </dd>
@@ -119,19 +120,19 @@ cos2 are selected. </li>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame containing the (total) coord, cos2 and the contribution
+    <p>A data frame containing the (total) coord, cos2 and the contribution 
   for the axes.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>If length(axes) &gt; 1, then the columns contrib and cos2 correspond to
-  the total contributions and total cos2 of the axes. In this case, the
-  column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the
+  the total contributions and total cos2 of the axes. In this case, the 
+  column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the 
   coordinates of the points on the specified axes.</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
-    <p>http://www.sthda.com</p>
+    <p>http://www.sthda.com/english/</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -269,8 +270,7 @@ cos2 are selected. </li>
 #&gt; 3    3 -0.8673037  0.09906989 0.7620305 0.51312594 0.6025988
 #&gt; 4    4  1.7839172 -0.56856945 3.5056316 0.66185891 2.7721845
 #&gt; 5    5 -0.8673037  0.09906989 0.7620305 0.51312594 0.6025988
-#&gt; 6    6 -1.1229099 -1.07440938 2.4152822 0.06519297 1.9099576</div><div class='input'> 
-</div></pre>
+#&gt; 6    6 -1.1229099 -1.07440938 2.4152822 0.06519297 1.9099576</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

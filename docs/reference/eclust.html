@@ -81,7 +81,7 @@
     <pre><span class='fu'>eclust</span>(<span class='no'>x</span>, <span class='kw'>FUNcluster</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"kmeans"</span>, <span class='st'>"pam"</span>, <span class='st'>"clara"</span>, <span class='st'>"fanny"</span>, <span class='st'>"hclust"</span>, <span class='st'>"agnes"</span>,
   <span class='st'>"diana"</span>), <span class='kw'>k</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>k.max</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>stand</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>graph</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='kw'>hc_metric</span> <span class='kw'>=</span> <span class='st'>"euclidean"</span>, <span class='kw'>hc_method</span> <span class='kw'>=</span> <span class='st'>"ward.D2"</span>, <span class='kw'>gap_maxSE</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>method</span>
-  <span class='kw'>=</span> <span class='st'>"firstmax"</span>, <span class='kw'>SE.factor</span> <span class='kw'>=</span> <span class='fl'>1</span>), <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fu'>interactive</span>(),
+  <span class='kw'>=</span> <span class='st'>"firstSEmax"</span>, <span class='kw'>SE.factor</span> <span class='kw'>=</span> <span class='fl'>1</span>), <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>100</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fu'>interactive</span>(),
   <span class='kw'>seed</span> <span class='kw'>=</span> <span class='fl'>123</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -169,45 +169,43 @@ for determining the number of clusters using gap statistic.</dd>
 #&gt; Bootstrapping, b = 1,2,..., B (= 10)  [one &quot;.&quot; per sample]:
 #&gt; .......... 10 </div><img src='eclust-3.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Silhouette plot</span>
 <span class='fu'><a href='fviz_silhouette.html'>fviz_silhouette</a></span>(<span class='no'>res.km</span>)</div><div class='output co'>#&gt;   cluster size ave.sil.width
-#&gt; 1       1    8          0.12
-#&gt; 2       2   11          0.22
-#&gt; 3       3    3          0.51
-#&gt; 4       4   28          0.30</div><img src='eclust-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Optimal number of clusters using gap statistics</span>
-<span class='no'>res.km</span>$<span class='no'>nbclust</span></div><div class='output co'>#&gt; [1] 4</div><div class='input'><span class='co'># Print result</span>
- <span class='no'>res.km</span></div><div class='output co'>#&gt; K-means clustering with 4 clusters of sizes 8, 11, 3, 28
+#&gt; 1       1   13          0.31
+#&gt; 2       2   29          0.38
+#&gt; 3       3    8          0.39</div><img src='eclust-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Optimal number of clusters using gap statistics</span>
+<span class='no'>res.km</span>$<span class='no'>nbclust</span></div><div class='output co'>#&gt; [1] 3</div><div class='input'><span class='co'># Print result</span>
+ <span class='no'>res.km</span></div><div class='output co'>#&gt; K-means clustering with 3 clusters of sizes 13, 29, 8
 #&gt; 
 #&gt; Cluster means:
-#&gt;       Murder    Assault    UrbanPop       Rape
-#&gt; 1  1.0301894  0.3643611 -0.15820639  0.2688337
-#&gt; 2  0.6936251  1.1875456  0.73519807  1.4000551
-#&gt; 3  1.5410366  1.4508047 -1.37296430 -0.2845637
-#&gt; 4 -0.7319465 -0.7260823 -0.09652267 -0.5963423
+#&gt;       Murder    Assault    UrbanPop        Rape
+#&gt; 1  0.6950701  1.0394414  0.72263703  1.27693964
+#&gt; 2 -0.7010700 -0.7071522 -0.09924526 -0.57773737
+#&gt; 3  1.4118898  0.8743346 -0.81452109  0.01927104
 #&gt; 
 #&gt; Clustering vector:
 #&gt;        Alabama         Alaska        Arizona       Arkansas     California 
-#&gt;              1              2              2              1              2 
+#&gt;              3              1              1              3              1 
 #&gt;       Colorado    Connecticut       Delaware        Florida        Georgia 
-#&gt;              2              4              4              2              1 
+#&gt;              1              2              2              1              3 
 #&gt;         Hawaii          Idaho       Illinois        Indiana           Iowa 
-#&gt;              4              4              2              4              4 
+#&gt;              2              2              1              2              2 
 #&gt;         Kansas       Kentucky      Louisiana          Maine       Maryland 
-#&gt;              4              4              1              4              2 
+#&gt;              2              2              3              2              1 
 #&gt;  Massachusetts       Michigan      Minnesota    Mississippi       Missouri 
-#&gt;              4              2              4              3              1 
+#&gt;              2              1              2              3              1 
 #&gt;        Montana       Nebraska         Nevada  New Hampshire     New Jersey 
-#&gt;              4              4              2              4              4 
+#&gt;              2              2              1              2              2 
 #&gt;     New Mexico       New York North Carolina   North Dakota           Ohio 
-#&gt;              2              2              3              4              4 
+#&gt;              1              1              3              2              2 
 #&gt;       Oklahoma         Oregon   Pennsylvania   Rhode Island South Carolina 
-#&gt;              4              4              4              4              3 
+#&gt;              2              2              2              2              3 
 #&gt;   South Dakota      Tennessee          Texas           Utah        Vermont 
-#&gt;              4              1              1              4              4 
+#&gt;              2              3              1              2              2 
 #&gt;       Virginia     Washington  West Virginia      Wisconsin        Wyoming 
-#&gt;              1              4              4              4              4 
+#&gt;              2              2              2              2              2 
 #&gt; 
 #&gt; Within cluster sum of squares by cluster:
-#&gt; [1]  8.418306 16.579810  1.038324 52.002600
-#&gt;  (between_SS / total_SS =  60.2 %)
+#&gt; [1] 19.922437 53.354791  8.316061
+#&gt;  (between_SS / total_SS =  58.4 %)
 #&gt; 
 #&gt; Available components:
 #&gt; 
@@ -218,10 +216,9 @@ for determining the number of clusters using gap statistic.</dd>
  <span class='no'>res.hc</span> <span class='kw'>&lt;-</span> <span class='fu'>eclust</span>(<span class='no'>df</span>, <span class='st'>"hclust"</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>10</span>) <span class='co'># compute hclust</span></div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
 #&gt; Bootstrapping, b = 1,2,..., B (= 10)  [one &quot;.&quot; per sample]:
 #&gt; .......... 10 </div><div class='input'>  <span class='fu'><a href='fviz_dend.html'>fviz_dend</a></span>(<span class='no'>res.hc</span>) <span class='co'># dendrogam</span></div><img src='eclust-14.png' alt='' width='540' height='400' /><div class='input'>  <span class='fu'><a href='fviz_silhouette.html'>fviz_silhouette</a></span>(<span class='no'>res.hc</span>) <span class='co'># silhouette plot</span></div><div class='output co'>#&gt;   cluster size ave.sil.width
-#&gt; 1       1    7          0.46
-#&gt; 2       2   12          0.29
-#&gt; 3       3   19          0.26
-#&gt; 4       4   12          0.43</div><img src='eclust-17.png' alt='' width='540' height='400' /><div class='input'> 
+#&gt; 1       1   19          0.26
+#&gt; 2       2   19          0.28
+#&gt; 3       3   12          0.43</div><img src='eclust-17.png' alt='' width='540' height='400' /><div class='input'> 
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

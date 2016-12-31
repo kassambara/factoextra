@@ -73,28 +73,14 @@
     </div>
 
     
-    <p>Graph of individuals and variables from the output of Hierarchical Multiple Factor Analysis (HMFA).
-<ul>
-<li>fviz_hmfa_ind(): Graph of individuals
-</li>
-<li>fviz_hmfa_var(): Graph of variables
-</li>
-<li>fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative variables
-</li>
-<li>fviz_hmfa(): An alias of fviz_hmfa_ind()
-</li>
-</ul></p>
-
-    <p>Deprecated functions. Will be removed in the next version: 
-<ul>
-<li>fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = &quot;all&quot;) instead.
-</li>
-<li>fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, &quot;quanti.var&quot;) instead.
-</li>
-<li>fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, &quot;quali.var&quot;) instead.
-</li>
-<li>fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, &quot;group&quot;) instead.
-</li>
+    <p>Graph of individuals and variables from the output of 
+ Hierarchical Multiple Factor Analysis (HMFA). <ul>
+<li>fviz_hmfa_ind(): Graph of individuals </li>
+<li>fviz_hmfa_var(): Graph of
+ variables </li>
+<li>fviz_hmfa_quali_biplot(): Biplot of individuals and 
+ qualitative variables </li>
+<li>fviz_hmfa(): An alias of fviz_hmfa_ind() </li>
 </ul></p>
     
 
@@ -110,17 +96,9 @@
   <span class='kw'>alpha.var</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>shape.var</span> <span class='kw'>=</span> <span class='fl'>17</span>, <span class='kw'>col.var.sup</span> <span class='kw'>=</span> <span class='st'>"darkgreen"</span>,
   <span class='kw'>select.var</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
 
-<span class='fu'>fviz_hmfa_quanti_var</span>(<span class='no'>X</span>, <span class='no'>...</span>)
-
-<span class='fu'>fviz_hmfa_quali_var</span>(<span class='no'>X</span>, <span class='no'>...</span>)
-
 <span class='fu'>fviz_hmfa_quali_biplot</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>),
   <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
   <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"Biplot of individuals and qualitative variables - HMFA"</span>, <span class='no'>...</span>)
-
-<span class='fu'>fviz_hmfa_ind_starplot</span>(<span class='no'>X</span>, <span class='no'>...</span>)
-
-<span class='fu'>fviz_hmfa_group</span>(<span class='no'>X</span>, <span class='no'>...</span>)
 
 <span class='fu'>fviz_hmfa</span>(<span class='no'>X</span>, <span class='no'>...</span>)</pre>
     
@@ -137,65 +115,70 @@ values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, &quot;text
 show only points); &quot;text&quot; to show only labels; c(&quot;point&quot;, &quot;text&quot;) or 
 c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
       <dt>repel</dt>
-      <dd>a boolean, whether to use ggrepel to avoid overplotting text labels or not.</dd>
+      <dd>a boolean, whether to use ggrepel to avoid overplotting text 
+labels or not.</dd>
       <dt>habillage</dt>
-      <dd>an optional factor variable for coloring 
-the observations by groups. Default value is &quot;none&quot;.
-If X is an HMFA object from FactoMineR package, habillage can also specify
-the index of the factor variable in the data.</dd>
+      <dd>an optional factor variable for coloring the observations by 
+groups. Default value is &quot;none&quot;. If X is an HMFA object from FactoMineR 
+package, habillage can also specify the index of the factor variable in the 
+data.</dd>
       <dt>addEllipses</dt>
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>shape.ind, shape.var</dt>
-      <dd>point shapes of individuals and variables, respectively.</dd>
+      <dd>point shapes of individuals and variables, 
+respectively.</dd>
       <dt>col.ind, col.var</dt>
-      <dd>color for individuals, partial individuals and variables, 
-respectively.
- Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;.
- In this case, the colors for individuals/variables are automatically controlled by their qualities (&quot;cos2&quot;),
- contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;).
- To use automatic coloring (by cos2, contrib, ....), make sure that habillage =&quot;none&quot;.</dd>
+      <dd>color for individuals, partial individuals and 
+variables, respectively. Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, 
+&quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for individuals/variables are 
+automatically controlled by their qualities (&quot;cos2&quot;), contributions 
+(&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y 
+values(&quot;y&quot;). To use automatic coloring (by cos2, contrib, ....), make sure 
+that habillage =&quot;none&quot;.</dd>
       <dt>col.ind.sup</dt>
       <dd>color for supplementary individuals</dd>
       <dt>alpha.ind, alpha.var</dt>
-      <dd>controls the transparency of
- individual, partial individual and variable, respectively.
-The value can variate from 0 (total transparency) to 1 (no transparency).
-Default value is 1. Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;.
- In this case, the transparency for individual/variable colors are automatically controlled by their qualities (&quot;cos2&quot;),
- contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;).
- To use this, make sure that habillage =&quot;none&quot;.</dd>
+      <dd>controls the transparency of individual, partial 
+individual and variable, respectively. The value can variate from 0 (total 
+transparency) to 1 (no transparency). Default value is 1. Possible values 
+include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the 
+transparency for individual/variable colors are automatically controlled by 
+their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 
+, &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;). To use this, make sure that 
+habillage =&quot;none&quot;.</dd>
       <dt>select.ind, select.var</dt>
-      <dd>a selection of individuals and
-variables to be drawn.
-Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
-<ul>
-<li> name is a character vector containing individuals/variables to be drawn
-</li>
-<li> cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 &gt; 0.6 are drawn.
-if cos2 &gt; 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-</li>
-<li> contrib if contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
-</li>
+      <dd>a selection of individuals and variables to be 
+drawn. Allowed values are NULL or a list containing the arguments name, cos2
+or contrib: <ul>
+<li> name is a character vector containing 
+individuals/variables to be drawn </li>
+<li> cos2 if cos2 is in [0, 1], ex: 0.6, 
+then individuals/variables with a cos2 &gt; 0.6 are drawn. if cos2 &gt; 1, ex: 5, 
+then the top 5 individuals/variables with the highest cos2 are drawn. </li>
+<li> 
+contrib if contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with 
+the highest cos2 are drawn </li>
 </ul>
 </dd>
       <dt>partial</dt>
-      <dd>list of the individuals for which the partial points should be drawn. 
-(by default, partial = NULL and no partial points are drawn). 
-Use partial = &quot;All&quot; to visualize partial points for all individuals.</dd>
+      <dd>list of the individuals for which the partial points should be 
+drawn. (by default, partial = NULL and no partial points are drawn). Use 
+partial = &quot;All&quot; to visualize partial points for all individuals.</dd>
       <dt>col.partial</dt>
-      <dd>color for partial individuals. By default, points are colored according to the groups.</dd>
+      <dd>color for partial individuals. By default, points are 
+colored according to the groups.</dd>
       <dt>group.names</dt>
-      <dd>a vector containing the name of the groups (by default, NULL and the group are named group.1, group.2 and so on).</dd>
+      <dd>a vector containing the name of the groups (by default, 
+NULL and the group are named group.1, group.2 and so on).</dd>
       <dt>node.level</dt>
       <dd>a single number indicating the HMFA node level to plot.</dd>
       <dt>...</dt>
       <dd>Arguments to be passed to the function fviz() and ggpubr::ggpar()</dd>
       <dt>choice</dt>
-      <dd>the graph to plot. Allowed values include: i) &quot;var&quot; and 
-&quot;mca.cor&quot; for plotting the correlation between variables and principal
-dimensions; ii) &quot;var.cat&quot; for variable categories and iii) &quot;quanti.sup&quot; for the
-supplementary quantitative variables.</dd>
+      <dd>the graph to plot. Allowed values include one of c(&quot;quanti.var&quot;,
+&quot;quali.var&quot;, &quot;group&quot;) for plotting quantitative variables, qualitative
+variables and group of variables, respectively.</dd>
       <dt>col.var.sup</dt>
       <dd>color for supplementary variables.</dd>
       <dt>title</dt>

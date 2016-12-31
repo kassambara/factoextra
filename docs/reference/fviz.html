@@ -78,24 +78,25 @@
 
     <pre><span class='fu'>fviz</span>(<span class='no'>X</span>, <span class='no'>element</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"all"</span>,
   <span class='kw'>invisible</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>labelsize</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>pointsize</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>pointshape</span> <span class='kw'>=</span> <span class='fl'>19</span>,
-  <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>ellipse.level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>ellipse.type</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='kw'>ellipse.alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
-  <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>,
-  <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span>
-  <span class='kw'>NULL</span>), <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>axes.linetype</span> <span class='kw'>=</span> <span class='st'>"dashed"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>, <span class='kw'>ggtheme</span> <span class='kw'>=</span> <span class='fu'>theme_minimal</span>(), <span class='no'>...</span>)</pre>
+  <span class='kw'>arrowsize</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>ellipse.level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>ellipse.type</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='kw'>ellipse.alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
+  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>, <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span>
+  <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>axes.linetype</span> <span class='kw'>=</span> <span class='st'>"dashed"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>,
+  <span class='kw'>ggtheme</span> <span class='kw'>=</span> <span class='fu'>theme_minimal</span>(), <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>X</dt>
-      <dd>an object of class PCA, CA, MCA, MFA and HMFA [FactoMineR]; prcomp and
-princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
+      <dd>an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
+and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].</dd>
       <dt>element</dt>
       <dd>the element to subset from the output. Possible values are 
-&quot;row&quot; or &quot;col&quot; for CA; &quot;var&quot; or &quot;ind&quot; for PCA and MCA; &quot;mca.cor&quot; for MCA;
-&#39;quanti.var&#39;, &#39;quali.var&#39; , &#39;group&#39; or &#39;ind&#39; for MFA and HMFA.</dd>
+&quot;row&quot; or &quot;col&quot; for CA; &quot;var&quot; or &quot;ind&quot; for PCA and MCA; &quot;mca.cor&quot; for MCA; 
+&#39;quanti.var&#39;, &#39;quali.var&#39; , &#39;group&#39; or &#39;ind&#39; for FAMD, MFA and HMFA.</dd>
       <dt>axes</dt>
-      <dd>a numeric vector specifying the axes of interest. Default values
+      <dd>a numeric vector specifying the axes of interest. Default values 
 are 1:2 for axes 1 and 2.</dd>
       <dt>geom</dt>
       <dd>a text specifying the geometry to be used for the graph. Default value is &quot;auto&quot;. Allowed 
@@ -119,6 +120,8 @@ Default value is &quot;none&quot;. Allowed values are the combination of c(&quot
       <dd>the size of points</dd>
       <dt>pointshape</dt>
       <dd>the shape of points</dd>
+      <dt>arrowsize</dt>
+      <dd>the size of arrows. Controls the thickness of arrows.</dd>
       <dt>habillage</dt>
       <dd>an optional factor variable for coloring the observations by
 groups. Default value is &quot;none&quot;. If X is a PCA object from FactoMineR 
