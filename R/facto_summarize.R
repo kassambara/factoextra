@@ -109,37 +109,20 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     result <- NULL
   }
   
-  # check and get the classe of X
+  # Check and get the classe of X
   facto_class <- .get_facto_class(X)
-  
   # Extract the element
   element <- element[1]
-  if(facto_class=="CA"){
-  if(element %in% c("ind", "row")) elmt<- get_ca_row(X)
-  else if(element  %in% c("var", "col") ) elmt <- get_ca_col(X)
-  }
-  else if(facto_class=="PCA"){
-    if(element %in% c("var", "col")) elmt<- get_pca_var(X)
-    else if(element %in% c("ind", "row")) elmt <- get_pca_ind(X)
-  }
-  else if(facto_class=="MCA"){
-    if(element %in% c("var", "col")) elmt<- get_mca_var(X)
-    else if(element %in% c("ind", "row")) elmt <- get_mca_ind(X)
-    else if(element == "mca.cor") {
-      elmt <- list(coord = X$var$eta2)
-      class(elmt) <- c("factoextra", "mca.cor")
-    }
-    else if(element == "quanti.sup") {
-      elmt <- X$quanti.sup
-      class(elmt) <- c("factoextra", "quanti.sup")
-    }
-  }
-  else if (facto_class == "FAMD") elmt <- get_famd(X, element)
-  else if (facto_class == "MFA") elmt <- get_mfa(X, element)
-  else if (facto_class == "HMFA") elmt <- get_hmfa(X, element)
+  elmt <- switch(facto_class,
+                 CA = get_ca(X, element),
+                 PCA = get_pca(X, element),
+                 MCA = get_mca(X, element),
+                 FAMD = get_famd(X, element),
+                 MFA = get_mfa(X, element),
+                 HMFA = get_hmfa(X, element)
+                 )
   
-  
-  # check axes
+  # Check axes
   if(inherits(elmt, "hmfa_partial"))
     ndim <- ncol(elmt[[1]])
   else
@@ -149,7 +132,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
          "The number of axes in the data is: ", ncol(elmt$coord), 
          ". Please try again with axes between 1 - ", ncol(elmt$coord))
   
-  # summarize the result
+  # Summarize the result
   res = NULL
   if(element %in% c("mca.cor", "quanti.sup")) res <- elmt$coord
   
