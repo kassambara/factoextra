@@ -50,10 +50,9 @@ NULL
 #' @rdname get_pca
 #' @export 
 get_pca <- function(res.pca, element = c("var", "ind")){
-  elmt <- element[1]
+  elmt <- match.arg(element)
   if(elmt =="var") get_pca_var(res.pca)
   else if(elmt == "ind") get_pca_ind(res.pca)
-  else stop("Allowed values for the argument element are: 'ind' or 'var'.")
 }
 
 #' @rdname get_pca
