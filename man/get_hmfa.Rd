@@ -10,7 +10,8 @@
 \alias{get_hmfa_var}
 \title{Extract the results for individuals/variables/group/partial axes - HMFA}
 \usage{
-get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group"))
+get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group",
+  "partial.node"))
 
 get_hmfa_ind(res.hmfa)
 
@@ -27,32 +28,31 @@ get_hmfa_partial(res.hmfa)
 \arguments{
 \item{res.hmfa}{an object of class HMFA [FactoMineR].}
 
-\item{element}{the element to subset from the output. Possible values are "ind", "quanti.var", "quali.var" or "group".}
+\item{element}{the element to subset from the output. Possible values are
+"ind", "quanti.var", "quali.var", "group" or "partial.node".}
 }
 \value{
 a list of matrices containing the results for the active 
-individuals/quantitative variable categories/qualitative variable categories/groups/partial axes including : 
-\item{coord}{coordinates for the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
-\item{cos2}{cos2 for the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
-\item{contrib}{contributions of the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
-\item{inertia}{inertia of the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
+  individuals, variables, groups and partial nodes, including : 
+  \item{coord}{coordinates} \item{cos2}{cos2} 
+  \item{contrib}{contributions}
 }
 \description{
-Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals/quantitative variables/qualitative variable categories/groups/partial axes from Hierarchical Multiple Factor Analysis (HMFA) outputs.\cr\cr
-\itemize{
-\item get_hmfa(): Extract the results for variables and individuals
-\item get_hmfa_ind(): Extract the results for individuals only
-\item get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
-}
+Extract all the results (coordinates, squared cosine and
+contributions) for the active individuals/quantitative variables/qualitative
+variable categories/groups/partial axes from Hierarchical Multiple Factor
+Analysis (HMFA) outputs.\cr\cr \itemize{ \item get_hmfa(): Extract the
+results for variables and individuals \item get_hmfa_ind(): Extract the
+results for individuals only \item get_mfa_var(): Extract the results for
+variables (quantitatives, qualitatives and groups) 
+\item get_hmfa_partial(): Extract the results for partial.node. }
 
-  
-Deprecated functions. Will be removed in the next version:
-\itemize{
-\item get_hmfa_var_quanti(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var") instead.
-\item get_hmfa_var_quali().  Deprecated. Use get_hmfa_var(res.hmfa, "quali.var") instead.
-\item get_hmfa_group(). Deprecated. Use get_hmfa_var(res.hmfa, "group") instead.
-}
+
+Deprecated functions. Will be removed in the next version: \itemize{ \item
+get_hmfa_var_quanti(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var")
+instead. \item get_hmfa_var_quali().  Deprecated. Use get_hmfa_var(res.hmfa,
+"quali.var") instead. \item get_hmfa_group(). Deprecated. Use
+get_hmfa_var(res.hmfa, "group") instead. }
 }
 \examples{
 # Multiple Factor Analysis

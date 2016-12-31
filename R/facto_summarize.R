@@ -137,17 +137,11 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   }
   else if (facto_class == "FAMD") elmt <- get_famd(X, element)
   else if (facto_class == "MFA") elmt <- get_mfa(X, element)
-  else if (facto_class == "HMFA") {
-    if (element %in% c("quanti.var", "col")) elmt <- get_hmfa_quanti_var(X)
-    else if (element %in% c("quali.var", "col")) elmt <- get_hmfa_quali_var(X)
-    else if (element %in% c("group", "col")) elmt <- get_hmfa_group(X)
-    else if (element %in% c("ind", "row")) elmt <- get_hmfa_ind(X)
-    else if (element %in% c("partial.node", "row")) elmt <- get_hmfa_partial(X)
-  }
+  else if (facto_class == "HMFA") elmt <- get_hmfa(X, element)
   
   
   # check axes
-  if(class(elmt)[[2]] == "hmfa_partial")
+  if(inherits(elmt, "hmfa_partial"))
     ndim <- ncol(elmt[[1]])
   else
     ndim <- ncol(elmt$coord)
