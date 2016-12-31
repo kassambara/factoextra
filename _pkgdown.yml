@@ -4,23 +4,25 @@ templates:
 
 reference:
   - title: Visualizing Dimension Reduction Analysis Outputs
-    desc:  Visualization of PCA, CA, MCA, MFA and HMFA.
+    desc:  Visualization of PCA, CA, MCA, FAMD, MFA and HMFA.
     contents:
       - eigenvalue
       - fviz_pca
       - fviz_ca
       - fviz_mca
+      - fviz_famd
       - fviz_mfa
       - fviz_hmfa
       - fviz_cos2
       - fviz_contrib
   - title: Extracting Data from Dimension Reduction Analysis Outputs
-    desc: Extracting data from the output of PCA, CA, MCA, MFA and HMFA.
+    desc: Extracting data from the output of PCA, CA, MCA, FAMD, MFA and HMFA.
     contents:
       - facto_summarize
       - get_pca
       - get_ca
       - get_mca
+      - get_famd
       - get_mfa
       - get_hmfa
   - title: Clustering
