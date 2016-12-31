@@ -29,6 +29,9 @@ NULL
   else if(inherits(X, c("MFA","mfa"))) facto_class = "MFA"
   else if(inherits(X, c("HMFA"))) facto_class = "HMFA"
   else if(inherits(X, c("FAMD"))) facto_class = "FAMD"
+  else if (inherits(X, "expoOutput")){
+   if (inherits(X$ExPosition.Data,'epCA')) facto_class="CA"
+  }
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
 }
@@ -383,6 +386,11 @@ NULL
     n <- sum(res.ca$Freq)
     if(element =="row") mass <- row.sum/n
     else if(element =="col") mass <- col.sum/n
+  }
+  # ExPosition
+  else if (inherits(res.ca, "expoOutput")){
+    if(element =="row") mass <- res.ca$ExPosition.Data$M
+    else if(element =="col") mass <- res.ca$ExPosition.Data$W
   }
   else stop("An object of class : ", class(res.ca), 
             " can't be handled") 

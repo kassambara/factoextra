@@ -99,6 +99,8 @@ get_eig<-function(X){
     else if(inherits(X, 'mjca')) eig <- X$inertia.e
     # MASS
     else if(inherits(X, 'correspondence'))  eig <- X$cor^2
+    # ExPosition package
+    else if (inherits(X, "expoOutput")) eig <- X$ExPosition.Data$eigs
     else stop("An object of class : ", class(X), 
               " can't be handled by the function get_eigenvalue()")
     

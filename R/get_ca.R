@@ -54,7 +54,6 @@ get_ca <- function(res.ca, element = c("row", "col")){
  elmt <- match.arg(element)
  if(elmt =="row") get_ca_row(res.ca)
  else if(elmt == "col") get_ca_col(res.ca)
- else stop("Allowed values for the argument element are: 'row' or 'col'.")
 }
 
 
@@ -114,6 +113,17 @@ get_ca_col <- function(res.ca){
     contrib <- (inertia$col.abs/100)[, colnames(coord)]
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     cols <- list(coord = coord, contrib = contrib, cos2 = cos2, inertia = NA)
+  }
+  # ExPosition package
+  else if (inherits(res.ca, "expoOutput") & inherits(res.ca$ExPosition.Data,'epCA')) {
+    coord <- res.ca$ExPosition.Data$fj
+    inertia <- res.ca$ExPosition.Data$dj*res.ca$ExPosition.Data$W
+    cos2 <- res.ca$ExPosition.Data$rj
+    contrib <- res.ca$ExPosition.Data$cj*100
+    colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 
+                                                                     1:ncol(coord))
+    cols <- list(coord = coord, contrib = contrib, cos2 = cos2, 
+                 inertia = inertia)
   }
   
   else stop("An object of class : ", class(res.ca), 
@@ -180,6 +190,17 @@ get_ca_row <- function(res.ca){
     contrib <- (inertia$row.abs/100)[, colnames(coord)]
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     row <- list(coord = coord, contrib = contrib, cos2 = cos2, inertia = NA)
+  }
+  # ExPosition package
+  else if (inherits(res.ca, "expoOutput") & inherits(res.ca$ExPosition.Data,'epCA')) {
+    coord <- res.ca$ExPosition.Data$fi
+    inertia <- res.ca$ExPosition.Data$di*res.ca$ExPosition.Data$M
+    cos2 <- res.ca$ExPosition.Data$ri
+    contrib <- res.ca$ExPosition.Data$ci*100
+    colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 
+                                                                     1:ncol(coord))
+    row <- list(coord = coord, contrib = contrib, cos2 = cos2, 
+                inertia = inertia)
   }
   else stop("An object of class : ", class(res.ca), 
             " can't be handled by the function get_ca_row()")
