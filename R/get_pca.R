@@ -11,7 +11,7 @@ NULL
 #' \item get_pca_var(): Extract the results for variables only
 #' }
 #' @param res.pca an object of class PCA [FactoMineR]; 
-#' prcomp and princomp [stats]; pca, dudi [adea4].
+#' prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].
 #' @param element the element to subset from the output. Allowed values are 
 #' "var" (for active variables) or "ind" (for active individuals).
 #' @param ... not used
@@ -87,6 +87,11 @@ get_pca_ind<-function(res.pca, ...){
     ind <- .get_pca_ind_results(ind.coord, data, res.pca$sdev^2,
                                 res.pca$center, res.pca$scale)
   }
+  # ExPosition package
+  else if (inherits(res.pca, "expoOutput") & inherits(res.pca$ExPosition.Data,'epPCA')){
+    res <- res.pca$ExPosition.Data
+    ind <- list(coord = res$fi,  cos2 = res$ri, contrib = res$ci*100)
+  }
   else stop("An object of class : ", class(res.pca), 
             " can't be handled by the function get_pca_ind()")
   
@@ -117,6 +122,15 @@ get_pca_var<-function(res.pca){
     var_cor_func <- function(var.loadings, comp.sdev){var.loadings*comp.sdev}
     var.cor <- t(apply(res.pca$rotation, 1, var_cor_func, res.pca$sdev))
     var <- .get_pca_var_results(var.cor)
+  }
+  # ExPosition package
+  else if (inherits(res.pca, "expoOutput") & inherits(res.pca$ExPosition.Data,'epPCA')){
+    res <- res.pca$ExPosition.Data
+    data_matrix <- res$X
+    factor_scores <- res$fi
+    var.coord <- var.cor <- stats::cor(res$X, res$fi) # cor(t(data_matrix), factor_scores)
+    var.coord <- replace(var.coord, is.na(var.coord), 0)
+    var <- list(coord = var.coord, cor = var.coord, cos2 = res$rj, contrib = res$cj*100)
   }
   else stop("An object of class : ", class(res.pca), 
             " can't be handled by the function get_pca_var()")

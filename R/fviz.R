@@ -254,13 +254,14 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 # Helper functions
 #+++++++++++++++++++++
 
-# X : an object of class PCA, princomp, prcomp, dudi
+# X : an object of class PCA, princomp, prcomp, dudi, expoOutput
 # Return TRUE if the data are scaled to unit variance
 .get_scale_unit <-function(X){
   scale_unit <- FALSE
   if(inherits(X, 'PCA')) scale_unit <- X$call$scale.unit
   else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale) 
   else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1 
+  else if(inherits(X, "expoOutput")) scale_unit <- !all(X$ExPosition.Data$scale==1) 
   else if(inherits(X, 'pca') & inherits(X, 'dudi')) scale_unit <- length(unique(X$norm))>1 
   else {
     warning(".get_scale_unit function: can't handle an object of class ",

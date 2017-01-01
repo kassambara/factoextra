@@ -31,6 +31,7 @@ NULL
   else if(inherits(X, c("FAMD"))) facto_class = "FAMD"
   else if (inherits(X, "expoOutput")){
    if (inherits(X$ExPosition.Data,'epCA')) facto_class="CA"
+   else if (inherits(X$ExPosition.Data,'epPCA')) facto_class="PCA"
   }
   else stop("An object of class : ", class(X), 
             " can't be handled by factoextra")   
