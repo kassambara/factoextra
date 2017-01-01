@@ -24,7 +24,7 @@
 - New argument repel in `fviz_add()`.
 - New argument gradient.cols in fviz_*() functions.
     
-- Support for ExPosition::epCA() added ([#23](https://github.com/kassambara/factoextra/issues/23))
+- Support for ExPosition added (epCA, epPCA) ([#23](https://github.com/kassambara/factoextra/issues/23))
      
 ## Minor changing
    
