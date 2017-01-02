@@ -8,7 +8,7 @@ NULL
 #'   Extract the results for variables and individuals \item get_mca_ind(): 
 #'   Extract the results for individuals only \item get_mca_var(): Extract the 
 #'   results for variables only }
-#' @param res.mca an object of class MCA [FactoMineR], acm [ade4].
+#' @param res.mca an object of class MCA [FactoMineR], acm [ade4], expoOutput/epMCA [ExPosition].
 #' @param element the element to subset from the output. Possible values are 
 #'   "var" for variables, "ind" for individuals, "mca.cor" for correlation
 #'   between variables and principal dimensions, "quanti.sup" for quantitative supplementary variables.
@@ -66,6 +66,7 @@ get_mca <- function(res.mca, element = c("var", "ind", "mca.cor", "quanti.sup"))
 #' @export
 get_mca_var <- function(res.mca, element = c( "var", "mca.cor", "quanti.sup")){
   choice <- match.arg(element)
+  element_desc <- "variables"
   # FactoMineR package
   if(inherits(res.mca, c("MCA"))) {
     vars <- switch(choice,
@@ -84,7 +85,6 @@ get_mca_var <- function(res.mca, element = c( "var", "mca.cor", "quanti.sup")){
     if (!requireNamespace("ade4", quietly = TRUE)) {
       stop("ade4 package needed for this function to work. Please install it.")
     }
-    element_desc = "variables"
     if(choice == "var"){
     coord <- res.mca$co
     inertia <- ade4::inertia.dudi(res.mca, row.inertia = FALSE, col.inertia = TRUE)
@@ -95,8 +95,20 @@ get_mca_var <- function(res.mca, element = c( "var", "mca.cor", "quanti.sup")){
     }
     else{
       vars <- list()
-      stop("Don't handle ", choice, "for MCA computed with ade4. Use FactoMineR instead.")
+      stop("Don't handle ", choice, " for MCA computed with ade4. Use FactoMineR instead.")
     }
+  }
+  # ExPosition package
+  else if (inherits(res.mca, "expoOutput") & inherits(res.mca$ExPosition.Data,'epMCA')){
+    if(choice != "var")  stop("Don't handle ", choice, " for MCA computed with ExPosition.",
+                              " Use FactoMineR instead.")
+    res <- res.mca$ExPosition.Data
+    coord <- res$fj
+    inertia <- res$dj*res$W
+    cos2 <- res$rj
+    contrib <- res$cj*100
+    colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
+    vars <- list(coord = coord, contrib = contrib, cos2 = cos2)
   }
   else stop("An object of class : ", class(res.mca), 
             " can't be handled by the function get_mca_var()")
@@ -121,6 +133,16 @@ get_mca_ind <- function(res.mca){
     inertia <- ade4::inertia.dudi(res.mca, row.inertia = TRUE, col.inertia = FALSE)
     cos2 <- abs(inertia$row.rel/10000)[, colnames(coord)]
     contrib <- (inertia$row.abs/100)[, colnames(coord)]
+    colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
+    ind <- list(coord = coord, contrib = contrib, cos2 = cos2)
+  }
+  # ExPosition package
+  else if (inherits(res.mca, "expoOutput") & inherits(res.mca$ExPosition.Data,'epMCA')){
+    res <- res.mca$ExPosition.Data
+    coord <- res$fi
+    inertia <- res$di*res$M
+    cos2 <- res$ri
+    contrib <- res$ci*100
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     ind <- list(coord = coord, contrib = contrib, cos2 = cos2)
   }

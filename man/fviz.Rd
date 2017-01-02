@@ -16,7 +16,7 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
-and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].}
+and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput [ExPosition].}
 
 \item{element}{the element to subset from the output. Possible values are 
 "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 

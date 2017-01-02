@@ -13,7 +13,7 @@ get_mca_var(res.mca, element = c("var", "mca.cor", "quanti.sup"))
 get_mca_ind(res.mca)
 }
 \arguments{
-\item{res.mca}{an object of class MCA [FactoMineR], acm [ade4].}
+\item{res.mca}{an object of class MCA [FactoMineR], acm [ade4], expoOutput/epMCA [ExPosition].}
 
 \item{element}{the element to subset from the output. Possible values are 
 "var" for variables, "ind" for individuals, "mca.cor" for correlation

@@ -7,7 +7,7 @@ NULL
 #'   (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor Analysis
 #'   (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions from several packages.
 #' @param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
-#'   and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package].
+#'   and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput [ExPosition].
 #' @param element the element to subset from the output. Possible values are 
 #'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
 #'   'quanti.var', 'quali.var' , 'group' or 'ind' for FAMD, MFA and HMFA.
@@ -209,6 +209,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   else {
     name <- rownames(elmt$coord)
     if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
+    name <- as.character(name)
     res <- cbind.data.frame(name = name, res)
     rownames(res) <- name
     if(!is.null(select)) res <- .select(res, select)
