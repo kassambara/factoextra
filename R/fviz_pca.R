@@ -191,6 +191,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"),
 #' @rdname fviz_pca
 #' @export
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
+                            col.ind = "black", col.var = "steelblue",
                             label = "all", invisible="none", repel = FALSE, 
                             habillage = "none", palette = NULL, addEllipses=FALSE, 
                             title = "PCA - Biplot", ...)
@@ -212,10 +213,12 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom, repel = repel,
+                    col.ind = col.ind,
                     label = label, invisible=invisible, habillage = habillage,
                     addEllipses = addEllipses, palette = palette, ...)
   # Add variables
   p <- fviz_pca_var(X, axes = axes, geom =  c("arrow", "text"), repel = repel,
+                    col.var = col.var,
                     label = label, invisible = invisible,
                     scale.= r*0.7, ggp = p,  ...)
   p+labs(title=title)
