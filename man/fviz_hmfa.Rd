@@ -162,6 +162,6 @@ Fabian Mundt \email{f.mundt@inventionate.de}
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
 \references{
-http://www.sthda.com
+http://www.sthda.com/english/
 }
 

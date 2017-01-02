@@ -60,7 +60,7 @@ NULL
 #'@return a ggplot
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@references http://www.sthda.com
+#'@references http://www.sthda.com/english/
 #' @examples
 #' # Hierarchical Multiple Factor Analysis
 #' # ++++++++++++++++++++++++
