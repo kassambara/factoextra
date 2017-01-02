@@ -73,36 +73,38 @@
     </div>
 
     
-    <p>Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals/variable categories from Multiple Correspondence Analysis (MCA) outputs.
-<ul>
-<li> get_mca(): Extract the results for variables and individuals
-</li>
-<li> get_mca_ind(): Extract the results for individuals only
-</li>
-<li> get_mca_var(): Extract the results for variables only
-</li>
+    <p>Extract all the results (coordinates, squared cosine and 
+  contributions) for the active individuals/variable categories from Multiple
+  Correspondence Analysis (MCA) outputs. <ul>
+<li> get_mca(): 
+  Extract the results for variables and individuals </li>
+<li> get_mca_ind(): 
+  Extract the results for individuals only </li>
+<li> get_mca_var(): Extract the 
+  results for variables only </li>
 </ul></p>
     
 
-    <pre><span class='fu'>get_mca</span>(<span class='no'>res.mca</span>, <span class='kw'>element</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"var"</span>, <span class='st'>"ind"</span>))
+    <pre><span class='fu'>get_mca</span>(<span class='no'>res.mca</span>, <span class='kw'>element</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"var"</span>, <span class='st'>"ind"</span>, <span class='st'>"mca.cor"</span>, <span class='st'>"quanti.sup"</span>))
 
-<span class='fu'>get_mca_var</span>(<span class='no'>res.mca</span>)
+<span class='fu'>get_mca_var</span>(<span class='no'>res.mca</span>, <span class='kw'>element</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"var"</span>, <span class='st'>"mca.cor"</span>, <span class='st'>"quanti.sup"</span>))
 
 <span class='fu'>get_mca_ind</span>(<span class='no'>res.mca</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>res.mca</dt>
-      <dd>an object of class MCA [FactoMineR], acm [ade4].</dd>
+      <dd>an object of class MCA [FactoMineR], acm [ade4], expoOutput/epMCA [ExPosition].</dd>
       <dt>element</dt>
-      <dd>the element to subset from the output. Possible values are &quot;var&quot; or &quot;ind&quot;.</dd>
+      <dd>the element to subset from the output. Possible values are 
+&quot;var&quot; for variables, &quot;ind&quot; for individuals, &quot;mca.cor&quot; for correlation
+between variables and principal dimensions, &quot;quanti.sup&quot; for quantitative supplementary variables.</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list of matrices containing the results for the active 
-individuals/variable categories including :</p>
+  individuals/variable categories including :</p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
