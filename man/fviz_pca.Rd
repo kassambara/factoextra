@@ -25,7 +25,7 @@ fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
-dudi and pca [ade4].}
+dudi and pca [ade4]; expOutput/epPCA [ExPosition].}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_pca_ind() and 
 fviz_pca_var(): Additional arguments are passed to the functions 
@@ -112,7 +112,7 @@ Principal component analysis (PCA) reduces the dimensionality of
   multivariate data, to two or three that can be visualized graphically with 
   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
-  stats], ii) PCA [in FactoMineR] and iii) dudi.pca [in ade4]. Read more: 
+  stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA [ExPosition]. Read more: 
   \href{http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining}{Principal
    Component Analysis}
   

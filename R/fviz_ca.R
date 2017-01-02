@@ -5,8 +5,8 @@ NULL
 #'@description Correspondence analysis (CA) is an extension of Principal 
 #'  Component Analysis (PCA) suited to analyze frequencies formed by two 
 #'  categorical variables. fviz_ca() provides ggplot2-based elegant 
-#'  visualization of CA outputs from the R functions: CA [in FactoMineR], ii) ca
-#'  [in ca], coa [in ade4] and correspondence [in MASS]. Read more: 
+#'  visualization of CA outputs from the R functions: CA [in FactoMineR], ca
+#'  [in ca], coa [in ade4], correspondence [in MASS] and expOutput/epCA [in ExPosition]. Read more: 
 #'  \href{http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining}{Correspondence
 #'  Analysis} 
 #'     
@@ -16,7 +16,7 @@ NULL
 #'  fviz_ca_biplot()} }
 #'    
 #'@param X an object of class CA [FactoMineR], ca [ca], coa [ade4]; 
-#'  correspondence [MASS].
+#'  correspondence [MASS] and expOutput/epCA [ExPosition].
 #'@param axes a numeric vector of length 2 specifying the dimensions to be 
 #'  plotted.
 #'@param shape.row,shape.col the point shapes to be used for row/column 

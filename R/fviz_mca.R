@@ -5,14 +5,14 @@ NULL
 #'@description Multiple Correspondence Analysis (MCA) is an extension of simple 
 #'  CA to analyse a data table containing more than two categorical variables. 
 #'  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
-#'  the R functions: MCA [in FactoMineR], and acm [in ade4]. Read more: 
+#'  the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in ExPosition]. Read more: 
 #'  \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
 #'   Correspondence Analysis Essentials.}
 #'  
 #'  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
 #'  Graph of variables} \item{fviz_mca_biplot(): Biplot of individuals and 
 #'  variables} \item{fviz_mca(): An alias of fviz_mca_biplot()}}
-#'@param X an object of class MCA [FactoMineR], acm [ade4].
+#'@param X an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA [ExPosition].
 #'@inheritParams fviz_pca
 #'@param label a text specifying the elements to be labelled. Default value is 
 #'  "all". Allowed values are "none" or the combination of c("ind", 
@@ -80,7 +80,7 @@ NULL
 #'  "map" can be used to change the plot type. For more explanation, read the 
 #'  details section of fviz_ca documentation.
 #'  
-#'@return a ggplot2 plot
+#'@return a ggplot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{get_mca}}, \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
 #'  \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}

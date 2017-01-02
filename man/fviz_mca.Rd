@@ -27,7 +27,7 @@ fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
 fviz_mca(X, ...)
 }
 \arguments{
-\item{X}{an object of class MCA [FactoMineR], acm [ade4].}
+\item{X}{an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA [ExPosition].}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
 plotted.}
@@ -121,13 +121,13 @@ second value sets the columns.}
 \item{title}{the title of the graph}
 }
 \value{
-a ggplot2 plot
+a ggplot
 }
 \description{
 Multiple Correspondence Analysis (MCA) is an extension of simple 
  CA to analyse a data table containing more than two categorical variables. 
  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
- the R functions: MCA [in FactoMineR], and acm [in ade4]. Read more: 
+ the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in ExPosition]. Read more: 
  \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
   Correspondence Analysis Essentials.}
  
