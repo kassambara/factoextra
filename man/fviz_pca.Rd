@@ -20,8 +20,8 @@ fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), repel = FALSE,
   = NULL), ...)
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  col.ind = "black", col.var = "red", label = "all", invisible = "none",
-  repel = FALSE, habillage = "none", palette = NULL,
+  col.ind = "black", col.var = "steelblue", label = "all",
+  invisible = "none", repel = FALSE, habillage = "none", palette = NULL,
   addEllipses = FALSE, title = "PCA - Biplot", ...)
 }
 \arguments{
