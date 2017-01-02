@@ -73,18 +73,19 @@
     </div>
 
     
-    <p>Graph of individuals/variables/partial axes from the output of Multiple Factor Analysis (MFA).
-<ul>
-<li>fviz_mfa_ind(): Graph of individuals
-</li>
-<li>fviz_mfa_var(): Graph of variables
-</li>
-<li>fviz_mfa_axes(): Graph of partial axes
-</li>
-<li>fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = &quot;all&quot;)
-</li>
-<li>fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables
-</li>
+    <p>Multiple factor analysis (MFA) is used to analyze a data set in 
+ which individuals are described by several sets of variables (quantitative 
+ and/or qualitative) structured into groups. fviz_mfa() provides ggplot2-based
+ elegant visualization of MFA outputs from the R function: MFA [FactoMineR]. <ul>
+<li>fviz_mfa_ind(): Graph of individuals 
+ </li>
+<li>fviz_mfa_var(): Graph of variables </li>
+<li>fviz_mfa_axes(): Graph of 
+ partial axes </li>
+<li>fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = 
+ &quot;all&quot;) </li>
+<li>fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
+ variables </li>
 </ul></p>
     
 
@@ -124,12 +125,13 @@ values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, &quot;text
 show only points); &quot;text&quot; to show only labels; c(&quot;point&quot;, &quot;text&quot;) or 
 c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
       <dt>repel</dt>
-      <dd>a boolean, whether to use ggrepel to avoid overplotting text labels or not.</dd>
+      <dd>a boolean, whether to use ggrepel to avoid overplotting text 
+labels or not.</dd>
       <dt>habillage</dt>
-      <dd>an optional factor variable for coloring
-the observations by groups. Default value is &quot;none&quot;.
-If X is an MFA object from FactoMineR package, habillage can also specify
-the index of the factor variable in the data.</dd>
+      <dd>an optional factor variable for coloring the observations by 
+groups. Default value is &quot;none&quot;. If X is an MFA object from FactoMineR 
+package, habillage can also specify the index of the factor variable in the 
+data.</dd>
       <dt>palette</dt>
       <dd>the color palette to be used for coloring or filling by
 groups. Allowed values include &quot;grey&quot; for grey color palettes; brewer
@@ -141,52 +143,58 @@ palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette 
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>col.ind, col.var, col.axes</dt>
-      <dd>color for individuals, variables and col.axes respectively.
-Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;.
-In this case, the colors for individuals/variables are automatically controlled by their qualities (&quot;cos2&quot;),
-contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;).
-To use automatic coloring (by cos2, contrib, ....), make sure that habillage =&quot;none&quot;.</dd>
+      <dd>color for individuals, variables and col.axes 
+respectively. Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot;
+or &quot;y&quot;. In this case, the colors for individuals/variables are automatically
+controlled by their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;), 
+coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;). To use 
+automatic coloring (by cos2, contrib, ....), make sure that habillage 
+=&quot;none&quot;.</dd>
       <dt>col.ind.sup</dt>
       <dd>color for supplementary individuals</dd>
       <dt>alpha.ind, alpha.var, alpha.axes</dt>
-      <dd>controls the transparency of
- individual, variable, group and axes colors, respectively.
-The value can variate from 0 (total transparency) to 1 (no transparency).
-Default value is 1. Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;.
- In this case, the transparency for individual/variable colors are automatically controlled by their qualities (&quot;cos2&quot;),
- contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;).
- To use this, make sure that habillage =&quot;none&quot;.</dd>
+      <dd>controls the transparency of individual,
+variable, group and axes colors, respectively. The value can variate from 0 
+(total transparency) to 1 (no transparency). Default value is 1. Possible 
+values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, 
+the transparency for individual/variable colors are automatically controlled
+by their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2 + 
+y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;). To use this, make sure that 
+habillage =&quot;none&quot;.</dd>
       <dt>shape.ind, shape.var</dt>
-      <dd>point shapes of individuals, variables, groups and axes</dd>
+      <dd>point shapes of individuals, variables, groups and 
+axes</dd>
       <dt>col.quali.var.sup</dt>
-      <dd>color for supplementary qualitative variables. Default is &quot;black&quot;.</dd>
+      <dd>color for supplementary qualitative variables. 
+Default is &quot;black&quot;.</dd>
       <dt>select.ind, select.var, select.axes</dt>
-      <dd>a selection of individuals/partial individuals/
-variables/groups/axes to be drawn.
-Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
-<ul>
-<li> name is a character vector containing individuals/variables to be drawn
-</li>
-<li> cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 &gt; 0.6 are drawn.
-if cos2 &gt; 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-</li>
-<li> contrib if contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
-</li>
+      <dd>a selection of individuals/partial 
+individuals/ variables/groups/axes to be drawn. Allowed values are NULL or a
+list containing the arguments name, cos2 or contrib: <ul>
+<li> name is
+a character vector containing individuals/variables to be drawn </li>
+<li> cos2 
+if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 &gt; 0.6 
+are drawn. if cos2 &gt; 1, ex: 5, then the top 5 individuals/variables with the
+highest cos2 are drawn. </li>
+<li> contrib if contrib &gt; 1, ex: 5,  then the top 5
+individuals/variables with the highest cos2 are drawn </li>
 </ul>
 </dd>
       <dt>partial</dt>
-      <dd>list of the individuals for which the partial points should be drawn. 
-(by default, partial = NULL and no partial points are drawn). 
-Use partial = &quot;All&quot; to visualize partial points for all individuals.</dd>
+      <dd>list of the individuals for which the partial points should be 
+drawn. (by default, partial = NULL and no partial points are drawn). Use 
+partial = &quot;All&quot; to visualize partial points for all individuals.</dd>
       <dt>col.partial</dt>
-      <dd>color for partial individuals. By default, points are colored according to the groups.</dd>
+      <dd>color for partial individuals. By default, points are 
+colored according to the groups.</dd>
       <dt>...</dt>
       <dd>Arguments to be passed to the function fviz()</dd>
       <dt>title</dt>
       <dd>the title of the graph</dd>
       <dt>choice</dt>
       <dd>the graph to plot. Allowed values include one of c(&quot;quanti.var&quot;,
-&quot;quali.var&quot;, &quot;group&quot;) for plotting quantitative variables, qualitative
+&quot;quali.var&quot;, &quot;group&quot;) for plotting quantitative variables, qualitative 
 variables and group of variables, respectively.</dd>
       <dt>col.var.sup</dt>
       <dd>color for supplementary variables.</dd>

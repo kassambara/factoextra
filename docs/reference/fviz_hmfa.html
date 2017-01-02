@@ -73,13 +73,15 @@
     </div>
 
     
-    <p>Graph of individuals and variables from the output of 
- Hierarchical Multiple Factor Analysis (HMFA). <ul>
-<li>fviz_hmfa_ind(): Graph of individuals </li>
-<li>fviz_hmfa_var(): Graph of
+    <p>Hierarchical Multiple Factor Analysis (HMFA) is, an extension of MFA, used
+ in a situation where the data are organized into a hierarchical structure.  fviz_hmfa() provides ggplot2-based
+ elegant visualization of HMFA outputs from the R function: HMFA [FactoMineR]. <ul>
+<li>fviz_hmfa_ind(): Graph of
+ individuals </li>
+<li>fviz_hmfa_var(): Graph of variables
+ </li>
+<li>fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative
  variables </li>
-<li>fviz_hmfa_quali_biplot(): Biplot of individuals and 
- qualitative variables </li>
 <li>fviz_hmfa(): An alias of fviz_hmfa_ind() </li>
 </ul></p>
     
@@ -177,7 +179,7 @@ NULL and the group are named group.1, group.2 and so on).</dd>
       <dd>Arguments to be passed to the function fviz() and ggpubr::ggpar()</dd>
       <dt>choice</dt>
       <dd>the graph to plot. Allowed values include one of c(&quot;quanti.var&quot;,
-&quot;quali.var&quot;, &quot;group&quot;) for plotting quantitative variables, qualitative
+&quot;quali.var&quot;, &quot;group&quot;) for plotting quantitative variables, qualitative 
 variables and group of variables, respectively.</dd>
       <dt>col.var.sup</dt>
       <dd>color for supplementary variables.</dd>

@@ -1,65 +1,70 @@
 #' @include get_mfa.R
 NULL
-#' Visualize Multiple Factor Analysis
+#'Visualize Multiple Factor Analysis
 #'
-#' @description
-#' Graph of individuals/variables/partial axes from the output of Multiple Factor Analysis (MFA).\cr\cr
-#' \itemize{
-#' \item{fviz_mfa_ind(): Graph of individuals}
-#' \item{fviz_mfa_var(): Graph of variables}
-#' \item{fviz_mfa_axes(): Graph of partial axes}
-#' \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = "all")}
-#' \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative variables}
-#' }
-#' 
-#' @param X an object of class MFA [FactoMineR].
-#' @inheritParams fviz_mca
-#' @inheritParams fviz_pca
-#' @inheritParams fviz
-#' @inheritParams ggpubr::ggpar
+#'@description Multiple factor analysis (MFA) is used to analyze a data set in 
+#'  which individuals are described by several sets of variables (quantitative 
+#'  and/or qualitative) structured into groups. fviz_mfa() provides ggplot2-based
+#'  elegant visualization of MFA outputs from the R function: MFA [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
+#'  \item{fviz_mfa_var(): Graph of variables} \item{fviz_mfa_axes(): Graph of 
+#'  partial axes} \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = 
+#'  "all")} \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
+#'  variables} }
+#'  
+#'@param X an object of class MFA [FactoMineR].
+#'@inheritParams fviz_mca
+#'@inheritParams fviz_pca
+#'@inheritParams fviz
+#'@inheritParams ggpubr::ggpar
 #'@param choice the graph to plot. Allowed values include one of c("quanti.var",
-#'  "quali.var", "group") for plotting quantitative variables, qualitative
+#'  "quali.var", "group") for plotting quantitative variables, qualitative 
 #'  variables and group of variables, respectively.
-#' @param habillage an optional factor variable for coloring
-#'  the observations by groups. Default value is "none".
-#'  If X is an MFA object from FactoMineR package, habillage can also specify
-#'  the index of the factor variable in the data.
-#' @param col.ind,col.var,col.axes color for individuals, variables and col.axes respectively.
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-#'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
-#' @param col.partial color for partial individuals. By default, points are colored according to the groups.
-#' @param col.var.sup color for supplementary variables.
-#' @param alpha.ind,alpha.var,alpha.axes controls the transparency of
-#'  individual, variable, group and axes colors, respectively.
-#' The value can variate from 0 (total transparency) to 1 (no transparency).
-#' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-#'  To use this, make sure that habillage ="none".
-#' @param shape.ind,shape.var point shapes of individuals, variables, groups and axes
-#' @param col.quali.var.sup color for supplementary qualitative variables. Default is "black".
-#' @param title the title of the graph
-#' @param select.ind,select.var,select.axes a selection of individuals/partial individuals/
-#' variables/groups/axes to be drawn.
-#' Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
-#' \itemize{
-#' \item name is a character vector containing individuals/variables to be drawn
-#' \item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn.
-#' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-#' \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
-#' }
-#' @param ... Arguments to be passed to the function fviz()
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
-#' @param partial list of the individuals for which the partial points should be drawn. 
-#' (by default, partial = NULL and no partial points are drawn). 
-#' Use partial = "All" to visualize partial points for all individuals.
-#'
-#' @return a ggplot2 plot
-#' @author Fabian Mundt \email{f.mundt@inventionate.de}
-#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com/english/
+#'@param habillage an optional factor variable for coloring the observations by 
+#'  groups. Default value is "none". If X is an MFA object from FactoMineR 
+#'  package, habillage can also specify the index of the factor variable in the 
+#'  data.
+#'@param col.ind,col.var,col.axes color for individuals, variables and col.axes 
+#'  respectively. Possible values include also : "cos2", "contrib", "coord", "x"
+#'  or "y". In this case, the colors for individuals/variables are automatically
+#'  controlled by their qualities ("cos2"), contributions ("contrib"), 
+#'  coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y"). To use 
+#'  automatic coloring (by cos2, contrib, ....), make sure that habillage 
+#'  ="none".
+#'@param col.partial color for partial individuals. By default, points are 
+#'  colored according to the groups.
+#'@param col.var.sup color for supplementary variables.
+#'@param alpha.ind,alpha.var,alpha.axes controls the transparency of individual,
+#'  variable, group and axes colors, respectively. The value can variate from 0 
+#'  (total transparency) to 1 (no transparency). Default value is 1. Possible 
+#'  values include also : "cos2", "contrib", "coord", "x" or "y". In this case, 
+#'  the transparency for individual/variable colors are automatically controlled
+#'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
+#'  y^2 , "coord"), x values("x") or y values("y"). To use this, make sure that 
+#'  habillage ="none".
+#'@param shape.ind,shape.var point shapes of individuals, variables, groups and 
+#'  axes
+#'@param col.quali.var.sup color for supplementary qualitative variables. 
+#'  Default is "black".
+#'@param title the title of the graph
+#'@param select.ind,select.var,select.axes a selection of individuals/partial 
+#'  individuals/ variables/groups/axes to be drawn. Allowed values are NULL or a
+#'  list containing the arguments name, cos2 or contrib: \itemize{ \item name is
+#'  a character vector containing individuals/variables to be drawn \item cos2 
+#'  if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 
+#'  are drawn. if cos2 > 1, ex: 5, then the top 5 individuals/variables with the
+#'  highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the top 5
+#'  individuals/variables with the highest cos2 are drawn }
+#'@param ... Arguments to be passed to the function fviz()
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'  labels or not.
+#'@param partial list of the individuals for which the partial points should be 
+#'  drawn. (by default, partial = NULL and no partial points are drawn). Use 
+#'  partial = "All" to visualize partial points for all individuals.
+#'  
+#'@return a ggplot2 plot
+#'@author Fabian Mundt \email{f.mundt@inventionate.de}
+#'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#'@references http://www.sthda.com/english/
 #' @examples
 #' # Compute Multiple Factor Analysis
 #' library("FactoMineR")
@@ -104,9 +109,9 @@ NULL
 #' fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
 #'    habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)
 #' 
-#' @name fviz_mfa
-#' @rdname fviz_mfa
-#' @export
+#'@name fviz_mfa
+#'@rdname fviz_mfa
+#'@export
 fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
                          habillage = "none", palette = NULL, addEllipses = FALSE, 
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,

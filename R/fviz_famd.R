@@ -1,50 +1,56 @@
 #' @include get_mfa.R
 NULL
 #' Visualize Factor Analysis of Mixed Data
-#'
-#' @description
-#' Graph of individuals and variables from the output of Factor Analysis of Mixed Data (FAMD).\cr\cr
-#' \itemize{
-#' \item{fviz_famd_ind(): Graph of individuals}
-#' \item{fviz_famd_var(): Graph of variables}
-#' \item{fviz_famd(): An alias of fviz_famd_ind(res.famd)}
-#' }
+#' 
+#' @description Factor analysis of mixed data (FAMD) is, a particular case of 
+#' MFA, used to analyze a data set containing both quantitative and qualitative 
+#' variables. fviz_famd() provides ggplot2-based elegant visualization of FAMD
+#' outputs from the R function: FAMD [FactoMineR].\cr\cr \itemize{
+#' \item{fviz_famd_ind(): Graph of individuals} \item{fviz_famd_var(): Graph of
+#' variables} \item{fviz_famd(): An alias of fviz_famd_ind(res.famd)} }
 #' 
 #' @param X an object of class FAMD [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
 #' @inheritParams fviz
 #' @inheritParams ggpubr::ggpar
-#' @param choice The graph to plot inf fviz_mfa_var(). Allowed values include one of c("var", quanti.var",  "quali.var").
-#' @param habillage an optional factor variable for coloring
-#'  the observations by groups. Default value is "none".
-#'  If X is an MFA object from FactoMineR package, habillage can also specify
-#'  the index of the factor variable in the data.
-#' @param col.ind,col.var color for individuals and variables, respectively.
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the colors for individuals/variables are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-#'  To use automatic coloring (by cos2, contrib, ....), make sure that habillage ="none".
+#' @param choice The graph to plot inf fviz_mfa_var(). Allowed values include 
+#'   one of c("var", quanti.var",  "quali.var").
+#' @param habillage an optional factor variable for coloring the observations by
+#'   groups. Default value is "none". If X is an MFA object from FactoMineR 
+#'   package, habillage can also specify the index of the factor variable in the
+#'   data.
+#' @param col.ind,col.var color for individuals and variables, respectively. 
+#'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
+#'   this case, the colors for individuals/variables are automatically 
+#'   controlled by their qualities ("cos2"), contributions ("contrib"), 
+#'   coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y"). To use 
+#'   automatic coloring (by cos2, contrib, ....), make sure that habillage 
+#'   ="none".
 #' @param col.var.sup color for supplementary variables.
-#' @param col.quali.var color for qualitative variables in fviz_mfa_ind(). Default is "black".
-#' @param alpha.ind,alpha.var controls the transparency of
-#'  individuals and variables, respectively.
-#' The value can variate from 0 (total transparency) to 1 (no transparency).
-#' Default value is 1. Possible values include also : "cos2", "contrib", "coord", "x" or "y".
-#'  In this case, the transparency for individual/variable colors are automatically controlled by their qualities ("cos2"),
-#'  contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y").
-#'  To use this, make sure that habillage ="none".
-#' @param shape.ind,shape.var point shapes of individuals, variables, groups and axes
-#' @param select.ind,select.var a selection of individuals and variables to be drawn.
-#' Allowed values are NULL or a list containing the arguments name, cos2 or contrib:
-#' \itemize{
-#' \item name is a character vector containing individuals/variables to be drawn
-#' \item cos2 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 are drawn.
-#' if cos2 > 1, ex: 5, then the top 5 individuals/variables with the highest cos2 are drawn.
-#' \item contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest cos2 are drawn
-#' }
+#' @param col.quali.var color for qualitative variables in fviz_mfa_ind(). 
+#'   Default is "black".
+#' @param alpha.ind,alpha.var controls the transparency of individuals and 
+#'   variables, respectively. The value can variate from 0 (total transparency) 
+#'   to 1 (no transparency). Default value is 1. Possible values include also : 
+#'   "cos2", "contrib", "coord", "x" or "y". In this case, the transparency for 
+#'   individual/variable colors are automatically controlled by their qualities 
+#'   ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x 
+#'   values("x") or y values("y"). To use this, make sure that habillage 
+#'   ="none".
+#' @param shape.ind,shape.var point shapes of individuals, variables, groups and
+#'   axes
+#' @param select.ind,select.var a selection of individuals and variables to be 
+#'   drawn. Allowed values are NULL or a list containing the arguments name, 
+#'   cos2 or contrib: \itemize{ \item name is a character vector containing 
+#'   individuals/variables to be drawn \item cos2 if cos2 is in [0, 1], ex: 0.6,
+#'   then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5,
+#'   then the top 5 individuals/variables with the highest cos2 are drawn. \item
+#'   contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
+#'   the highest cos2 are drawn }
 #' @param ... Arguments to be passed to the function fviz()
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text labels or not.
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'   labels or not.
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @examples

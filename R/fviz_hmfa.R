@@ -2,11 +2,12 @@
 NULL
 #'Visualize Hierarchical Multiple Factor Analysis
 #'
-#'@description Graph of individuals and variables from the output of 
-#'  Hierarchical Multiple Factor Analysis (HMFA).\cr\cr \itemize{ 
-#'  \item{fviz_hmfa_ind(): Graph of individuals} \item{fviz_hmfa_var(): Graph of
-#'  variables} \item{fviz_hmfa_quali_biplot(): Biplot of individuals and 
-#'  qualitative variables} \item{fviz_hmfa(): An alias of fviz_hmfa_ind()} }
+#'@description Hierarchical Multiple Factor Analysis (HMFA) is, an extension of MFA, used
+#'  in a situation where the data are organized into a hierarchical structure.  fviz_hmfa() provides ggplot2-based
+#'  elegant visualization of HMFA outputs from the R function: HMFA [FactoMineR].\cr\cr \itemize{ \item{fviz_hmfa_ind(): Graph of
+#'  individuals} \item{fviz_hmfa_var(): Graph of variables}
+#'  \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative
+#'  variables} \item{fviz_hmfa(): An alias of fviz_hmfa_ind()} }
 #'@param X an object of class HMFA [FactoMineR].
 #'@inheritParams fviz_mca
 #'@inheritParams fviz_pca
@@ -47,7 +48,7 @@ NULL
 #'  contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 #'  the highest cos2 are drawn }
 #'@param choice the graph to plot. Allowed values include one of c("quanti.var",
-#'  "quali.var", "group") for plotting quantitative variables, qualitative
+#'  "quali.var", "group") for plotting quantitative variables, qualitative 
 #'  variables and group of variables, respectively.
 #'@param ... Arguments to be passed to the function fviz() and ggpubr::ggpar()
 #'@param partial list of the individuals for which the partial points should be 
