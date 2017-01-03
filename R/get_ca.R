@@ -109,8 +109,18 @@ get_ca_col <- function(res.ca){
     }
     coord <- res.ca$co
     inertia <- ade4::inertia.dudi(res.ca, row.inertia = FALSE, col.inertia = TRUE)
+    vv <- as.character(utils::packageVersion("ade4"))
+    cc <- utils::compareVersion(vv, "1.7.4") > 0
+    if(cc){
+      # "v>1.7.4"
+      cos2 <- abs(inertia$col.rel/100)[, 1:ncol(coord)]
+      contrib <- (inertia$col.abs)[, 1:ncol(coord)]
+    }
+    # v<=1.7.4
+    else {
     cos2 <- abs(inertia$col.rel/10000)[, 1:ncol(coord)]
     contrib <- (inertia$col.abs/100)[, 1:ncol(coord)]
+    }
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     cols <- list(coord = coord, contrib = contrib, cos2 = cos2, inertia = NA)
   }
@@ -186,8 +196,18 @@ get_ca_row <- function(res.ca){
     }
     coord <- res.ca$li
     inertia <- ade4::inertia.dudi(res.ca, row.inertia = TRUE, col.inertia = FALSE)
-    cos2 <- abs(inertia$row.rel/10000)[, 1:ncol(coord)]
-    contrib <- (inertia$row.abs/100)[, 1:ncol(coord)]
+    vv <- as.character(utils::packageVersion("ade4"))
+    cc <- utils::compareVersion(vv, "1.7.4") > 0
+    if(cc){
+      # "v>1.7.4"
+      cos2 <- abs(inertia$row.rel/100)[, 1:ncol(coord)]
+      contrib <- (inertia$row.abs)[, 1:ncol(coord)]
+    }
+    # v<=1.7.4
+    else {
+      cos2 <- abs(inertia$row.rel/10000)[, 1:ncol(coord)]
+      contrib <- (inertia$row.abs/100)[, 1:ncol(coord)]
+    }
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     row <- list(coord = coord, contrib = contrib, cos2 = cos2, inertia = NA)
   }

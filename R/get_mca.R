@@ -88,8 +88,18 @@ get_mca_var <- function(res.mca, element = c( "var", "mca.cor", "quanti.sup")){
     if(choice == "var"){
     coord <- res.mca$co
     inertia <- ade4::inertia.dudi(res.mca, row.inertia = FALSE, col.inertia = TRUE)
-    cos2 <- abs(inertia$col.rel/10000)[, colnames(coord)]
-    contrib <- (inertia$col.abs/100)[, colnames(coord)]
+    vv <- as.character(utils::packageVersion("ade4"))
+    cc <- utils::compareVersion(vv, "1.7.4") > 0
+    if(cc){
+      # "v>1.7.4"
+      cos2 <- abs(inertia$col.rel/100)[, 1:ncol(coord)]
+      contrib <- (inertia$col.abs)[, 1:ncol(coord)]
+    }
+    # v<=1.7.4
+    else {
+      cos2 <- abs(inertia$col.rel/10000)[, 1:ncol(coord)]
+      contrib <- (inertia$col.abs/100)[, 1:ncol(coord)]
+    }
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     vars <- list(coord = coord, contrib = contrib, cos2 = cos2)
     }
@@ -131,8 +141,18 @@ get_mca_ind <- function(res.mca){
     }
     coord <- res.mca$li
     inertia <- ade4::inertia.dudi(res.mca, row.inertia = TRUE, col.inertia = FALSE)
-    cos2 <- abs(inertia$row.rel/10000)[, colnames(coord)]
-    contrib <- (inertia$row.abs/100)[, colnames(coord)]
+    vv <- as.character(utils::packageVersion("ade4"))
+    cc <- utils::compareVersion(vv, "1.7.4") > 0
+    if(cc){
+      # "v>1.7.4"
+      cos2 <- abs(inertia$row.rel/100)[, 1:ncol(coord)]
+      contrib <- (inertia$row.abs)[, 1:ncol(coord)]
+    }
+    # v<=1.7.4
+    else {
+      cos2 <- abs(inertia$row.rel/10000)[, 1:ncol(coord)]
+      contrib <- (inertia$row.abs/100)[, 1:ncol(coord)]
+    }
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     ind <- list(coord = coord, contrib = contrib, cos2 = cos2)
   }
