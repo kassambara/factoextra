@@ -43,7 +43,8 @@
 - Now fviz_cluster can handle HCPC object obtained from MCA ([Alejandro Juarez-Escario, #13](https://github.com/kassambara/factoextra/pull/13))
 - Now fviz_ca_biplot() reacts when repel = TRUE used
 - In `facto_summarize()`, now the contribution values computed for >=2 axes are in percentage ([#22](https://github.com/kassambara/factoextra/issues/22))
-
+- `fviz_ca()` now work with the latest version of ade4 v1.7-5 ([#24](https://github.com/kassambara/factoextra/issues/24))
+     
 
 # factoextra 1.0.3
   
