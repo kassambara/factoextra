@@ -109,8 +109,8 @@ get_ca_col <- function(res.ca){
     }
     coord <- res.ca$co
     inertia <- ade4::inertia.dudi(res.ca, row.inertia = FALSE, col.inertia = TRUE)
-    cos2 <- abs(inertia$col.rel/10000)[, colnames(coord)]
-    contrib <- (inertia$col.abs/100)[, colnames(coord)]
+    cos2 <- abs(inertia$col.rel/10000)[, 1:ncol(coord)]
+    contrib <- (inertia$col.abs/100)[, 1:ncol(coord)]
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     cols <- list(coord = coord, contrib = contrib, cos2 = cos2, inertia = NA)
   }
@@ -186,8 +186,8 @@ get_ca_row <- function(res.ca){
     }
     coord <- res.ca$li
     inertia <- ade4::inertia.dudi(res.ca, row.inertia = TRUE, col.inertia = FALSE)
-    cos2 <- abs(inertia$row.rel/10000)[, colnames(coord)]
-    contrib <- (inertia$row.abs/100)[, colnames(coord)]
+    cos2 <- abs(inertia$row.rel/10000)[, 1:ncol(coord)]
+    contrib <- (inertia$row.abs/100)[, 1:ncol(coord)]
     colnames(coord) <- colnames(cos2) <- colnames(contrib) <- paste0("Dim.", 1:ncol(coord)) 
     row <- list(coord = coord, contrib = contrib, cos2 = cos2, inertia = NA)
   }
