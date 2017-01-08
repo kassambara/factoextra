@@ -305,19 +305,17 @@ second value sets the columns.</dd>
 <span class='co'># Graph of variable categories</span>
 <span class='co'># ++++++++++++++++++++++++++++</span>
 <span class='co'># Default plot: use repel = TRUE to avoid overplotting</span>
-<span class='fu'>fviz_mca_var</span>(<span class='no'>res.mca</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"#FC4E07"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call.graphics(L_setviewport, vp, TRUE): position et / ou taille de vue non finies</span></div><img src='fviz_mca-17.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'>fviz_mca_var</span>(<span class='no'>res.mca</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"#FC4E07"</span>)</div><img src='fviz_mca-16.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'># Control variable colors using their contributions</span>
 <span class='co'># use repel = TRUE to avoid overplotting</span>
 <span class='fu'>fviz_mca_var</span>(<span class='no'>res.mca</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"contrib"</span>,
-  <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"#00AFBB"</span>, <span class='st'>"#E7B800"</span>, <span class='st'>"#FC4E07"</span>))
-
+  <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"#00AFBB"</span>, <span class='st'>"#E7B800"</span>, <span class='st'>"#FC4E07"</span>))</div><img src='fviz_mca-18.png' alt='' width='540' height='400' /><div class='input'>
 
 <span class='co'># Biplot</span>
 <span class='co'># ++++++++++++++++++++++++++</span>
 <span class='no'>grp</span> <span class='kw'>&lt;-</span> <span class='fu'>as.factor</span>(<span class='no'>poison.active</span>[, <span class='st'>"Vomiting"</span>])
 <span class='fu'>fviz_mca_biplot</span>(<span class='no'>res.mca</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"#E7B800"</span>,
- <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='no'>grp</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ellipse.level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)
-
+ <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='no'>grp</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>ellipse.level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>)</div><img src='fviz_mca-20.png' alt='' width='540' height='400' /><div class='input'>
  <span class='co'>## Not run: ------------------------------------</span>
 <span class='co'># # Keep only the labels for variable categories: </span>
 <span class='co'># fviz_mca_biplot(res.mca, label ="var")</span>
