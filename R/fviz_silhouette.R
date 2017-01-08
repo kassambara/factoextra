@@ -44,7 +44,7 @@
 #' 
 #' # K-means clustering
 #' # +++++++++++++++++++++
-#' km.res <- kmeans(iris.scaled, 3, nstart = 10)
+#' km.res <- kmeans(iris.scaled, 3, nstart = 2)
 #' 
 #' # Visualize kmeans clustering
 #' fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")+
@@ -58,7 +58,7 @@
 #' # Identify observation with negative silhouette
 #' neg_sil_index <- which(sil[, "sil_width"] < 0)
 #' sil[neg_sil_index, , drop = FALSE]
-#' 
+#' \dontrun{
 #' # PAM clustering
 #' # ++++++++++++++++++++
 #' require(cluster)
@@ -77,7 +77,7 @@
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 #' # Visualize silhouhette information
 #' fviz_silhouette(hc.cut)
-#' 
+#' }
 #'@export
 fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   
