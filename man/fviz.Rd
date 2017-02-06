@@ -12,7 +12,7 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   col.row.sup = "darkblue", col.col.sup = "darkred", select = list(name =
   NULL, cos2 = NULL, contrib = NULL), title = NULL,
   axes.linetype = "dashed", repel = FALSE, col.circle = "grey70",
-  ggtheme = theme_minimal(), ...)
+  ggtheme = theme_minimal(), ggp = NULL, ...)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
@@ -114,6 +114,8 @@ Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{...}{Arguments to be passed to the functions ggpubr::ggscatter() & ggpubr::ggpar().}
+
+\item{a}{ggplot. If not NULL, points are added to an existing plot.}
 }
 \value{
 a ggplot

@@ -64,6 +64,7 @@ NULL
 #'   ex: 5, then the top 5 individuals/variables with the highest cos2 are 
 #'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
 #'   individuals/variables with the highest contrib are drawn }
+#' @param a ggplot. If not NULL, points are added to an existing plot.
 #' @inheritParams ggpubr::ggpar
 #' @param ... Arguments to be passed to the functions ggpubr::ggscatter() & ggpubr::ggpar().
 #'   
@@ -113,6 +114,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
                           title = NULL, axes.linetype = "dashed",
                           repel = FALSE, col.circle ="grey70", ggtheme = theme_minimal(),
+                          ggp = NULL,
                            ...)
   {
   
@@ -189,14 +191,17 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(lab[[element]] & "text" %in% geom & !hide[[element]]) label <- "name"
   
   p <- ggplot() 
-  if(hide[[element]]) p <-ggplot()+geom_blank(data = df, aes_string("x","y"))
+  if(hide[[element]]) {
+    if(is.null(ggp)) p <-ggplot()+geom_blank(data = df, aes_string("x","y"))
+    else p <- ggp
+  }
   else p <- ggpubr::ggscatter(data = df, x = "x", y = "y",
                          color = color,  alpha = alpha, shape = pointshape, 
                          point = point, size = pointsize, mean.point = mean.point,
                          label = label, font.label = labelsize*3, repel = repel,
                          ellipse = addEllipses, ellipse.type = ellipse.type,
                          ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
-                         main = title, ggtheme = ggtheme, ...)
+                         main = title, ggtheme = ggtheme, ggp = ggp, ...)
   if(alpha %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
   if(!is.null(gradient.cols) & color %in% c("cos2","contrib", "coord", "x", "y"))
@@ -308,8 +313,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(element == "ind" & inherits(X, c('PCA', "MCA", "MFA", "FAMD")) & !hide$ind.sup)
     res <- list(name = "ind.sup", addlabel = (lab$ind.sup & "text" %in% geom))
   # Supplementary quantitative variables
-  else if(element == "var" & inherits(X, 'PCA') & !hide$quanti)
-    res <- list(name = "quanti", addlabel = (lab$quanti & "text" %in% geom))
+  else if(element == "var" & inherits(X, 'PCA') & !hide$quanti.sup)
+    res <- list(name = "quanti", addlabel = (lab$quanti.sup & "text" %in% geom))
   else if(element == "mca.cor" & inherits(X, 'MCA') & !hide$quanti)
     res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti & "text" %in% geom))
   else if(element %in% "var" & inherits(X, 'MCA') & !hide$quali.sup)
