@@ -1,3 +1,9 @@
+# factoextra 1.0.4.999
+     
+## Bug fixes
+   
+- Now, the argument `invisible` works properly in the function `fviz_pca_biplot()`([@ginolhac, #26](https://github.com/kassambara/factoextra/issues/26)).
+  
 # factoextra 1.0.4
 
 ## New features
