@@ -64,7 +64,7 @@ NULL
 #'   ex: 5, then the top 5 individuals/variables with the highest cos2 are 
 #'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
 #'   individuals/variables with the highest contrib are drawn }
-#' @param a ggplot. If not NULL, points are added to an existing plot.
+#' @param ggp a ggplot. If not NULL, points are added to an existing plot.
 #' @inheritParams ggpubr::ggpar
 #' @param ... Arguments to be passed to the functions ggpubr::ggscatter() & ggpubr::ggpar().
 #'   

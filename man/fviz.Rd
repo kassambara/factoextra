@@ -113,9 +113,9 @@ labels or not.}
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
-\item{...}{Arguments to be passed to the functions ggpubr::ggscatter() & ggpubr::ggpar().}
+\item{ggp}{a ggplot. If not NULL, points are added to an existing plot.}
 
-\item{a}{ggplot. If not NULL, points are added to an existing plot.}
+\item{...}{Arguments to be passed to the functions ggpubr::ggscatter() & ggpubr::ggpar().}
 }
 \value{
 a ggplot
