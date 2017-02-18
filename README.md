@@ -24,7 +24,7 @@ if(!require(devtools)) install.packages("devtools")
 devtools::install_github("kassambara/factoextra")
 ```
 
-Geting started
---------------
+Getting started
+---------------
 
 Find out more at <http://www.sthda.com/english/wiki/factoextra-r-package>
