@@ -41,7 +41,7 @@ Remotes:
     kassambara/ggpubr
 URL: http://www.sthda.com/english/rpkgs/factoextra
 BugReports: https://github.com/kassambara/factoextra/issues
-Collate:
+Collate: 
     'cluster_utilities.R'
     'decathlon2.R'
     'print.factoextra.R'
@@ -79,4 +79,5 @@ Collate:
     'housetasks.R'
     'multishapes.R'
     'poison.R'
+    'zzz.R'
 RoxygenNote: 6.0.1
