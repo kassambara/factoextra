@@ -60,4 +60,3 @@ for the active individuals and variables from Factor Analysis of Mixed Date (FAM
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-

@@ -158,4 +158,3 @@ fviz(res.mca, "var") # Variables plot
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-

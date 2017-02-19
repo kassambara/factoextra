@@ -2,8 +2,8 @@
 % Please edit documentation in R/get_mca.R
 \name{get_mca}
 \alias{get_mca}
-\alias{get_mca_ind}
 \alias{get_mca_var}
+\alias{get_mca_ind}
 \title{Extract the results for individuals/variables - MCA}
 \usage{
 get_mca(res.mca, element = c("var", "ind", "mca.cor", "quanti.sup"))
@@ -67,10 +67,9 @@ res.mca <- MCA(poison.active, graph=FALSE)
  }
  
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com/english/
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

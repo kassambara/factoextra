@@ -69,6 +69,7 @@ Plots the classification, the uncertainty and the BIC values returned by the Mcl
 
 \item \code{fviz_mclust_bic}: Plots the BIC values.
 }}
+
 \examples{
 
 if(require("mclust")){
@@ -86,4 +87,3 @@ fviz_mclust(mc, "classification", geom = "point")
 }
 
 }
-

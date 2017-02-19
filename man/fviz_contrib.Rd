@@ -64,6 +64,7 @@ considered as important in contributing to the dimension.
 \itemize{
 \item \code{fviz_pca_contrib}: deprecated function. Use fviz_contrib()
 }}
+
 \examples{
 \donttest{
 # Principal component analysis
@@ -131,10 +132,9 @@ fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
 
  }
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com/english/
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

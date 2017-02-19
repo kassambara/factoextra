@@ -126,4 +126,3 @@ fviz_dend(res.hc, k = 4,
 
 }
 }
-

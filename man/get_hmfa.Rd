@@ -3,8 +3,8 @@
 \name{get_hmfa}
 \alias{get_hmfa}
 \alias{get_hmfa_ind}
-\alias{get_hmfa_partial}
 \alias{get_hmfa_var}
+\alias{get_hmfa_partial}
 \title{Extract the results for individuals/variables/group/partial axes - HMFA}
 \usage{
 get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group",
@@ -72,4 +72,3 @@ Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 
 Fabian Mundt \email{f.mundt@inventionate.de}
 }
-

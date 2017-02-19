@@ -24,4 +24,3 @@ Print method for an object of class factoextra
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-

@@ -112,10 +112,9 @@ head(res)
 res <- facto_summarize(res.mfa, "ind", axes = 1:2)
 head(res)
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com/english/
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

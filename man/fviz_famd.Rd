@@ -4,6 +4,7 @@
 \alias{fviz_famd}
 \alias{fviz_famd_ind}
 \alias{fviz_famd_var}
+\alias{fviz_famd}
 \title{Visualize Factor Analysis of Mixed Data}
 \usage{
 fviz_famd_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
@@ -124,4 +125,3 @@ fviz_famd_ind(res.famd, col.ind = "cos2",
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-

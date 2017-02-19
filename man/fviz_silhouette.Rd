@@ -90,11 +90,10 @@ fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 fviz_silhouette(hc.cut)
 }
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link{fviz_cluster}}, \code{\link{hcut}}, 
  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

@@ -3,8 +3,9 @@
 \name{fviz_hmfa}
 \alias{fviz_hmfa}
 \alias{fviz_hmfa_ind}
-\alias{fviz_hmfa_quali_biplot}
 \alias{fviz_hmfa_var}
+\alias{fviz_hmfa_quali_biplot}
+\alias{fviz_hmfa}
 \title{Visualize Hierarchical Multiple Factor Analysis}
 \usage{
 fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
@@ -156,12 +157,11 @@ fviz_hmfa_ind(res.hmfa, partial = "all", palette = "Dark2")
  
 
 }
+\references{
+http://www.sthda.com/english/
+}
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}
 
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-\references{
-http://www.sthda.com/english/
-}
-

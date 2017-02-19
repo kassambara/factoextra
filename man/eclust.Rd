@@ -94,11 +94,10 @@ res.km$nbclust
   fviz_silhouette(res.hc) # silhouette plot
  
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, 
   \code{\link{fviz_cluster}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

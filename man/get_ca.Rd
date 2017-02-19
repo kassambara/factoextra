@@ -61,10 +61,9 @@ for the active row/column variables from Correspondence Analysis (CA) outputs.\c
  get_ca(res.ca, "col") # Results for columns
  }
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

@@ -2,10 +2,10 @@
 % Please edit documentation in R/eigenvalue.R
 \name{eigenvalue}
 \alias{eigenvalue}
-\alias{fviz_eig}
-\alias{fviz_screeplot}
 \alias{get_eig}
 \alias{get_eigenvalue}
+\alias{fviz_eig}
+\alias{fviz_screeplot}
 \title{Extract and visualize the eigenvalues/variances of dimensions}
 \usage{
 get_eig(X)
@@ -112,9 +112,6 @@ fviz_eig(res.mca, linecolor = "#FC4E07",
 }
 
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com/english/
 }
@@ -122,4 +119,6 @@ http://www.sthda.com/english/
 \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

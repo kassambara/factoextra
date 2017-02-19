@@ -2,9 +2,10 @@
 % Please edit documentation in R/fviz_mca.R
 \name{fviz_mca}
 \alias{fviz_mca}
-\alias{fviz_mca_biplot}
 \alias{fviz_mca_ind}
 \alias{fviz_mca_var}
+\alias{fviz_mca_biplot}
+\alias{fviz_mca}
 \title{Visualize Multiple Correspondence Analysis}
 \usage{
 fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
@@ -249,11 +250,10 @@ fviz_mca_biplot(res.mca,
 }
 
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link{get_mca}}, \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
  \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

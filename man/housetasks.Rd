@@ -29,4 +29,3 @@ fviz_ca_biplot(res.ca, repel = TRUE)+
 theme_minimal()
 
 }
-

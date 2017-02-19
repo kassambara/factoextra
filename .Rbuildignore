@@ -4,6 +4,10 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^factoextra-r-package\.png$
+^partitioning-clustering\.png$
+^clustering-e1-cover\.png$
+^multivariate-analysis-factoextra\.png$
+^style\.css$
 ^\.travis\.yml$
 ^docs$
 ^_pkgdown\.yml$

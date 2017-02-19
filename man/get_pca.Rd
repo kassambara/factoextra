@@ -61,10 +61,9 @@ the active individuals/variables from Principal Component Analysis (PCA) outputs
  get_pca(res.pca, "var") # Results for variable categories
  }
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com/english/
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

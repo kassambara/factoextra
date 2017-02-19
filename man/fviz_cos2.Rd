@@ -109,10 +109,9 @@ fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
                
  }
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com/english/
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

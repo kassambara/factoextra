@@ -134,11 +134,10 @@ fviz_cluster(hc.cut, ellipse.type = "convex")
 
 
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link{fviz_silhouette}}, \code{\link{hcut}}, 
  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

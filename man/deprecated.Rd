@@ -2,20 +2,20 @@
 % Please edit documentation in R/deprecated.R
 \name{deprecated}
 \alias{deprecated}
-\alias{fviz_hmfa_group}
-\alias{fviz_hmfa_ind_starplot}
-\alias{fviz_hmfa_quali_var}
-\alias{fviz_hmfa_quanti_var}
-\alias{fviz_mfa_group}
-\alias{fviz_mfa_ind_starplot}
-\alias{fviz_mfa_quali_var}
-\alias{fviz_mfa_quanti_var}
-\alias{get_hmfa_group}
-\alias{get_hmfa_quali_var}
-\alias{get_hmfa_quanti_var}
-\alias{get_mfa_group}
-\alias{get_mfa_quali_var}
 \alias{get_mfa_quanti_var}
+\alias{get_mfa_quali_var}
+\alias{get_mfa_group}
+\alias{fviz_mfa_ind_starplot}
+\alias{fviz_mfa_group}
+\alias{fviz_mfa_quanti_var}
+\alias{fviz_mfa_quali_var}
+\alias{get_hmfa_quanti_var}
+\alias{get_hmfa_quali_var}
+\alias{get_hmfa_group}
+\alias{fviz_hmfa_quanti_var}
+\alias{fviz_hmfa_quali_var}
+\alias{fviz_hmfa_ind_starplot}
+\alias{fviz_hmfa_group}
 \title{Deprecated Functions}
 \usage{
 get_mfa_quanti_var(res.mfa)
@@ -84,4 +84,3 @@ get_hmfa_var(res.hmfa, "group") instead.
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-

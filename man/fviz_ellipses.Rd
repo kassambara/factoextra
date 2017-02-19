@@ -68,4 +68,3 @@ palette = "jco")
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-

@@ -60,10 +60,9 @@ fviz_add(p, coord, color ="blue", geom="arrow")
  }
  
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

@@ -3,8 +3,8 @@
 \name{get_mfa}
 \alias{get_mfa}
 \alias{get_mfa_ind}
-\alias{get_mfa_partial_axes}
 \alias{get_mfa_var}
+\alias{get_mfa_partial_axes}
 \title{Extract the results for individuals/variables/group/partial axes - MFA}
 \usage{
 get_mfa(res.mfa, element = c("ind", "quanti.var", "quali.var", "group",
@@ -74,4 +74,3 @@ Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 
 Fabian Mundt \email{f.mundt@inventionate.de}
 }
-

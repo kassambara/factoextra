@@ -69,10 +69,9 @@ random_df <- apply(iris[, -5], 2,
 get_clust_tendency(random_df, n = 50, gradient = gradient_col)
 
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link{fviz_dist}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

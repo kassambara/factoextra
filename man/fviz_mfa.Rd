@@ -2,10 +2,11 @@
 % Please edit documentation in R/fviz_mfa.R
 \name{fviz_mfa}
 \alias{fviz_mfa}
-\alias{fviz_mfa_axes}
 \alias{fviz_mfa_ind}
 \alias{fviz_mfa_quali_biplot}
 \alias{fviz_mfa_var}
+\alias{fviz_mfa_axes}
+\alias{fviz_mfa}
 \title{Visualize Multiple Factor Analysis}
 \usage{
 fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
@@ -171,12 +172,11 @@ fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
    habillage = grp, addEllipses = TRUE, ellipse.level = 0.95)
 
 }
+\references{
+http://www.sthda.com/english/
+}
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}
 
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }
-\references{
-http://www.sthda.com/english/
-}
-

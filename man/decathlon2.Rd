@@ -38,4 +38,3 @@ fviz_pca_biplot(res.pca)
 }
 
 }
-

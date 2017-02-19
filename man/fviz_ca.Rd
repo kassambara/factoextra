@@ -2,9 +2,10 @@
 % Please edit documentation in R/fviz_ca.R
 \name{fviz_ca}
 \alias{fviz_ca}
-\alias{fviz_ca_biplot}
-\alias{fviz_ca_col}
 \alias{fviz_ca_row}
+\alias{fviz_ca_col}
+\alias{fviz_ca_biplot}
+\alias{fviz_ca}
 \title{Visualize Correspondence Analysis}
 \usage{
 fviz_ca_row(X, axes = c(1, 2), geom = c("point", "text"), shape.row = 19,
@@ -203,13 +204,12 @@ fviz_ca_col(res.ca, select.col = list(contrib = 3))
     
  
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \references{
 http://www.sthda.com
 }
 \seealso{
 \code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

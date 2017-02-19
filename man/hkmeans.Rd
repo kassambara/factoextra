@@ -2,8 +2,8 @@
 % Please edit documentation in R/hkmeans.R
 \name{hkmeans}
 \alias{hkmeans}
-\alias{hkmeans_tree}
 \alias{print.hkmeans}
+\alias{hkmeans_tree}
 \title{Hierarchical k-means clustering}
 \usage{
 hkmeans(x, k, hc.metric = "euclidean", hc.method = "ward.D2",
@@ -90,4 +90,3 @@ fviz_dend(res.hk, cex = 0.6)
 fviz_cluster(res.hk, frame.type = "norm", frame.level = 0.68)
 }
 }
-

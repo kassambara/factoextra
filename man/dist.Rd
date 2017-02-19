@@ -2,8 +2,8 @@
 % Please edit documentation in R/dist.R
 \name{dist}
 \alias{dist}
-\alias{fviz_dist}
 \alias{get_dist}
+\alias{fviz_dist}
 \title{Enhanced Distance Matrix Computation and Visualization}
 \usage{
 get_dist(x, method = "euclidean", stand = FALSE, ...)
@@ -58,10 +58,9 @@ res.dist <- get_dist(USArrests, stand = TRUE, method = "pearson")
 fviz_dist(res.dist, 
    gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link[stats]{dist}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}

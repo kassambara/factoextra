@@ -2,9 +2,9 @@
 % Please edit documentation in R/fviz_pca.R
 \name{fviz_pca}
 \alias{fviz_pca}
-\alias{fviz_pca_biplot}
 \alias{fviz_pca_ind}
 \alias{fviz_pca_var}
+\alias{fviz_pca_biplot}
 \title{Visualize Principal Component Analysis}
 \usage{
 fviz_pca(X, ...)
@@ -193,10 +193,9 @@ fviz_pca_biplot(res.pca, label = "var", habillage=iris$Species,
  }
  
 }
-\author{
-Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
-}
 \seealso{
 \code{\link{fviz_ca}}, \code{\link{fviz_mca}}
 }
-
+\author{
+Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
+}
