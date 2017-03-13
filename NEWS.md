@@ -3,7 +3,25 @@
 ## Bug fixes
    
 - Now, the argument `invisible` works properly in the function `fviz_pca_biplot()`([@ginolhac, #26](https://github.com/kassambara/factoextra/issues/26)).
-  
+    
+## Minor changes
+   
+   
+It's now possible to color individuals using a custom continuous variable ([#29](https://github.com/kassambara/factoextra/issues/29)). This is done using the argument **col.ind**.
+
+
+```r
+library(factoextra)
+data(iris)
+res.pca <- prcomp(iris[, -5],  scale = TRUE)
+
+# Visualize and color by a custom continuous variable
+fviz_pca_ind(res.pca, col.ind = iris$Sepal.Length,
+             legend.title = "Sepal.Length")
+```
+
+
+   
 # factoextra 1.0.4
 
 ## New features
