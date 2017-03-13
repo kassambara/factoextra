@@ -214,7 +214,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          main = title, ggtheme = ggtheme, ggp = ggp, ...)
   if(alpha %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
-  if(!is.null(gradient.cols) & color %in% c("cos2","contrib", "coord", "x", "y"))
+  if(!is.null(gradient.cols))
     p <- p + ggpubr:::.gradient_col(gradient.cols)
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
