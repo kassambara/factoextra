@@ -49,13 +49,13 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
 
-\item{col.ind, col.var}{color for individuals and variables, respectively. 
-Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
-this case, the colors for individuals/variables are automatically 
-controlled by their qualities ("cos2"), contributions ("contrib"), 
-coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y"). To use 
-automatic coloring (by cos2, contrib, ....), make sure that habillage 
-="none".}
+\item{col.ind, col.var}{color for individuals and variables, respectively. Can
+be a continuous variable or a factor variable. Possible values include also
+: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+individuals/variables are automatically controlled by their qualities
+("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
+values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
+....), make sure that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
@@ -95,11 +95,12 @@ a ggplot
 }
 \description{
 Factor analysis of mixed data (FAMD) is, a particular case of 
-MFA, used to analyze a data set containing both quantitative and qualitative 
-variables. fviz_famd() provides ggplot2-based elegant visualization of FAMD
-outputs from the R function: FAMD [FactoMineR].\cr\cr \itemize{
-\item{fviz_famd_ind(): Graph of individuals} \item{fviz_famd_var(): Graph of
-variables} \item{fviz_famd(): An alias of fviz_famd_ind(res.famd)} }
+  MFA, used to analyze a data set containing both quantitative and
+  qualitative variables. fviz_famd() provides ggplot2-based elegant
+  visualization of FAMD outputs from the R function: FAMD [FactoMineR].\cr\cr
+  \itemize{ \item{fviz_famd_ind(): Graph of individuals}
+  \item{fviz_famd_var(): Graph of variables} \item{fviz_famd(): An alias of
+  fviz_famd_ind(res.famd)} }
 }
 \examples{
 # Compute FAMD

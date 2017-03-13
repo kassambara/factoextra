@@ -48,9 +48,9 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 "rickandmorty".}
 
 \item{legend}{character specifying legend position. Allowed values are one of
-c("top", "bottom", "left", "right", "none"). Default is "bottom" side
-position. to remove the legend use legend = "none". Legend position can be
-also specified using a numeric vector c(x, y); see details section.}
+c("top", "bottom", "left", "right", "none"). To remove the legend use
+legend = "none". Legend position can be also specified using a numeric
+vector c(x, y); see details section.}
 
 \item{main}{plot main title.}
 

@@ -28,7 +28,8 @@ fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
 fviz_mca(X, ...)
 }
 \arguments{
-\item{X}{an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA [ExPosition].}
+\item{X}{an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
+[ExPosition].}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
 plotted.}
@@ -56,12 +57,13 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
 
-\item{col.ind, col.var}{color for individuals and variables, respectively. 
-Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
-this case, the colors for individuals/variables are automatically controlled
-by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
-y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring 
-(by cos2, contrib, ....), make sure that habillage ="none".}
+\item{col.ind, col.var}{color for individuals and variables, respectively. Can 
+be a continuous variable or a factor variable. Possible values include also
+: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+individuals/variables are automatically controlled by their qualities
+("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
+values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
+....), make sure that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
@@ -96,9 +98,9 @@ fviz_mca(): Additional arguments are passed to fviz_mca_ind() and
 fviz_mca_var().}}
 
 \item{choice}{the graph to plot. Allowed values include: i) "var" and 
-"mca.cor" for plotting the correlation between variables and principal
-dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
-supplementary quantitative variables.}
+"mca.cor" for plotting the correlation between variables and principal 
+dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for
+the supplementary quantitative variables.}
 
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative 
 supplementary variables.}
@@ -128,7 +130,8 @@ a ggplot
 Multiple Correspondence Analysis (MCA) is an extension of simple 
  CA to analyse a data table containing more than two categorical variables. 
  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
- the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in ExPosition]. Read more: 
+ the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
+ ExPosition]. Read more: 
  \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
   Correspondence Analysis Essentials.}
  

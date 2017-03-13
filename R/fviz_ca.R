@@ -5,16 +5,16 @@ NULL
 #'@description Correspondence analysis (CA) is an extension of Principal 
 #'  Component Analysis (PCA) suited to analyze frequencies formed by two 
 #'  categorical variables. fviz_ca() provides ggplot2-based elegant 
-#'  visualization of CA outputs from the R functions: CA [in FactoMineR], ca
-#'  [in ca], coa [in ade4], correspondence [in MASS] and expOutput/epCA [in ExPosition]. Read more: 
+#'  visualization of CA outputs from the R functions: CA [in FactoMineR], ca [in
+#'  ca], coa [in ade4], correspondence [in MASS] and expOutput/epCA [in
+#'  ExPosition]. Read more: 
 #'  \href{http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining}{Correspondence
-#'  Analysis} 
-#'     
-#'  \itemize{ \item{fviz_ca_row(): Graph of row variables}
-#'  \item{fviz_ca_col(): Graph of column variables} \item{fviz_ca_biplot():
-#'  Biplot of row and column variables} \item{fviz_ca(): An alias of
-#'  fviz_ca_biplot()} }
-#'    
+#'   Analysis}
+#'  
+#'  \itemize{ \item{fviz_ca_row(): Graph of row variables} \item{fviz_ca_col():
+#'  Graph of column variables} \item{fviz_ca_biplot(): Biplot of row and column
+#'  variables} \item{fviz_ca(): An alias of fviz_ca_biplot()} }
+#'  
 #'@param X an object of class CA [FactoMineR], ca [ca], coa [ade4]; 
 #'  correspondence [MASS] and expOutput/epCA [ExPosition].
 #'@param axes a numeric vector of length 2 specifying the dimensions to be 
@@ -34,11 +34,11 @@ NULL
 #'  c("row", "row.sup","col", "col.sup").
 #'@param title the title of the graph
 #'@param col.col,col.row color for column/row points. The default values are 
-#'  "red" and "blue", respectively. Allowed values include also : "cos2", 
-#'  "contrib", "coord", "x" or "y". In this case, the colors for row/column 
-#'  variables are automatically controlled by their qualities ("cos2"), 
-#'  contributions ("contrib"), coordinates (x^2 + y^2, "coord"), x values("x") 
-#'  or y values("y")
+#'  "red" and "blue", respectively. Can be a continuous variable or a factor
+#'  variable. Allowed values include also : "cos2", "contrib", "coord", "x" or
+#'  "y". In this case, the colors for row/column variables are automatically
+#'  controlled by their qualities ("cos2"), contributions ("contrib"),
+#'  coordinates (x^2 + y^2, "coord"), x values("x") or y values("y")
 #'@param alpha.col,alpha.row controls the transparency of colors. The value can 
 #'  variate from 0 (total transparency) to 1 (no transparency). Default value is
 #'  1. Allowed values include also : "cos2", "contrib", "coord", "x" or "y" as 
@@ -60,31 +60,31 @@ NULL
 #'@param arrows Vector of two logicals specifying if the plot should contain 
 #'  points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 #'  second value sets the columns.
-#' @inheritParams ggpubr::ggpar
-#' @param ... Additional arguments. \itemize{ \item in fviz_ca_row() and 
-#'   fviz_ca_col(): Additional arguments are passed to the functions 
-#'   fviz() and ggpubr::ggpar(). \item in fviz_ca_biplot() and fviz_ca(): Additional
-#'   arguments are passed to fviz_ca_row() and fviz_ca_col().}
-#'@details The default plot of (M)CA is a "symmetric" plot in which both rows and 
-#'  columns are in principal coordinates. In this situation, it's not possible 
-#'  to interpret the distance between row points and column points. To overcome 
-#'  this problem, the simplest way is to make an asymmetric plot. This means 
-#'  that, the column profiles must be presented in row space or vice-versa. The 
-#'  allowed options for the argument map are: \itemize{ \item "rowprincipal" or 
-#'  "colprincipal": asymmetric plots with either rows in principal coordinates 
-#'  and columns in standard coordinates, or vice versa. These plots preserve row
-#'  metric or column metric respectively. \item "symbiplot": Both rows and 
-#'  columns are scaled to have variances equal to the singular values (square 
-#'  roots of eigenvalues), which gives a symmetric biplot but does not preserve 
-#'  row or column metrics. \item "rowgab" or "colgab": Asymmetric maps, proposed
-#'  by Gabriel & Odoroff (1990), with rows (respectively, columns) in principal 
-#'  coordinates and columns (respectively, rows) in standard coordinates 
-#'  multiplied by the mass of the corresponding point. \item "rowgreen" or 
-#'  "colgreen": The so-called contribution biplots showing visually the most 
-#'  contributing points (Greenacre 2006b). These are similar to "rowgab" and 
-#'  "colgab" except that the points in standard coordinates are multiplied by 
-#'  the square root of the corresponding masses, giving reconstructions of the 
-#'  standardized residuals. }
+#'@inheritParams ggpubr::ggpar
+#'@param ... Additional arguments. \itemize{ \item in fviz_ca_row() and 
+#'  fviz_ca_col(): Additional arguments are passed to the functions fviz() and
+#'  ggpubr::ggpar(). \item in fviz_ca_biplot() and fviz_ca(): Additional 
+#'  arguments are passed to fviz_ca_row() and fviz_ca_col().}
+#'@details The default plot of (M)CA is a "symmetric" plot in which both rows
+#'  and columns are in principal coordinates. In this situation, it's not
+#'  possible to interpret the distance between row points and column points. To
+#'  overcome this problem, the simplest way is to make an asymmetric plot. This
+#'  means that, the column profiles must be presented in row space or
+#'  vice-versa. The allowed options for the argument map are: \itemize{ \item
+#'  "rowprincipal" or "colprincipal": asymmetric plots with either rows in
+#'  principal coordinates and columns in standard coordinates, or vice versa.
+#'  These plots preserve row metric or column metric respectively. \item
+#'  "symbiplot": Both rows and columns are scaled to have variances equal to the
+#'  singular values (square roots of eigenvalues), which gives a symmetric
+#'  biplot but does not preserve row or column metrics. \item "rowgab" or
+#'  "colgab": Asymmetric maps, proposed by Gabriel & Odoroff (1990), with rows
+#'  (respectively, columns) in principal coordinates and columns (respectively,
+#'  rows) in standard coordinates multiplied by the mass of the corresponding
+#'  point. \item "rowgreen" or "colgreen": The so-called contribution biplots
+#'  showing visually the most contributing points (Greenacre 2006b). These are
+#'  similar to "rowgab" and "colgab" except that the points in standard
+#'  coordinates are multiplied by the square root of the corresponding masses,
+#'  giving reconstructions of the standardized residuals. }
 #'@return a ggplot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}

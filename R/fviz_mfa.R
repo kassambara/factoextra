@@ -4,8 +4,9 @@ NULL
 #'
 #'@description Multiple factor analysis (MFA) is used to analyze a data set in 
 #'  which individuals are described by several sets of variables (quantitative 
-#'  and/or qualitative) structured into groups. fviz_mfa() provides ggplot2-based
-#'  elegant visualization of MFA outputs from the R function: MFA [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
+#'  and/or qualitative) structured into groups. fviz_mfa() provides
+#'  ggplot2-based elegant visualization of MFA outputs from the R function: MFA
+#'  [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
 #'  \item{fviz_mfa_var(): Graph of variables} \item{fviz_mfa_axes(): Graph of 
 #'  partial axes} \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = 
 #'  "all")} \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
@@ -24,12 +25,12 @@ NULL
 #'  package, habillage can also specify the index of the factor variable in the 
 #'  data.
 #'@param col.ind,col.var,col.axes color for individuals, variables and col.axes 
-#'  respectively. Possible values include also : "cos2", "contrib", "coord", "x"
-#'  or "y". In this case, the colors for individuals/variables are automatically
-#'  controlled by their qualities ("cos2"), contributions ("contrib"), 
-#'  coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y"). To use 
-#'  automatic coloring (by cos2, contrib, ....), make sure that habillage 
-#'  ="none".
+#'  respectively. Can be a continuous variable or a factor variable. Possible
+#'  values include also : "cos2", "contrib", "coord", "x" or "y". In this case,
+#'  the colors for individuals/variables are automatically controlled by their
+#'  qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 ,
+#'  "coord"), x values("x") or y values("y"). To use automatic coloring (by
+#'  cos2, contrib, ....), make sure that habillage ="none".
 #'@param col.partial color for partial individuals. By default, points are 
 #'  colored according to the groups.
 #'@param col.var.sup color for supplementary variables.

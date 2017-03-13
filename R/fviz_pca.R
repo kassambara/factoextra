@@ -40,7 +40,8 @@
 #'   ?PCA in FactoMineR).
 #' @param addEllipses logical value. If TRUE, draws ellipses around the 
 #'   individuals when habillage != "none".
-#' @param col.ind,col.var color for individuals and variables, respectively. 
+#' @param col.ind,col.var color for individuals and variables, respectively. Can
+#'  be a continuous variable or a factor variable. 
 #'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
 #'   this case, the colors for individuals/variables are automatically 
 #'   controlled by their qualities of representation ("cos2"), contributions 

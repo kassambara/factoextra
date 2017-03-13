@@ -5,14 +5,16 @@ NULL
 #'@description Multiple Correspondence Analysis (MCA) is an extension of simple 
 #'  CA to analyse a data table containing more than two categorical variables. 
 #'  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
-#'  the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in ExPosition]. Read more: 
+#'  the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
+#'  ExPosition]. Read more: 
 #'  \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
 #'   Correspondence Analysis Essentials.}
 #'  
 #'  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
 #'  Graph of variables} \item{fviz_mca_biplot(): Biplot of individuals and 
 #'  variables} \item{fviz_mca(): An alias of fviz_mca_biplot()}}
-#'@param X an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA [ExPosition].
+#'@param X an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
+#'  [ExPosition].
 #'@inheritParams fviz_pca
 #'@param label a text specifying the elements to be labelled. Default value is 
 #'  "all". Allowed values are "none" or the combination of c("ind", 
@@ -28,12 +30,13 @@ NULL
 #'  groups. Default value is "none". If X is an MCA object from FactoMineR 
 #'  package, habillage can also specify the index of the factor variable in the 
 #'  data.
-#'@param col.ind,col.var color for individuals and variables, respectively. 
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
-#'  this case, the colors for individuals/variables are automatically controlled
-#'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
-#'  y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring 
-#'  (by cos2, contrib, ....), make sure that habillage ="none".
+#'@param col.ind,col.var color for individuals and variables, respectively. Can 
+#'  be a continuous variable or a factor variable. Possible values include also
+#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+#'  individuals/variables are automatically controlled by their qualities
+#'  ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
+#'  values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
+#'  ....), make sure that habillage ="none".
 #'@param alpha.ind,alpha.var controls the transparency of individual and 
 #'  variable colors, respectively. The value can variate from 0 (total 
 #'  transparency) to 1 (no transparency). Default value is 1. Possible values 
@@ -48,9 +51,9 @@ NULL
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'  labels or not.
 #'@param choice the graph to plot. Allowed values include: i) "var" and 
-#'  "mca.cor" for plotting the correlation between variables and principal
-#'  dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for the
-#'  supplementary quantitative variables.
+#'  "mca.cor" for plotting the correlation between variables and principal 
+#'  dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for
+#'  the supplementary quantitative variables.
 #'@param title the title of the graph
 #'@param select.ind,select.var a selection of individuals/variables to be drawn.
 #'  Allowed values are NULL or a list containing the arguments name, cos2 or 

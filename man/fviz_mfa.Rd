@@ -62,12 +62,12 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 individuals when habillage != "none".}
 
 \item{col.ind, col.var, col.axes}{color for individuals, variables and col.axes 
-respectively. Possible values include also : "cos2", "contrib", "coord", "x"
-or "y". In this case, the colors for individuals/variables are automatically
-controlled by their qualities ("cos2"), contributions ("contrib"), 
-coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y"). To use 
-automatic coloring (by cos2, contrib, ....), make sure that habillage 
-="none".}
+respectively. Can be a continuous variable or a factor variable. Possible
+values include also : "cos2", "contrib", "coord", "x" or "y". In this case,
+the colors for individuals/variables are automatically controlled by their
+qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 ,
+"coord"), x values("x") or y values("y"). To use automatic coloring (by
+cos2, contrib, ....), make sure that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
@@ -112,7 +112,8 @@ variables and group of variables, respectively.}
 
 \item{col.var.sup}{color for supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
+\item{col.circle}{a color for the correlation circle. Used only when X is a
+PCA output.}
 }
 \value{
 a ggplot2 plot
@@ -120,8 +121,9 @@ a ggplot2 plot
 \description{
 Multiple factor analysis (MFA) is used to analyze a data set in 
  which individuals are described by several sets of variables (quantitative 
- and/or qualitative) structured into groups. fviz_mfa() provides ggplot2-based
- elegant visualization of MFA outputs from the R function: MFA [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
+ and/or qualitative) structured into groups. fviz_mfa() provides
+ ggplot2-based elegant visualization of MFA outputs from the R function: MFA
+ [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
  \item{fviz_mfa_var(): Graph of variables} \item{fviz_mfa_axes(): Graph of 
  partial axes} \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = 
  "all")} \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative

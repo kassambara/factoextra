@@ -3,12 +3,13 @@ NULL
 #' Visualize Factor Analysis of Mixed Data
 #' 
 #' @description Factor analysis of mixed data (FAMD) is, a particular case of 
-#' MFA, used to analyze a data set containing both quantitative and qualitative 
-#' variables. fviz_famd() provides ggplot2-based elegant visualization of FAMD
-#' outputs from the R function: FAMD [FactoMineR].\cr\cr \itemize{
-#' \item{fviz_famd_ind(): Graph of individuals} \item{fviz_famd_var(): Graph of
-#' variables} \item{fviz_famd(): An alias of fviz_famd_ind(res.famd)} }
-#' 
+#'   MFA, used to analyze a data set containing both quantitative and
+#'   qualitative variables. fviz_famd() provides ggplot2-based elegant
+#'   visualization of FAMD outputs from the R function: FAMD [FactoMineR].\cr\cr
+#'   \itemize{ \item{fviz_famd_ind(): Graph of individuals}
+#'   \item{fviz_famd_var(): Graph of variables} \item{fviz_famd(): An alias of
+#'   fviz_famd_ind(res.famd)} }
+#'   
 #' @param X an object of class FAMD [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
@@ -20,13 +21,13 @@ NULL
 #'   groups. Default value is "none". If X is an MFA object from FactoMineR 
 #'   package, habillage can also specify the index of the factor variable in the
 #'   data.
-#' @param col.ind,col.var color for individuals and variables, respectively. 
-#'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
-#'   this case, the colors for individuals/variables are automatically 
-#'   controlled by their qualities ("cos2"), contributions ("contrib"), 
-#'   coordinates (x^2 + y^2 , "coord"), x values("x") or y values("y"). To use 
-#'   automatic coloring (by cos2, contrib, ....), make sure that habillage 
-#'   ="none".
+#' @param col.ind,col.var color for individuals and variables, respectively. Can
+#'   be a continuous variable or a factor variable. Possible values include also
+#'   : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+#'   individuals/variables are automatically controlled by their qualities
+#'   ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
+#'   values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
+#'   ....), make sure that habillage ="none".
 #' @param col.var.sup color for supplementary variables.
 #' @param col.quali.var color for qualitative variables in fviz_mfa_ind(). 
 #'   Default is "black".

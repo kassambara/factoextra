@@ -60,13 +60,14 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 
 individuals when habillage != "none".}
 
-\item{col.ind, col.var}{color for individuals and variables, respectively. 
-Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
-this case, the colors for individuals/variables are automatically 
-controlled by their qualities of representation ("cos2"), contributions 
-("contrib"), coordinates (x^2+y^2, "coord"), x values ("x") or y values 
-("y"). To use automatic coloring (by cos2, contrib, ....), make sure that 
-habillage ="none".}
+\item{col.ind, col.var}{color for individuals and variables, respectively. Can
+be a continuous variable or a factor variable. 
+ Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
+ this case, the colors for individuals/variables are automatically 
+ controlled by their qualities of representation ("cos2"), contributions 
+ ("contrib"), coordinates (x^2+y^2, "coord"), x values ("x") or y values 
+ ("y"). To use automatic coloring (by cos2, contrib, ....), make sure that 
+ habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
@@ -90,7 +91,8 @@ individuals/variables with the highest contrib are drawn }}
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle. Used only when X is a PCA output.}
+\item{col.circle}{a color for the correlation circle. Used only when X is a
+PCA output.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
 "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 

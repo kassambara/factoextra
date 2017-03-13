@@ -2,12 +2,13 @@
 NULL
 #'Visualize Hierarchical Multiple Factor Analysis
 #'
-#'@description Hierarchical Multiple Factor Analysis (HMFA) is, an extension of MFA, used
-#'  in a situation where the data are organized into a hierarchical structure.  fviz_hmfa() provides ggplot2-based
-#'  elegant visualization of HMFA outputs from the R function: HMFA [FactoMineR].\cr\cr \itemize{ \item{fviz_hmfa_ind(): Graph of
-#'  individuals} \item{fviz_hmfa_var(): Graph of variables}
-#'  \item{fviz_hmfa_quali_biplot(): Biplot of individuals and qualitative
-#'  variables} \item{fviz_hmfa(): An alias of fviz_hmfa_ind()} }
+#'@description Hierarchical Multiple Factor Analysis (HMFA) is, an extension of
+#'  MFA, used in a situation where the data are organized into a hierarchical
+#'  structure.  fviz_hmfa() provides ggplot2-based elegant visualization of HMFA
+#'  outputs from the R function: HMFA [FactoMineR].\cr\cr \itemize{
+#'  \item{fviz_hmfa_ind(): Graph of individuals} \item{fviz_hmfa_var(): Graph of
+#'  variables} \item{fviz_hmfa_quali_biplot(): Biplot of individuals and
+#'  qualitative variables} \item{fviz_hmfa(): An alias of fviz_hmfa_ind()} }
 #'@param X an object of class HMFA [FactoMineR].
 #'@inheritParams fviz_mca
 #'@inheritParams fviz_pca
@@ -17,12 +18,12 @@ NULL
 #'  package, habillage can also specify the index of the factor variable in the 
 #'  data.
 #'@param col.ind,col.var color for individuals, partial individuals and 
-#'  variables, respectively. Possible values include also : "cos2", "contrib", 
-#'  "coord", "x" or "y". In this case, the colors for individuals/variables are 
-#'  automatically controlled by their qualities ("cos2"), contributions 
-#'  ("contrib"), coordinates (x^2 + y^2 , "coord"), x values("x") or y 
-#'  values("y"). To use automatic coloring (by cos2, contrib, ....), make sure 
-#'  that habillage ="none".
+#'  variables, respectively. Can be a continuous variable or a factor variable.
+#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y". In
+#'  this case, the colors for individuals/variables are automatically controlled
+#'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 +
+#'  y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring
+#'  (by cos2, contrib, ....), make sure that habillage ="none".
 #'@param col.partial color for partial individuals. By default, points are 
 #'  colored according to the groups.
 #'@param alpha.ind,alpha.var controls the transparency of individual, partial 

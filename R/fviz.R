@@ -1,77 +1,79 @@
 #' @include utilities.R
 NULL
-#' Visualizing Multivariate Analyse Outputs
-#' @description Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA, MCA and MFA.
-#' @inheritParams facto_summarize
-#' @param geom a text specifying the geometry to be used for the graph. Default value is "auto". Allowed 
-#'   values are the combination of c("point", "arrow", "text"). Use "point" (to 
-#'   show only points); "text" to show only labels; c("point", "text") or 
-#'   c("arrow", "text") to show both types.
-#' @param label a text specifying the elements to be labelled. Default value is 
-#'   "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
-#'   "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only active 
-#'   individuals. "ind.sup" is for supplementary individuals. "quali" is for 
-#'   supplementary qualitative variables. "var" is for active variables. 
-#'   "quanti.sup" is for quantitative supplementary variables.
-#' @param invisible a text specifying the elements to be hidden on the plot. 
-#'   Default value is "none". Allowed values are the combination of c("ind", 
-#'   "ind.sup", "quali", "var", "quanti.sup", "group.sup").
-#' @param labelsize font size for the labels
-#' @param pointsize the size of points
-#' @param pointshape the shape of points
-#' @param arrowsize the size of arrows. Controls the thickness of arrows.
-#' @param title the title of the graph
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'   labels or not.
-#' @param habillage an optional factor variable for coloring the observations by
-#'   groups. Default value is "none". If X is a PCA object from FactoMineR 
-#'   package, habillage can also specify the supplementary qualitative variable 
-#'   (by its index or name) to be used for coloring individuals by groups (see 
-#'   ?PCA in FactoMineR).
-#' @param addEllipses logical value. If TRUE, draws ellipses around the 
-#'   individuals when habillage != "none".
-#' @param ellipse.level the size of the concentration ellipse in normal 
-#'   probability.
-#' @param ellipse.type Character specifying frame type. Possible values are 
-#'   'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-#'   including one of c("t", "norm", "euclid").
-#' @param ellipse.alpha Alpha for ellipse specifying the transparency level of 
-#'   fill color. Use alpha = 0 for no fill color.
-#' @param col.circle a color for the correlation circle. Used only when X is a PCA output.
-#' @param axes.linetype linetype of x and y axes.
-#' @param color color to be used for the specified geometries (point, text). 
-#'   Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
-#'   this case, the colors for individuals/variables are automatically 
-#'   controlled by their qualities of representation ("cos2"), contributions 
-#'   ("contrib"), coordinates (x^2+y^2, "coord"), x values ("x") or y values 
-#'   ("y"). To use automatic coloring (by cos2, contrib, ....), make sure that 
-#'   habillage ="none".
-#' @param alpha controls the transparency of individual and 
-#'   variable colors, respectively. The value can variate from 0 (total 
-#'   transparency) to 1 (no transparency). Default value is 1. Possible values 
-#'   include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
-#'   transparency for the individual/variable colors are automatically 
-#'   controlled by their qualities ("cos2"), contributions ("contrib"), 
-#'   coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
-#'   this, make sure that habillage ="none".
+#'Visualizing Multivariate Analyse Outputs
+#'@description Generic function to create a scatter plot of multivariate analyse
+#'  outputs, including PCA, CA, MCA and MFA.
+#'@inheritParams facto_summarize
+#'@param geom a text specifying the geometry to be used for the graph. Default
+#'  value is "auto". Allowed values are the combination of c("point", "arrow",
+#'  "text"). Use "point" (to show only points); "text" to show only labels;
+#'  c("point", "text") or c("arrow", "text") to show both types.
+#'@param label a text specifying the elements to be labelled. Default value is 
+#'  "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+#'  "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only
+#'  active individuals. "ind.sup" is for supplementary individuals. "quali" is
+#'  for supplementary qualitative variables. "var" is for active variables. 
+#'  "quanti.sup" is for quantitative supplementary variables.
+#'@param invisible a text specifying the elements to be hidden on the plot. 
+#'  Default value is "none". Allowed values are the combination of c("ind", 
+#'  "ind.sup", "quali", "var", "quanti.sup", "group.sup").
+#'@param labelsize font size for the labels
+#'@param pointsize the size of points
+#'@param pointshape the shape of points
+#'@param arrowsize the size of arrows. Controls the thickness of arrows.
+#'@param title the title of the graph
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'  labels or not.
+#'@param habillage an optional factor variable for coloring the observations by 
+#'  groups. Default value is "none". If X is a PCA object from FactoMineR 
+#'  package, habillage can also specify the supplementary qualitative variable 
+#'  (by its index or name) to be used for coloring individuals by groups (see 
+#'  ?PCA in FactoMineR).
+#'@param addEllipses logical value. If TRUE, draws ellipses around the 
+#'  individuals when habillage != "none".
+#'@param ellipse.level the size of the concentration ellipse in normal 
+#'  probability.
+#'@param ellipse.type Character specifying frame type. Possible values are 
+#'  'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
+#'  including one of c("t", "norm", "euclid").
+#'@param ellipse.alpha Alpha for ellipse specifying the transparency level of 
+#'  fill color. Use alpha = 0 for no fill color.
+#'@param col.circle a color for the correlation circle. Used only when X is a
+#'  PCA output.
+#'@param axes.linetype linetype of x and y axes.
+#'@param color color to be used for the specified geometries (point, text). Can
+#'  be a continuous variable or a factor variable. Possible values include also
+#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+#'  individuals/variables are automatically controlled by their qualities of
+#'  representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
+#'  "coord"), x values ("x") or y values ("y"). To use automatic coloring (by
+#'  cos2, contrib, ....), make sure that habillage ="none".
+#'@param alpha controls the transparency of individual and variable colors,
+#'  respectively. The value can variate from 0 (total transparency) to 1 (no
+#'  transparency). Default value is 1. Possible values include also : "cos2",
+#'  "contrib", "coord", "x" or "y". In this case, the transparency for the
+#'  individual/variable colors are automatically controlled by their qualities
+#'  ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x
+#'  values("x") or y values("y"). To use this, make sure that habillage ="none".
 #'@param col.col.sup,col.row.sup colors for the supplementary column and row 
 #'  points, respectively.
-#' @param select a selection of individuals/variables to be 
-#'   drawn. Allowed values are NULL or a list containing the arguments name, 
-#'   cos2 or contrib: \itemize{ \item name: is a character vector containing 
-#'   individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex: 
-#'   0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, 
-#'   ex: 5, then the top 5 individuals/variables with the highest cos2 are 
-#'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
-#'   individuals/variables with the highest contrib are drawn }
-#' @param ggp a ggplot. If not NULL, points are added to an existing plot.
-#' @inheritParams ggpubr::ggpar
-#' @param ... Arguments to be passed to the functions ggpubr::ggscatter() & ggpubr::ggpar().
-#'   
-#' @return a ggplot
-#' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' 
-#' @rdname fviz
+#'@param select a selection of individuals/variables to be drawn. Allowed values
+#'  are NULL or a list containing the arguments name, cos2 or contrib: \itemize{
+#'  \item name: is a character vector containing individuals/variables to be
+#'  drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables
+#'  with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5
+#'  individuals/variables with the highest cos2 are drawn. \item contrib: if
+#'  contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest
+#'  contrib are drawn }
+#'@param ggp a ggplot. If not NULL, points are added to an existing plot.
+#'@inheritParams ggpubr::ggpar
+#'@param ... Arguments to be passed to the functions ggpubr::ggscatter() &
+#'  ggpubr::ggpar().
+#'  
+#'@return a ggplot
+#'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#'  
+#'@rdname fviz
 #' @examples
 #' \donttest{
 #' # Principal component analysis
@@ -103,7 +105,7 @@ NULL
 #' fviz(res.mca, "var") # Variables plot
 #' 
 #'  }
-#' @export
+#'@export
 fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           label = "all", invisible="none", labelsize=4, 
                           pointsize = 1.5, pointshape = 19, arrowsize = 0.5,
@@ -166,6 +168,14 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     df <- dd$ind
     color <- dd$name.quali
     if(missing(pointshape)) pointshape <- dd$name.quali
+  }
+  # Augment data if color is a continuous varable or a factor variable
+  if(length(color) > 1){
+    if(nrow(df) != length(color)) stop("The length of color variable",
+                                    "should be the same as the number of rows in the data.")
+    if(is.factor(color)) df$Col. <- factor(color, levels = levels(color))
+    else df$Col. <- color
+    color <- "Col."
   }
   # Selection
   df.all <- df
