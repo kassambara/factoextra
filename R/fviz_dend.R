@@ -131,7 +131,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
     method <- ""
   }
   else stop("Can't handle an object of class ", paste(class(x), collapse =", ") )
-  if(is.na(method)) method <- ""
+  if(is.null(method)) method <- ""
+  else if(is.na(method)) method <- ""
   if(is.null(sub) & method!="") sub = paste0("Method: ", method)
   
   if(!is.null(dendextend::labels_cex(dend))) cex <- dendextend::labels_cex(dend)
