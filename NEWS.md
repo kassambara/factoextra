@@ -8,7 +8,7 @@
 ## Minor changes
    
    
-It's now possible to color individuals using a custom continuous variable ([#29](https://github.com/kassambara/factoextra/issues/29)). This is done using the argument **col.ind**.
+- It's now possible to color individuals using a custom continuous variable ([#29](https://github.com/kassambara/factoextra/issues/29)). This is done using the argument **col.ind**.
 
 
 ```r
@@ -19,6 +19,27 @@ res.pca <- prcomp(iris[, -5],  scale = TRUE)
 # Visualize and color by a custom continuous variable
 fviz_pca_ind(res.pca, col.ind = iris$Sepal.Length,
              legend.title = "Sepal.Length")
+```
+   
+   
+- factoextra can now handle Japanese characters by using the argument font.family = "HiraKakuProN-W3"` ([#31](https://github.com/kassambara/factoextra/issues/31)). For example:
+    
+    
+```r
+library(FactoMineR)
+library(factoextra)
+
+.tbl2.1 <- matrix(c(395, 2456,1758,
+                    147, 153, 916, 
+                    694, 327, 1347),byrow=T,3,3)
+dimnames(.tbl2.1) <- list(地域=c("オスロ","中部地域","北部地域"),
+                            犯罪=c("強盗", "詐欺","破壊") )
+
+
+res.CA <- CA(.tbl2.1,graph=FALSE)
+
+fviz_ca_biplot(res.CA,map="simbiplot",title="simbiplot",
+               font.family = "HiraKakuProN-W3")
 ```
 
 
