@@ -63,7 +63,7 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
   
   if(is.null(df$name)) df$name <- rownames(df)
   if(is.null(df$x)) df$x <- df[,axes[1]]
-  if(is.null(df$y)) df$y <- df[,axes[1]]
+  if(is.null(df$y)) df$y <- df[,axes[2]]
   
   # Plot
   #%%%%%%%%%%%%%%%%%%%%%%
