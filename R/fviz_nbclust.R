@@ -15,7 +15,7 @@
 #'   \href{http://www.sthda.com/english/wiki/determining-the-optimal-number-of-clusters-3-must-known-methods-unsupervised-machine-learning}{Determining
 #'    the optimal number of clusters}
 #'   
-#' @param x numeric matrix or data frame. In the function fviz_nbclust(), x can 
+#' @param x numeric matrix, data frame, or distance matrix. In the function fviz_nbclust(), x can 
 #'   be the results of the function NbClust().
 #' @param method the method to be used for estimating the optimal number of 
 #'   clusters. Possible values are "silhouette" (for average silhouette width), 
@@ -112,7 +112,11 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   else if(method %in% c("silhouette", "wss")) {
 
       if (is.data.frame(x)) x <- as.matrix(x)
-      if(is.null(diss)) diss <- stats::dist(x)
+      if (class(x)=='dist'){
+        diss <- x
+      } else if (is.null(diss)){
+        diss <- stats::dist(x)
+      } 
       
       v <- rep(0, k.max)
       if(method == "silhouette"){
