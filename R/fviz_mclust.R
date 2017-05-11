@@ -79,11 +79,12 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
                        gather_cols = colnames(x)[-1])
   x <- x[!is.na(x$BIC), , drop = FALSE]
   x$model <- factor(x$model, levels = dnx[[2]])
-  
+ 
   if(ggpubr:::.is_col_palette(palette)) palette <- ggpubr:::.get_pal(palette, k = length(model.names))
-  p <- ggpubr::ggline(x, x ="cluster", y = "BIC", group = "model",
-                 color = color, shape = shape, palette = palette,
-                 main = main, xlab = xlab, ylab = ylab,...)+
+  ggline.opts <- list(data = x, x ="cluster", y = "BIC", group = "model",
+                      color = color, shape = shape, palette = palette,
+                      main = main, xlab = xlab, ylab = ylab,...)
+  p <- do.call(ggpubr::ggline, ggline.opts)+
     labs(subtitle = paste0("Best model: ", best_model, 
                            " | Optimal clusters: n = ",  number_of_cluster))+
     geom_vline(xintercept = number_of_cluster, linetype = 2, color = "red")+
