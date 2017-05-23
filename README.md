@@ -86,7 +86,6 @@ devtools::install_github("kassambara/factoextra")
 
 ``` r
 library("factoextra")
-#> Loading required package: ggplot2
 ```
 
 Main functions in the factoextra package
@@ -647,6 +646,10 @@ Read more:
 library("factoextra")
 my_data <- scale(USArrests)
 fviz_nbclust(my_data, kmeans, method = "gap_stat")
+#> Clustering k = 1,2,..., K.max (= 10): .. done
+#> Bootstrapping, b = 1,2,..., B (= 100)  [one "." per sample]:
+#> .................................................. 50 
+#> .................................................. 100
 ```
 
 ![](README-determine-the-number-of-clusters-gap-statistics-1.png)
