@@ -138,7 +138,7 @@ are printed in fviz_silhouette().</dd>
 
 <span class='co'># K-means clustering</span>
 <span class='co'># +++++++++++++++++++++</span>
-<span class='no'>km.res</span> <span class='kw'>&lt;-</span> <span class='fu'>kmeans</span>(<span class='no'>iris.scaled</span>, <span class='fl'>3</span>, <span class='kw'>nstart</span> <span class='kw'>=</span> <span class='fl'>10</span>)
+<span class='no'>km.res</span> <span class='kw'>&lt;-</span> <span class='fu'>kmeans</span>(<span class='no'>iris.scaled</span>, <span class='fl'>3</span>, <span class='kw'>nstart</span> <span class='kw'>=</span> <span class='fl'>2</span>)
 
 <span class='co'># Visualize kmeans clustering</span>
 <span class='fu'><a href='fviz_cluster.html'>fviz_cluster</a></span>(<span class='no'>km.res</span>, <span class='no'>iris</span>[, -<span class='fl'>5</span>], <span class='kw'>ellipse.type</span> <span class='kw'>=</span> <span class='st'>"norm"</span>)+
@@ -154,29 +154,26 @@ are printed in fviz_silhouette().</dd>
 <span class='no'>neg_sil_index</span> <span class='kw'>&lt;-</span> <span class='fu'>which</span>(<span class='no'>sil</span>[, <span class='st'>"sil_width"</span>] <span class='kw'>&lt;</span> <span class='fl'>0</span>)
 <span class='no'>sil</span>[<span class='no'>neg_sil_index</span>, , <span class='kw'>drop</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>]</div><div class='output co'>#&gt;      cluster neighbor   sil_width
 #&gt; [1,]       2        3 -0.01058434
-#&gt; [2,]       2        3 -0.02489394</div><div class='input'>
-<span class='co'># PAM clustering</span>
-<span class='co'># ++++++++++++++++++++</span>
-<span class='fu'>require</span>(<span class='no'>cluster</span>)
-<span class='no'>pam.res</span> <span class='kw'>&lt;-</span> <span class='fu'>pam</span>(<span class='no'>iris.scaled</span>, <span class='fl'>3</span>)
-<span class='co'># Visualize pam clustering</span>
-<span class='fu'><a href='fviz_cluster.html'>fviz_cluster</a></span>(<span class='no'>pam.res</span>, <span class='kw'>ellipse.type</span> <span class='kw'>=</span> <span class='st'>"norm"</span>)+
-<span class='fu'>theme_minimal</span>()</div><img src='fviz_silhouette-11.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Visualize silhouhette information</span>
-<span class='fu'>fviz_silhouette</span>(<span class='no'>pam.res</span>)</div><div class='output co'>#&gt;   cluster size ave.sil.width
-#&gt; 1       1   50          0.63
-#&gt; 2       2   45          0.35
-#&gt; 3       3   55          0.38</div><img src='fviz_silhouette-14.png' alt='' width='540' height='400' /><div class='input'>
-<span class='co'># Hierarchical clustering</span>
-<span class='co'># ++++++++++++++++++++++++</span>
-<span class='co'># Use hcut() which compute hclust and cut the tree</span>
-<span class='no'>hc.cut</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='hcut.html'>hcut</a></span>(<span class='no'>iris.scaled</span>, <span class='kw'>k</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>hc_method</span> <span class='kw'>=</span> <span class='st'>"complete"</span>)
-<span class='co'># Visualize dendrogram</span>
-<span class='fu'><a href='fviz_dend.html'>fviz_dend</a></span>(<span class='no'>hc.cut</span>, <span class='kw'>show_labels</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>rect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><img src='fviz_silhouette-16.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Visualize silhouhette information</span>
-<span class='fu'>fviz_silhouette</span>(<span class='no'>hc.cut</span>)</div><div class='output co'>#&gt;   cluster size ave.sil.width
-#&gt; 1       1   49          0.64
-#&gt; 2       2   24          0.48
-#&gt; 3       3   77          0.32</div><img src='fviz_silhouette-19.png' alt='' width='540' height='400' /><div class='input'>
-</div></pre>
+#&gt; [2,]       2        3 -0.02489394</div><div class='input'><span class='co'>## Not run: ------------------------------------</span>
+<span class='co'># # PAM clustering</span>
+<span class='co'># # ++++++++++++++++++++</span>
+<span class='co'># require(cluster)</span>
+<span class='co'># pam.res &lt;- pam(iris.scaled, 3)</span>
+<span class='co'># # Visualize pam clustering</span>
+<span class='co'># fviz_cluster(pam.res, ellipse.type = "norm")+</span>
+<span class='co'># theme_minimal()</span>
+<span class='co'># # Visualize silhouhette information</span>
+<span class='co'># fviz_silhouette(pam.res)</span>
+<span class='co'># </span>
+<span class='co'># # Hierarchical clustering</span>
+<span class='co'># # ++++++++++++++++++++++++</span>
+<span class='co'># # Use hcut() which compute hclust and cut the tree</span>
+<span class='co'># hc.cut &lt;- hcut(iris.scaled, k = 3, hc_method = "complete")</span>
+<span class='co'># # Visualize dendrogram</span>
+<span class='co'># fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)</span>
+<span class='co'># # Visualize silhouhette information</span>
+<span class='co'># fviz_silhouette(hc.cut)</span>
+<span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

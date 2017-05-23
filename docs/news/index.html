@@ -74,46 +74,97 @@
     </div>
 
     <div class="contents">
+    <div id="factoextra-1-0-4-999" class="section level1">
+<h1 class="hasAnchor">
+<a href="#factoextra-1-0-4-999" class="anchor"> </a>factoextra 1.0.4.999</h1>
+<div id="bug-fixes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"> </a>Bug fixes</h2>
+<ul>
+<li>Now, the argument <code>invisible</code> works properly in the function <code><a href="../reference/fviz_pca.html">fviz_pca_biplot()</a></code>(<a href="https://github.com/kassambara/factoextra/issues/26">@ginolhac, #26</a>).</li>
+<li>The function <code><a href="../reference/fviz_dend.html">fviz_dend()</a></code> now works for an object of class <code>diana</code> (<a href="https://github.com/kassambara/factoextra/issues/30">@qfazille, #30</a>).</li>
+</ul>
+</div>
+<div id="minor-changes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#minor-changes" class="anchor"> </a>Minor changes</h2>
+<ul>
+<li>It’s now possible to color individuals using a custom continuous variable (<a href="https://github.com/kassambara/factoextra/issues/29">#29</a>). This is done using the argument <strong>col.ind</strong>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(factoextra)
+<span class="kw">data</span>(iris)
+res.pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(iris[, -<span class="dv">5</span>],  <span class="dt">scale =</span> <span class="ot">TRUE</span>)
+
+<span class="co"># Visualize and color by a custom continuous variable</span>
+<span class="kw"><a href="../reference/fviz_pca.html">fviz_pca_ind</a></span>(res.pca, <span class="dt">col.ind =</span> iris$Sepal.Length,
+             <span class="dt">legend.title =</span> <span class="st">"Sepal.Length"</span>)</code></pre></div>
+<ul>
+<li>factoextra can now handle Japanese characters by using the argument font.family = “HiraKakuProN-W3”` (<a href="https://github.com/kassambara/factoextra/issues/31">#31</a>). For example:</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(FactoMineR)
+<span class="kw">library</span>(factoextra)
+
+.tbl2<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">395</span>, <span class="dv">2456</span>,<span class="dv">1758</span>,
+                    <span class="dv">147</span>, <span class="dv">153</span>, <span class="dv">916</span>, 
+                    <span class="dv">694</span>, <span class="dv">327</span>, <span class="dv">1347</span>),<span class="dt">byrow=</span>T,<span class="dv">3</span>,<span class="dv">3</span>)
+<span class="kw">dimnames</span>(.tbl2<span class="fl">.1</span>) &lt;-<span class="st"> </span><span class="kw">list</span>(地域=<span class="kw">c</span>(<span class="st">"オスロ"</span>,<span class="st">"中部地域"</span>,<span class="st">"北部地域"</span>),
+                            犯罪=<span class="kw">c</span>(<span class="st">"強盗"</span>, <span class="st">"詐欺"</span>,<span class="st">"破壊"</span>) )
+
+
+res.CA &lt;-<span class="st"> </span><span class="kw">CA</span>(.tbl2<span class="fl">.1</span>,<span class="dt">graph=</span><span class="ot">FALSE</span>)
+
+<span class="kw"><a href="../reference/fviz_ca.html">fviz_ca_biplot</a></span>(res.CA,<span class="dt">map=</span><span class="st">"simbiplot"</span>,<span class="dt">title=</span><span class="st">"simbiplot"</span>,
+               <span class="dt">font.family =</span> <span class="st">"HiraKakuProN-W3"</span>)</code></pre></div>
+</div>
+</div>
     <div id="factoextra-1-0-4" class="section level1">
 <h1 class="hasAnchor">
 <a href="#factoextra-1-0-4" class="anchor"> </a>factoextra 1.0.4</h1>
 <div id="new-features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features" class="anchor"> </a>New features</h2>
-<ul><li><p>New function <code><a href="../reference/fviz_mclust.html">fviz_mclust()</a></code> for plotting model-based clustering using ggplot2.</p></li>
+<ul>
+<li><p>New function <code><a href="../reference/fviz_mclust.html">fviz_mclust()</a></code> for plotting model-based clustering using ggplot2.</p></li>
 <li><p>New function <code><a href="../reference/fviz.html">fviz()</a></code>: Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA and MCA, MFA, …</p></li>
 <li><p>New functions <code><a href="../reference/fviz_mfa.html">fviz_mfa_var()</a></code> and <code><a href="../reference/fviz_hmfa.html">fviz_hmfa_var()</a></code> for plotting MFA and HMFA variables, respectively.</p></li>
 <li><p>New function <code><a href="../reference/get_mfa.html">get_mfa_var()</a></code>: Extract the results for variables (quantitatives, qualitatives and groups). Deprecated functions: <code>get_mfa_var_quanti()</code>, <code>get_mfa_var_quali()</code> and <code><a href="../reference/deprecated.html">get_mfa_group()</a></code>.</p></li>
 <li><p>New functions added for extracting and visualizing the results of FAMD (factor analysis of mixed data): <code><a href="../reference/get_famd.html">get_famd_ind()</a></code>, <code><a href="../reference/get_famd.html">get_famd_var()</a></code>, <code><a href="../reference/fviz_famd.html">fviz_famd_ind()</a></code> and <code><a href="../reference/fviz_famd.html">fviz_famd_var()</a></code>.</p></li>
 <li><p>Now <code><a href="../reference/fviz_dend.html">fviz_dend()</a></code> returns a ggplot. It can be used to plot circular dendrograms and phylogenic-like trees. Additionnally, it supports an object of class HCPC (from FactoMineR).</p></li>
 <li>New arguments in <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code>:
-<ul><li>main, xlab, ylab in <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code>: to change the plot main title and axis labels.</li>
+<ul>
+<li>main, xlab, ylab in <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code>: to change the plot main title and axis labels.</li>
 <li>ellipse, ellipse.type, ellipse.level and ellipse.alpha</li>
 <li>choose.vars: a character vector containing variables to be considered for plotting.</li>
-</ul></li>
+</ul>
+</li>
 <li>New argument pointshape in <code><a href="../reference/fviz_pca.html">fviz_pca()</a></code>. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage (<a href="https://github.com/kassambara/factoextra/issues/20">@raynamharris, #15</a>).</li>
 <li>New argument repel in <code><a href="../reference/fviz_add.html">fviz_add()</a></code>.</li>
 <li><p>New argument gradient.cols in fviz_*() functions.</p></li>
-<li><p>Support for ExPosition added (epCA, epPCA, epMCA) (<a href="https://github.com/kassambara/factoextra/issues/23">#23</a>)</p></li>
-</ul></div>
+<li><p>Support for the ExPosition package added (epCA, epPCA, epMCA) (<a href="https://github.com/kassambara/factoextra/issues/23">#23</a>)</p></li>
+</ul>
+</div>
 <div id="minor-changing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changing" class="anchor"> </a>Minor changing</h2>
-<ul><li>Check point added in the function <code>fviz_nbcluster</code> to make sure that x is an object of class data.frame or matrix (<a href="https://github.com/kassambara/factoextra/issues/15">Jakub Nowosad, #15</a>).</li>
+<ul>
+<li>Check point added in the function <code><a href="../reference/fviz_nbclust.html">fviz_nbclust()</a></code> to make sure that x is an object of class data.frame or matrix (<a href="https://github.com/kassambara/factoextra/issues/15">Jakub Nowosad, #15</a>).</li>
 <li><p>The following arguments are deprecated in <code>fviz_cluster</code>(): title, frame, frame.type, frame.level, frame.alpha. Now, use main, ellipse, ellipse.type, ellipse.level and ellipse.alpha instead.</p></li>
 <li><p>Now, by default, the function <code>fviz_cluster</code>() doesn’t show cluster mean points for an object of class PAM and CLARA, when the argument show.clust.cent is missing . This is because cluster centers are medoids in the case of PAM and CLARA but not means. However, user can force the function to display the mean points by using the argument show.clust.cent = TRUE.</p></li>
 <li><p>The argument jitter is deprecated; use repel = TRUE instead, to avoid overlapping of labels.</p></li>
 <li><p>New argument “sub” in <code><a href="../reference/fviz_dend.html">fviz_dend()</a></code> for adding a subtitle to the dendrogram. If NULL, the method used hierarchical clustering is shown. To remove the subtitle use sub = “”.</p></li>
-</ul></div>
-<div id="bug-fixes" class="section level2">
+</ul>
+</div>
+<div id="bug-fixes-1" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"> </a>Bug fixes</h2>
-<ul><li>Now fviz_cluster can handle HCPC object obtained from MCA (<a href="https://github.com/kassambara/factoextra/pull/13">Alejandro Juarez-Escario, #13</a>)</li>
-<li>Now fviz_ca_biplot() reacts when repel = TRUE used</li>
+<a href="#bug-fixes-1" class="anchor"> </a>Bug fixes</h2>
+<ul>
+<li>Now <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code> can handle HCPC object obtained from MCA (<a href="https://github.com/kassambara/factoextra/pull/13">Alejandro Juarez-Escario, #13</a>)</li>
+<li>Now <code><a href="../reference/fviz_ca.html">fviz_ca_biplot()</a></code> reacts when repel = TRUE used</li>
 <li>In <code><a href="../reference/facto_summarize.html">facto_summarize()</a></code>, now the contribution values computed for &gt;=2 axes are in percentage (<a href="https://github.com/kassambara/factoextra/issues/22">#22</a>)</li>
 <li>
 <code><a href="../reference/fviz_ca.html">fviz_ca()</a></code> and <code><a href="../reference/fviz_mca.html">fviz_mca()</a></code> now work with the latest version of ade4 v1.7-5 (<a href="https://github.com/kassambara/factoextra/issues/24">#24</a>)</li>
-</ul></div>
+</ul>
+</div>
 </div>
     <div id="factoextra-1-0-3" class="section level1">
 <h1 class="hasAnchor">
@@ -121,7 +172,8 @@
 <div id="new-features-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features-1" class="anchor"> </a>NEW FEATURES</h2>
-<ul><li><p>New fviz_mfa function to plot MFA individuals, partial individuals, quantitive variables, categorical variables, groups relationship square and partial axes (<a href="https://github.com/kassambara/factoextra/pull/4">@inventionate, #4</a>).</p></li>
+<ul>
+<li><p>New fviz_mfa function to plot MFA individuals, partial individuals, quantitive variables, categorical variables, groups relationship square and partial axes (<a href="https://github.com/kassambara/factoextra/pull/4">@inventionate, #4</a>).</p></li>
 <li><p>New fviz_hmfa function to plot HMFA individuals, quantitive variables, categorical variables and groups relationship square (<a href="https://github.com/kassambara/factoextra/pull/4">@inventionate, #4</a>).</p></li>
 <li><p>New get_mfa and get_hmfa function (<a href="https://github.com/kassambara/factoextra/pull/4">@inventionate, #4</a>).</p></li>
 <li><p>fviz_ca, fviz_pca, fviz_mca, fviz_mfa and fviz_hmfa ggrepel support (<a href="https://github.com/kassambara/factoextra/pull/4">@inventionate, #4</a>).</p></li>
@@ -137,20 +189,25 @@
 <li><p>eclust(): Visual enhancement of clustering analysis</p></li>
 <li><p>get_dist() and fviz_dist(): Enhanced Distance Matrix Computation and Visualization</p></li>
 <li><p>eclust(): Visual enhancement of clustering analysis</p></li>
-</ul></div>
+</ul>
+</div>
 <div id="minor-changing-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changing-1" class="anchor"> </a>MINOR CHANGING</h2>
-<ul><li>Require R &gt;= 3.1.0</li>
+<ul>
+<li>Require R &gt;= 3.1.0</li>
 <li>A dataset named “multishapes” has been added. It contains clusters of multiple shapes. Useful for comparing density-based clustering and partitioning methods such as k-means</li>
 <li>The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() and fviz_cluster() in order to reduce overplotting of points and texts</li>
 <li>The functions fviz_*() now use ggplot2::stat_ellipse() for drawing ellipses.</li>
-</ul></div>
-<div id="bug-fixes-1" class="section level2">
+</ul>
+</div>
+<div id="bug-fixes-2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"> </a>BUG FIXES</h2>
-<ul><li>Unknown parameters “shape” removed from geom_text (<a href="https://github.com/kassambara/factoextra/issues/5">@bdboy, #5</a>)</li>
-</ul></div>
+<a href="#bug-fixes-2" class="anchor"> </a>BUG FIXES</h2>
+<ul>
+<li>Unknown parameters “shape” removed from geom_text (<a href="https://github.com/kassambara/factoextra/issues/5">@bdboy, #5</a>)</li>
+</ul>
+</div>
 </div>
     <div id="factoextra-1-0-2" class="section level1">
 <h1 class="hasAnchor">
@@ -158,7 +215,8 @@
 <div id="new-features-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#new-features-2" class="anchor"> </a>NEW FEATURES</h2>
-<ul><li>Visualization of Correspondence Analysis outputs from different R packages (FactoMineR, ca, ade4, MASS)</li>
+<ul>
+<li>Visualization of Correspondence Analysis outputs from different R packages (FactoMineR, ca, ade4, MASS)</li>
 <li>fviz_ca_row()</li>
 <li>fviz_ca_col()</li>
 <li><p>fviz_ca_biplot()</p></li>
@@ -171,20 +229,25 @@
 <li><p>fviz_contrib()</p></li>
 <li>Sumarize the results of PCA, CA, MCA</li>
 <li><p>facto_summarize()</p></li>
-</ul></div>
+</ul>
+</div>
 <div id="deprecated-function" class="section level2">
 <h2 class="hasAnchor">
 <a href="#deprecated-function" class="anchor"> </a>DEPRECATED FUNCTION</h2>
-<ul><li>fviz_pca_contrib() is dreprecated -&gt; use fviz_contrib()</li>
-</ul></div>
+<ul>
+<li>fviz_pca_contrib() is dreprecated -&gt; use fviz_contrib()</li>
+</ul>
+</div>
 <div id="minor-changing-2" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changing-2" class="anchor"> </a>MINOR CHANGING</h2>
-<ul><li>fviz_add: “text” are included in the allowed values for the argument geom</li>
+<ul>
+<li>fviz_add: “text” are included in the allowed values for the argument geom</li>
 <li>fviz_screeplot: the X parameter can be also an object of class ca [ca], coa [ade4], correspondence [MASS]</li>
 <li>get_eigenvalue: X parameters and description changed</li>
 <li>get_pca_ind: the argument data are no longer required</li>
-</ul></div>
+</ul>
+</div>
 </div>
     <div id="factoextra-1-0-1" class="section level1">
 <h1 class="hasAnchor">
@@ -192,8 +255,10 @@
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#features" class="anchor"> </a>FEATURES</h2>
-<ul><li>Easy to use functions to extract and visualize the output of principal component analysis.</li>
-</ul></div>
+<ul>
+<li>Easy to use functions to extract and visualize the output of principal component analysis.</li>
+</ul>
+</div>
 </div>
     </div>
   </div>
@@ -202,6 +267,7 @@
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
+        <li><a href="#factoextra-1-0-4-999">1.0.4.999</a></li>
         <li><a href="#factoextra-1-0-4">1.0.4</a></li>
         <li><a href="#factoextra-1-0-3">1.0.3</a></li>
         <li><a href="#factoextra-1-0-2">1.0.2</a></li>

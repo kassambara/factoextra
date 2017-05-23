@@ -46,7 +46,8 @@ palettes e.g. "RdBu", "Blues", ...; or custom color palette e.g. c("blue",
 "red"); and scientific journal palettes from ggsci R package, e.g.: "npg",
 "aaas", "lancet", "jco", "ucscgb", "uchicago", "simpsons" and
 "rickandmorty". Can be also a numeric vector of length(groups); in this
-case a basic color palette is created using the function \link[grDevices]{palette}.}
+case a basic color palette is created using the function
+\link[grDevices]{palette}.}
 
 \item{legend}{character specifying legend position. Allowed values are one of
 c("top", "bottom", "left", "right", "none"). To remove the legend use
@@ -55,8 +56,8 @@ vector c(x, y); see details section.}
 
 \item{main}{plot main title.}
 
-\item{xlab}{character vector specifying x axis labels. Use xlab
-= FALSE to hide xlab.}
+\item{xlab}{character vector specifying x axis labels. Use xlab = FALSE to
+hide xlab.}
 
 \item{ylab}{character vector specifying y axis labels. Use ylab = FALSE to
 hide ylab.}

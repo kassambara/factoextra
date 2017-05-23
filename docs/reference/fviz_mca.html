@@ -76,7 +76,8 @@
     <p>Multiple Correspondence Analysis (MCA) is an extension of simple 
  CA to analyse a data table containing more than two categorical variables. 
  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
- the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in ExPosition]. Read more: 
+ the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
+ ExPosition]. Read more: 
  <a href = 'Multiple
   Correspondence Analysis Essentials.'>http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining</a></p>
 
@@ -112,7 +113,8 @@
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
       <dt>X</dt>
-      <dd>an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA [ExPosition].</dd>
+      <dd>an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
+[ExPosition].</dd>
       <dt>axes</dt>
       <dd>a numeric vector of length 2 specifying the dimensions to be 
 plotted.</dd>
@@ -135,17 +137,19 @@ groups. Allowed values include &quot;grey&quot; for grey color palettes; brewer
 palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette e.g. c(&quot;blue&quot;,
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
-&quot;rickandmorty&quot;.</dd>
+&quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
+case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>addEllipses</dt>
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>col.ind, col.var</dt>
-      <dd>color for individuals and variables, respectively. 
-Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In 
-this case, the colors for individuals/variables are automatically controlled
-by their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2 + 
-y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;). To use automatic coloring 
-(by cos2, contrib, ....), make sure that habillage =&quot;none&quot;.</dd>
+      <dd>color for individuals and variables, respectively. Can 
+be a continuous variable or a factor variable. Possible values include also
+: &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for
+individuals/variables are automatically controlled by their qualities
+(&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x
+values(&quot;x&quot;) or y values(&quot;y&quot;). To use automatic coloring (by cos2, contrib,
+....), make sure that habillage =&quot;none&quot;.</dd>
       <dt>col.ind.sup</dt>
       <dd>color for supplementary individuals</dd>
       <dt>alpha.ind, alpha.var</dt>
@@ -189,9 +193,9 @@ fviz_mca_var().</li>
 </dd>
       <dt>choice</dt>
       <dd>the graph to plot. Allowed values include: i) &quot;var&quot; and 
-&quot;mca.cor&quot; for plotting the correlation between variables and principal
-dimensions; ii) &quot;var.cat&quot; for variable categories and iii) &quot;quanti.sup&quot; for the
-supplementary quantitative variables.</dd>
+&quot;mca.cor&quot; for plotting the correlation between variables and principal 
+dimensions; ii) &quot;var.cat&quot; for variable categories and iii) &quot;quanti.sup&quot; for
+the supplementary quantitative variables.</dd>
       <dt>col.quanti.sup, col.quali.sup</dt>
       <dd>a color for the quantitative/qualitative 
 supplementary variables.</dd>

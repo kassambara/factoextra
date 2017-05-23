@@ -73,7 +73,8 @@
     </div>
 
     
-    <p>Generic function to create a scatter plot of multivariate analyse outputs, including PCA, CA, MCA and MFA.</p>
+    <p>Generic function to create a scatter plot of multivariate analyse
+ outputs, including PCA, CA, MCA and MFA.</p>
     
 
     <pre><span class='fu'>fviz</span>(<span class='no'>X</span>, <span class='no'>element</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"auto"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"all"</span>,
@@ -84,7 +85,7 @@
   <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>, <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span>
   <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>axes.linetype</span> <span class='kw'>=</span> <span class='st'>"dashed"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>,
-  <span class='kw'>ggtheme</span> <span class='kw'>=</span> <span class='fu'>theme_minimal</span>(), <span class='no'>...</span>)</pre>
+  <span class='kw'>ggtheme</span> <span class='kw'>=</span> <span class='fu'>theme_minimal</span>(), <span class='kw'>ggp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -99,16 +100,16 @@ and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput
       <dd>a numeric vector specifying the axes of interest. Default values 
 are 1:2 for axes 1 and 2.</dd>
       <dt>geom</dt>
-      <dd>a text specifying the geometry to be used for the graph. Default value is &quot;auto&quot;. Allowed 
-values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, &quot;text&quot;). Use &quot;point&quot; (to 
-show only points); &quot;text&quot; to show only labels; c(&quot;point&quot;, &quot;text&quot;) or 
-c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
+      <dd>a text specifying the geometry to be used for the graph. Default
+value is &quot;auto&quot;. Allowed values are the combination of c(&quot;point&quot;, &quot;arrow&quot;,
+&quot;text&quot;). Use &quot;point&quot; (to show only points); &quot;text&quot; to show only labels;
+c(&quot;point&quot;, &quot;text&quot;) or c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
       <dt>label</dt>
       <dd>a text specifying the elements to be labelled. Default value is 
 &quot;all&quot;. Allowed values are &quot;none&quot; or the combination of c(&quot;ind&quot;, &quot;ind.sup&quot;, 
-&quot;quali&quot;, &quot;var&quot;, &quot;quanti.sup&quot;, &quot;group.sup&quot;). &quot;ind&quot; can be used to label only active 
-individuals. &quot;ind.sup&quot; is for supplementary individuals. &quot;quali&quot; is for 
-supplementary qualitative variables. &quot;var&quot; is for active variables. 
+&quot;quali&quot;, &quot;var&quot;, &quot;quanti.sup&quot;, &quot;group.sup&quot;). &quot;ind&quot; can be used to label only
+active individuals. &quot;ind.sup&quot; is for supplementary individuals. &quot;quali&quot; is
+for supplementary qualitative variables. &quot;var&quot; is for active variables. 
 &quot;quanti.sup&quot; is for quantitative supplementary variables.</dd>
       <dt>invisible</dt>
       <dd>a text specifying the elements to be hidden on the plot. 
@@ -123,7 +124,7 @@ Default value is &quot;none&quot;. Allowed values are the combination of c(&quot
       <dt>arrowsize</dt>
       <dd>the size of arrows. Controls the thickness of arrows.</dd>
       <dt>habillage</dt>
-      <dd>an optional factor variable for coloring the observations by
+      <dd>an optional factor variable for coloring the observations by 
 groups. Default value is &quot;none&quot;. If X is a PCA object from FactoMineR 
 package, habillage can also specify the supplementary qualitative variable 
 (by its index or name) to be used for coloring individuals by groups (see 
@@ -142,22 +143,21 @@ including one of c(&quot;t&quot;, &quot;norm&quot;, &quot;euclid&quot;).</dd>
       <dd>Alpha for ellipse specifying the transparency level of 
 fill color. Use alpha = 0 for no fill color.</dd>
       <dt>color</dt>
-      <dd>color to be used for the specified geometries (point, text). 
-Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In 
-this case, the colors for individuals/variables are automatically 
-controlled by their qualities of representation (&quot;cos2&quot;), contributions 
-(&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x values (&quot;x&quot;) or y values 
-(&quot;y&quot;). To use automatic coloring (by cos2, contrib, ....), make sure that 
-habillage =&quot;none&quot;.</dd>
+      <dd>color to be used for the specified geometries (point, text). Can
+be a continuous variable or a factor variable. Possible values include also
+: &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for
+individuals/variables are automatically controlled by their qualities of
+representation (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2,
+&quot;coord&quot;), x values (&quot;x&quot;) or y values (&quot;y&quot;). To use automatic coloring (by
+cos2, contrib, ....), make sure that habillage =&quot;none&quot;.</dd>
       <dt>alpha</dt>
-      <dd>controls the transparency of individual and 
-variable colors, respectively. The value can variate from 0 (total 
-transparency) to 1 (no transparency). Default value is 1. Possible values 
-include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the 
-transparency for the individual/variable colors are automatically 
-controlled by their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;), 
-coordinates (x^2+y^2, &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;). To use 
-this, make sure that habillage =&quot;none&quot;.</dd>
+      <dd>controls the transparency of individual and variable colors,
+respectively. The value can variate from 0 (total transparency) to 1 (no
+transparency). Default value is 1. Possible values include also : &quot;cos2&quot;,
+&quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the transparency for the
+individual/variable colors are automatically controlled by their qualities
+(&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x
+values(&quot;x&quot;) or y values(&quot;y&quot;). To use this, make sure that habillage =&quot;none&quot;.</dd>
       <dt>gradient.cols</dt>
       <dd>vector of colors to use for n-colour gradient. Allowed
 values include brewer and ggsci color palettes.</dd>
@@ -165,17 +165,16 @@ values include brewer and ggsci color palettes.</dd>
       <dd>colors for the supplementary column and row 
 points, respectively.</dd>
       <dt>select</dt>
-      <dd>a selection of individuals/variables to be 
-drawn. Allowed values are NULL or a list containing the arguments name, 
-cos2 or contrib: <ul>
-<li> name: is a character vector containing 
-individuals/variables to be drawn </li>
-<li> cos2: if cos2 is in [0, 1], ex: 
-0.6, then individuals/variables with a cos2 &gt; 0.6 are drawn. if cos2 &gt; 1, 
-ex: 5, then the top 5 individuals/variables with the highest cos2 are 
-drawn. </li>
-<li> contrib: if contrib &gt; 1, ex: 5,  then the top 5 
-individuals/variables with the highest contrib are drawn </li>
+      <dd>a selection of individuals/variables to be drawn. Allowed values
+are NULL or a list containing the arguments name, cos2 or contrib: <ul>
+<li> name: is a character vector containing individuals/variables to be
+drawn </li>
+<li> cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables
+with a cos2 &gt; 0.6 are drawn. if cos2 &gt; 1, ex: 5, then the top 5
+individuals/variables with the highest cos2 are drawn. </li>
+<li> contrib: if
+contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with the highest
+contrib are drawn </li>
 </ul>
 </dd>
       <dt>title</dt>
@@ -186,13 +185,17 @@ individuals/variables with the highest contrib are drawn </li>
       <dd>a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.</dd>
       <dt>col.circle</dt>
-      <dd>a color for the correlation circle. Used only when X is a PCA output.</dd>
+      <dd>a color for the correlation circle. Used only when X is a
+PCA output.</dd>
       <dt>ggtheme</dt>
       <dd>function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....</dd>
+      <dt>ggp</dt>
+      <dd>a ggplot. If not NULL, points are added to an existing plot.</dd>
       <dt>...</dt>
-      <dd>Arguments to be passed to the functions ggpubr::ggscatter() &amp; ggpubr::ggpar().</dd>
+      <dd>Arguments to be passed to the functions ggpubr::ggscatter() &amp;
+ggpubr::ggpar().</dd>
     </dl>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>

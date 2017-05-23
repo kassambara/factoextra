@@ -118,16 +118,17 @@ groups. Allowed values include &quot;grey&quot; for grey color palettes; brewer
 palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette e.g. c(&quot;blue&quot;,
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
-&quot;rickandmorty&quot;.</dd>
+&quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
+case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>legend</dt>
       <dd>character specifying legend position. Allowed values are one of
-c(&quot;top&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;right&quot;, &quot;none&quot;). Default is &quot;bottom&quot; side
-position. to remove the legend use legend = &quot;none&quot;. Legend position can be
-also specified using a numeric vector c(x, y); see details section.</dd>
+c(&quot;top&quot;, &quot;bottom&quot;, &quot;left&quot;, &quot;right&quot;, &quot;none&quot;). To remove the legend use
+legend = &quot;none&quot;. Legend position can be also specified using a numeric
+vector c(x, y); see details section.</dd>
       <dt>main</dt>
       <dd>plot main title.</dd>
       <dt>xlab</dt>
-      <dd>character vector specifying x axis labels, respectively. Use xlab
+      <dd>character vector specifying x axis labels. Use xlab
 = FALSE to hide xlab.</dd>
       <dt>ylab</dt>
       <dd>character vector specifying y axis labels. Use ylab = FALSE to
@@ -162,7 +163,7 @@ hide ylab.</dd>
 #&gt; <span class='message'>   /  |/  / ____/ /   / / / / ___/_  __/</span>
 #&gt; <span class='message'>  / /|_/ / /   / /   / / / /\__ \ / /   </span>
 #&gt; <span class='message'> / /  / / /___/ /___/ /_/ /___/ // /    </span>
-#&gt; <span class='message'>/_/  /_/\____/_____/\____//____//_/    version 5.2</span></div><div class='output co'>#&gt; <span class='message'>Type &#39;citation(&quot;mclust&quot;)&#39; for citing this R package in publications.</span></div><img src='fviz_mclust-5.png' alt='' width='540' height='400' /><div class='input'>
+#&gt; <span class='message'>/_/  /_/\____/_____/\____//____//_/    version 5.2.2</span></div><div class='output co'>#&gt; <span class='message'>Type &#39;citation(&quot;mclust&quot;)&#39; for citing this R package in publications.</span></div><img src='fviz_mclust-5.png' alt='' width='540' height='400' /><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

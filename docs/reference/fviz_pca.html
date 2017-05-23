@@ -145,18 +145,20 @@ groups. Allowed values include &quot;grey&quot; for grey color palettes; brewer
 palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette e.g. c(&quot;blue&quot;,
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
-&quot;rickandmorty&quot;.</dd>
+&quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
+case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>addEllipses</dt>
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>col.ind, col.var</dt>
-      <dd>color for individuals and variables, respectively. 
-Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In 
-this case, the colors for individuals/variables are automatically 
-controlled by their qualities of representation (&quot;cos2&quot;), contributions 
-(&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x values (&quot;x&quot;) or y values 
-(&quot;y&quot;). To use automatic coloring (by cos2, contrib, ....), make sure that 
-habillage =&quot;none&quot;.</dd>
+      <dd>color for individuals and variables, respectively. Can
+be a continuous variable or a factor variable. 
+ Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In 
+ this case, the colors for individuals/variables are automatically 
+ controlled by their qualities of representation (&quot;cos2&quot;), contributions 
+ (&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x values (&quot;x&quot;) or y values 
+ (&quot;y&quot;). To use automatic coloring (by cos2, contrib, ....), make sure that 
+ habillage =&quot;none&quot;.</dd>
       <dt>col.ind.sup</dt>
       <dd>color for supplementary individuals</dd>
       <dt>alpha.ind, alpha.var</dt>
@@ -185,7 +187,8 @@ individuals/variables with the highest contrib are drawn </li>
       <dt>col.quanti.sup</dt>
       <dd>a color for the quantitative supplementary variables.</dd>
       <dt>col.circle</dt>
-      <dd>a color for the correlation circle. Used only when X is a PCA output.</dd>
+      <dd>a color for the correlation circle. Used only when X is a
+PCA output.</dd>
       <dt>label</dt>
       <dd>a text specifying the elements to be labelled. Default value is 
 &quot;all&quot;. Allowed values are &quot;none&quot; or the combination of c(&quot;ind&quot;, &quot;ind.sup&quot;, 

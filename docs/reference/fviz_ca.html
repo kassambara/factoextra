@@ -76,19 +76,19 @@
     <p>Correspondence analysis (CA) is an extension of Principal 
  Component Analysis (PCA) suited to analyze frequencies formed by two 
  categorical variables. fviz_ca() provides ggplot2-based elegant 
- visualization of CA outputs from the R functions: CA [in FactoMineR], ca
- [in ca], coa [in ade4], correspondence [in MASS] and expOutput/epCA [in ExPosition]. Read more: 
+ visualization of CA outputs from the R functions: CA [in FactoMineR], ca [in
+ ca], coa [in ade4], correspondence [in MASS] and expOutput/epCA [in
+ ExPosition]. Read more: 
  <a href = 'Correspondence
- Analysis'>http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining</a></p>
+  Analysis'>http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining</a></p>
 
     <p><ul>
-<li>fviz_ca_row(): Graph of row variables
- </li>
-<li>fviz_ca_col(): Graph of column variables </li>
-<li>fviz_ca_biplot():
- Biplot of row and column variables </li>
-<li>fviz_ca(): An alias of
- fviz_ca_biplot() </li>
+<li>fviz_ca_row(): Graph of row variables </li>
+<li>fviz_ca_col():
+ Graph of column variables </li>
+<li>fviz_ca_biplot(): Biplot of row and column
+ variables </li>
+<li>fviz_ca(): An alias of fviz_ca_biplot() </li>
 </ul></p>
     
 
@@ -134,19 +134,19 @@ labels or not.</dd>
       <dt>...</dt>
       <dd>Additional arguments. <ul>
 <li> in fviz_ca_row() and 
-fviz_ca_col(): Additional arguments are passed to the functions 
-fviz() and ggpubr::ggpar(). </li>
-<li> in fviz_ca_biplot() and fviz_ca(): Additional
+fviz_ca_col(): Additional arguments are passed to the functions fviz() and
+ggpubr::ggpar(). </li>
+<li> in fviz_ca_biplot() and fviz_ca(): Additional 
 arguments are passed to fviz_ca_row() and fviz_ca_col().</li>
 </ul>
 </dd>
       <dt>col.col, col.row</dt>
       <dd>color for column/row points. The default values are 
-&quot;red&quot; and &quot;blue&quot;, respectively. Allowed values include also : &quot;cos2&quot;, 
-&quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for row/column 
-variables are automatically controlled by their qualities (&quot;cos2&quot;), 
-contributions (&quot;contrib&quot;), coordinates (x^2 + y^2, &quot;coord&quot;), x values(&quot;x&quot;) 
-or y values(&quot;y&quot;)</dd>
+&quot;red&quot; and &quot;blue&quot;, respectively. Can be a continuous variable or a factor
+variable. Allowed values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or
+&quot;y&quot;. In this case, the colors for row/column variables are automatically
+controlled by their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;),
+coordinates (x^2 + y^2, &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;)</dd>
       <dt>col.col.sup, col.row.sup</dt>
       <dd>colors for the supplementary column and row 
 points, respectively.</dd>
@@ -191,30 +191,30 @@ second value sets the columns.</dd>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The default plot of (M)CA is a &quot;symmetric&quot; plot in which both rows and 
- columns are in principal coordinates. In this situation, it&#39;s not possible 
- to interpret the distance between row points and column points. To overcome 
- this problem, the simplest way is to make an asymmetric plot. This means 
- that, the column profiles must be presented in row space or vice-versa. The 
- allowed options for the argument map are: <ul>
-<li> &quot;rowprincipal&quot; or 
- &quot;colprincipal&quot;: asymmetric plots with either rows in principal coordinates 
- and columns in standard coordinates, or vice versa. These plots preserve row
- metric or column metric respectively. </li>
-<li> &quot;symbiplot&quot;: Both rows and 
- columns are scaled to have variances equal to the singular values (square 
- roots of eigenvalues), which gives a symmetric biplot but does not preserve 
- row or column metrics. </li>
-<li> &quot;rowgab&quot; or &quot;colgab&quot;: Asymmetric maps, proposed
- by Gabriel &amp; Odoroff (1990), with rows (respectively, columns) in principal 
- coordinates and columns (respectively, rows) in standard coordinates 
- multiplied by the mass of the corresponding point. </li>
-<li> &quot;rowgreen&quot; or 
- &quot;colgreen&quot;: The so-called contribution biplots showing visually the most 
- contributing points (Greenacre 2006b). These are similar to &quot;rowgab&quot; and 
- &quot;colgab&quot; except that the points in standard coordinates are multiplied by 
- the square root of the corresponding masses, giving reconstructions of the 
- standardized residuals. </li>
+    <p>The default plot of (M)CA is a &quot;symmetric&quot; plot in which both rows
+ and columns are in principal coordinates. In this situation, it&#39;s not
+ possible to interpret the distance between row points and column points. To
+ overcome this problem, the simplest way is to make an asymmetric plot. This
+ means that, the column profiles must be presented in row space or
+ vice-versa. The allowed options for the argument map are: <ul>
+<li>
+ &quot;rowprincipal&quot; or &quot;colprincipal&quot;: asymmetric plots with either rows in
+ principal coordinates and columns in standard coordinates, or vice versa.
+ These plots preserve row metric or column metric respectively. </li>
+<li>
+ &quot;symbiplot&quot;: Both rows and columns are scaled to have variances equal to the
+ singular values (square roots of eigenvalues), which gives a symmetric
+ biplot but does not preserve row or column metrics. </li>
+<li> &quot;rowgab&quot; or
+ &quot;colgab&quot;: Asymmetric maps, proposed by Gabriel &amp; Odoroff (1990), with rows
+ (respectively, columns) in principal coordinates and columns (respectively,
+ rows) in standard coordinates multiplied by the mass of the corresponding
+ point. </li>
+<li> &quot;rowgreen&quot; or &quot;colgreen&quot;: The so-called contribution biplots
+ showing visually the most contributing points (Greenacre 2006b). These are
+ similar to &quot;rowgab&quot; and &quot;colgab&quot; except that the points in standard
+ coordinates are multiplied by the square root of the corresponding masses,
+ giving reconstructions of the standardized residuals. </li>
 </ul></p>
     
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>

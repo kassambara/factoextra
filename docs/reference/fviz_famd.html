@@ -74,13 +74,15 @@
 
     
     <p>Factor analysis of mixed data (FAMD) is, a particular case of 
-MFA, used to analyze a data set containing both quantitative and qualitative 
-variables. fviz_famd() provides ggplot2-based elegant visualization of FAMD
-outputs from the R function: FAMD [FactoMineR]. <ul>
-<li>fviz_famd_ind(): Graph of individuals </li>
-<li>fviz_famd_var(): Graph of
-variables </li>
-<li>fviz_famd(): An alias of fviz_famd_ind(res.famd) </li>
+  MFA, used to analyze a data set containing both quantitative and
+  qualitative variables. fviz_famd() provides ggplot2-based elegant
+  visualization of FAMD outputs from the R function: FAMD [FactoMineR].
+  <ul>
+<li>fviz_famd_ind(): Graph of individuals
+  </li>
+<li>fviz_famd_var(): Graph of variables </li>
+<li>fviz_famd(): An alias of
+  fviz_famd_ind(res.famd) </li>
 </ul></p>
     
 
@@ -123,18 +125,19 @@ groups. Allowed values include &quot;grey&quot; for grey color palettes; brewer
 palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette e.g. c(&quot;blue&quot;,
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
-&quot;rickandmorty&quot;.</dd>
+&quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
+case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>addEllipses</dt>
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>col.ind, col.var</dt>
-      <dd>color for individuals and variables, respectively. 
-Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In 
-this case, the colors for individuals/variables are automatically 
-controlled by their qualities (&quot;cos2&quot;), contributions (&quot;contrib&quot;), 
-coordinates (x^2 + y^2 , &quot;coord&quot;), x values(&quot;x&quot;) or y values(&quot;y&quot;). To use 
-automatic coloring (by cos2, contrib, ....), make sure that habillage 
-=&quot;none&quot;.</dd>
+      <dd>color for individuals and variables, respectively. Can
+be a continuous variable or a factor variable. Possible values include also
+: &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for
+individuals/variables are automatically controlled by their qualities
+(&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2 + y^2 , &quot;coord&quot;), x
+values(&quot;x&quot;) or y values(&quot;y&quot;). To use automatic coloring (by cos2, contrib,
+....), make sure that habillage =&quot;none&quot;.</dd>
       <dt>col.ind.sup</dt>
       <dd>color for supplementary individuals</dd>
       <dt>alpha.ind, alpha.var</dt>
@@ -193,7 +196,8 @@ one of c(&quot;var&quot;, quanti.var&quot;,  &quot;quali.var&quot;).</dd>
 <span class='fu'>fviz_famd_var</span>(<span class='no'>res.famd</span>, <span class='st'>"quali.var"</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"black"</span>)</div><img src='fviz_famd-8.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Graph of individuals colored by cos2</span>
 <span class='fu'>fviz_famd_ind</span>(<span class='no'>res.famd</span>, <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"cos2"</span>,
   <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"#00AFBB"</span>, <span class='st'>"#E7B800"</span>, <span class='st'>"#FC4E07"</span>),
-  <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><img src='fviz_famd-10.png' alt='' width='540' height='400' /><div class='input'>
+  <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,</span>
+#&gt; <span class='message'>which will replace the existing scale.</span></div><img src='fviz_famd-11.png' alt='' width='540' height='400' /><div class='input'>
 
 </div></pre>
   </div>
