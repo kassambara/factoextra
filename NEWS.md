@@ -4,6 +4,7 @@
    
 - Now, the argument `invisible` works properly in the function `fviz_pca_biplot()`([@ginolhac, #26](https://github.com/kassambara/factoextra/issues/26)).
 - The function `fviz_dend()` now works for an object of class `diana` ([@qfazille, #30](https://github.com/kassambara/factoextra/issues/30)).
+- Now, `fviz_cluster()` supports for HCPC ([@famuvie, #34](https://github.com/kassambara/factoextra/issues/34)).
     
 ## Minor changes
    

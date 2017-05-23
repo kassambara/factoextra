@@ -142,7 +142,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   }
   # HCPC in FactoMineR
   else if(inherits(object, "HCPC")) {
-    object$cluster <- res.hcpc$call$X$clust
+    object$cluster <- object$call$X$clust
     data <- res.hcpc <- object
     stand <- FALSE # to avoid trying to standardize HCPC results
 #     data <- object$data.clust[, -ncol(object$data.clust), drop = FALSE]
