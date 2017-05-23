@@ -16,6 +16,7 @@
 #' @param linetype the linetype to be used when geom ="arrow"
 #' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'   labels or not.
+#' @param font.family character vector specifying font family.
 #' @param ... Additional arguments, not used
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
@@ -41,7 +42,7 @@
 #' @export 
 fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="blue", 
                      addlabel = TRUE, labelsize = 4, pointsize = 2, shape=19, linetype ="dashed",
-                     repel = FALSE, ...)
+                     repel = FALSE, font.family = "", ...)
 {
   # Deprecated arguments
   extra_args <- list(...)
@@ -89,12 +90,13 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
   if(addlabel | "text" %in% geom){
     if(repel){
       p <- p + ggpubr::geom_exec(ggrepel::geom_text_repel, data = df, x = "x", y = "y", 
-                                 label = "name", color = color, size = labelsize)
+                                 label = "name", color = color, size = labelsize,
+                                 family = font.family)
     }
     else{
       p <- p + ggpubr::geom_exec(geom_text, data = df, x = "x", y = "y", 
                                  label = "name", color = color, size = labelsize,
-                                 vjust=vjust, hjust = hjust)
+                                 vjust=vjust, hjust = hjust, family = font.family)
       
 #       p <- p + geom_text(data = df, aes_string("x", "y"), color = color,
 #                          label = df$name, size = labelsize, vjust=vjust, hjust = hjust)

@@ -6,7 +6,7 @@
 \usage{
 fviz_add(ggp, df, axes = c(1, 2), geom = c("point", "arrow"),
   color = "blue", addlabel = TRUE, labelsize = 4, pointsize = 2,
-  shape = 19, linetype = "dashed", repel = FALSE, ...)
+  shape = 19, linetype = "dashed", repel = FALSE, font.family = "", ...)
 }
 \arguments{
 \item{ggp}{a ggplot2 plot.}
@@ -32,6 +32,8 @@ Allowed values are "point" or "arrow" or "text"}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
+
+\item{font.family}{character vector specifying font family.}
 
 \item{...}{Additional arguments, not used}
 }

@@ -255,7 +255,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(!is.null(esup)) p <- .add_supp (p, X, element = esup$name, axes = axes, select = select,
                                 geom = geom, color = esup$color, shape = esup$shape, pointsize = pointsize,
                                 labelsize = labelsize, addlabel = esup$addlabel, repel = repel, linetype = 2,
-                                scale. = scale., ca_map = ca_map)
+                                scale. = scale., ca_map = ca_map, ...)
   
   
   p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
