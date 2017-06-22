@@ -12,7 +12,8 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   col.row.sup = "darkblue", col.col.sup = "darkred", select = list(name =
   NULL, cos2 = NULL, contrib = NULL), title = NULL,
   axes.linetype = "dashed", repel = FALSE, col.circle = "grey70",
-  ggtheme = theme_minimal(), ggp = NULL, ...)
+  circlesize = 0.5, ggtheme = theme_minimal(), ggp = NULL,
+  font.family = "", ...)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
@@ -109,11 +110,15 @@ labels or not.}
 \item{col.circle}{a color for the correlation circle. Used only when X is a
 PCA output.}
 
+\item{circlesize}{the size of the variable correlation circle.}
+
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{ggp}{a ggplot. If not NULL, points are added to an existing plot.}
+
+\item{font.family}{character vector specifying font family.}
 
 \item{...}{Arguments to be passed to the functions ggpubr::ggscatter() &
 ggpubr::ggpar().}

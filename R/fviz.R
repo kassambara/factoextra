@@ -40,6 +40,7 @@ NULL
 #'  fill color. Use alpha = 0 for no fill color.
 #'@param col.circle a color for the correlation circle. Used only when X is a
 #'  PCA output.
+#'@param circlesize the size of the variable correlation circle.
 #'@param axes.linetype linetype of x and y axes.
 #'@param color color to be used for the specified geometries (point, text). Can
 #'  be a continuous variable or a factor variable. Possible values include also
@@ -67,6 +68,7 @@ NULL
 #'  contrib are drawn }
 #'@param ggp a ggplot. If not NULL, points are added to an existing plot.
 #'@inheritParams ggpubr::ggpar
+#' @param font.family character vector specifying font family.
 #'@param ... Arguments to be passed to the functions ggpubr::ggscatter() &
 #'  ggpubr::ggpar().
 #'  
@@ -115,8 +117,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           col.row.sup = "darkblue", col.col.sup="darkred",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
                           title = NULL, axes.linetype = "dashed",
-                          repel = FALSE, col.circle ="grey70", ggtheme = theme_minimal(),
-                          ggp = NULL,
+                          repel = FALSE, col.circle ="grey70", circlesize = 0.5, ggtheme = theme_minimal(),
+                          ggp = NULL, font.family = "",
                            ...)
   {
   
@@ -211,7 +213,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          label = label, font.label = labelsize*3, repel = repel,
                          ellipse = addEllipses, ellipse.type = ellipse.type,
                          ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
-                         main = title, ggtheme = ggtheme, ggp = ggp, ...)
+                         main = title, ggtheme = ggtheme, ggp = ggp, font.family = font.family, ...)
   if(alpha %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
   if(!is.null(gradient.cols))
@@ -223,10 +225,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Add correlation circle if PCA & element = "var" & scale = TRUE
   if(facto.class == "PCA" & element == "var"){
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
-      p <- .add_corr_circle(p, color = col.circle)
+      p <- .add_corr_circle(p, color = col.circle, size = circlesize)
   }
   else if(facto.class %in% c("MCA", "MFA", "HMFA", "FAMD") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
-      p <- .add_corr_circle(p, color = col.circle)
+      p <- .add_corr_circle(p, color = col.circle, size = circlesize)
   }
   # Faceting when multiple variables are used to color individuals
   # (e.g., habillage = 1:2, or data.frame)
@@ -255,7 +257,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(!is.null(esup)) p <- .add_supp (p, X, element = esup$name, axes = axes, select = select,
                                 geom = geom, color = esup$color, shape = esup$shape, pointsize = pointsize,
                                 labelsize = labelsize, addlabel = esup$addlabel, repel = repel, linetype = 2,
-                                scale. = scale., ca_map = ca_map)
+                                scale. = scale., ca_map = ca_map, font.family = font.family)
   
   
   p <- .fviz_finish(p, X, axes, axes.linetype, ...) +
@@ -286,11 +288,12 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 }
 
 # Add correlation circle to variables plot
-.add_corr_circle <- function(p, color = "grey70"){
+.add_corr_circle <- function(p, color = "grey70", size = 0.5){
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p + 
-    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color)
+    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color,
+              size = size)
   
 }
 
