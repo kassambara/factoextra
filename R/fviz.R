@@ -293,7 +293,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p + 
     geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color,
-              size = size)
+              size = size) +
+    coord_fixed()
   
 }
 
