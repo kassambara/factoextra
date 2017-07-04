@@ -17,6 +17,7 @@
 #' @param choose.vars a character vector containing variables to be considered for plotting.
 #'@param stand logical value; if TRUE, data is standardized before principal 
 #'  component analysis
+#'@param axes a numeric vector of length 2 specifying the dimensions to be plotted.
 #'@param geom a text specifying the geometry to be used for the graph. Allowed 
 #'  values are the combination of c("point", "text"). Use "point" (to show only 
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
@@ -104,6 +105,7 @@
 #'@rdname fviz_cluster
 #'@export
 fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE, 
+                         axes = c(1, 2),
                          geom = c("point", "text"), repel = FALSE,
                          show.clust.cent = TRUE,
                          ellipse = TRUE, ellipse.type = "convex", ellipse.level = 0.95,
@@ -115,6 +117,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   
   # Deprecated arguments
   extra_args <- list(...)
+  .check_axes(axes, .length = 2)
   
   if (!is.null(extra_args$jitter)) {
     warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
@@ -176,10 +179,10 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     # ncol(data) > 2 --> PCA
     if(ncol(data)>2){
     pca <- stats::prcomp(data, scale = FALSE, center = FALSE)
-    ind <- facto_summarize(pca, element = "ind", result = "coord", axes = 1:2)
-    eig <- get_eigenvalue(pca)[,2]
-    if(is.null(xlab)) xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
-    if(is.null(ylab)) ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
+    ind <- facto_summarize(pca, element = "ind", result = "coord", axes = axes)
+    eig <- get_eigenvalue(pca)[axes,2]
+    if(is.null(xlab)) xlab = paste0("Dim", axes[1], " (", round(eig[1],1), "%)") 
+    if(is.null(ylab)) ylab = paste0("Dim", axes[2], " (", round(eig[2], 1),"%)")
     }
     # PCA is not performed
     else if(ncol(data) == 2){
@@ -198,14 +201,14 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     label_coord <- ind
   }
   else if(inherits(data, "HCPC")){
-    ind <- res.hcpc$call$X[, c(1, 2, ncol(res.hcpc$call$X))]
+    ind <- res.hcpc$call$X[, c(axes, ncol(res.hcpc$call$X))]
     colnames(ind) <- c("Dim.1", "Dim.2", "clust")
     ind <- cbind.data.frame(name = rownames(ind), ind)
     colnames(ind)[2:3] <-  c("x", "y")
     label_coord <- ind
-    eig <- get_eigenvalue(res.hcpc$call$t$res)[,2]
-    if(is.null(xlab)) xlab = paste0("Dim", 1, " (", round(eig[1],1), "%)") 
-    if(is.null(ylab)) ylab = paste0("Dim", 2, " (", round(eig[2], 1),"%)")
+    eig <- get_eigenvalue(res.hcpc$call$t$res)[axes,2]
+    if(is.null(xlab)) xlab = paste0("Dim", axes[1], " (", round(eig[1], 1), "%)") 
+    if(is.null(ylab)) ylab = paste0("Dim", axes[2], " (", round(eig[2], 1),"%)")
   }
   else stop("A data of class ", class(data), " is not supported.")
   

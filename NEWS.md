@@ -8,6 +8,7 @@
     
 ## Minor changes
    
+- New argument `àxes` in `fviz_cluster`() to specify the dimension to plot.
 - New argument `circlesize` in the function `fviz()` to change the size of the variable correlation circle size.
    
 - It's now possible to color individuals using a custom continuous variable ([#29](https://github.com/kassambara/factoextra/issues/29)). This is done using the argument **col.ind**.
