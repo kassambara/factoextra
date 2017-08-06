@@ -24,7 +24,7 @@ Imports:
     cluster,
     dendextend,
     FactoMineR,
-    ggpubr(>= 0.1.2),
+    ggpubr(>= 0.1.4),
     grid,
     stats,
     reshape2,
