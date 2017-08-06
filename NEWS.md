@@ -8,6 +8,7 @@
     
 ## Minor changes
    
+- New argument `gradient.cols` in `fviz_pca_biplot()`
 - New argument `àxes` in `fviz_cluster`() to specify the dimension to plot.
 - New argument `circlesize` in the function `fviz()` to change the size of the variable correlation circle size.
    

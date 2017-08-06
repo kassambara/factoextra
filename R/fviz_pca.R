@@ -192,7 +192,7 @@ fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"),
 #' @rdname fviz_pca
 #' @export
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
-                            col.ind = "black", col.var = "steelblue",
+                            col.ind = "black", col.var = "steelblue", gradient.cols = NULL,
                             label = "all", invisible="none", repel = FALSE, 
                             habillage = "none", palette = NULL, addEllipses=FALSE, 
                             title = "PCA - Biplot", ...)
@@ -222,6 +222,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                     col.var = col.var,
                     label = label, invisible = invisible,
                     scale.= r*0.7, ggp = p,  ...)
+  if(!is.null(gradient.cols))
+    p <- p + ggpubr:::.gradient_col(gradient.cols)
   p+labs(title=title)
 }
 

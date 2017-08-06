@@ -20,9 +20,9 @@ fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), repel = FALSE,
   = NULL), ...)
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  col.ind = "black", col.var = "steelblue", label = "all",
-  invisible = "none", repel = FALSE, habillage = "none", palette = NULL,
-  addEllipses = FALSE, title = "PCA - Biplot", ...)
+  col.ind = "black", col.var = "steelblue", gradient.cols = NULL,
+  label = "all", invisible = "none", repel = FALSE, habillage = "none",
+  palette = NULL, addEllipses = FALSE, title = "PCA - Biplot", ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
@@ -95,6 +95,9 @@ individuals/variables with the highest contrib are drawn }}
 
 \item{col.circle}{a color for the correlation circle. Used only when X is a
 PCA output.}
+
+\item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
+values include brewer and ggsci color palettes.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
 "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
