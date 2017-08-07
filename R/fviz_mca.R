@@ -16,6 +16,9 @@ NULL
 #'@param X an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
 #'  [ExPosition].
 #'@inheritParams fviz_pca
+#' @param geom.ind,geom.var as \code{geom} but for individuals and variables,
+#'   respectively. Default is geom.ind = c("point", "text), geom.var =
+#'   c("point", "text").
 #'@param label a text specifying the elements to be labelled. Default value is 
 #'  "all". Allowed values are "none" or the combination of c("ind", 
 #'  "ind.sup","var", "quali.sup",  "quanti.sup"). "ind" can be used to label 
@@ -195,7 +198,7 @@ NULL
 #'@name fviz_mca
 #'@rdname fviz_mca
 #'@export
-fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
+fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), geom.ind = geom, repel = FALSE,
                          habillage = "none", palette = NULL, addEllipses = FALSE, 
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
                          shape.ind = 19, map ="symmetric", 
@@ -203,7 +206,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          ...)
 {
   
-  fviz (X, element = "ind", axes = axes, geom = geom, habillage = habillage, 
+  fviz (X, element = "ind", axes = axes, geom = geom.ind, habillage = habillage, 
         addEllipses = addEllipses, palette = palette, pointshape = shape.ind,
         color = col.ind, alpha = alpha.ind,
         shape.sup = shape.ind, col.row.sup = col.ind.sup,
@@ -216,7 +219,7 @@ fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 #' @rdname fviz_mca
 #' @export 
 fviz_mca_var <- function(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"), 
-                         axes=c(1,2), geom = c("point", "text"), repel = FALSE, 
+                         axes=c(1,2), geom = c("point", "text"), geom.var = geom, repel = FALSE, 
                          col.var="red", alpha.var=1, shape.var = 17, col.quanti.sup = "blue", 
                          col.quali.sup = "darkgreen",  map = "symmetric", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
@@ -239,7 +242,7 @@ fviz_mca_var <- function(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"
     if(missing(geom)) geom <- c("arrow", "text")
     if(missing(col.var)) col.var <- col.quanti.sup
   }
-  fviz (X, element = choice, axes = axes, geom = geom,
+  fviz (X, element = choice, axes = axes, geom = geom.var,
         color = col.var, alpha = alpha.var,  pointshape = shape.var, 
         shape.sup = shape.var, col.col.sup = col.col.sup, 
         select = select.var, repel = repel,  map = map, ...)
@@ -250,6 +253,7 @@ fviz_mca_var <- function(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"
 #' @rdname fviz_mca
 #' @export
 fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
+                            geom.ind = geom, geom.var = geom,
                             repel = FALSE, label = "all", invisible="none",
                             habillage="none", addEllipses=FALSE, palette = NULL,
                             arrows = c(FALSE, FALSE), map ="symmetric", 
@@ -257,14 +261,14 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 {
   
   # Individuals
-  geom2 <- geom
+  geom2 <- geom.ind
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_mca_ind(X,  axes = axes, geom = geom2, repel = repel,
                     label = label, invisible=invisible, habillage = habillage,
                     addEllipses = addEllipses, palette = palette,  ...)
     
   # Variable
-  geom2 <- geom
+  geom2 <- geom.var
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   # Add variables
   p <- fviz_mca_var(X, axes = axes, geom =  geom2, repel = repel, 

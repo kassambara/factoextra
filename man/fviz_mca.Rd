@@ -8,22 +8,23 @@
 \alias{fviz_mca}
 \title{Visualize Multiple Correspondence Analysis}
 \usage{
-fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  habillage = "none", palette = NULL, addEllipses = FALSE,
-  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  shape.ind = 19, map = "symmetric", select.ind = list(name = NULL, cos2 =
-  NULL, contrib = NULL), ...)
+fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"),
+  geom.ind = geom, repel = FALSE, habillage = "none", palette = NULL,
+  addEllipses = FALSE, col.ind = "blue", col.ind.sup = "darkblue",
+  alpha.ind = 1, shape.ind = 19, map = "symmetric",
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_mca_var(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"),
-  axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  col.var = "red", alpha.var = 1, shape.var = 17,
+  axes = c(1, 2), geom = c("point", "text"), geom.var = geom,
+  repel = FALSE, col.var = "red", alpha.var = 1, shape.var = 17,
   col.quanti.sup = "blue", col.quali.sup = "darkgreen", map = "symmetric",
   select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  repel = FALSE, label = "all", invisible = "none", habillage = "none",
-  addEllipses = FALSE, palette = NULL, arrows = c(FALSE, FALSE),
-  map = "symmetric", title = "MCA - Biplot", ...)
+  geom.ind = geom, geom.var = geom, repel = FALSE, label = "all",
+  invisible = "none", habillage = "none", addEllipses = FALSE,
+  palette = NULL, arrows = c(FALSE, FALSE), map = "symmetric",
+  title = "MCA - Biplot", ...)
 
 fviz_mca(X, ...)
 }
@@ -38,6 +39,10 @@ plotted.}
 values are the combination of c("point", "arrow", "text"). Use "point" (to 
 show only points); "text" to show only labels; c("point", "text") or 
 c("arrow", "text") to show both types.}
+
+\item{geom.ind, geom.var}{as \code{geom} but for individuals and variables,
+respectively. Default is geom.ind = c("point", "text), geom.var =
+c("point", "text").}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
