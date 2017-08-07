@@ -25,6 +25,9 @@ NULL
 #'  Allowed values are the combination of c("point", "arrow", "text"). Use 
 #'  "point" (to show only points); "text" to show only labels; c("point", 
 #'  "text") or c("arrow", "text") to show both types.
+#' @param geom.row,geom.col as \code{geom} but for row and column elements,
+#'   respectively. Default is geom.row = c("point", "text), geom.col =
+#'   c("point", "text").
 #'@param label a character vector specifying the elements to be labelled. 
 #'  Default value is "all". Allowed values are "none" or the combination of 
 #'  c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
@@ -168,7 +171,7 @@ NULL
 #'  
 #'@rdname fviz_ca
 #'@export
-fviz_ca_row <-function(X,  axes = c(1,2), geom = c("point", "text"),
+fviz_ca_row <-function(X,  axes = c(1,2), geom = c("point", "text"), geom.row = geom,
                        shape.row = 19, col.row ="blue", alpha.row = 1,
                        col.row.sup="darkblue",  
                        select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -176,7 +179,7 @@ fviz_ca_row <-function(X,  axes = c(1,2), geom = c("point", "text"),
                        ...)
 {
   
-  p <- fviz (X, element = "row", axes = axes, geom = geom,
+  p <- fviz (X, element = "row", axes = axes, geom = geom.row,
                       color = col.row, alpha = alpha.row,
                       pointshape = shape.row, select = select.row, 
                       map = map, repel = repel, 
@@ -188,14 +191,14 @@ fviz_ca_row <-function(X,  axes = c(1,2), geom = c("point", "text"),
 #' @rdname fviz_ca
 #' @export 
 fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17, 
-                       geom=c("point", "text"),
+                       geom=c("point", "text"), geom.col = geom,
                        col.col ="red", col.col.sup="darkred",  alpha.col = 1,
                        select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
                        map ="symmetric", repel = FALSE,
                        ...)
 {
   
-  fviz (X, element = "col", axes = axes, geom = geom,
+  fviz (X, element = "col", axes = axes, geom = geom.col,
         color = col.col, alpha = alpha.col,
         pointshape = shape.col, select = select.col, 
         map = map, repel = repel, 
@@ -210,17 +213,18 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
 #' @rdname fviz_ca
 #' @export 
 fviz_ca_biplot <-function(X,  axes = c(1,2), geom=c("point", "text"), 
+                          geom.row = geom, geom.col = geom,
                           label = "all", invisible="none", arrows = c(FALSE, FALSE),
                           repel = FALSE, title = "CA - Biplot",
                        ...)
 {
   # Rows
-  geom2 <- geom
+  geom2 <- geom.row
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_ca_row(X,  axes = axes, geom=geom2, repel = repel,
         label = label, invisible = invisible, ...)
   # Add columns
-  geom2 <- geom
+  geom2 <- geom.col
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_ca_col(X,  axes = axes, geom=geom2, repel = repel,
                    label = label, invisible = invisible, 

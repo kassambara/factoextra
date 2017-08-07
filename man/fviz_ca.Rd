@@ -8,19 +8,19 @@
 \alias{fviz_ca}
 \title{Visualize Correspondence Analysis}
 \usage{
-fviz_ca_row(X, axes = c(1, 2), geom = c("point", "text"), shape.row = 19,
-  col.row = "blue", alpha.row = 1, col.row.sup = "darkblue",
-  select.row = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", repel = FALSE, ...)
+fviz_ca_row(X, axes = c(1, 2), geom = c("point", "text"), geom.row = geom,
+  shape.row = 19, col.row = "blue", alpha.row = 1,
+  col.row.sup = "darkblue", select.row = list(name = NULL, cos2 = NULL,
+  contrib = NULL), map = "symmetric", repel = FALSE, ...)
 
 fviz_ca_col(X, axes = c(1, 2), shape.col = 17, geom = c("point", "text"),
-  col.col = "red", col.col.sup = "darkred", alpha.col = 1,
-  select.col = list(name = NULL, cos2 = NULL, contrib = NULL),
-  map = "symmetric", repel = FALSE, ...)
+  geom.col = geom, col.col = "red", col.col.sup = "darkred",
+  alpha.col = 1, select.col = list(name = NULL, cos2 = NULL, contrib =
+  NULL), map = "symmetric", repel = FALSE, ...)
 
 fviz_ca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  label = "all", invisible = "none", arrows = c(FALSE, FALSE),
-  repel = FALSE, title = "CA - Biplot", ...)
+  geom.row = geom, geom.col = geom, label = "all", invisible = "none",
+  arrows = c(FALSE, FALSE), repel = FALSE, title = "CA - Biplot", ...)
 
 fviz_ca(X, ...)
 }
@@ -35,6 +35,10 @@ plotted.}
 Allowed values are the combination of c("point", "arrow", "text"). Use 
 "point" (to show only points); "text" to show only labels; c("point", 
 "text") or c("arrow", "text") to show both types.}
+
+\item{geom.row, geom.col}{as \code{geom} but for row and column elements,
+respectively. Default is geom.row = c("point", "text), geom.col =
+c("point", "text").}
 
 \item{shape.row, shape.col}{the point shapes to be used for row/column 
 variables. Default values are 19 for rows and 17 for columns.}
