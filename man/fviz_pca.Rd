@@ -9,28 +9,30 @@
 \usage{
 fviz_pca(X, ...)
 
-fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  habillage = "none", palette = NULL, addEllipses = FALSE,
-  col.ind = "black", col.ind.sup = "blue", alpha.ind = 1,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"),
+  geom.ind = geom, repel = FALSE, habillage = "none", palette = NULL,
+  addEllipses = FALSE, col.ind = "black", col.ind.sup = "blue",
+  alpha.ind = 1, select.ind = list(name = NULL, cos2 = NULL, contrib =
+  NULL), ...)
 
-fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"), repel = FALSE,
-  col.var = "black", alpha.var = 1, col.quanti.sup = "blue",
-  col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL, contrib
-  = NULL), ...)
+fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"),
+  geom.var = geom, repel = FALSE, col.var = "black", alpha.var = 1,
+  col.quanti.sup = "blue", col.circle = "grey70", select.var = list(name =
+  NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  col.ind = "black", col.var = "steelblue", gradient.cols = NULL,
-  label = "all", invisible = "none", repel = FALSE, habillage = "none",
-  palette = NULL, addEllipses = FALSE, title = "PCA - Biplot", ...)
+  geom.ind = geom, geom.var = c("arrow", "text"), col.ind = "black",
+  col.var = "steelblue", gradient.cols = NULL, label = "all",
+  invisible = "none", repel = FALSE, habillage = "none", palette = NULL,
+  addEllipses = FALSE, title = "PCA - Biplot", ...)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
 dudi and pca [ade4]; expOutput/epPCA [ExPosition].}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_pca_ind() and 
-fviz_pca_var(): Additional arguments are passed to the functions 
-fviz() and ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional
+fviz_pca_var(): Additional arguments are passed to the functions fviz() and
+ggpubr::ggpar(). \item in fviz_pca_biplot() and fviz_pca(): Additional 
 arguments are passed to fviz_pca_ind() and fviz_pca_var().}}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
@@ -40,6 +42,10 @@ plotted.}
 values are the combination of c("point", "arrow", "text"). Use "point" (to 
 show only points); "text" to show only labels; c("point", "text") or 
 c("arrow", "text") to show both types.}
+
+\item{geom.ind, geom.var}{as \code{geom} but for individuals and variables,
+respectively. Default is geom.ind = c("point", "text), geom.var =
+c("arrow", "text").}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
@@ -63,13 +69,12 @@ case a basic color palette is created using the function
 individuals when habillage != "none".}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. Can
-be a continuous variable or a factor variable. 
- Possible values include also : "cos2", "contrib", "coord", "x" or "y". In 
- this case, the colors for individuals/variables are automatically 
- controlled by their qualities of representation ("cos2"), contributions 
- ("contrib"), coordinates (x^2+y^2, "coord"), x values ("x") or y values 
- ("y"). To use automatic coloring (by cos2, contrib, ....), make sure that 
- habillage ="none".}
+be a continuous variable or a factor variable. Possible values include also
+: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+individuals/variables are automatically controlled by their qualities of
+representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
+"coord"), x values ("x") or y values ("y"). To use automatic coloring (by
+cos2, contrib, ....), make sure that habillage ="none".}
 
 \item{col.ind.sup}{color for supplementary individuals}
 
@@ -120,7 +125,8 @@ Principal component analysis (PCA) reduces the dimensionality of
   multivariate data, to two or three that can be visualized graphically with 
   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
-  stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA [ExPosition]. Read more: 
+  stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA
+  [ExPosition]. Read more: 
   \href{http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining}{Principal
    Component Analysis}
   

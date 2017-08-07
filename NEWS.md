@@ -8,6 +8,7 @@
     
 ## Minor changes
    
+- New arguments `geom.ind` and `geom.var` in `fviz_pca_xxx()` functions to have more controls on the individuals/variables geometry in the function `fviz_pca_biplot()` ([@Confurious, #42](https://github.com/kassambara/factoextra/issues/42)).
 - New argument `gradient.cols` in `fviz_pca_biplot()`
 - New argument `àxes` in `fviz_cluster`() to specify the dimension to plot.
 - New argument `circlesize` in the function `fviz()` to change the size of the variable correlation circle size.
