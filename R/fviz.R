@@ -228,7 +228,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
   
   if(!is.null(gradient.cols))
-    p <- p + ggpubr:::gradient_color(gradient.cols)
+    p <- p + ggpubr::gradient_color(gradient.cols)
     
     
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
