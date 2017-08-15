@@ -114,7 +114,7 @@ variables and group of variables, respectively.}
 
 \item{col.var.sup}{color for supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle. Used only when X is a
+\item{col.circle}{a color for the correlation circle. Used only when X is a 
 PCA output.}
 }
 \value{

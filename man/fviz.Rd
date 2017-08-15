@@ -8,7 +8,7 @@ fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
   invisible = "none", labelsize = 4, pointsize = 1.5, pointshape = 19,
   arrowsize = 0.5, habillage = "none", addEllipses = FALSE,
   ellipse.level = 0.95, ellipse.type = "norm", ellipse.alpha = 0.1,
-  color = "black", alpha = 1, gradient.cols = NULL,
+  color = "black", fill = "white", alpha = 1, gradient.cols = NULL,
   col.row.sup = "darkblue", col.col.sup = "darkred", select = list(name =
   NULL, cos2 = NULL, contrib = NULL), title = NULL,
   axes.linetype = "dashed", repel = FALSE, col.circle = "grey70",
@@ -26,15 +26,15 @@ and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput
 \item{axes}{a numeric vector specifying the axes of interest. Default values 
 are 1:2 for axes 1 and 2.}
 
-\item{geom}{a text specifying the geometry to be used for the graph. Default
-value is "auto". Allowed values are the combination of c("point", "arrow",
-"text"). Use "point" (to show only points); "text" to show only labels;
+\item{geom}{a text specifying the geometry to be used for the graph. Default 
+value is "auto". Allowed values are the combination of c("point", "arrow", 
+"text"). Use "point" (to show only points); "text" to show only labels; 
 c("point", "text") or c("arrow", "text") to show both types.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
 "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
-"quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only
-active individuals. "ind.sup" is for supplementary individuals. "quali" is
+"quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only 
+active individuals. "ind.sup" is for supplementary individuals. "quali" is 
 for supplementary qualitative variables. "var" is for active variables. 
 "quanti.sup" is for quantitative supplementary variables.}
 
@@ -69,20 +69,23 @@ including one of c("t", "norm", "euclid").}
 \item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
 fill color. Use alpha = 0 for no fill color.}
 
-\item{color}{color to be used for the specified geometries (point, text). Can
-be a continuous variable or a factor variable. Possible values include also
-: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
-individuals/variables are automatically controlled by their qualities of
-representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
-"coord"), x values ("x") or y values ("y"). To use automatic coloring (by
+\item{color}{color to be used for the specified geometries (point, text). Can 
+be a continuous variable or a factor variable. Possible values include also 
+: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+individuals/variables are automatically controlled by their qualities of 
+representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
+"coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
 cos2, contrib, ....), make sure that habillage ="none".}
 
-\item{alpha}{controls the transparency of individual and variable colors,
-respectively. The value can variate from 0 (total transparency) to 1 (no
-transparency). Default value is 1. Possible values include also : "cos2",
-"contrib", "coord", "x" or "y". In this case, the transparency for the
-individual/variable colors are automatically controlled by their qualities
-("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x
+\item{fill}{same as the argument \code{color}, but for point fill color.
+Useful when pointshape = 21, for example.}
+
+\item{alpha}{controls the transparency of individual and variable colors, 
+respectively. The value can variate from 0 (total transparency) to 1 (no 
+transparency). Default value is 1. Possible values include also : "cos2", 
+"contrib", "coord", "x" or "y". In this case, the transparency for the 
+individual/variable colors are automatically controlled by their qualities 
+("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x 
 values("x") or y values("y"). To use this, make sure that habillage ="none".}
 
 \item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
@@ -93,11 +96,11 @@ points, respectively.}
 
 \item{select}{a selection of individuals/variables to be drawn. Allowed values
 are NULL or a list containing the arguments name, cos2 or contrib: \itemize{
-\item name: is a character vector containing individuals/variables to be
-drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables
-with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5
-individuals/variables with the highest cos2 are drawn. \item contrib: if
-contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest
+\item name: is a character vector containing individuals/variables to be 
+drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables 
+with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5 
+individuals/variables with the highest cos2 are drawn. \item contrib: if 
+contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest 
 contrib are drawn }}
 
 \item{title}{the title of the graph}
@@ -107,7 +110,7 @@ contrib are drawn }}
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
 
-\item{col.circle}{a color for the correlation circle. Used only when X is a
+\item{col.circle}{a color for the correlation circle. Used only when X is a 
 PCA output.}
 
 \item{circlesize}{the size of the variable correlation circle.}
@@ -120,7 +123,7 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 
 \item{font.family}{character vector specifying font family.}
 
-\item{...}{Arguments to be passed to the functions ggpubr::ggscatter() &
+\item{...}{Arguments to be passed to the functions ggpubr::ggscatter() & 
 ggpubr::ggpar().}
 }
 \value{

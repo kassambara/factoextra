@@ -4,14 +4,14 @@ NULL
 #'@description Generic function to create a scatter plot of multivariate analyse
 #'  outputs, including PCA, CA, MCA and MFA.
 #'@inheritParams facto_summarize
-#'@param geom a text specifying the geometry to be used for the graph. Default
-#'  value is "auto". Allowed values are the combination of c("point", "arrow",
-#'  "text"). Use "point" (to show only points); "text" to show only labels;
+#'@param geom a text specifying the geometry to be used for the graph. Default 
+#'  value is "auto". Allowed values are the combination of c("point", "arrow", 
+#'  "text"). Use "point" (to show only points); "text" to show only labels; 
 #'  c("point", "text") or c("arrow", "text") to show both types.
 #'@param label a text specifying the elements to be labelled. Default value is 
 #'  "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
-#'  "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only
-#'  active individuals. "ind.sup" is for supplementary individuals. "quali" is
+#'  "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only 
+#'  active individuals. "ind.sup" is for supplementary individuals. "quali" is 
 #'  for supplementary qualitative variables. "var" is for active variables. 
 #'  "quanti.sup" is for quantitative supplementary variables.
 #'@param invisible a text specifying the elements to be hidden on the plot. 
@@ -38,38 +38,40 @@ NULL
 #'  including one of c("t", "norm", "euclid").
 #'@param ellipse.alpha Alpha for ellipse specifying the transparency level of 
 #'  fill color. Use alpha = 0 for no fill color.
-#'@param col.circle a color for the correlation circle. Used only when X is a
+#'@param col.circle a color for the correlation circle. Used only when X is a 
 #'  PCA output.
 #'@param circlesize the size of the variable correlation circle.
 #'@param axes.linetype linetype of x and y axes.
-#'@param color color to be used for the specified geometries (point, text). Can
-#'  be a continuous variable or a factor variable. Possible values include also
-#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
-#'  individuals/variables are automatically controlled by their qualities of
-#'  representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
-#'  "coord"), x values ("x") or y values ("y"). To use automatic coloring (by
+#'@param color color to be used for the specified geometries (point, text). Can 
+#'  be a continuous variable or a factor variable. Possible values include also 
+#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+#'  individuals/variables are automatically controlled by their qualities of 
+#'  representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
+#'  "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
 #'  cos2, contrib, ....), make sure that habillage ="none".
-#'@param alpha controls the transparency of individual and variable colors,
-#'  respectively. The value can variate from 0 (total transparency) to 1 (no
-#'  transparency). Default value is 1. Possible values include also : "cos2",
-#'  "contrib", "coord", "x" or "y". In this case, the transparency for the
-#'  individual/variable colors are automatically controlled by their qualities
-#'  ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x
+#'@param fill same as the argument \code{color}, but for point fill color.
+#'  Useful when pointshape = 21, for example.
+#'@param alpha controls the transparency of individual and variable colors, 
+#'  respectively. The value can variate from 0 (total transparency) to 1 (no 
+#'  transparency). Default value is 1. Possible values include also : "cos2", 
+#'  "contrib", "coord", "x" or "y". In this case, the transparency for the 
+#'  individual/variable colors are automatically controlled by their qualities 
+#'  ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x 
 #'  values("x") or y values("y"). To use this, make sure that habillage ="none".
 #'@param col.col.sup,col.row.sup colors for the supplementary column and row 
 #'  points, respectively.
 #'@param select a selection of individuals/variables to be drawn. Allowed values
 #'  are NULL or a list containing the arguments name, cos2 or contrib: \itemize{
-#'  \item name: is a character vector containing individuals/variables to be
-#'  drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables
-#'  with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5
-#'  individuals/variables with the highest cos2 are drawn. \item contrib: if
-#'  contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest
+#'  \item name: is a character vector containing individuals/variables to be 
+#'  drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables 
+#'  with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5 
+#'  individuals/variables with the highest cos2 are drawn. \item contrib: if 
+#'  contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest 
 #'  contrib are drawn }
 #'@param ggp a ggplot. If not NULL, points are added to an existing plot.
 #'@inheritParams ggpubr::ggpar
-#' @param font.family character vector specifying font family.
-#'@param ... Arguments to be passed to the functions ggpubr::ggscatter() &
+#'@param font.family character vector specifying font family.
+#'@param ... Arguments to be passed to the functions ggpubr::ggscatter() & 
 #'  ggpubr::ggpar().
 #'  
 #'@return a ggplot
@@ -113,7 +115,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           pointsize = 1.5, pointshape = 19, arrowsize = 0.5,
                           habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
                           ellipse.type = "norm", ellipse.alpha = 0.1,
-                          color = "black", alpha = 1, gradient.cols = NULL,
+                          color = "black", fill = "white", alpha = 1, gradient.cols = NULL,
                           col.row.sup = "darkblue", col.col.sup="darkred",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
                           title = NULL, axes.linetype = "dashed",
@@ -171,13 +173,21 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     color <- dd$name.quali
     if(missing(pointshape)) pointshape <- dd$name.quali
   }
-  # Augment data if color is a continuous varable or a factor variable
+  # Augment data if color is a continuous variable or a factor variable
   if(length(color) > 1){
     if(nrow(df) != length(color)) stop("The length of color variable",
                                     "should be the same as the number of rows in the data.")
     if(is.factor(color)) df$Col. <- factor(color, levels = levels(color))
     else df$Col. <- color
     color <- "Col."
+  }
+  # Augment data if fill is a continuous variable or a factor variable
+  if(length(fill) > 1){
+    if(nrow(df) != length(fill)) stop("The length of fill variable",
+                                       "should be the same as the number of rows in the data.")
+    if(is.factor(fill)) df$Fill. <- factor(fill, levels = levels(fill))
+    else df$Fill. <- fill
+    fill <- "Fill."
   }
   # Selection
   df.all <- df
@@ -208,7 +218,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     else p <- ggp
   }
   else p <- ggpubr::ggscatter(data = df, x = "x", y = "y",
-                         color = color,  alpha = alpha, shape = pointshape, 
+                         color = color, fill = fill,  alpha = alpha, shape = pointshape, 
                          point = point, size = pointsize, mean.point = mean.point,
                          label = label, font.label = labelsize*3, repel = repel,
                          ellipse = addEllipses, ellipse.type = ellipse.type,
@@ -217,7 +227,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(alpha %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
   if(!is.null(gradient.cols))
-    p <- p + ggpubr:::.gradient_col(gradient.cols)
+    p <- p + ggpubr:::gradient_color(gradient.cols)+
+             ggpubr:::gradient_fill(gradient.cols)
+    
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
   if("arrow" %in% geom & !hide[[element]]) 

@@ -98,7 +98,7 @@ individuals/variables with the highest contrib are drawn }}
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 
-\item{col.circle}{a color for the correlation circle. Used only when X is a
+\item{col.circle}{a color for the correlation circle. Used only when X is a 
 PCA output.}
 
 \item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
