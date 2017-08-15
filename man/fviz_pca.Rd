@@ -77,6 +77,8 @@ representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
 "coord"), x values ("x") or y values ("y"). To use automatic coloring (by
 cos2, contrib, ....), make sure that habillage ="none".}
 
+\item{fill.ind, fill.var}{same as col.ind and col.var but for the fill color.}
+
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var}{controls the transparency of individual and 

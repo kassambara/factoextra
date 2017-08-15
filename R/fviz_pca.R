@@ -51,6 +51,7 @@
 #'   representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
 #'   "coord"), x values ("x") or y values ("y"). To use automatic coloring (by
 #'   cos2, contrib, ....), make sure that habillage ="none".
+#' @param fill.ind,fill.var same as col.ind and col.var but for the fill color.
 #' @param col.ind.sup color for supplementary individuals
 #' @param alpha.ind,alpha.var controls the transparency of individual and 
 #'   variable colors, respectively. The value can variate from 0 (total 
