@@ -182,8 +182,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     if(nrow(df) != length(color)) stop("The length of color variable",
                                     "should be the same as the number of rows in the data.")
     df$Col. <- color
+    if(missing(pointshape) & .is_grouping_var(color)) pointshape <- "Col."
     color <- "Col."
-    if(missing(pointshape)) pointshape <- "Col."
   }
   # Augment data if fill is a continuous variable or a factor variable
   if(length(fill) > 1){
