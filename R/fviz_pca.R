@@ -231,8 +231,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                     scale.= r*0.7, ggp = p,  ...)
   
   if(!is.null(gradient.cols)){
-    if(.is_continuous_var(col.ind) | .is_continuous_var(col.var)) p <- p + ggpubr:::gradient_color(gradient.cols)
-    if(.is_continuous_var(fill.ind) | .is_continuous_var(fill.var)) p <- p + ggpubr:::gradient_fill(gradient.cols)
+    if(.is_continuous_var(col.ind) | .is_continuous_var(col.var)) p <- p + ggpubr::gradient_color(gradient.cols)
+    if(.is_continuous_var(fill.ind) | .is_continuous_var(fill.var)) p <- p + ggpubr::gradient_fill(gradient.cols)
   }
   
   if(!is.null(palette)){
