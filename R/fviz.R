@@ -169,7 +169,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   colnames(df)[2:3] <-  c("x", "y")
   # Color by grouping variables
   #::::::::::::::::::::::::::::::::::::::
-  is_grouping_var_exists <- !("none" %in% habillage) | (is.factor(color) | is.character(color))
+  is_grouping_var_exists <- !("none" %in% habillage) | .is_grouping_var(color) | .is_grouping_var(fill)
   # Augment data, if qualitative variable is used to color points by groups
   if(!("none" %in% habillage)){
     dd <- .add_ind_groups(X, df, habillage)
@@ -189,8 +189,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(length(fill) > 1){
     if(nrow(df) != length(fill)) stop("The length of fill variable",
                                        "should be the same as the number of rows in the data.")
-    if(is.factor(fill)) df$Fill. <- factor(fill, levels = levels(fill))
-    else df$Fill. <- fill
+    df$Fill. <- fill
     fill <- "Fill."
   }
   # Selection
@@ -288,6 +287,26 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 #+++++++++++++++++++++
 # Helper functions
 #+++++++++++++++++++++
+
+
+# Check if fill/color variable is continous in the context of PCA
+.is_continuous_var <- function(x){
+  x[1] %in% c("cos2", "contrib", "x", "y") | is.numeric(x)
+}
+
+.is_grouping_var <- function(x){
+  length(x) > 1 & (is.character(x) | is.factor(x))
+}
+
+# Check if character string is a valid color representation
+.is_color <- function(x) {
+  sapply(x, function(X) {
+    tryCatch(is.matrix(grDevices::col2rgb(X)),
+             error = function(e) FALSE)
+  })
+}
+
+
 # X : an object of class PCA, princomp, prcomp, dudi, expoOutput
 # Return TRUE if the data are scaled to unit variance
 .get_scale_unit <-function(X){
@@ -368,4 +387,5 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   res$shape <- shape.sup
   res
 }
+
 

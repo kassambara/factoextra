@@ -244,27 +244,5 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   p+labs(title=title)
 }
 
-# Helper functions
-#:::::::::::::::::::::::::::::::::::
-# Check if fill/color variable is continous in the context of PCA
-.is_continuous_var <- function(x){
-  x[1] %in% c("cos2", "contrib", "x", "y") | is.numeric(x)
-}
-
-.is_grouping_var <- function(x){
-  !.is_continuous_var(x) & !.is_color(x[1])
-}
-
-# Check if character string is a valid color representation
-.is_color <- function(x) {
-  sapply(x, function(X) {
-    tryCatch(is.matrix(grDevices::col2rgb(X)),
-             error = function(e) FALSE)
-  })
-}
-
-
-
-
 
 
