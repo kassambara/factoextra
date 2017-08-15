@@ -126,6 +126,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   
   .check_axes(axes, .length = 2)
   facto.class <- .get_facto_class(X)
+    
   # Deprecated arguments: jitter
   extra_args <- list(...)
   if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
@@ -166,7 +167,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   else if(element == "group" & facto.class == "HMFA") summary.res <- "coord"
   df <- facto_summarize(X, element = element, axes = axes, result = summary.res)
   colnames(df)[2:3] <-  c("x", "y")
-  # augment data, if qualitative variable is used to color points by groups
+  # Color by grouping variables
+  #::::::::::::::::::::::::::::::::::::::
+  is_grouping_var_exists <- !("none" %in% habillage) | (is.factor(color) | is.character(color))
+  # Augment data, if qualitative variable is used to color points by groups
   if(!("none" %in% habillage)){
     dd <- .add_ind_groups(X, df, habillage)
     df <- dd$ind
@@ -177,9 +181,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(length(color) > 1){
     if(nrow(df) != length(color)) stop("The length of color variable",
                                     "should be the same as the number of rows in the data.")
-    if(is.factor(color)) df$Col. <- factor(color, levels = levels(color))
-    else df$Col. <- color
+    df$Col. <- color
     color <- "Col."
+    if(missing(pointshape)) pointshape <- "Col."
   }
   # Augment data if fill is a continuous variable or a factor variable
   if(length(fill) > 1){
@@ -205,8 +209,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Main plot
   #%%%%%%%%%%%%%%%%%%%
+  is.pca.var <- element == "var" & facto.class == "PCA" # We don't want meanpoint for PCA variables colored by groups
   point <- ("point" %in% geom) & (!hide[[element]]) # to show points, should be TRUE
-  mean.point <- (!("none" %in% habillage)) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
+  mean.point <- (is_grouping_var_exists & !is.pca.var) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
   if(element == "quanti.var") mean.point <- FALSE # MFA, don't show the mean point of groups of variables
   
   label <- NULL
