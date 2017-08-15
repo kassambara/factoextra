@@ -226,9 +226,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          main = title, ggtheme = ggtheme, ggp = ggp, font.family = font.family, ...)
   if(alpha %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
+  
   if(!is.null(gradient.cols))
-    p <- p + ggpubr:::gradient_color(gradient.cols)+
-             ggpubr:::gradient_fill(gradient.cols)
+    p <- p + ggpubr:::gradient_color(gradient.cols)
+    
     
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
@@ -282,7 +283,6 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 #+++++++++++++++++++++
 # Helper functions
 #+++++++++++++++++++++
-
 # X : an object of class PCA, princomp, prcomp, dudi, expoOutput
 # Return TRUE if the data are scaled to unit variance
 .get_scale_unit <-function(X){

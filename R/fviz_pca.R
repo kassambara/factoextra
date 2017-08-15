@@ -163,14 +163,14 @@ fviz_pca <- function(X, ...){
 fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"),
                          geom.ind = geom, repel = FALSE,
                          habillage="none", palette = NULL, addEllipses=FALSE, 
-                         col.ind = "black", col.ind.sup = "blue", alpha.ind =1,
+                         col.ind = "black", fill.ind = "white", col.ind.sup = "blue", alpha.ind =1,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          ...)
 {
  
   fviz (X, element = "ind", axes = axes, geom = geom.ind,
                  habillage = habillage, palette = palette, addEllipses = addEllipses, 
-                 color = col.ind, alpha = alpha.ind, col.row.sup = col.ind.sup,
+                 color = col.ind, fill = fill.ind, alpha = alpha.ind, col.row.sup = col.ind.sup,
                 select = select.ind, repel = repel,  ...)
   
 }
@@ -180,13 +180,13 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"),
 #' @export 
 fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"), 
                          geom.var = geom,
-                         repel = FALSE, col.var="black", alpha.var=1, 
+                         repel = FALSE, col.var="black", fill.var = "white", alpha.var=1, 
                          col.quanti.sup="blue", col.circle ="grey70", 
                          select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
                           ...)
 {
   fviz (X, element = "var", axes = axes, geom = geom.var,
-                color = col.var, alpha = alpha.var,  select = select.var,
+                color = col.var, fill = fill.var, alpha = alpha.var,  select = select.var,
                 repel = repel, col.col.sup = col.quanti.sup, 
                 col.circle = col.circle,...)
   
@@ -198,7 +198,8 @@ fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"),
 #' @export
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             geom.ind = geom, geom.var = c("arrow", "text"),
-                            col.ind = "black", col.var = "steelblue", gradient.cols = NULL,
+                            col.ind = "black", fill.ind = "white", 
+                            col.var = "steelblue", fill.var = "white", gradient.cols = NULL,
                             label = "all", invisible="none", repel = FALSE, 
                             habillage = "none", palette = NULL, addEllipses=FALSE, 
                             title = "PCA - Biplot", ...)
@@ -220,19 +221,46 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom.ind, repel = repel,
-                    col.ind = col.ind,
+                    col.ind = col.ind, fill.ind = fill.ind,
                     label = label, invisible=invisible, habillage = habillage,
-                    addEllipses = addEllipses, palette = palette, ...)
+                    addEllipses = addEllipses, palette = palette,  ...)
   # Add variables
   p <- fviz_pca_var(X, axes = axes, geom =  geom.var, repel = repel,
-                    col.var = col.var,
+                    col.var = col.var, fill.var = fill.var,
                     label = label, invisible = invisible,
                     scale.= r*0.7, ggp = p,  ...)
-  if(!is.null(gradient.cols))
-    p <- p + ggpubr:::.gradient_col(gradient.cols)
+  
+  if(!is.null(gradient.cols)){
+    if(.is_continuous_var(col.ind) | .is_continuous_var(col.var)) p <- p + ggpubr:::gradient_color(gradient.cols)
+    if(.is_continuous_var(fill.ind) | .is_continuous_var(fill.var)) p <- p + ggpubr:::gradient_fill(gradient.cols)
+  }
+  
+  if(!is.null(palette)){
+    if(.is_grouping_var(col.ind) | .is_grouping_var(col.var)) p <- p + ggpubr::color_palette(palette)
+    if(.is_grouping_var(fill.ind) | .is_grouping_var(fill.var)) p <- p + ggpubr::fill_palette(palette)
+  }
+  
   p+labs(title=title)
 }
 
+# Helper functions
+#:::::::::::::::::::::::::::::::::::
+# Check if fill/color variable is continous in the context of PCA
+.is_continuous_var <- function(x){
+  x[1] %in% c("cos2", "contrib", "x", "y") | is.numeric(x)
+}
+
+.is_grouping_var <- function(x){
+  !.is_continuous_var(x) & !.is_color(x[1])
+}
+
+# Check if character string is a valid color representation
+.is_color <- function(x) {
+  sapply(x, function(X) {
+    tryCatch(is.matrix(grDevices::col2rgb(X)),
+             error = function(e) FALSE)
+  })
+}
 
 
 
