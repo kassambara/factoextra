@@ -220,11 +220,23 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
     (max(ind[,"y"])-min(ind[,"y"])/(max(var[,"y"])-min(var[,"y"])))
   )
   
+  # When fill.ind = grouping variable & col.var = continuous variable,
+  # we should inactivate ellipse border and ind.point border colors,
+  # otherwise --> error: Discrete value supplied to continuous scale
+  # Reason: individuals are in discrete color and variable in gradient colors, 
+  # and we can't change the color (https://github.com/kassambara/factoextra/issues/42)
+  ellipse.border.remove  <- FALSE
+  if(.is_grouping_var(fill.ind) & .is_continuous_var(col.var)){
+    ellipse.border.remove <- TRUE
+  }
+  
+  
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom.ind, repel = repel,
                     col.ind = col.ind, fill.ind = fill.ind,
                     label = label, invisible=invisible, habillage = habillage,
                     addEllipses = addEllipses, # palette = palette, 
+                    ellipse.border.remove = ellipse.border.remove,
                     ...)
   # Add variables
   p <- fviz_pca_var(X, axes = axes, geom =  geom.var, repel = repel,
