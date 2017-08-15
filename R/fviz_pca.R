@@ -224,7 +224,8 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   p <- fviz_pca_ind(X,  axes = axes, geom = geom.ind, repel = repel,
                     col.ind = col.ind, fill.ind = fill.ind,
                     label = label, invisible=invisible, habillage = habillage,
-                    addEllipses = addEllipses, palette = palette,  ...)
+                    addEllipses = addEllipses, # palette = palette, 
+                    ...)
   # Add variables
   p <- fviz_pca_var(X, axes = axes, geom =  geom.var, repel = repel,
                     col.var = col.var, fill.var = fill.var,
