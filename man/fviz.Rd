@@ -63,13 +63,24 @@ individuals when habillage != "none".}
 probability.}
 
 \item{ellipse.type}{Character specifying frame type. Possible values are 
-'convex' or types supporeted by \code{\link[ggplot2]{stat_ellipse}} 
-including one of c("t", "norm", "euclid").}
+\code{"convex"}, \code{"confidence"} or types supported by 
+\code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm", 
+"euclid") for plotting concentration ellipses.
+
+\itemize{ \item \code{"convex"}: plot convex hull of a set o points. \item 
+\code{"confidence"}: plot confidence ellipses arround group mean points as
+\code{\link[FactoMineR]{coord.ellipse}()}[in FactoMineR]. \item \code{"t"}:
+assumes a multivariate t-distribution. \item \code{"norm"}: assumes a
+multivariate normal distribution. \item \code{"euclid"}: draws a circle with
+the radius equal to level, representing the euclidean distance from the
+center. This ellipse probably won't appear circular unless
+\code{\link[ggplot2]{coord_fixed}()} is applied.}}
 
 \item{ellipse.alpha}{Alpha for ellipse specifying the transparency level of 
 fill color. Use alpha = 0 for no fill color.}
 
-\item{mean.point}{logical value. If TRUE (default), group mean points are added to the plot.}
+\item{mean.point}{logical value. If TRUE (default), group mean points are 
+added to the plot.}
 
 \item{color}{color to be used for the specified geometries (point, text). Can 
 be a continuous variable or a factor variable. Possible values include also 
@@ -79,7 +90,7 @@ representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
 "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
 cos2, contrib, ....), make sure that habillage ="none".}
 
-\item{fill}{same as the argument \code{color}, but for point fill color.
+\item{fill}{same as the argument \code{color}, but for point fill color. 
 Useful when pointshape = 21, for example.}
 
 \item{alpha}{controls the transparency of individual and variable colors, 

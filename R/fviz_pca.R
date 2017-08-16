@@ -7,7 +7,7 @@
 #'   multivariate data, to two or three that can be visualized graphically with 
 #'   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
 #'   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
-#'   stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA
+#'   stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA 
 #'   [ExPosition]. Read more: 
 #'   \href{http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining}{Principal
 #'    Component Analysis}
@@ -16,16 +16,24 @@
 #'   Graph of variables} \item{fviz_pca_biplot(): Biplot of individuals and 
 #'   variables} \item{fviz_pca(): An alias of fviz_pca_biplot()} }
 #'   
+#'   Note that, \code{fviz_pca_xxx()} functions are wrapper arround the core
+#'   function \code{\link{fviz}()}, whih is also a wrapper arround the
+#'   function \code{\link[ggpubr]{ggscatter}()} [in ggpubr]. Therfore, further arguments, to be
+#'   passed to the function \code{\link{fviz}()} and \code{\link[ggpubr]{ggscatter}()}, can be specified in
+#'   \code{\link{fviz_pca_ind}()} and \code{\link{fviz_pca_var}()}.
+#'   
 #' @param X an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
 #'   dudi and pca [ade4]; expOutput/epPCA [ExPosition].
 #' @param axes a numeric vector of length 2 specifying the dimensions to be 
 #'   plotted.
 #' @param geom a text specifying the geometry to be used for the graph. Allowed 
-#'   values are the combination of c("point", "arrow", "text"). Use "point" (to 
-#'   show only points); "text" to show only labels; c("point", "text") or 
-#'   c("arrow", "text") to show both types.
-#' @param geom.ind,geom.var as \code{geom} but for individuals and variables,
-#'   respectively. Default is geom.ind = c("point", "text), geom.var =
+#'   values are the combination of \code{c("point", "arrow", "text")}. Use 
+#'   \code{"point"} (to show only points); \code{"text"} to show only labels; 
+#'   \code{c("point", "text")} or \code{c("arrow", "text")} to show arrows and 
+#'   texts. Using \code{c("arrow", "text")} is sensible only for the graph of 
+#'   variables.
+#' @param geom.ind,geom.var as \code{geom} but for individuals and variables, 
+#'   respectively. Default is geom.ind = c("point", "text), geom.var = 
 #'   c("arrow", "text").
 #' @param label a text specifying the elements to be labelled. Default value is 
 #'   "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
@@ -46,10 +54,10 @@
 #'   individuals when habillage != "none".
 #' @param col.ind,col.var color for individuals and variables, respectively. Can
 #'   be a continuous variable or a factor variable. Possible values include also
-#'   : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
-#'   individuals/variables are automatically controlled by their qualities of
-#'   representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2,
-#'   "coord"), x values ("x") or y values ("y"). To use automatic coloring (by
+#'   : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+#'   individuals/variables are automatically controlled by their qualities of 
+#'   representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
+#'   "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
 #'   cos2, contrib, ....), make sure that habillage ="none".
 #' @param fill.ind,fill.var same as col.ind and col.var but for the fill color.
 #' @param col.ind.sup color for supplementary individuals
