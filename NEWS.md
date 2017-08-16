@@ -8,6 +8,7 @@
     
 ## Minor changes
    
+- New argument `mean.point` in the function `fviz()`. logical value. If TRUE, group mean points are added to the plot.
 - Now, PCA correlation circles have fixed coordinates so they don't appear as ellipses ([@scoavoux, #38](https://github.com/kassambara/factoextra/pull/38).
 - New argument `fill.ind` and `fill.var` added in `fviz_pca()` ([@ginolhac, #27](https://github.com/kassambara/factoextra/issues/27) and [@Confurious, #42](https://github.com/kassambara/factoextra/issues/42)).
 - New arguments `geom.ind` and `geom.var` in `fviz_pca_xxx()` and `fviz_mca_xxx()` functions to have more controls on the individuals/variables geometry in the functions `fviz_pca_biplot()` and `fviz_mca_biplot()` ([@Confurious, #42](https://github.com/kassambara/factoextra/issues/42)).

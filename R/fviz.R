@@ -38,6 +38,7 @@ NULL
 #'  including one of c("t", "norm", "euclid").
 #'@param ellipse.alpha Alpha for ellipse specifying the transparency level of 
 #'  fill color. Use alpha = 0 for no fill color.
+#'@param mean.point logical value. If TRUE (default), group mean points are added to the plot.
 #'@param col.circle a color for the correlation circle. Used only when X is a 
 #'  PCA output.
 #'@param circlesize the size of the variable correlation circle.
@@ -114,7 +115,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           label = "all", invisible="none", labelsize=4, 
                           pointsize = 1.5, pointshape = 19, arrowsize = 0.5,
                           habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
-                          ellipse.type = "norm", ellipse.alpha = 0.1,
+                          ellipse.type = "norm", ellipse.alpha = 0.1, mean.point = TRUE,
                           color = "black", fill = "white", alpha = 1, gradient.cols = NULL,
                           col.row.sup = "darkblue", col.col.sup="darkred",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
@@ -212,7 +213,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   #%%%%%%%%%%%%%%%%%%%
   is.pca.var <- element == "var" & facto.class == "PCA" # We don't want meanpoint for PCA variables colored by groups
   point <- ("point" %in% geom) & (!hide[[element]]) # to show points, should be TRUE
-  mean.point <- (is_grouping_var_exists & !is.pca.var) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
+  if(missing(mean.point))
+    mean.point <- (is_grouping_var_exists & !is.pca.var) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
   if(element == "quanti.var") mean.point <- FALSE # MFA, don't show the mean point of groups of variables
   
   label <- NULL
