@@ -27,9 +27,11 @@ fviz_famd(X, ...)
 plotted.}
 
 \item{geom}{a text specifying the geometry to be used for the graph. Allowed 
-values are the combination of c("point", "arrow", "text"). Use "point" (to 
-show only points); "text" to show only labels; c("point", "text") or 
-c("arrow", "text") to show both types.}
+values are the combination of \code{c("point", "arrow", "text")}. Use 
+\code{"point"} (to show only points); \code{"text"} to show only labels; 
+\code{c("point", "text")} or \code{c("arrow", "text")} to show arrows and 
+texts. Using \code{c("arrow", "text")} is sensible only for the graph of 
+variables.}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.}
