@@ -258,8 +258,11 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   }
   
   if(!is.null(palette)){
-    if(.is_grouping_var(col.ind) | .is_grouping_var(col.var)) p <- p + ggpubr::color_palette(palette)
-    if(.is_grouping_var(fill.ind) | .is_grouping_var(fill.var)) p <- p + ggpubr::fill_palette(palette)
+    if(.is_grouping_var(col.ind) | .is_grouping_var(habillage) | .is_grouping_var(col.var)) p <- p + ggpubr::color_palette(palette)
+    if(.is_grouping_var(fill.ind) | .is_grouping_var(fill.var) | .is_grouping_var(habillage) | (.is_grouping_var(col.ind) & addEllipses))
+      {
+      p <- p + ggpubr::fill_palette(palette)
+     }
   }
   
   p+labs(title=title)
