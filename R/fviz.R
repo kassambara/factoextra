@@ -181,16 +181,18 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(length(color) > 1){
     if(nrow(df) != length(color)) stop("The length of color variable",
                                     "should be the same as the number of rows in the data.")
-    df$Col. <- color
-    if(missing(pointshape) & .is_grouping_var(color)) pointshape <- "Col."
-    color <- "Col."
+    .col.name <- "Col."
+    df[[.col.name]] <- color
+    if(missing(pointshape) & .is_grouping_var(color)) pointshape <- .col.name
+    color <- .col.name
   }
   # Augment data if fill is a continuous variable or a factor variable
   if(length(fill) > 1){
     if(nrow(df) != length(fill)) stop("The length of fill variable",
                                        "should be the same as the number of rows in the data.")
-    df$Fill. <- fill
-    fill <- "Fill."
+    .col.name <- "Fill."
+    df[[.col.name]] <- fill
+    fill <- .col.name
   }
   # Selection
   df.all <- df
