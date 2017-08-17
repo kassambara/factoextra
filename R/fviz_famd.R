@@ -82,6 +82,7 @@ fviz_famd_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
                          shape.ind = 19, col.quali.var = "black",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         gradient.cols = NULL,
                          ...)
 {
   extra_args <- list(...)
@@ -102,6 +103,9 @@ fviz_famd_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
         color = col.ind, alpha = alpha.ind,
         shape.sup = shape.ind, col.row.sup = col.ind.sup,
         select = select.ind, repel = repel, ggp = p,  ...)
+  
+  if(!is.null(gradient.cols))
+    p <- p + ggpubr::gradient_color(gradient.cols)
   
  
   p

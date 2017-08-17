@@ -11,7 +11,7 @@ fviz_famd_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
   habillage = "none", palette = NULL, addEllipses = FALSE,
   col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
   shape.ind = 19, col.quali.var = "black", select.ind = list(name = NULL,
-  cos2 = NULL, contrib = NULL), ...)
+  cos2 = NULL, contrib = NULL), gradient.cols = NULL, ...)
 
 fviz_famd_var(X, choice = c("var", "quanti.var", "quali.var"), axes = c(1,
   2), geom = c("point", "text"), repel = FALSE, col.var = "red",
@@ -86,6 +86,9 @@ then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5,
 then the top 5 individuals/variables with the highest cos2 are drawn. \item
 contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 the highest cos2 are drawn }}
+
+\item{gradient.cols}{vector of colors to use for n-colour gradient. Allowed
+values include brewer and ggsci color palettes.}
 
 \item{...}{Arguments to be passed to the function fviz()}
 
