@@ -314,6 +314,11 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 .is_grouping_var <- function(x){
   length(x) > 1 & (is.character(x) | is.factor(x))
 }
+# Check if is continuous or grouping variable in the context of PCA
+.is_variable <- function(x){
+  .is_continuous_var(x) | .is_grouping_var(col.var)
+}
+
 
 # Check if character string is a valid color representation
 .is_color <- function(x) {
