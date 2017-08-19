@@ -213,6 +213,19 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             habillage = "none", palette = NULL, addEllipses=FALSE, 
                             title = "PCA - Biplot", ...)
 {
+  
+  # Check if individials or variables are colored by variables
+  is.individuals.colored.by.variable <- .is_grouping_var(fill.ind) | .is_grouping_var(col.ind)
+  is.variables.colored.by.variable <-  .is_continuous_var(col.var) | .is_grouping_var(col.var)
+  # If coloring variable are continuous, then gradient coloring shoulld be applied
+  is.gradient.color <- .is_continuous_var(col.ind) | .is_continuous_var(col.var) 
+  is.gradient.fill <- .is_continuous_var(fill.ind) | .is_continuous_var(fill.var)
+  # If coloring variables are qualitative, then discrete coloring should be applied
+  is.discrete.color <- .is_grouping_var(col.ind) | .is_grouping_var(habillage) | .is_grouping_var(col.var)
+  is.discrete.fill <- .is_grouping_var(fill.ind) | .is_grouping_var(fill.var) |
+                       .is_grouping_var(habillage) | (.is_grouping_var(col.ind) & addEllipses)
+  
+  
   # Data frame to be used for plotting
   var <- facto_summarize(X, element = "var", 
                          result = c("coord", "contrib", "cos2"), axes = axes)
@@ -234,9 +247,9 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   # Reason: individuals are in discrete color and variable in gradient colors, 
   # and we can't change the color (https://github.com/kassambara/factoextra/issues/42)
   ellipse.border.remove  <- FALSE
-  if(.is_grouping_var(fill.ind) & .is_continuous_var(col.var)){
+  if(is.individuals.colored.by.variable & is.variables.colored.by.variable)
     ellipse.border.remove <- TRUE
-  }
+
   
   
   # Individuals
@@ -253,20 +266,16 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                     scale.= r*0.7, ggp = p,  ...)
   
   if(!is.null(gradient.cols)){
-    if(.is_continuous_var(col.ind) | .is_continuous_var(col.var)) p <- p + ggpubr::gradient_color(gradient.cols)
-    if(.is_continuous_var(fill.ind) | .is_continuous_var(fill.var)) p <- p + ggpubr::gradient_fill(gradient.cols)
+    if(is.gradient.color) p <- p + ggpubr::gradient_color(gradient.cols)
+    if(is.gradient.fill) p <- p + ggpubr::gradient_fill(gradient.cols)
   }
   
   if(!is.null(palette)){
-    if(.is_grouping_var(col.ind) | .is_grouping_var(habillage) | .is_grouping_var(col.var)) p <- p + ggpubr::color_palette(palette)
-    if(.is_grouping_var(fill.ind) | .is_grouping_var(fill.var) | .is_grouping_var(habillage) | (.is_grouping_var(col.ind) & addEllipses))
-      {
-      p <- p + ggpubr::fill_palette(palette)
-     }
+    if(is.discrete.color) p <- p + ggpubr::color_palette(palette)
+    if(is.discrete.fill) p <- p + ggpubr::fill_palette(palette)
+     
   }
   
   p+labs(title=title)
 }
-
-
 
