@@ -80,7 +80,8 @@ data("USArrests")
 df <- scale(USArrests)
 
 # Enhanced k-means clustering
-res.km <- eclust(df, "kmeans", nboot = 10)
+# nboot >= 500 is recommended
+res.km <- eclust(df, "kmeans", nboot = 3)
 # Silhouette plot
 fviz_silhouette(res.km)
 # Optimal number of clusters using gap statistics
