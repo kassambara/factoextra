@@ -84,6 +84,8 @@ devtools::install_github("kassambara/factoextra")
 
 ``` r
 library("factoextra")
+#> Loading required package: ggplot2
+#> Welcome! Related Books: `Practical Guide To Cluster Analysis in R` at https://goo.gl/13EFCZ
 ```
 
 Main functions in the factoextra package
@@ -310,7 +312,7 @@ get_eig(res.pca)
 fviz_screeplot(res.pca, addlabels = TRUE, ylim = c(0, 50))
 ```
 
-![](README-pca-eigenvalue-1.png)
+![](tools/README-pca-eigenvalue-1.png)
 
 4.**Extract and visualize results for variables**:
 
@@ -347,7 +349,7 @@ head(var$contrib)
 fviz_pca_var(res.pca, col.var = "black")
 ```
 
-![](README-pca-variables-1.png)
+![](tools/README-pca-variables-1.png)
 
 It's possible to control variable colors using their contributions ("contrib") to the principal axes:
 
@@ -359,7 +361,7 @@ fviz_pca_var(res.pca, col.var="contrib",
              )
 ```
 
-![](README-pca-variable-colors-by-contributions-1.png)
+![](tools/README-pca-variable-colors-by-contributions-1.png)
 
 1.  **Variable contributions to the principal axes**:
 
@@ -371,7 +373,7 @@ fviz_contrib(res.pca, choice = "var", axes = 1, top = 10)
 fviz_contrib(res.pca, choice = "var", axes = 2, top = 10)
 ```
 
-![](README-pca-variable-contributions-1.png)![](README-pca-variable-contributions-2.png)
+![](tools/README-pca-variable-contributions-1.png)![](tools/README-pca-variable-contributions-2.png)
 
 1.  **Extract and visualize results for individuals**:
 
@@ -406,14 +408,14 @@ fviz_pca_ind(res.pca, col.ind = "cos2",
              )
 ```
 
-![](README-principal-component-analysis-data-mining-1.png)
+![](tools/README-principal-component-analysis-data-mining-1.png)
 
 ``` r
 # Biplot of individuals and variables
 fviz_pca_biplot(res.pca, repel = TRUE)
 ```
 
-![](README-principal-component-analysis-data-mining-2.png)
+![](tools/README-principal-component-analysis-data-mining-2.png)
 
 1.  **Color individuals by groups**:
 
@@ -433,7 +435,7 @@ fviz_pca_ind(iris.pca,
              )
 ```
 
-![](README-individuals-factor-map-color-by-groups-1.png)
+![](tools/README-individuals-factor-map-color-by-groups-1.png)
 
 ### Correspondence analysis
 
@@ -470,7 +472,7 @@ get_ca_col(res.ca)
 fviz_ca_biplot(res.ca, repel = TRUE)
 ```
 
-![](README-correspondence-analysis-biplot-1.png)
+![](tools/README-correspondence-analysis-biplot-1.png)
 
 To visualize only row points or column points, type this:
 
@@ -537,7 +539,7 @@ fviz_mca_ind(res.mca,  habillage = grp,
              addEllipses = TRUE, repel = TRUE)
 ```
 
-![](README-mca-graph-of-individuals-1.png)
+![](tools/README-mca-graph-of-individuals-1.png)
 
 1.  **Graph of variable categories**:
 
@@ -545,7 +547,7 @@ fviz_mca_ind(res.mca,  habillage = grp,
 fviz_mca_var(res.mca, repel = TRUE)
 ```
 
-![](README-mca-graph-variables-1.png)
+![](tools/README-mca-graph-variables-1.png)
 
 1.  **Biplot of individuals and variables**:
 
@@ -553,7 +555,7 @@ fviz_mca_var(res.mca, repel = TRUE)
 fviz_mca_biplot(res.mca, repel = TRUE)
 ```
 
-![](README-mca-biplot-1.png)
+![](tools/README-mca-biplot-1.png)
 
 ### Advanced methods
 
@@ -603,7 +605,7 @@ fviz_cluster(km.res, data = df,
              )
 ```
 
-![](README-partitioning-clustering-1.png)
+![](tools/README-partitioning-clustering-1.png)
 
 <br/>
 Read more:
@@ -626,7 +628,7 @@ fviz_dend(res, rect = TRUE, cex = 0.5,
           k_colors = c("#00AFBB","#2E9FDF", "#E7B800", "#FC4E07"))
 ```
 
-![](README-hierarchical-clustering-1.png)
+![](tools/README-hierarchical-clustering-1.png)
 
 <br/>
 Read more:
@@ -644,13 +646,9 @@ Read more:
 library("factoextra")
 my_data <- scale(USArrests)
 fviz_nbclust(my_data, kmeans, method = "gap_stat")
-#> Clustering k = 1,2,..., K.max (= 10): .. done
-#> Bootstrapping, b = 1,2,..., B (= 100)  [one "." per sample]:
-#> .................................................. 50 
-#> .................................................. 100
 ```
 
-![](README-determine-the-number-of-clusters-gap-statistics-1.png)
+![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)
 
 Acknoweledgment
 ---------------
