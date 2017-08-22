@@ -29,7 +29,7 @@ However, the result is presented differently according to the used packages. To 
 
 The figure below shows methods, which outputs can be visualized using the factoextra package. The official online documentation is available at: <http://www.sthda.com/english/rpkgs/factoextra>.
 
-![factoextra R package](factoextra-r-package.png)
+![factoextra R package](tools/factoextra-r-package.png)
 
 Why using factoextra?
 ---------------------
@@ -261,7 +261,7 @@ Dimension reduction and factoextra
 
 As depicted in the figure below, the type of analysis to be performed depends on the data set formats and structures.
 
-![dimension reduction and factoextra](multivariate-analysis-factoextra.png)
+![dimension reduction and factoextra](tools/multivariate-analysis-factoextra.png)
 
 In this section we start by illustrating classical methods - such as PCA, CA and MCA - for analyzing a data set containing continuous variables, contingency table and qualitative variables, respectively.
 
@@ -571,7 +571,7 @@ Cluster analysis and factoextra
 
 To learn more about cluster analysis, you can refer to the book available at: [Practical Guide to Cluster Analysis in R](http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book)
 
-<a href = "http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book"><img src = "clustering-e1-cover.png" alt = "clustering book cover"/></a>
+<a href = "http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book"><img src = "tools/clustering-e1-cover.png" alt = "clustering book cover"/></a>
 
 The main parts of the book include:
 
@@ -585,7 +585,7 @@ The book presents the basic principles of these tasks and provide many examples 
 
 ### Partitioning clustering
 
-![Partitioning cluster analysis](partitioning-clustering.png)
+![Partitioning cluster analysis](tools/partitioning-clustering.png)
 
 ``` r
 # 1. Loading and preparing data
