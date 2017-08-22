@@ -22,7 +22,6 @@ knitr::opts_chunk$set(
 [![Pending Pull-Requests](http://githubbadges.herokuapp.com/kassambara/factoextra/pulls.svg?style=flat)](https://github.com/kassambara/factoextra/pulls)
 [![Github Issues](http://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](https://github.com/kassambara/factoextra/issues)
    
-<link href="style.css" rel="stylesheet" type="text/css">
    
 # factoextra : Extract and Visualize the Results of Multivariate Data Analyses
        

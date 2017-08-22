@@ -1,7 +1,5 @@
 [![Build Status](https://api.travis-ci.org/kassambara/factoextra.png)](https://travis-ci.org/kassambara/factoextra) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/factoextra)](https://cran.r-project.org/package=factoextra) [![Downloads](http://cranlogs.r-pkg.org/badges/factoextra)](https://cran.r-project.org/package=factoextra) [![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/factoextra?color=orange)](http://cranlogs.r-pkg.org/badges/grand-total/factoextra) [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Pending Pull-Requests](http://githubbadges.herokuapp.com/kassambara/factoextra/pulls.svg?style=flat)](https://github.com/kassambara/factoextra/pulls) [![Github Issues](http://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](https://github.com/kassambara/factoextra/issues)
 
-<link href="style.css" rel="stylesheet" type="text/css">
-
 factoextra : Extract and Visualize the Results of Multivariate Data Analyses
 ============================================================================
 
