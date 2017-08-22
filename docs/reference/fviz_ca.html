@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -92,19 +92,19 @@
 </ul></p>
     
 
-    <pre><span class='fu'>fviz_ca_row</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>), <span class='kw'>shape.row</span> <span class='kw'>=</span> <span class='fl'>19</span>,
-  <span class='kw'>col.row</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>alpha.row</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>,
-  <span class='kw'>select.row</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>),
-  <span class='kw'>map</span> <span class='kw'>=</span> <span class='st'>"symmetric"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+    <pre><span class='fu'>fviz_ca_row</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>), <span class='kw'>geom.row</span> <span class='kw'>=</span> <span class='no'>geom</span>,
+  <span class='kw'>shape.row</span> <span class='kw'>=</span> <span class='fl'>19</span>, <span class='kw'>col.row</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>alpha.row</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>, <span class='kw'>select.row</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>map</span> <span class='kw'>=</span> <span class='st'>"symmetric"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='fu'>fviz_ca_col</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>shape.col</span> <span class='kw'>=</span> <span class='fl'>17</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>),
-  <span class='kw'>col.col</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>alpha.col</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>select.col</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>),
-  <span class='kw'>map</span> <span class='kw'>=</span> <span class='st'>"symmetric"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
+  <span class='kw'>geom.col</span> <span class='kw'>=</span> <span class='no'>geom</span>, <span class='kw'>col.col</span> <span class='kw'>=</span> <span class='st'>"red"</span>, <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>,
+  <span class='kw'>alpha.col</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>select.col</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span>
+  <span class='kw'>NULL</span>), <span class='kw'>map</span> <span class='kw'>=</span> <span class='st'>"symmetric"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='no'>...</span>)
 
 <span class='fu'>fviz_ca_biplot</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>),
-  <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>invisible</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>arrows</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>FALSE</span>),
-  <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"CA - Biplot"</span>, <span class='no'>...</span>)
+  <span class='kw'>geom.row</span> <span class='kw'>=</span> <span class='no'>geom</span>, <span class='kw'>geom.col</span> <span class='kw'>=</span> <span class='no'>geom</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>invisible</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>arrows</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>FALSE</span>, <span class='fl'>FALSE</span>), <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"CA - Biplot"</span>, <span class='no'>...</span>)
 
 <span class='fu'>fviz_ca</span>(<span class='no'>X</span>, <span class='no'>...</span>)</pre>
     
@@ -121,6 +121,10 @@ plotted.</dd>
 Allowed values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, &quot;text&quot;). Use 
 &quot;point&quot; (to show only points); &quot;text&quot; to show only labels; c(&quot;point&quot;, 
 &quot;text&quot;) or c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
+      <dt>geom.row, geom.col</dt>
+      <dd>as <code>geom</code> but for row and column elements,
+respectively. Default is geom.row = c(&quot;point&quot;, &quot;text), geom.col =
+c(&quot;point&quot;, &quot;text&quot;).</dd>
       <dt>shape.row, shape.col</dt>
       <dd>the point shapes to be used for row/column 
 variables. Default values are 19 for rows and 17 for columns.</dd>

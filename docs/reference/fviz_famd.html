@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -90,7 +90,7 @@
   <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>col.ind.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>, <span class='kw'>alpha.ind</span> <span class='kw'>=</span> <span class='fl'>1</span>,
   <span class='kw'>shape.ind</span> <span class='kw'>=</span> <span class='fl'>19</span>, <span class='kw'>col.quali.var</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>select.ind</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
+  <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='fu'>fviz_famd_var</span>(<span class='no'>X</span>, <span class='kw'>choice</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"var"</span>, <span class='st'>"quanti.var"</span>, <span class='st'>"quali.var"</span>), <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>,
   <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>), <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"red"</span>,
@@ -108,9 +108,11 @@
 plotted.</dd>
       <dt>geom</dt>
       <dd>a text specifying the geometry to be used for the graph. Allowed 
-values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, &quot;text&quot;). Use &quot;point&quot; (to 
-show only points); &quot;text&quot; to show only labels; c(&quot;point&quot;, &quot;text&quot;) or 
-c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
+values are the combination of <code>c(&quot;point&quot;, &quot;arrow&quot;, &quot;text&quot;)</code>. Use 
+<code>&quot;point&quot;</code> (to show only points); <code>&quot;text&quot;</code> to show only labels; 
+<code>c(&quot;point&quot;, &quot;text&quot;)</code> or <code>c(&quot;arrow&quot;, &quot;text&quot;)</code> to show arrows and 
+texts. Using <code>c(&quot;arrow&quot;, &quot;text&quot;)</code> is sensible only for the graph of 
+variables.</dd>
       <dt>repel</dt>
       <dd>a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.</dd>
@@ -126,7 +128,8 @@ palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette 
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
 &quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
-case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
+case a basic color palette is created using the function
+<a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>addEllipses</dt>
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
@@ -169,6 +172,9 @@ contrib if contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with
 the highest cos2 are drawn </li>
 </ul>
 </dd>
+      <dt>gradient.cols</dt>
+      <dd>vector of colors to use for n-colour gradient. Allowed
+values include brewer and ggsci color palettes.</dd>
       <dt>...</dt>
       <dd>Arguments to be passed to the function fviz()</dd>
       <dt>choice</dt>
@@ -196,8 +202,7 @@ one of c(&quot;var&quot;, quanti.var&quot;,  &quot;quali.var&quot;).</dd>
 <span class='fu'>fviz_famd_var</span>(<span class='no'>res.famd</span>, <span class='st'>"quali.var"</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"black"</span>)</div><img src='fviz_famd-8.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Graph of individuals colored by cos2</span>
 <span class='fu'>fviz_famd_ind</span>(<span class='no'>res.famd</span>, <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"cos2"</span>,
   <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"#00AFBB"</span>, <span class='st'>"#E7B800"</span>, <span class='st'>"#FC4E07"</span>),
-  <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><div class='output co'>#&gt; <span class='message'>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,</span>
-#&gt; <span class='message'>which will replace the existing scale.</span></div><img src='fviz_famd-11.png' alt='' width='540' height='400' /><div class='input'>
+  <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div><img src='fviz_famd-10.png' alt='' width='540' height='400' /><div class='input'>
 
 </div></pre>
   </div>

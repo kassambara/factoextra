@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -95,8 +95,25 @@ are 1:2 for axes 1 and 2.</dd>
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>ellipse.type</dt>
       <dd>Character specifying frame type. Possible values are 
-&#39;convex&#39; or types supporeted by <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/stat_ellipse'>stat_ellipse</a></code> 
-including one of c(&quot;t&quot;, &quot;norm&quot;, &quot;euclid&quot;).</dd>
+<code>&quot;convex&quot;</code>, <code>&quot;confidence&quot;</code> or types supported by 
+<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/stat_ellipse'>stat_ellipse</a>()</code> including one of <code>c(&quot;t&quot;, &quot;norm&quot;, 
+&quot;euclid&quot;)</code> for plotting concentration ellipses.
+
+<ul>
+<li> <code>&quot;convex&quot;</code>: plot convex hull of a set o points. </li>
+<li> 
+<code>&quot;confidence&quot;</code>: plot confidence ellipses arround group mean points as
+<code><a href='http://www.rdocumentation.org/packages/FactoMineR/topics/coord.ellipse'>coord.ellipse</a>()</code>[in FactoMineR]. </li>
+<li> <code>&quot;t&quot;</code>:
+assumes a multivariate t-distribution. </li>
+<li> <code>&quot;norm&quot;</code>: assumes a
+multivariate normal distribution. </li>
+<li> <code>&quot;euclid&quot;</code>: draws a circle with
+the radius equal to level, representing the euclidean distance from the
+center. This ellipse probably won&#39;t appear circular unless
+<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed'>coord_fixed</a>()</code> is applied.</li>
+</ul>
+</dd>
       <dt>palette</dt>
       <dd>the color palette to be used for coloring or filling by
 groups. Allowed values include &quot;grey&quot; for grey color palettes; brewer
@@ -104,7 +121,8 @@ palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette 
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
 &quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
-case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
+case a basic color palette is created using the function
+<a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>pointsize</dt>
       <dd>the size of points</dd>
       <dt>geom</dt>
@@ -135,11 +153,9 @@ ggpubr::ggpar().</dd>
               <span class='kw'>quali.sup</span> <span class='kw'>=</span> <span class='fl'>3</span>:<span class='fl'>4</span>, <span class='kw'>graph</span><span class='kw'>=</span><span class='fl'>FALSE</span>)
 
 <span class='fu'>fviz_ellipses</span>(<span class='no'>res.mca</span>, <span class='fl'>1</span>:<span class='fl'>4</span>, <span class='kw'>geom</span> <span class='kw'>=</span> <span class='st'>"point"</span>,
-<span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"jco"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='message'>Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,</span>
-#&gt; <span class='message'>which will replace the existing scale.</span></div><div class='output co'>#&gt; <span class='message'>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;, which</span>
-#&gt; <span class='message'>will replace the existing scale.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Computation failed in `stat_conf_ellipse()`:</span>
+<span class='kw'>palette</span> <span class='kw'>=</span> <span class='st'>"jco"</span>)</div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: production de NaN</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Computation failed in `stat_conf_ellipse()`:</span>
 #&gt; <span class='warning'>valeur manquante là où TRUE / FALSE est requis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Computation failed in `stat_conf_ellipse()`:</span>
-#&gt; <span class='warning'>valeur manquante là où TRUE / FALSE est requis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: This manual palette can handle a maximum of 10 values. You have supplied 32.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 144 rows containing missing values (geom_point).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 22 rows containing missing values (geom_point).</span></div><img src='fviz_ellipses-41.png' alt='' width='540' height='400' /><div class='input'>
+#&gt; <span class='warning'>valeur manquante là où TRUE / FALSE est requis</span></div><div class='output co'>#&gt; <span class='warning'>Warning: This manual palette can handle a maximum of 10 values. You have supplied 32.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 144 rows containing missing values (geom_point).</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 22 rows containing missing values (geom_point).</span></div><img src='fviz_ellipses-39.png' alt='' width='540' height='400' /><div class='input'>
  
 </div></pre>
   </div>

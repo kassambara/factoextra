@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -77,7 +77,8 @@
   multivariate data, to two or three that can be visualized graphically with 
   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
-  stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA [ExPosition]. Read more: 
+  stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA 
+  [ExPosition]. Read more: 
   <a href = 'Principal
    Component Analysis'>http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining</a></p>
 
@@ -89,23 +90,32 @@
   variables </li>
 <li>fviz_pca(): An alias of fviz_pca_biplot() </li>
 </ul></p>
+
+    <p>Note that, <code>fviz_pca_xxx()</code> functions are wrapper arround the core
+  function <code><a href='fviz.html'>fviz</a>()</code>, whih is also a wrapper arround the
+  function <code><a href='http://www.rdocumentation.org/packages/ggpubr/topics/ggscatter'>ggscatter</a>()</code> [in ggpubr]. Therfore, further arguments, to be
+  passed to the function <code><a href='fviz.html'>fviz</a>()</code> and <code><a href='http://www.rdocumentation.org/packages/ggpubr/topics/ggscatter'>ggscatter</a>()</code>, can be specified in
+  <code>fviz_pca_ind()</code> and <code>fviz_pca_var()</code>.</p>
     
 
     <pre><span class='fu'>fviz_pca</span>(<span class='no'>X</span>, <span class='no'>...</span>)
 
-<span class='fu'>fviz_pca_ind</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>), <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>col.ind.sup</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>alpha.ind</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>select.ind</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
+<span class='fu'>fviz_pca_ind</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>),
+  <span class='kw'>geom.ind</span> <span class='kw'>=</span> <span class='no'>geom</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>fill.ind</span> <span class='kw'>=</span> <span class='st'>"white"</span>,
+  <span class='kw'>col.ind.sup</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>alpha.ind</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>select.ind</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span>
+  <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
 
-<span class='fu'>fviz_pca_var</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"arrow"</span>, <span class='st'>"text"</span>), <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>alpha.var</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.quanti.sup</span> <span class='kw'>=</span> <span class='st'>"blue"</span>,
-  <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>, <span class='kw'>select.var</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span>
-  <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
+<span class='fu'>fviz_pca_var</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"arrow"</span>, <span class='st'>"text"</span>),
+  <span class='kw'>geom.var</span> <span class='kw'>=</span> <span class='no'>geom</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>fill.var</span> <span class='kw'>=</span> <span class='st'>"white"</span>,
+  <span class='kw'>alpha.var</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>col.quanti.sup</span> <span class='kw'>=</span> <span class='st'>"blue"</span>, <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>,
+  <span class='kw'>select.var</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='no'>...</span>)
 
 <span class='fu'>fviz_pca_biplot</span>(<span class='no'>X</span>, <span class='kw'>axes</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='fl'>1</span>, <span class='fl'>2</span>), <span class='kw'>geom</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"point"</span>, <span class='st'>"text"</span>),
-  <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"steelblue"</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"all"</span>,
-  <span class='kw'>invisible</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>geom.ind</span> <span class='kw'>=</span> <span class='no'>geom</span>, <span class='kw'>geom.var</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"arrow"</span>, <span class='st'>"text"</span>), <span class='kw'>col.ind</span> <span class='kw'>=</span> <span class='st'>"black"</span>,
+  <span class='kw'>fill.ind</span> <span class='kw'>=</span> <span class='st'>"white"</span>, <span class='kw'>col.var</span> <span class='kw'>=</span> <span class='st'>"steelblue"</span>, <span class='kw'>fill.var</span> <span class='kw'>=</span> <span class='st'>"white"</span>,
+  <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>label</span> <span class='kw'>=</span> <span class='st'>"all"</span>, <span class='kw'>invisible</span> <span class='kw'>=</span> <span class='st'>"none"</span>,
+  <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>palette</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>title</span> <span class='kw'>=</span> <span class='st'>"PCA - Biplot"</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
@@ -116,9 +126,9 @@ dudi and pca [ade4]; expOutput/epPCA [ExPosition].</dd>
       <dt>...</dt>
       <dd>Additional arguments. <ul>
 <li> in fviz_pca_ind() and 
-fviz_pca_var(): Additional arguments are passed to the functions 
-fviz() and ggpubr::ggpar(). </li>
-<li> in fviz_pca_biplot() and fviz_pca(): Additional
+fviz_pca_var(): Additional arguments are passed to the functions fviz() and
+ggpubr::ggpar(). </li>
+<li> in fviz_pca_biplot() and fviz_pca(): Additional 
 arguments are passed to fviz_pca_ind() and fviz_pca_var().</li>
 </ul>
 </dd>
@@ -127,9 +137,15 @@ arguments are passed to fviz_pca_ind() and fviz_pca_var().</li>
 plotted.</dd>
       <dt>geom</dt>
       <dd>a text specifying the geometry to be used for the graph. Allowed 
-values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, &quot;text&quot;). Use &quot;point&quot; (to 
-show only points); &quot;text&quot; to show only labels; c(&quot;point&quot;, &quot;text&quot;) or 
-c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
+values are the combination of <code>c(&quot;point&quot;, &quot;arrow&quot;, &quot;text&quot;)</code>. Use 
+<code>&quot;point&quot;</code> (to show only points); <code>&quot;text&quot;</code> to show only labels; 
+<code>c(&quot;point&quot;, &quot;text&quot;)</code> or <code>c(&quot;arrow&quot;, &quot;text&quot;)</code> to show arrows and 
+texts. Using <code>c(&quot;arrow&quot;, &quot;text&quot;)</code> is sensible only for the graph of 
+variables.</dd>
+      <dt>geom.ind, geom.var</dt>
+      <dd>as <code>geom</code> but for individuals and variables, 
+respectively. Default is geom.ind = c(&quot;point&quot;, &quot;text), geom.var = 
+c(&quot;arrow&quot;, &quot;text&quot;).</dd>
       <dt>repel</dt>
       <dd>a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.</dd>
@@ -146,19 +162,21 @@ palettes e.g. &quot;RdBu&quot;, &quot;Blues&quot;, ...; or custom color palette 
 &quot;red&quot;); and scientific journal palettes from ggsci R package, e.g.: &quot;npg&quot;,
 &quot;aaas&quot;, &quot;lancet&quot;, &quot;jco&quot;, &quot;ucscgb&quot;, &quot;uchicago&quot;, &quot;simpsons&quot; and
 &quot;rickandmorty&quot;. Can be also a numeric vector of length(groups); in this
-case a basic color palette is created using the function <a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
+case a basic color palette is created using the function
+<a href='http://www.rdocumentation.org/packages/grDevices/topics/palette'>palette</a>.</dd>
       <dt>addEllipses</dt>
       <dd>logical value. If TRUE, draws ellipses around the 
 individuals when habillage != &quot;none&quot;.</dd>
       <dt>col.ind, col.var</dt>
       <dd>color for individuals and variables, respectively. Can
-be a continuous variable or a factor variable. 
- Possible values include also : &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In 
- this case, the colors for individuals/variables are automatically 
- controlled by their qualities of representation (&quot;cos2&quot;), contributions 
- (&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x values (&quot;x&quot;) or y values 
- (&quot;y&quot;). To use automatic coloring (by cos2, contrib, ....), make sure that 
- habillage =&quot;none&quot;.</dd>
+be a continuous variable or a factor variable. Possible values include also
+: &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for 
+individuals/variables are automatically controlled by their qualities of 
+representation (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2, 
+&quot;coord&quot;), x values (&quot;x&quot;) or y values (&quot;y&quot;). To use automatic coloring (by 
+cos2, contrib, ....), make sure that habillage =&quot;none&quot;.</dd>
+      <dt>fill.ind, fill.var</dt>
+      <dd>same as col.ind and col.var but for the fill color.</dd>
       <dt>col.ind.sup</dt>
       <dd>color for supplementary individuals</dd>
       <dt>alpha.ind, alpha.var</dt>
@@ -187,8 +205,11 @@ individuals/variables with the highest contrib are drawn </li>
       <dt>col.quanti.sup</dt>
       <dd>a color for the quantitative supplementary variables.</dd>
       <dt>col.circle</dt>
-      <dd>a color for the correlation circle. Used only when X is a
+      <dd>a color for the correlation circle. Used only when X is a 
 PCA output.</dd>
+      <dt>gradient.cols</dt>
+      <dd>vector of colors to use for n-colour gradient. Allowed
+values include brewer and ggsci color palettes.</dd>
       <dt>label</dt>
       <dd>a text specifying the elements to be labelled. Default value is 
 &quot;all&quot;. Allowed values are &quot;none&quot; or the combination of c(&quot;ind&quot;, &quot;ind.sup&quot;, 

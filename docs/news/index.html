@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -74,22 +74,32 @@
     </div>
 
     <div class="contents">
-    <div id="factoextra-1-0-4-999" class="section level1">
+    <div id="factoextra-1-0-5" class="section level1">
 <h1 class="hasAnchor">
-<a href="#factoextra-1-0-4-999" class="anchor"> </a>factoextra 1.0.4.999</h1>
+<a href="#factoextra-1-0-5" class="anchor"> </a>factoextra 1.0.5</h1>
 <div id="bug-fixes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"> </a>Bug fixes</h2>
 <ul>
 <li>Now, the argument <code>invisible</code> works properly in the function <code><a href="../reference/fviz_pca.html">fviz_pca_biplot()</a></code>(<a href="https://github.com/kassambara/factoextra/issues/26">@ginolhac, #26</a>).</li>
 <li>The function <code><a href="../reference/fviz_dend.html">fviz_dend()</a></code> now works for an object of class <code>diana</code> (<a href="https://github.com/kassambara/factoextra/issues/30">@qfazille, #30</a>).</li>
+<li>Now, <code><a href="../reference/fviz_cluster.html">fviz_cluster()</a></code> supports HCPC results (<a href="https://github.com/kassambara/factoextra/issues/34">@famuvie, #34</a>).</li>
 </ul>
 </div>
 <div id="minor-changes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#minor-changes" class="anchor"> </a>Minor changes</h2>
 <ul>
-<li>It’s now possible to color individuals using a custom continuous variable (<a href="https://github.com/kassambara/factoextra/issues/29">#29</a>). This is done using the argument <strong>col.ind</strong>.</li>
+<li>New argument <code>mean.point</code> in the function <code><a href="../reference/fviz.html">fviz()</a></code>. logical value. If TRUE, group mean points are added to the plot.</li>
+<li>Now, PCA correlation circles have fixed coordinates so they don’t appear as ellipses (<a href="https://github.com/kassambara/factoextra/pull/38">@scoavoux, #38</a>.</li>
+<li>New argument <code>fill.ind</code> and <code>fill.var</code> added in <code><a href="../reference/fviz_pca.html">fviz_pca()</a></code> (<a href="https://github.com/kassambara/factoextra/issues/27">@ginolhac, #27</a> and <a href="https://github.com/kassambara/factoextra/issues/42">@Confurious, #42</a>).</li>
+<li>New arguments <code>geom.ind</code> and <code>geom.var</code> in <code>fviz_pca_xxx()</code> and <code>fviz_mca_xxx()</code> functions to have more controls on the individuals/variables geometry in the functions <code><a href="../reference/fviz_pca.html">fviz_pca_biplot()</a></code> and <code><a href="../reference/fviz_mca.html">fviz_mca_biplot()</a></code> (<a href="https://github.com/kassambara/factoextra/issues/42">@Confurious, #42</a>).</li>
+<li>New arguments <code>geom.row</code> and <code>geom.col</code> in <code>fviz_ca_xxx()</code> functions to have more controls on the individuals/variables geometry in the function <code><a href="../reference/fviz_ca.html">fviz_ca_biplot()</a></code> (<a href="https://github.com/kassambara/factoextra/issues/42">@Confurious, #42</a>).</li>
+<li>New argument <code>gradient.cols</code> in <code><a href="../reference/fviz_pca.html">fviz_pca_biplot()</a></code>
+</li>
+<li>New argument <code>àxes</code> in <code>fviz_cluster</code>() to specify the dimension to plot.</li>
+<li><p>New argument <code>circlesize</code> in the function <code><a href="../reference/fviz.html">fviz()</a></code> to change the size of the variable correlation circle size.</p></li>
+<li><p>It’s now possible to color individuals using a custom continuous variable (<a href="https://github.com/kassambara/factoextra/issues/29">#29</a>). This is done using the argument <strong>col.ind</strong>.</p></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(factoextra)
 <span class="kw">data</span>(iris)
@@ -267,7 +277,7 @@ res.CA &lt;-<span class="st"> </span><span class="kw">CA</span>(.tbl2<span class
     <div id="tocnav">
       <h2>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-        <li><a href="#factoextra-1-0-4-999">1.0.4.999</a></li>
+        <li><a href="#factoextra-1-0-5">1.0.5</a></li>
         <li><a href="#factoextra-1-0-4">1.0.4</a></li>
         <li><a href="#factoextra-1-0-3">1.0.3</a></li>
         <li><a href="#factoextra-1-0-2">1.0.2</a></li>

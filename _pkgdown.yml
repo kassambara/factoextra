@@ -1,6 +1,6 @@
 templates:
   params:
-    bootswatch: flatly
+    bootswatch: lumen
 
 reference:
   - title: Visualizing Dimension Reduction Analysis Outputs

@@ -11,7 +11,7 @@
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
-<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/lumen/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -81,11 +81,12 @@
   <span class='kw'>invisible</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>labelsize</span> <span class='kw'>=</span> <span class='fl'>4</span>, <span class='kw'>pointsize</span> <span class='kw'>=</span> <span class='fl'>1.5</span>, <span class='kw'>pointshape</span> <span class='kw'>=</span> <span class='fl'>19</span>,
   <span class='kw'>arrowsize</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>habillage</span> <span class='kw'>=</span> <span class='st'>"none"</span>, <span class='kw'>addEllipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>ellipse.level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>, <span class='kw'>ellipse.type</span> <span class='kw'>=</span> <span class='st'>"norm"</span>, <span class='kw'>ellipse.alpha</span> <span class='kw'>=</span> <span class='fl'>0.1</span>,
-  <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>, <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>, <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span>
-  <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>mean.point</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>color</span> <span class='kw'>=</span> <span class='st'>"black"</span>, <span class='kw'>fill</span> <span class='kw'>=</span> <span class='st'>"white"</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fl'>1</span>,
+  <span class='kw'>gradient.cols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>col.row.sup</span> <span class='kw'>=</span> <span class='st'>"darkblue"</span>, <span class='kw'>col.col.sup</span> <span class='kw'>=</span> <span class='st'>"darkred"</span>,
+  <span class='kw'>select</span> <span class='kw'>=</span> <span class='fu'>list</span>(<span class='kw'>name</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cos2</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>contrib</span> <span class='kw'>=</span> <span class='kw'>NULL</span>), <span class='kw'>title</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>axes.linetype</span> <span class='kw'>=</span> <span class='st'>"dashed"</span>, <span class='kw'>repel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>col.circle</span> <span class='kw'>=</span> <span class='st'>"grey70"</span>,
-  <span class='kw'>ggtheme</span> <span class='kw'>=</span> <span class='fu'>theme_minimal</span>(), <span class='kw'>ggp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
+  <span class='kw'>circlesize</span> <span class='kw'>=</span> <span class='fl'>0.5</span>, <span class='kw'>ggtheme</span> <span class='kw'>=</span> <span class='fu'>theme_minimal</span>(), <span class='kw'>ggp</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>font.family</span> <span class='kw'>=</span> <span class='st'>""</span>, <span class='no'>...</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <dl class="dl-horizontal">
@@ -100,15 +101,15 @@ and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput
       <dd>a numeric vector specifying the axes of interest. Default values 
 are 1:2 for axes 1 and 2.</dd>
       <dt>geom</dt>
-      <dd>a text specifying the geometry to be used for the graph. Default
-value is &quot;auto&quot;. Allowed values are the combination of c(&quot;point&quot;, &quot;arrow&quot;,
-&quot;text&quot;). Use &quot;point&quot; (to show only points); &quot;text&quot; to show only labels;
+      <dd>a text specifying the geometry to be used for the graph. Default 
+value is &quot;auto&quot;. Allowed values are the combination of c(&quot;point&quot;, &quot;arrow&quot;, 
+&quot;text&quot;). Use &quot;point&quot; (to show only points); &quot;text&quot; to show only labels; 
 c(&quot;point&quot;, &quot;text&quot;) or c(&quot;arrow&quot;, &quot;text&quot;) to show both types.</dd>
       <dt>label</dt>
       <dd>a text specifying the elements to be labelled. Default value is 
 &quot;all&quot;. Allowed values are &quot;none&quot; or the combination of c(&quot;ind&quot;, &quot;ind.sup&quot;, 
-&quot;quali&quot;, &quot;var&quot;, &quot;quanti.sup&quot;, &quot;group.sup&quot;). &quot;ind&quot; can be used to label only
-active individuals. &quot;ind.sup&quot; is for supplementary individuals. &quot;quali&quot; is
+&quot;quali&quot;, &quot;var&quot;, &quot;quanti.sup&quot;, &quot;group.sup&quot;). &quot;ind&quot; can be used to label only 
+active individuals. &quot;ind.sup&quot; is for supplementary individuals. &quot;quali&quot; is 
 for supplementary qualitative variables. &quot;var&quot; is for active variables. 
 &quot;quanti.sup&quot; is for quantitative supplementary variables.</dd>
       <dt>invisible</dt>
@@ -137,26 +138,49 @@ individuals when habillage != &quot;none&quot;.</dd>
 probability.</dd>
       <dt>ellipse.type</dt>
       <dd>Character specifying frame type. Possible values are 
-&#39;convex&#39; or types supporeted by <code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/stat_ellipse'>stat_ellipse</a></code> 
-including one of c(&quot;t&quot;, &quot;norm&quot;, &quot;euclid&quot;).</dd>
+<code>&quot;convex&quot;</code>, <code>&quot;confidence&quot;</code> or types supported by 
+<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/stat_ellipse'>stat_ellipse</a>()</code> including one of <code>c(&quot;t&quot;, &quot;norm&quot;, 
+&quot;euclid&quot;)</code> for plotting concentration ellipses.
+
+<ul>
+<li> <code>&quot;convex&quot;</code>: plot convex hull of a set o points. </li>
+<li> 
+<code>&quot;confidence&quot;</code>: plot confidence ellipses arround group mean points as
+<code><a href='http://www.rdocumentation.org/packages/FactoMineR/topics/coord.ellipse'>coord.ellipse</a>()</code>[in FactoMineR]. </li>
+<li> <code>&quot;t&quot;</code>:
+assumes a multivariate t-distribution. </li>
+<li> <code>&quot;norm&quot;</code>: assumes a
+multivariate normal distribution. </li>
+<li> <code>&quot;euclid&quot;</code>: draws a circle with
+the radius equal to level, representing the euclidean distance from the
+center. This ellipse probably won&#39;t appear circular unless
+<code><a href='http://www.rdocumentation.org/packages/ggplot2/topics/coord_fixed'>coord_fixed</a>()</code> is applied.</li>
+</ul>
+</dd>
       <dt>ellipse.alpha</dt>
       <dd>Alpha for ellipse specifying the transparency level of 
 fill color. Use alpha = 0 for no fill color.</dd>
+      <dt>mean.point</dt>
+      <dd>logical value. If TRUE (default), group mean points are 
+added to the plot.</dd>
       <dt>color</dt>
-      <dd>color to be used for the specified geometries (point, text). Can
-be a continuous variable or a factor variable. Possible values include also
-: &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for
-individuals/variables are automatically controlled by their qualities of
-representation (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2,
-&quot;coord&quot;), x values (&quot;x&quot;) or y values (&quot;y&quot;). To use automatic coloring (by
+      <dd>color to be used for the specified geometries (point, text). Can 
+be a continuous variable or a factor variable. Possible values include also 
+: &quot;cos2&quot;, &quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the colors for 
+individuals/variables are automatically controlled by their qualities of 
+representation (&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2, 
+&quot;coord&quot;), x values (&quot;x&quot;) or y values (&quot;y&quot;). To use automatic coloring (by 
 cos2, contrib, ....), make sure that habillage =&quot;none&quot;.</dd>
+      <dt>fill</dt>
+      <dd>same as the argument <code>color</code>, but for point fill color. 
+Useful when pointshape = 21, for example.</dd>
       <dt>alpha</dt>
-      <dd>controls the transparency of individual and variable colors,
-respectively. The value can variate from 0 (total transparency) to 1 (no
-transparency). Default value is 1. Possible values include also : &quot;cos2&quot;,
-&quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the transparency for the
-individual/variable colors are automatically controlled by their qualities
-(&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x
+      <dd>controls the transparency of individual and variable colors, 
+respectively. The value can variate from 0 (total transparency) to 1 (no 
+transparency). Default value is 1. Possible values include also : &quot;cos2&quot;, 
+&quot;contrib&quot;, &quot;coord&quot;, &quot;x&quot; or &quot;y&quot;. In this case, the transparency for the 
+individual/variable colors are automatically controlled by their qualities 
+(&quot;cos2&quot;), contributions (&quot;contrib&quot;), coordinates (x^2+y^2, &quot;coord&quot;), x 
 values(&quot;x&quot;) or y values(&quot;y&quot;). To use this, make sure that habillage =&quot;none&quot;.</dd>
       <dt>gradient.cols</dt>
       <dd>vector of colors to use for n-colour gradient. Allowed
@@ -167,13 +191,13 @@ points, respectively.</dd>
       <dt>select</dt>
       <dd>a selection of individuals/variables to be drawn. Allowed values
 are NULL or a list containing the arguments name, cos2 or contrib: <ul>
-<li> name: is a character vector containing individuals/variables to be
+<li> name: is a character vector containing individuals/variables to be 
 drawn </li>
-<li> cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables
-with a cos2 &gt; 0.6 are drawn. if cos2 &gt; 1, ex: 5, then the top 5
+<li> cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables 
+with a cos2 &gt; 0.6 are drawn. if cos2 &gt; 1, ex: 5, then the top 5 
 individuals/variables with the highest cos2 are drawn. </li>
-<li> contrib: if
-contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with the highest
+<li> contrib: if 
+contrib &gt; 1, ex: 5,  then the top 5 individuals/variables with the highest 
 contrib are drawn </li>
 </ul>
 </dd>
@@ -185,16 +209,20 @@ contrib are drawn </li>
       <dd>a boolean, whether to use ggrepel to avoid overplotting text 
 labels or not.</dd>
       <dt>col.circle</dt>
-      <dd>a color for the correlation circle. Used only when X is a
+      <dd>a color for the correlation circle. Used only when X is a 
 PCA output.</dd>
+      <dt>circlesize</dt>
+      <dd>the size of the variable correlation circle.</dd>
       <dt>ggtheme</dt>
       <dd>function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....</dd>
       <dt>ggp</dt>
       <dd>a ggplot. If not NULL, points are added to an existing plot.</dd>
+      <dt>font.family</dt>
+      <dd>character vector specifying font family.</dd>
       <dt>...</dt>
-      <dd>Arguments to be passed to the functions ggpubr::ggscatter() &amp;
+      <dd>Arguments to be passed to the functions ggpubr::ggscatter() &amp; 
 ggpubr::ggpar().</dd>
     </dl>
     
