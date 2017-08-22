@@ -316,7 +316,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 }
 # Check if is continuous or grouping variable in the context of PCA
 .is_variable <- function(x){
-  .is_continuous_var(x) | .is_grouping_var(col.var)
+  .is_continuous_var(x) | .is_grouping_var(x)
 }
 
 
