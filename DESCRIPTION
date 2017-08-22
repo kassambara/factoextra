@@ -1,7 +1,7 @@
 Package: factoextra
 Type: Package
 Title: Extract and Visualize the Results of Multivariate Data Analyses
-Version: 1.0.5
+Version: 1.0.5.999
 Date: 2017-08-22
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
