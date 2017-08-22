@@ -1,8 +1,8 @@
 Package: factoextra
 Type: Package
 Title: Extract and Visualize the Results of Multivariate Data Analyses
-Version: 1.0.4.999
-Date: 2017-01-08
+Version: 1.0.5
+Date: 2017-08-22
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
     person("Fabian", "Mundt", role = c("aut"), email = "f.mundt@inventionate.de")
@@ -24,7 +24,7 @@ Imports:
     cluster,
     dendextend,
     FactoMineR,
-    ggpubr(>= 0.1.4),
+    ggpubr(>= 0.1.5),
     grid,
     stats,
     reshape2,
@@ -37,8 +37,6 @@ Suggests:
     MASS,
     knitr,
     mclust
-Remotes:
-    kassambara/ggpubr
 URL: http://www.sthda.com/english/rpkgs/factoextra
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate: 
