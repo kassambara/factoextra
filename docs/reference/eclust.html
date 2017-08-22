@@ -165,47 +165,46 @@ for determining the number of clusters using gap statistic.</dd>
 <span class='no'>df</span> <span class='kw'>&lt;-</span> <span class='fu'>scale</span>(<span class='no'>USArrests</span>)
 
 <span class='co'># Enhanced k-means clustering</span>
-<span class='no'>res.km</span> <span class='kw'>&lt;-</span> <span class='fu'>eclust</span>(<span class='no'>df</span>, <span class='st'>"kmeans"</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
-#&gt; Bootstrapping, b = 1,2,..., B (= 10)  [one &quot;.&quot; per sample]:
-#&gt; .......... 10 </div><img src='eclust-3.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Silhouette plot</span>
+<span class='co'># nboot &gt;= 500 is recommended</span>
+<span class='no'>res.km</span> <span class='kw'>&lt;-</span> <span class='fu'>eclust</span>(<span class='no'>df</span>, <span class='st'>"kmeans"</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
+#&gt; Bootstrapping, b = 1,2,..., B (= 3)  [one &quot;.&quot; per sample]:
+#&gt; ... 3 </div><img src='eclust-3.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Silhouette plot</span>
 <span class='fu'><a href='fviz_silhouette.html'>fviz_silhouette</a></span>(<span class='no'>res.km</span>)</div><div class='output co'>#&gt;   cluster size ave.sil.width
-#&gt; 1       1   13          0.31
-#&gt; 2       2   29          0.38
-#&gt; 3       3    8          0.39</div><img src='eclust-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Optimal number of clusters using gap statistics</span>
-<span class='no'>res.km</span>$<span class='no'>nbclust</span></div><div class='output co'>#&gt; [1] 3</div><div class='input'><span class='co'># Print result</span>
- <span class='no'>res.km</span></div><div class='output co'>#&gt; K-means clustering with 3 clusters of sizes 13, 29, 8
+#&gt; 1       1   30          0.43
+#&gt; 2       2   20          0.37</div><img src='eclust-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Optimal number of clusters using gap statistics</span>
+<span class='no'>res.km</span>$<span class='no'>nbclust</span></div><div class='output co'>#&gt; [1] 2</div><div class='input'><span class='co'># Print result</span>
+ <span class='no'>res.km</span></div><div class='output co'>#&gt; K-means clustering with 2 clusters of sizes 30, 20
 #&gt; 
 #&gt; Cluster means:
-#&gt;       Murder    Assault    UrbanPop        Rape
-#&gt; 1  0.6950701  1.0394414  0.72263703  1.27693964
-#&gt; 2 -0.7010700 -0.7071522 -0.09924526 -0.57773737
-#&gt; 3  1.4118898  0.8743346 -0.81452109  0.01927104
+#&gt;      Murder    Assault   UrbanPop       Rape
+#&gt; 1 -0.669956 -0.6758849 -0.1317235 -0.5646433
+#&gt; 2  1.004934  1.0138274  0.1975853  0.8469650
 #&gt; 
 #&gt; Clustering vector:
 #&gt;        Alabama         Alaska        Arizona       Arkansas     California 
-#&gt;              3              1              1              3              1 
+#&gt;              2              2              2              1              2 
 #&gt;       Colorado    Connecticut       Delaware        Florida        Georgia 
-#&gt;              1              2              2              1              3 
+#&gt;              2              1              1              2              2 
 #&gt;         Hawaii          Idaho       Illinois        Indiana           Iowa 
-#&gt;              2              2              1              2              2 
+#&gt;              1              1              2              1              1 
 #&gt;         Kansas       Kentucky      Louisiana          Maine       Maryland 
-#&gt;              2              2              3              2              1 
+#&gt;              1              1              2              1              2 
 #&gt;  Massachusetts       Michigan      Minnesota    Mississippi       Missouri 
-#&gt;              2              1              2              3              1 
+#&gt;              1              2              1              2              2 
 #&gt;        Montana       Nebraska         Nevada  New Hampshire     New Jersey 
-#&gt;              2              2              1              2              2 
+#&gt;              1              1              2              1              1 
 #&gt;     New Mexico       New York North Carolina   North Dakota           Ohio 
-#&gt;              1              1              3              2              2 
+#&gt;              2              2              2              1              1 
 #&gt;       Oklahoma         Oregon   Pennsylvania   Rhode Island South Carolina 
-#&gt;              2              2              2              2              3 
+#&gt;              1              1              1              1              2 
 #&gt;   South Dakota      Tennessee          Texas           Utah        Vermont 
-#&gt;              2              3              1              2              2 
+#&gt;              1              2              2              1              1 
 #&gt;       Virginia     Washington  West Virginia      Wisconsin        Wyoming 
-#&gt;              2              2              2              2              2 
+#&gt;              1              1              1              1              1 
 #&gt; 
 #&gt; Within cluster sum of squares by cluster:
-#&gt; [1] 19.922437 53.354791  8.316061
-#&gt;  (between_SS / total_SS =  58.4 %)
+#&gt; [1] 56.11445 46.74796
+#&gt;  (between_SS / total_SS =  47.5 %)
 #&gt; 
 #&gt; Available components:
 #&gt; 

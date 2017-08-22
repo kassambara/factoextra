@@ -200,7 +200,7 @@ see ?cluster::maxSE for more options </li>
 <span class='fu'>fviz_nbclust</span>(<span class='no'>iris.scaled</span>, <span class='no'>kmeans</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"wss"</span>) +
 <span class='fu'>geom_vline</span>(<span class='kw'>xintercept</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>linetype</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><img src='fviz_nbclust-4.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'># Average silhouette for kmeans</span>
-<span class='fu'>fviz_nbclust</span>(<span class='no'>iris.scaled</span>, <span class='no'>kmeans</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"silhouette"</span>)</div><div class='output co'>#&gt; <span class='error'>Error in grid.Call.graphics(L_setviewport, vp, TRUE): position et / ou taille de vue non finies</span></div><img src='fviz_nbclust-7.png' alt='' width='540' height='400' /><div class='input'>
+<span class='fu'>fviz_nbclust</span>(<span class='no'>iris.scaled</span>, <span class='no'>kmeans</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"silhouette"</span>)</div><img src='fviz_nbclust-6.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'>### Gap statistic</span>
 <span class='fu'>library</span>(<span class='no'>cluster</span>)
 <span class='fu'>set.seed</span>(<span class='fl'>123</span>)
@@ -223,12 +223,13 @@ see ?cluster::maxSE for more options </li>
 #&gt;  [7,] 3.448288 3.899672 0.4513843 0.02816061
 #&gt;  [8,] 3.398210 3.846276 0.4480656 0.02557573
 #&gt;  [9,] 3.334279 3.800104 0.4658256 0.02313226
-#&gt; [10,] 3.250246 3.758406 0.5081600 0.02195875</div><div class='input'><span class='fu'>fviz_gap_stat</span>(<span class='no'>gap_stat</span>)
-
+#&gt; [10,] 3.250246 3.758406 0.5081600 0.02195875</div><div class='input'><span class='fu'>fviz_gap_stat</span>(<span class='no'>gap_stat</span>)</div><img src='fviz_nbclust-12.png' alt='' width='540' height='400' /><div class='input'>
 <span class='co'># Gap statistic for hierarchical clustering</span>
 <span class='no'>gap_stat</span> <span class='kw'>&lt;-</span> <span class='fu'>clusGap</span>(<span class='no'>iris.scaled</span>, <span class='kw'>FUN</span> <span class='kw'>=</span> <span class='no'>hcut</span>, <span class='kw'>K.max</span> <span class='kw'>=</span> <span class='fl'>10</span>, <span class='kw'>B</span> <span class='kw'>=</span> <span class='fl'>10</span>)</div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
 #&gt; Bootstrapping, b = 1,2,..., B (= 10)  [one &quot;.&quot; per sample]:
-#&gt; .......... 10 </div><div class='input'><span class='fu'>fviz_gap_stat</span>(<span class='no'>gap_stat</span>)</div></pre>
+#&gt; .......... 10 </div><div class='input'><span class='fu'>fviz_gap_stat</span>(<span class='no'>gap_stat</span>)</div><img src='fviz_nbclust-16.png' alt='' width='540' height='400' /><div class='input'>
+ 
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
