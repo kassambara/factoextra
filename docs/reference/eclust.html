@@ -166,9 +166,9 @@ for determining the number of clusters using gap statistic.</dd>
 
 <span class='co'># Enhanced k-means clustering</span>
 <span class='co'># nboot &gt;= 500 is recommended</span>
-<span class='no'>res.km</span> <span class='kw'>&lt;-</span> <span class='fu'>eclust</span>(<span class='no'>df</span>, <span class='st'>"kmeans"</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>3</span>)</div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
-#&gt; Bootstrapping, b = 1,2,..., B (= 3)  [one &quot;.&quot; per sample]:
-#&gt; ... 3 </div><img src='eclust-3.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Silhouette plot</span>
+<span class='no'>res.km</span> <span class='kw'>&lt;-</span> <span class='fu'>eclust</span>(<span class='no'>df</span>, <span class='st'>"kmeans"</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>2</span>)</div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
+#&gt; Bootstrapping, b = 1,2,..., B (= 2)  [one &quot;.&quot; per sample]:
+#&gt; .. 2 </div><img src='eclust-3.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Silhouette plot</span>
 <span class='fu'><a href='fviz_silhouette.html'>fviz_silhouette</a></span>(<span class='no'>res.km</span>)</div><div class='output co'>#&gt;   cluster size ave.sil.width
 #&gt; 1       1   30          0.43
 #&gt; 2       2   20          0.37</div><img src='eclust-6.png' alt='' width='540' height='400' /><div class='input'><span class='co'># Optimal number of clusters using gap statistics</span>
@@ -211,14 +211,12 @@ for determining the number of clusters using gap statistic.</dd>
 #&gt;  [1] &quot;cluster&quot;      &quot;centers&quot;      &quot;totss&quot;        &quot;withinss&quot;     &quot;tot.withinss&quot;
 #&gt;  [6] &quot;betweenss&quot;    &quot;size&quot;         &quot;iter&quot;         &quot;ifault&quot;       &quot;clust_plot&quot;  
 #&gt; [11] &quot;silinfo&quot;      &quot;nbclust&quot;      &quot;data&quot;         &quot;gap_stat&quot;    </div><div class='input'>
- <span class='co'># Enhanced hierarchical clustering</span>
- <span class='no'>res.hc</span> <span class='kw'>&lt;-</span> <span class='fu'>eclust</span>(<span class='no'>df</span>, <span class='st'>"hclust"</span>, <span class='kw'>nboot</span> <span class='kw'>=</span> <span class='fl'>10</span>) <span class='co'># compute hclust</span></div><div class='output co'>#&gt; Clustering k = 1,2,..., K.max (= 10): .. done
-#&gt; Bootstrapping, b = 1,2,..., B (= 10)  [one &quot;.&quot; per sample]:
-#&gt; .......... 10 </div><div class='input'>  <span class='fu'><a href='fviz_dend.html'>fviz_dend</a></span>(<span class='no'>res.hc</span>) <span class='co'># dendrogam</span></div><img src='eclust-14.png' alt='' width='540' height='400' /><div class='input'>  <span class='fu'><a href='fviz_silhouette.html'>fviz_silhouette</a></span>(<span class='no'>res.hc</span>) <span class='co'># silhouette plot</span></div><div class='output co'>#&gt;   cluster size ave.sil.width
-#&gt; 1       1   19          0.26
-#&gt; 2       2   19          0.28
-#&gt; 3       3   12          0.43</div><img src='eclust-17.png' alt='' width='540' height='400' /><div class='input'> 
-</div></pre>
+<span class='co'>## Not run: ------------------------------------</span>
+<span class='co'>#  # Enhanced hierarchical clustering</span>
+<span class='co'>#  res.hc &lt;- eclust(df, "hclust", nboot = 2) # compute hclust</span>
+<span class='co'>#   fviz_dend(res.hc) # dendrogam</span>
+<span class='co'>#   fviz_silhouette(res.hc) # silhouette plot</span>
+<span class='co'>## ---------------------------------------------</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

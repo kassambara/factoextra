@@ -77,7 +77,7 @@
 </blockquote>
 <p>The figure below shows methods, which outputs can be visualized using the factoextra package. The official online documentation is available at: <a href="http://www.sthda.com/english/rpkgs/factoextra" class="uri">http://www.sthda.com/english/rpkgs/factoextra</a>.</p>
 <div class="figure">
-<img src="factoextra-r-package.png" alt="factoextra R package"><p class="caption">factoextra R package</p>
+<img src="tools/factoextra-r-package.png" alt="factoextra R package"><p class="caption">factoextra R package</p>
 </div>
 <div id="why-using-factoextra" class="section level2">
 <h2 class="hasAnchor">
@@ -305,7 +305,7 @@ devtools::<span class="kw">install_github</span>(<span class="st">"kassambara/fa
 <a href="#dimension-reduction-and-factoextra" class="anchor"> </a>Dimension reduction and factoextra</h2>
 <p>As depicted in the figure below, the type of analysis to be performed depends on the data set formats and structures.</p>
 <div class="figure">
-<img src="multivariate-analysis-factoextra.png" alt="dimension reduction and factoextra"><p class="caption">dimension reduction and factoextra</p>
+<img src="tools/multivariate-analysis-factoextra.png" alt="dimension reduction and factoextra"><p class="caption">dimension reduction and factoextra</p>
 </div>
 <p>In this section we start by illustrating classical methods - such as PCA, CA and MCA - for analyzing a data set containing continuous variables, contingency table and qualitative variables, respectively.</p>
 <p>We continue by discussing advanced methods - such as FAMD, MFA and HMFA - for analyzing a data set containing a mix of variables (qualitatives &amp; quantitatives) organized or not into groups.</p>
@@ -349,7 +349,7 @@ res.pca &lt;-<span class="st"> </span><span class="kw">PCA</span>(df,  <span cla
 <span class="co">#&gt; Dim.10  0.1219710         1.219710                   100.00000</span>
 <span class="co"># Visualize eigenvalues/variances</span>
 <span class="kw"><a href="reference/eigenvalue.html">fviz_screeplot</a></span>(res.pca, <span class="dt">addlabels =</span> <span class="ot">TRUE</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">50</span>))</code></pre></div>
-<p><img src="README-pca-eigenvalue-1.png" width="432"></p>
+<p><img src="tools/README-pca-eigenvalue-1.png" width="432"></p>
 <p>4.<strong>Extract and visualize results for variables</strong>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Extract the results for variables</span>
 var &lt;-<span class="st"> </span><span class="kw"><a href="reference/get_pca.html">get_pca_var</a></span>(res.pca)
@@ -381,14 +381,14 @@ var
 <span class="co">#&gt; X110m.hurdle 14.157544  0.0332933 16.261261  0.03483735  7.166193</span>
 <span class="co"># Graph of variables: default plot</span>
 <span class="kw"><a href="reference/fviz_pca.html">fviz_pca_var</a></span>(res.pca, <span class="dt">col.var =</span> <span class="st">"black"</span>)</code></pre></div>
-<p><img src="README-pca-variables-1.png" width="432"></p>
+<p><img src="tools/README-pca-variables-1.png" width="432"></p>
 <p>It’s possible to control variable colors using their contributions (“contrib”) to the principal axes:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Control variable colors using their contributions</span>
 <span class="kw"><a href="reference/fviz_pca.html">fviz_pca_var</a></span>(res.pca, <span class="dt">col.var=</span><span class="st">"contrib"</span>,
              <span class="dt">gradient.cols =</span> <span class="kw">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>, <span class="st">"#FC4E07"</span>),
              <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid text overlapping</span>
              )</code></pre></div>
-<p><img src="README-pca-variable-colors-by-contributions-1.png" width="480"></p>
+<p><img src="tools/README-pca-variable-colors-by-contributions-1.png" width="480"></p>
 <ol start="5" style="list-style-type: decimal">
 <li>
 <strong>Variable contributions to the principal axes</strong>:</li>
@@ -398,7 +398,7 @@ var
 
 <span class="co"># Contributions of variables to PC2</span>
 <span class="kw"><a href="reference/fviz_contrib.html">fviz_contrib</a></span>(res.pca, <span class="dt">choice =</span> <span class="st">"var"</span>, <span class="dt">axes =</span> <span class="dv">2</span>, <span class="dt">top =</span> <span class="dv">10</span>)</code></pre></div>
-<p><img src="README-pca-variable-contributions-1.png" width="336"><img src="README-pca-variable-contributions-2.png" width="336"></p>
+<p><img src="tools/README-pca-variable-contributions-1.png" width="336"><img src="tools/README-pca-variable-contributions-2.png" width="336"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>
 <strong>Extract and visualize results for individuals</strong>:</li>
@@ -431,10 +431,10 @@ ind
              <span class="dt">gradient.cols =</span> <span class="kw">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>, <span class="st">"#FC4E07"</span>),
              <span class="dt">repel =</span> <span class="ot">TRUE</span> <span class="co"># Avoid text overlapping (slow if many points)</span>
              )</code></pre></div>
-<p><img src="README-principal-component-analysis-data-mining-1.png" width="518.4"></p>
+<p><img src="tools/README-principal-component-analysis-data-mining-1.png" width="518.4"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Biplot of individuals and variables</span>
 <span class="kw"><a href="reference/fviz_pca.html">fviz_pca_biplot</a></span>(res.pca, <span class="dt">repel =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-principal-component-analysis-data-mining-2.png" width="518.4"></p>
+<p><img src="tools/README-principal-component-analysis-data-mining-2.png" width="518.4"></p>
 <ol start="7" style="list-style-type: decimal">
 <li>
 <strong>Color individuals by groups</strong>:</li>
@@ -452,7 +452,7 @@ iris.pca &lt;-<span class="st"> </span><span class="kw">PCA</span>(iris[,-<span 
              <span class="dt">palette =</span> <span class="kw">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>, <span class="st">"#FC4E07"</span>),
              <span class="dt">addEllipses =</span> <span class="ot">TRUE</span> <span class="co"># Concentration ellipses</span>
              )</code></pre></div>
-<p><img src="README-individuals-factor-map-color-by-groups-1.png" width="576"></p>
+<p><img src="tools/README-individuals-factor-map-color-by-groups-1.png" width="576"></p>
 </div>
 <div id="correspondence-analysis" class="section level3">
 <h3 class="hasAnchor">
@@ -486,7 +486,7 @@ res.ca &lt;-<span class="st"> </span><span class="kw">CA</span>(housetasks, <spa
 <li><strong>Biplot of rows and columns</strong></li>
 </ul>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/fviz_ca.html">fviz_ca_biplot</a></span>(res.ca, <span class="dt">repel =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-correspondence-analysis-biplot-1.png" width="480"></p>
+<p><img src="tools/README-correspondence-analysis-biplot-1.png" width="480"></p>
 <p>To visualize only row points or column points, type this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Graph of row points</span>
 <span class="kw"><a href="reference/fviz_ca.html">fviz_ca_row</a></span>(res.ca, <span class="dt">repel =</span> <span class="ot">TRUE</span>)
@@ -545,19 +545,19 @@ res.mca &lt;-<span class="st"> </span><span class="kw">MCA</span>(poison, <span 
 grp &lt;-<span class="st"> </span><span class="kw">as.factor</span>(poison[, <span class="st">"Vomiting"</span>])
 <span class="kw"><a href="reference/fviz_mca.html">fviz_mca_ind</a></span>(res.mca,  <span class="dt">habillage =</span> grp,
              <span class="dt">addEllipses =</span> <span class="ot">TRUE</span>, <span class="dt">repel =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-mca-graph-of-individuals-1.png" width="518.4"></p>
+<p><img src="tools/README-mca-graph-of-individuals-1.png" width="518.4"></p>
 <ol start="5" style="list-style-type: decimal">
 <li>
 <strong>Graph of variable categories</strong>:</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/fviz_mca.html">fviz_mca_var</a></span>(res.mca, <span class="dt">repel =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-mca-graph-variables-1.png" width="518.4"></p>
+<p><img src="tools/README-mca-graph-variables-1.png" width="518.4"></p>
 <ol start="6" style="list-style-type: decimal">
 <li>
 <strong>Biplot of individuals and variables</strong>:</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="reference/fviz_mca.html">fviz_mca_biplot</a></span>(res.mca, <span class="dt">repel =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<p><img src="README-mca-biplot-1.png" width="518.4"></p>
+<p><img src="tools/README-mca-biplot-1.png" width="518.4"></p>
 </div>
 <div id="advanced-methods" class="section level3">
 <h3 class="hasAnchor">
@@ -578,7 +578,7 @@ grp &lt;-<span class="st"> </span><span class="kw">as.factor</span>(poison[, <sp
 <h2 class="hasAnchor">
 <a href="#cluster-analysis-and-factoextra" class="anchor"> </a>Cluster analysis and factoextra</h2>
 <p>To learn more about cluster analysis, you can refer to the book available at: <a href="http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book">Practical Guide to Cluster Analysis in R</a></p>
-<p><a href="http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book"><img src="clustering-e1-cover.png" alt="clustering book cover"></a></p>
+<p><a href="http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book"><img src="tools/clustering-e1-cover.png" alt="clustering book cover"></a></p>
 <p>The main parts of the book include:</p>
 <ul>
 <li>
@@ -597,7 +597,7 @@ grp &lt;-<span class="st"> </span><span class="kw">as.factor</span>(poison[, <sp
 <h3 class="hasAnchor">
 <a href="#partitioning-clustering" class="anchor"> </a>Partitioning clustering</h3>
 <div class="figure">
-<img src="partitioning-clustering.png" alt="Partitioning cluster analysis"><p class="caption">Partitioning cluster analysis</p>
+<img src="tools/partitioning-clustering.png" alt="Partitioning cluster analysis"><p class="caption">Partitioning cluster analysis</p>
 </div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># 1. Loading and preparing data</span>
 <span class="kw">data</span>(<span class="st">"USArrests"</span>)
@@ -614,7 +614,7 @@ km.res &lt;-<span class="st"> </span><span class="kw">kmeans</span>(<span class=
              <span class="dt">ggtheme =</span> <span class="kw">theme_minimal</span>(),
              <span class="dt">main =</span> <span class="st">"Partitioning Clustering Plot"</span>
              )</code></pre></div>
-<p><img src="README-partitioning-clustering-1.png" width="518.4"></p>
+<p><img src="tools/README-partitioning-clustering-1.png" width="518.4"></p>
 <br><br><div class="success">
 <p>Read more:</p>
 <ol style="list-style-type: decimal">
@@ -635,7 +635,7 @@ res &lt;-<span class="st"> </span><span class="kw"><a href="reference/hcut.html"
 <span class="co"># Visualize</span>
 <span class="kw"><a href="reference/fviz_dend.html">fviz_dend</a></span>(res, <span class="dt">rect =</span> <span class="ot">TRUE</span>, <span class="dt">cex =</span> <span class="fl">0.5</span>,
           <span class="dt">k_colors =</span> <span class="kw">c</span>(<span class="st">"#00AFBB"</span>,<span class="st">"#2E9FDF"</span>, <span class="st">"#E7B800"</span>, <span class="st">"#FC4E07"</span>))</code></pre></div>
-<p><img src="README-hierarchical-clustering-1.png" width="518.4"></p>
+<p><img src="tools/README-hierarchical-clustering-1.png" width="518.4"></p>
 <br><br><div class="success">
 <p>Read more:</p>
 <ol style="list-style-type: decimal">
@@ -656,7 +656,7 @@ my_data &lt;-<span class="st"> </span><span class="kw">scale</span>(USArrests)
 <span class="co">#&gt; Bootstrapping, b = 1,2,..., B (= 100)  [one "." per sample]:</span>
 <span class="co">#&gt; .................................................. 50 </span>
 <span class="co">#&gt; .................................................. 100</span></code></pre></div>
-<p><img src="README-determine-the-number-of-clusters-gap-statistics-1.png" width="384"></p>
+<p><img src="tools/README-determine-the-number-of-clusters-gap-statistics-1.png" width="384"></p>
 </div>
 </div>
 <div id="acknoweledgment" class="section level2">
