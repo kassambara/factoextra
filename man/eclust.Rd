@@ -89,10 +89,12 @@ res.km$nbclust
 # Print result
  res.km
  
+\dontrun{
  # Enhanced hierarchical clustering
  res.hc <- eclust(df, "hclust", nboot = 2) # compute hclust
   fviz_dend(res.hc) # dendrogam
   fviz_silhouette(res.hc) # silhouette plot
+}
  
 }
 \seealso{
