@@ -787,3 +787,9 @@ NULL
   res
 }
 
+
+# Principal component methods with Fcatominer
+f_pca <- function(X, graph = FALSE){
+  FactoMineR::PCA(X, graph = FALSE)
+}
+
