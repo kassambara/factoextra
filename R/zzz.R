@@ -1,3 +1,3 @@
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Welcome! Related Books: `Practical Guide To Cluster Analysis in R` at https://goo.gl/13EFCZ")
+  packageStartupMessage("Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa")
 }
