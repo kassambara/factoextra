@@ -41,12 +41,12 @@ Before applying cluster methods, the first step is to assess
   image (ODI) is shown. Objects belonging to the same cluster are displayed 
   in consecutive order using hierarchical clustering. For more details and 
   interpretation, see 
-  \href{http://www.sthda.com/english/wiki/assessing-clustering-tendency-a-vital-issue-unsupervised-machine-learning}{STHDA
+  \href{http://www.sthda.com/english/articles/29-cluster-validation-essentials/95-assessing-clustering-tendency-essentials/}{STHDA
    website: Assessing clustering tendency}.
 }
 \details{
-\strong{Hopkins statistic}: If the value of Hopkins statistic is close to
-zero (far below 0.5), then we can conclude that the dataset is significantly
+\strong{Hopkins statistic}: If the value of Hopkins statistic is close to 
+1 (far above 0.5), then we can conclude that the dataset is significantly
 clusterable.
 
 \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
