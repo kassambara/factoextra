@@ -91,7 +91,7 @@ habillage ="none".}
 "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
 "colgab", "rowgreen" and "colgreen". See details}
 
-\item{select.ind, select.var}{a selection of individuals/variables to be drawn.
+\item{select.ind, select.var}{a selection of individuals/variables to be drawn (must match at least one of the conditions).
 Allowed values are NULL or a list containing the arguments name, cos2 or 
 contrib: \itemize{ \item name is a character vector containing 
 individuals/variables to be drawn \item cos2 if cos2 is in [0, 1], ex: 0.6, 

@@ -95,10 +95,7 @@ NULL
     res <- cbind.data.frame(name =rownames(elmt$coord), res)
     
     # selection of variables
-    if(!is.null(select)){
-      if(!is.null(select$contrib)) res <- NULL # supp points don't have contrib
-      else res <- .select(res, select, check = FALSE)
-    }
+    if(!is.null(select)) res <- .select(res, select, check = FALSE)
   }
   if(!is.null(res)){
     if(nrow(res) == 0) res <- NULL
@@ -466,6 +463,7 @@ NULL
 # d a data frame containing row names, coordinates, cos2, contrib, etc
 # filter: a filter to be applied. Allowed values are NULL or a list containing the arguments either
 #  name, cos2 or contrib
+# Rows that match at least one condition are selected.
 # - name: is a character vector containing row names of interest
 # - cos2: if cos2 is in [0, 1], ex: 0.6, then rows with a cos2 > 0.6 are extracted.
 #   if cos2 > 1, ex: 5, then the top 5 rows with the highest cos2 are extracted
@@ -473,7 +471,10 @@ NULL
 # check: if TRUE, check the data after filtering
 .select <- function(d, filter = NULL, check= TRUE){
   
-  if(!is.null(filter)){
+  if(!all(sapply(filter, is.null))){
+    
+    # Initialize selection variables
+    selection_names <- selection_cos2 <- selection_contrib <- NULL
     
     # Filter by name
     if(!is.null(filter$name)){
@@ -482,7 +483,7 @@ NULL
       diff <- setdiff(name, d$name)
       #if(check & length(common) == 0) stop("Can't find the specified names")
       # if(check & length(diff)!=0) warning("Can't find the the following name(s): ", diff)
-      d <- d[common, , drop = FALSE]
+      selection_names <- rownames(d[common, , drop = FALSE])
     }
     
     # Filter by cos2
@@ -490,27 +491,32 @@ NULL
       # case 1 cos2 is in [0, 1]
       # rows with cos2 > value are selected
       if(0 <= filter$cos2 & filter$cos2 <= 1){
-        d <- d[which(d$cos2 >= filter$cos2), , drop = FALSE]
-        if(check & nrow(d)==0)
+        selection_cos2 <- rownames(d[which(d$cos2 >= filter$cos2), , drop = FALSE])
+        # If name or contrib is used, then don't check the cos2 filter.
+        if (!is.null(filter$name) || !is.null(filter$contrib)) check <- FALSE
+        if(check & length(selection_cos2)==0)
           stop("There are no observations with cos2 >=", filter$cos2, 
                ". Please, change the value of cos2 and try again.")
       }
       # case 2 - cos2 > 1 : the top rows are selected 
       else if(filter$cos2 > 1){
         cos2 <- round(filter$cos2)
-        d <- d[order(d$cos2, decreasing = TRUE), , drop = FALSE]
-        d <- d[1:min(filter$cos2, nrow(d)),, drop = FALSE]
+        selection_cos2 <- d[order(d$cos2, decreasing = TRUE), , drop = FALSE]
+        selection_cos2 <- rownames(selection_cos2[1:min(filter$cos2, nrow(selection_cos2)),, drop = FALSE])
       }
     }
     
     # Filter by contrib: the top rows are selected 
-    if(!is.null(filter$contrib) & nrow(d) >= 1){
+    if(!is.null(filter$contrib) & nrow(d) >= 1 & !is.null(d$contrib)){
       contrib <- round(filter$contrib)
       if(contrib < 1) stop("The value of the argument contrib >", 1)
-      d <- d[order(d$contrib, decreasing = TRUE), , drop = FALSE]
-      d <- d[1:min(contrib, nrow(d)), , drop = FALSE]
+      selection_contrib <- d[order(d$contrib, decreasing = TRUE), , drop = FALSE]
+      selection_contrib <- rownames(selection_contrib[1:min(contrib, nrow(selection_contrib)), , drop = FALSE])
     }
     
+    # Get union of selections
+    to_select <- unique(c(selection_names, selection_cos2, selection_contrib))
+    d <- d[which(rownames(d) %in% to_select), , drop = FALSE]
   }
   
   return (d)

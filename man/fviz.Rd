@@ -107,7 +107,7 @@ values include brewer and ggsci color palettes.}
 \item{col.col.sup, col.row.sup}{colors for the supplementary column and row 
 points, respectively.}
 
-\item{select}{a selection of individuals/variables to be drawn. Allowed values
+\item{select}{a selection of individuals/variables to be drawn (must match at least one of the conditions). Allowed values
 are NULL or a list containing the arguments name, cos2 or contrib: \itemize{
 \item name: is a character vector containing individuals/variables to be 
 drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables 

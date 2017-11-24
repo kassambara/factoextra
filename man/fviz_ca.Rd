@@ -70,7 +70,7 @@ variate from 0 (total transparency) to 1 (no transparency). Default value is
 1. Allowed values include also : "cos2", "contrib", "coord", "x" or "y" as 
 for the arguments col.col and col.row.}
 
-\item{select.col, select.row}{a selection of columns/rows to be drawn. Allowed 
+\item{select.col, select.row}{a selection of columns/rows to be drawn (must match at least one of the conditions). Allowed 
 values are NULL or a list containing the arguments name, cos2 or contrib: 
 \itemize{ \item name is a character vector containing column/row names to be
 drawn \item cos2 if cos2 is in [0, 1], ex: 0.6, then columns/rows with a 
