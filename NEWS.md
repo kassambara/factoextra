@@ -7,6 +7,8 @@
 
 ## Minor changes
 
+- `pointsize` in the function `fviz()` canbe now a continuous variable.
+
 ## Bug fixes
 
 

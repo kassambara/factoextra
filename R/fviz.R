@@ -208,6 +208,13 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     df[[.col.name]] <- fill
     fill <- .col.name
   }
+  # Augment the data, if pointsize is a continuous variable
+  if(length(pointsize) > 1){
+    if(nrow(df) != length(pointsize)) stop("The length of pointsize variable",
+                                      "should be the same as the number of rows in the data.")
+    df[["pointsize"]] <- pointsize
+    pointsize <- "pointsize"
+  }
   # Selection
   df.all <- df
   if(!is.null(select)) df <- .select(df, select)
