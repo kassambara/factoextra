@@ -210,8 +210,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Augment the data, if pointsize is a continuous variable
   if(length(pointsize) > 1){
-    if(nrow(df) != length(pointsize)) stop("The length of pointsize variable",
-                                      "should be the same as the number of rows in the data.")
+    if(nrow(df) != length(pointsize)) pointsize <- 1.5
     df[["pointsize"]] <- pointsize
     pointsize <- "pointsize"
   }
