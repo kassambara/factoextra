@@ -13,6 +13,7 @@
 
 - Now `hkmeans()` takes other distance metrics ([@santsang, #52](https://github.com/kassambara/factoextra/issues/52))
 
+
 # factoextra 1.0.5
      
 ## Bug fixes
