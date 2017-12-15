@@ -108,7 +108,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   rectangle <- type == "rectangle"
   
   if(inherits(x, "HCPC")){
-    k <- x$call$t$nb.clust
+    k <- length(unique(x$data.clust$clust))
+    #k <- x$call$t$nb.clust
     x <- x$call$t$tree #hclust
   }
     
