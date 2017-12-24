@@ -267,7 +267,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   # Add outliers (can exist only in dbscan)
   if(is_outliers)
     p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
-                  pointsize, labelsize, geom, repel = repel)
+                  pointsize, labelsize/3, geom, repel = repel)
 
   p
 }
