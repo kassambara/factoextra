@@ -62,7 +62,10 @@ The procedure is as follow:
    
 3. compute the center (i.e the mean) of each cluster
      
-4. Do k-means by using the set of cluster centers (defined in step 3) as the initial cluster centers
+4. Do k-means by using the set of cluster centers (defined in step 3) as the initial cluster centers. Optimize the clustering.  
+    
+This means that the final optimized partitioning obtained at step 4 might be different from the initial partitioning obtained at step 2. 
+Consider mainly the result displayed by \code{fviz_cluster()}.
 }
 \examples{
 \donttest{
