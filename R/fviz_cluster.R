@@ -133,7 +133,11 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   
   
   # object from cluster package
-  if(inherits(object, c("partition", "hkmeans", "eclust"))) data <- object$data
+  if(inherits(object, c("partition", "hkmeans", "eclust")) & !is.null(object$data)) data <- object$data
+  # Object from partition and is missing data (E.g. distance matrix was used in the original calculation)
+  else if(inherits(object, "partition")){
+    if(is.null(data)) stop("data is required for plotting partition clusters")
+  }
   # Object from kmeans (stats package)
   else if((inherits(object, "kmeans") & !inherits(object, "eclust"))| inherits(object, "dbscan")){
     if(is.null(data)) stop("data is required for plotting kmeans/dbscan clusters")
