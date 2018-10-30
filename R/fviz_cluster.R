@@ -1,93 +1,96 @@
 #' @include eigenvalue.R get_pca.R hcut.R
  NULL
 #'Visualize Clustering Results
-#'@description Provides ggplot2-based elegant visualization of partitioning 
-#'  methods including kmeans [stats package]; pam, clara and fanny [cluster 
-#'  package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR]; 
-#'  hkmeans [factoextra]. Observations are represented by points in the plot, 
-#'  using principal components if ncol(data) > 2. An ellipse is drawn around 
+#'@description Provides ggplot2-based elegant visualization of partitioning
+#'  methods including kmeans [stats package]; pam, clara and fanny [cluster
+#'  package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR];
+#'  hkmeans [factoextra]. Observations are represented by points in the plot,
+#'  using principal components if ncol(data) > 2. An ellipse is drawn around
 #'  each cluster.
-#'@param object an object of class "partition" created by the functions pam(), 
+#'@param object an object of class "partition" created by the functions pam(),
 #'  clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
 #'  [in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
-#'  Possible value are also any list object with data and cluster components 
+#'  Possible value are also any list object with data and cluster components
 #'  (e.g.: object = list(data = mydata, cluster = myclust)).
-#'@param data the data that has been used for clustering. Required only when 
+#'@param data the data that has been used for clustering. Required only when
 #'  object is a class of kmeans or dbscan.
-#' @param choose.vars a character vector containing variables to be considered for plotting.
-#'@param stand logical value; if TRUE, data is standardized before principal 
+#'@param choose.vars a character vector containing variables to be considered
+#'  for plotting.
+#'@param stand logical value; if TRUE, data is standardized before principal
 #'  component analysis
-#'@param axes a numeric vector of length 2 specifying the dimensions to be plotted.
-#'@param geom a text specifying the geometry to be used for the graph. Allowed 
-#'  values are the combination of c("point", "text"). Use "point" (to show only 
+#'@param axes a numeric vector of length 2 specifying the dimensions to be
+#'  plotted.
+#'@param geom a text specifying the geometry to be used for the graph. Allowed
+#'  values are the combination of c("point", "text"). Use "point" (to show only
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
-#'@param ellipse logical value; if TRUE, draws outline around points of 
-#'  each cluster
-#'@param ellipse.type Character specifying frame type. Possible 
-#'  values are 'convex', 'confidence' or types supported by 
-#'  \code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm", 
+#'@param ellipse logical value; if TRUE, draws outline around points of each
+#'  cluster
+#'@param ellipse.type Character specifying frame type. Possible values are
+#'  'convex', 'confidence' or types supported by
+#'  \code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm",
 #'  "euclid").
-#'@param ellipse.level the size of the concentration ellipse in 
-#'  normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. 
-#'  Ignored in 'convex'. Default value is 0.95.
-#'@param ellipse.alpha Alpha for frame specifying the transparency 
-#'  level of fill color. Use alpha = 0 for no fill color.
+#'@param ellipse.level the size of the concentration ellipse in normal
+#'  probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored in
+#'  'convex'. Default value is 0.95.
+#'@param ellipse.alpha Alpha for frame specifying the transparency level of fill
+#'  color. Use alpha = 0 for no fill color.
 #'@param labelsize font size for the labels
-#'@param shape the shape of points. 
+#'@param shape the shape of points.
 #'@param pointsize the size of points
-#'@param outlier.color,outlier.shape the color and the shape of outliers. 
-#'  Outliers can be detected only in DBSCAN clustering.
+#'@param outlier.pointsize,outlier.color,outlier.shape,outlier.labelsize
+#'  arguments for customizing outliers, which can be detected only in DBSCAN
+#'  clustering.
 #'@param main plot main title.
-#'@param xlab,ylab character vector specifying x and y axis labels, 
-#'  respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab, 
+#'@param xlab,ylab character vector specifying x and y axis labels,
+#'  respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab,
 #'  respectively.
 #'@inheritParams ggpubr::ggpar
 #'@param ... other arguments to be passed to the functions
 #'  \code{\link[ggpubr]{ggscatter}} and \code{\link[ggpubr]{ggpar}}.
-#'  
+#'
 #'@return return a ggpplot.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}}, 
+#'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}},
 #'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
-#' @examples 
+#' @examples
 #' set.seed(123)
-#' 
+#'
 #' # Data preparation
 #' # +++++++++++++++
 #' data("iris")
 #' head(iris)
 #' # Remove species column (5) and scale the data
 #' iris.scaled <- scale(iris[, -5])
-#' 
+#'
 #' # K-means clustering
 #' # +++++++++++++++++++++
 #' km.res <- kmeans(iris.scaled, 3, nstart = 10)
-#' 
+#'
 #' # Visualize kmeans clustering
 #' # use repel = TRUE to avoid overplotting
 #' fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")
-#' 
-#' 
+#'
+#'
 #'# Change the color palette and theme
 #'fviz_cluster(km.res, iris[, -5],
 #'    palette = "Set2", ggtheme = theme_minimal())
-#'  
+#'
 #'  \dontrun{
 #' # Show points only
 #' fviz_cluster(km.res, iris[, -5], geom = "point")
 #' # Show text only
 #' fviz_cluster(km.res, iris[, -5], geom = "text")
-#'  
+#'
 #' # PAM clustering
 #' # ++++++++++++++++++++
 #' require(cluster)
 #' pam.res <- pam(iris.scaled, 3)
 #'  # Visualize pam clustering
 #' fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
-#' 
+#'
 #' # Hierarchical clustering
 #' # ++++++++++++++++++++++++
 #' # Use hcut() which compute hclust and cut the tree
@@ -96,11 +99,11 @@
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
 #' # Visualize cluster
 #' fviz_cluster(hc.cut, ellipse.type = "convex")
-#' 
-#' }
-#' 
 #'
-#' 
+#' }
+#'
+#'
+#'
 #'@name fviz_cluster
 #'@rdname fviz_cluster
 #'@export
@@ -113,6 +116,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          shape = NULL, pointsize = 1.5, labelsize = 12,
                          main = "Cluster plot",  xlab = NULL, ylab = NULL,
                          outlier.color = "black", outlier.shape = 19,
+                         outlier.pointsize = pointsize, outlier.labelsize = labelsize,
                          ggtheme = theme_grey(), ...){
   
   # Deprecated arguments
@@ -267,7 +271,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   # Add outliers (can exist only in dbscan)
   if(is_outliers)
     p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
-                  pointsize, labelsize, geom, repel = repel)
+                  outlier.pointsize, outlier.labelsize/3, geom, repel = repel)
 
   p
 }

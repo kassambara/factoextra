@@ -7,7 +7,12 @@
 
 ## Minor changes
 
+- New arguments `outlier.pointsize` and `outlier.labelsize` added in `fviz_cluster()` to customize outliers detected with DBSCAN ([@choonghyunryu, #74](https://github.com/kassambara/factoextra/issues/74))
+- `pointsize` in the function `fviz()` canbe now a continuous variable.
+
 ## Bug fixes
+
+- Now `hkmeans()` takes other distance metrics ([@santsang, #52](https://github.com/kassambara/factoextra/issues/52))
 
 
 # factoextra 1.0.5

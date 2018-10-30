@@ -18,14 +18,14 @@ fviz_mclust_bic(object, model.names = NULL, shape = 19, color = "model",
 
 \item{what}{choose from one of the following three options: "classification" (default), "uncertainty" and "BIC".}
 
-\item{ellipse.type}{Character specifying frame type. Possible 
-values are 'convex', 'confidence' or types supported by 
-\code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm", 
+\item{ellipse.type}{Character specifying frame type. Possible values are
+'convex', 'confidence' or types supported by
+\code{\link[ggplot2]{stat_ellipse}} including one of c("t", "norm",
 "euclid").}
 
-\item{ellipse.level}{the size of the concentration ellipse in 
-normal probability. Passed for \code{ggplot2::stat_ellipse} 's level. 
-Ignored in 'convex'. Default value is 0.95.}
+\item{ellipse.level}{the size of the concentration ellipse in normal
+probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored in
+'convex'. Default value is 0.95.}
 
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),

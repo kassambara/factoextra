@@ -28,7 +28,11 @@
 #'    
 #' 3. compute the center (i.e the mean) of each cluster
 #'      
-#' 4. Do k-means by using the set of cluster centers (defined in step 3) as the initial cluster centers
+#' 4. Do k-means by using the set of cluster centers (defined in step 3) as the initial cluster centers. Optimize the clustering.  
+#'     
+#' This means that the final optimized partitioning obtained at step 4 might be different from the initial partitioning obtained at step 2. 
+#' Consider mainly the result displayed by \code{fviz_cluster()}.
+#' 
 #' @return hkmeans returns an object of class "hkmeans" containing the following components:
 #' \itemize{
 #' \item The elements returned by the standard function kmeans() (see ?kmeans)
@@ -66,7 +70,7 @@
 hkmeans <- function(x, k, hc.metric = "euclidean", hc.method = "ward.D2",
                     iter.max = 10, km.algorithm = "Hartigan-Wong"){
   
-  res.hc <- stats::hclust(stats::dist(x, method = "euclidean"), method = hc.method)
+  res.hc <- stats::hclust(stats::dist(x, method = hc.metric), method = hc.method)
   grp <- stats::cutree(res.hc, k = k)
   clus.centers <- stats::aggregate(x, list(grp), mean)[, -1]
   res.km <- kmeans(x, centers = clus.centers, 
