@@ -130,7 +130,7 @@ get_pca_var<-function(res.pca){
     factor_scores <- res$fi
     var.coord <- var.cor <- stats::cor(res$X, res$fi) # cor(t(data_matrix), factor_scores)
     var.coord <- replace(var.coord, is.na(var.coord), 0)
-    var <- list(coord = var.coord, cor = var.coord, cos2 = res$rj, contrib = res$cj*100)
+    var <- list(coord = var.coord, cos2 = res$rj, contrib = res$cj*100)
   }
   else stop("An object of class : ", class(res.pca), 
             " can't be handled by the function get_pca_var()")
