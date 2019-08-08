@@ -652,7 +652,7 @@ fviz_nbclust(my_data, kmeans, method = "gap_stat")
 
 ![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)
 
-Acknoweledgment
+Acknowledgment
 ---------------
 
 I would like to thank [Fabian Mundt](https://github.com/inventionate) for his active contributions to factoextra.
