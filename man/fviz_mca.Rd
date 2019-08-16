@@ -5,20 +5,21 @@
 \alias{fviz_mca_ind}
 \alias{fviz_mca_var}
 \alias{fviz_mca_biplot}
-\alias{fviz_mca}
 \title{Visualize Multiple Correspondence Analysis}
 \usage{
 fviz_mca_ind(X, axes = c(1, 2), geom = c("point", "text"),
-  geom.ind = geom, repel = FALSE, habillage = "none", palette = NULL,
-  addEllipses = FALSE, col.ind = "blue", col.ind.sup = "darkblue",
-  alpha.ind = 1, shape.ind = 19, map = "symmetric",
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+  geom.ind = geom, repel = FALSE, habillage = "none",
+  palette = NULL, addEllipses = FALSE, col.ind = "blue",
+  col.ind.sup = "darkblue", alpha.ind = 1, shape.ind = 19,
+  map = "symmetric", select.ind = list(name = NULL, cos2 = NULL,
+  contrib = NULL), ...)
 
 fviz_mca_var(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"),
   axes = c(1, 2), geom = c("point", "text"), geom.var = geom,
   repel = FALSE, col.var = "red", alpha.var = 1, shape.var = 17,
-  col.quanti.sup = "blue", col.quali.sup = "darkgreen", map = "symmetric",
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+  col.quanti.sup = "blue", col.quali.sup = "darkgreen",
+  map = "symmetric", select.var = list(name = NULL, cos2 = NULL,
+  contrib = NULL), ...)
 
 fviz_mca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   geom.ind = geom, geom.var = geom, repel = FALSE, label = "all",

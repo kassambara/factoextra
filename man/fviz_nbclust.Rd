@@ -7,8 +7,9 @@
 \usage{
 fviz_nbclust(x, FUNcluster = NULL, method = c("silhouette", "wss",
   "gap_stat"), diss = NULL, k.max = 10, nboot = 100,
-  verbose = interactive(), barfill = "steelblue", barcolor = "steelblue",
-  linecolor = "steelblue", print.summary = TRUE, ...)
+  verbose = interactive(), barfill = "steelblue",
+  barcolor = "steelblue", linecolor = "steelblue",
+  print.summary = TRUE, ...)
 
 fviz_gap_stat(gap_stat, linecolor = "steelblue", maxSE = list(method =
   "firstSEmax", SE.factor = 1))

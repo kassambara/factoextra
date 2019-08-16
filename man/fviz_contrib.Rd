@@ -7,12 +7,12 @@
 \usage{
 fviz_contrib(X, choice = c("row", "col", "var", "ind", "quanti.var",
   "quali.var", "group", "partial.axes"), axes = 1, fill = "steelblue",
-  color = "steelblue", sort.val = c("desc", "asc", "none"), top = Inf,
-  xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
+  color = "steelblue", sort.val = c("desc", "asc", "none"),
+  top = Inf, xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
 
 fviz_pca_contrib(X, choice = c("var", "ind"), axes = 1,
-  fill = "steelblue", color = "steelblue", sortcontrib = c("desc", "asc",
-  "none"), top = Inf, ...)
+  fill = "steelblue", color = "steelblue", sortcontrib = c("desc",
+  "asc", "none"), top = Inf, ...)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];

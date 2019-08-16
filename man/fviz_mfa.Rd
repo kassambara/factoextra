@@ -6,25 +6,24 @@
 \alias{fviz_mfa_quali_biplot}
 \alias{fviz_mfa_var}
 \alias{fviz_mfa_axes}
-\alias{fviz_mfa}
 \title{Visualize Multiple Factor Analysis}
 \usage{
-fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  habillage = "none", palette = NULL, addEllipses = FALSE,
-  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  shape.ind = 19, col.quali.var.sup = "black", select.ind = list(name =
-  NULL, cos2 = NULL, contrib = NULL), partial = NULL, col.partial = "group",
-  ...)
+fviz_mfa_ind(X, axes = c(1, 2), geom = c("point", "text"),
+  repel = FALSE, habillage = "none", palette = NULL,
+  addEllipses = FALSE, col.ind = "blue", col.ind.sup = "darkblue",
+  alpha.ind = 1, shape.ind = 19, col.quali.var.sup = "black",
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  partial = NULL, col.partial = "group", ...)
 
 fviz_mfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
   repel = repel,
   title = "Biplot of individuals and qualitative variables - MFA", ...)
 
-fviz_mfa_var(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,
-  2), geom = c("point", "text"), repel = FALSE, habillage = "none",
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.var.sup = "darkgreen", palette = NULL, select.var = list(name =
-  NULL, cos2 = NULL, contrib = NULL), ...)
+fviz_mfa_var(X, choice = c("quanti.var", "group", "quali.var"),
+  axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
+  habillage = "none", col.var = "red", alpha.var = 1,
+  shape.var = 17, col.var.sup = "darkgreen", palette = NULL,
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
 
 fviz_mfa_axes(X, axes = c(1, 2), geom = c("arrow", "text"),
   col.axes = NULL, alpha.axes = 1, col.circle = "grey70",

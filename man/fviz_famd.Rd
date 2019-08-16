@@ -4,19 +4,20 @@
 \alias{fviz_famd}
 \alias{fviz_famd_ind}
 \alias{fviz_famd_var}
-\alias{fviz_famd}
 \title{Visualize Factor Analysis of Mixed Data}
 \usage{
-fviz_famd_ind(X, axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  habillage = "none", palette = NULL, addEllipses = FALSE,
-  col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-  shape.ind = 19, col.quali.var = "black", select.ind = list(name = NULL,
-  cos2 = NULL, contrib = NULL), gradient.cols = NULL, ...)
+fviz_famd_ind(X, axes = c(1, 2), geom = c("point", "text"),
+  repel = FALSE, habillage = "none", palette = NULL,
+  addEllipses = FALSE, col.ind = "blue", col.ind.sup = "darkblue",
+  alpha.ind = 1, shape.ind = 19, col.quali.var = "black",
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  gradient.cols = NULL, ...)
 
-fviz_famd_var(X, choice = c("var", "quanti.var", "quali.var"), axes = c(1,
-  2), geom = c("point", "text"), repel = FALSE, col.var = "red",
-  alpha.var = 1, shape.var = 17, col.var.sup = "darkgreen",
-  select.var = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+fviz_famd_var(X, choice = c("var", "quanti.var", "quali.var"),
+  axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
+  col.var = "red", alpha.var = 1, shape.var = 17,
+  col.var.sup = "darkgreen", select.var = list(name = NULL, cos2 =
+  NULL, contrib = NULL), ...)
 
 fviz_famd(X, ...)
 }

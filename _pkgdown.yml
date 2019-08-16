@@ -1,7 +1,7 @@
 templates:
   params:
     bootswatch: lumen
-
+    ganalytics: UA-54921687-5
 reference:
   - title: Visualizing Dimension Reduction Analysis Outputs
     desc:  Visualization of PCA, CA, MCA, FAMD, MFA and HMFA.

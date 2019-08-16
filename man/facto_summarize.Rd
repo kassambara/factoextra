@@ -4,8 +4,8 @@
 \alias{facto_summarize}
 \title{Subset and summarize the output of factor analyses}
 \usage{
-facto_summarize(X, element, node.level = 1, group.names, result = c("coord",
-  "cos2", "contrib"), axes = 1:2, select = NULL)
+facto_summarize(X, element, node.level = 1, group.names,
+  result = c("coord", "cos2", "contrib"), axes = 1:2, select = NULL)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp

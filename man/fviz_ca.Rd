@@ -5,22 +5,22 @@
 \alias{fviz_ca_row}
 \alias{fviz_ca_col}
 \alias{fviz_ca_biplot}
-\alias{fviz_ca}
 \title{Visualize Correspondence Analysis}
 \usage{
-fviz_ca_row(X, axes = c(1, 2), geom = c("point", "text"), geom.row = geom,
-  shape.row = 19, col.row = "blue", alpha.row = 1,
+fviz_ca_row(X, axes = c(1, 2), geom = c("point", "text"),
+  geom.row = geom, shape.row = 19, col.row = "blue", alpha.row = 1,
   col.row.sup = "darkblue", select.row = list(name = NULL, cos2 = NULL,
   contrib = NULL), map = "symmetric", repel = FALSE, ...)
 
-fviz_ca_col(X, axes = c(1, 2), shape.col = 17, geom = c("point", "text"),
-  geom.col = geom, col.col = "red", col.col.sup = "darkred",
+fviz_ca_col(X, axes = c(1, 2), shape.col = 17, geom = c("point",
+  "text"), geom.col = geom, col.col = "red", col.col.sup = "darkred",
   alpha.col = 1, select.col = list(name = NULL, cos2 = NULL, contrib =
   NULL), map = "symmetric", repel = FALSE, ...)
 
 fviz_ca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  geom.row = geom, geom.col = geom, label = "all", invisible = "none",
-  arrows = c(FALSE, FALSE), repel = FALSE, title = "CA - Biplot", ...)
+  geom.row = geom, geom.col = geom, label = "all",
+  invisible = "none", arrows = c(FALSE, FALSE), repel = FALSE,
+  title = "CA - Biplot", ...)
 
 fviz_ca(X, ...)
 }
