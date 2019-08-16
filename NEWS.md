@@ -13,13 +13,13 @@
 ## Bug fixes
 
 - Now `hkmeans()` takes other distance metrics ([@santsang, #52](https://github.com/kassambara/factoextra/issues/52))
+- `get_clust_tendency()` updated to return the correct value of hopkins statistics as explained at: https://www.datanovia.com/en/lessons/assessing-clustering-tendency/
 
 
 # factoextra 1.0.5
      
 ## Bug fixes
    
-- `get_clust_tendency()` updated to return the correct value of hopkins statistics as explained at: http://www.sthda.com/english/articles/29-cluster-validation-essentials/95-assessing-clustering-tendency-essentials/
 - Now, the argument `invisible` works properly in the function `fviz_pca_biplot()`([@ginolhac, #26](https://github.com/kassambara/factoextra/issues/26)).
 - The function `fviz_dend()` now works for an object of class `diana` ([@qfazille, #30](https://github.com/kassambara/factoextra/issues/30)).
 - Now, `fviz_cluster()` supports HCPC results ([@famuvie, #34](https://github.com/kassambara/factoextra/issues/34)).
