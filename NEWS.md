@@ -7,6 +7,7 @@
 
 ## Minor changes
 
+- Clusters are now correctly order in `fviz_mclust_bic()` ([@hpsprecher, #84](https://github.com/kassambara/factoextra/issues/84))
 - New arguments `outlier.pointsize` and `outlier.labelsize` added in `fviz_cluster()` to customize outliers detected with DBSCAN ([@choonghyunryu, #74](https://github.com/kassambara/factoextra/issues/74))
 - `pointsize` in the function `fviz()` canbe now a continuous variable.
 

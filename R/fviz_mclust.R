@@ -79,6 +79,7 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
                        gather_cols = colnames(x)[-1])
   x <- x[!is.na(x$BIC), , drop = FALSE]
   x$model <- factor(x$model, levels = dnx[[2]])
+  x$cluster <- factor(x$cluster, levels = unique(x$cluster))
  
   if(ggpubr:::.is_col_palette(palette)) palette <- ggpubr:::.get_pal(palette, k = length(model.names))
   ggline.opts <- list(data = x, x ="cluster", y = "BIC", group = "model",
