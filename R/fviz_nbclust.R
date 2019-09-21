@@ -109,6 +109,12 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   }
   else if(is.null(FUNcluster)) stop("The argument FUNcluster is required. ",
                                     "Possible values are kmeans, pam, hcut, clara, ...")
+  else if(!is.function(FUNcluster)){
+    stop(
+      "The argument FUNcluster should be a function. ",
+      "Check if you're not overriding the specified function name somewhere."
+      )
+  }
   else if(method %in% c("silhouette", "wss")) {
 
       if (is.data.frame(x)) x <- as.matrix(x)
