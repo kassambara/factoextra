@@ -5,7 +5,7 @@ factoextra : Extract and Visualize the Results of Multivariate Data Analyses
 
 [**factoextra**](http://www.sthda.com/english/rpkgs/factoextra) is an R package making easy to *extract* and *visualize* the output of exploratory **multivariate data analyses**, including:
 
-1.  [Principal Component Analysis (PCA)](http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining), which is used to summarize the information contained in a continuous (i.e, quantitative) multivariate data by reducing the dimensionality of the data without loosing important information.
+1.  [Principal Component Analysis (PCA)](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/), which is used to summarize the information contained in a continuous (i.e, quantitative) multivariate data by reducing the dimensionality of the data without loosing important information.
 
 2.  [Correspondence Analysis (CA)](http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining), which is an extension of the principal component analysis suited to analyse a large contingency table formed by two *qualitative variables* (or categorical data).
 
@@ -43,7 +43,7 @@ Why using factoextra?
 
 <span class="success">If you want to do this, the factoextra package provides a convenient solution.</span>
 
-1.  *PCA and (M)CA are used sometimes for prediction problems* : one can predict the coordinates of new supplementary variables (quantitative and qualitative) and supplementary individuals using the information provided by the previously performed PCA or (M)CA. This can be done easily using the [FactoMineR](factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining) package.
+1.  *PCA and (M)CA are used sometimes for prediction problems* : one can predict the coordinates of new supplementary variables (quantitative and qualitative) and supplementary individuals using the information provided by the previously performed PCA or (M)CA. This can be done easily using the [FactoMineR](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/) package.
 
 <span class="success">If you want to make predictions with PCA/MCA and to visualize the position of the supplementary variables/individuals on the factor map using ggplot2: then factoextra can help you. It's quick, write less and do more...</span>
 
@@ -84,6 +84,8 @@ devtools::install_github("kassambara/factoextra")
 
 ``` r
 library("factoextra")
+#> Loading required package: ggplot2
+#> Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
 ```
 
 Main functions in the factoextra package
@@ -273,7 +275,7 @@ Finally, we show how to perform hierarchical clustering on principal components 
 -   PCA function: *FactoMineR::PCA*()
 -   Visualization *factoextra::fviz\_pca*()
 
-<span class="success">Read more about computing and interpreting principal component analysis at: [**Principal Component Analysis** (PCA)](http://www.sthda.com/english/wiki/factominer-and-factoextra-principal-component-analysis-visualization-r-software-and-data-mining).</span>
+<span class="success">Read more about computing and interpreting principal component analysis at: [**Principal Component Analysis** (PCA)](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/).</span>
 
 1.  **Loading data**
 
@@ -562,7 +564,7 @@ The factoextra R package has also functions that support the visualization of ad
 -   Factor Analysis of Mixed Data (FAMD): : [FAMD Examples](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_famd.html)
 -   Multiple Factor Analysis (MFA): [MFA Examples](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_mfa.html)
 -   Hierarchical Multiple Factor Analysis (HMFA): [HMFA Examples](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_hmfa.html)
--   [Hierachical Clustering on Principal Components (HCPC)](hcpc-hierarchical-clustering-on-principal-components-hybrid-approach-2-2-unsupervised-machine-learning)
+-   [Hierachical Clustering on Principal Components (HCPC)](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/117-hcpc-hierarchical-clustering-on-principal-components-essentials/)
 
 Cluster analysis and factoextra
 -------------------------------
@@ -644,10 +646,6 @@ Read more:
 library("factoextra")
 my_data <- scale(USArrests)
 fviz_nbclust(my_data, kmeans, method = "gap_stat")
-#> Clustering k = 1,2,..., K.max (= 10): .. done
-#> Bootstrapping, b = 1,2,..., B (= 100)  [one "." per sample]:
-#> .................................................. 50 
-#> .................................................. 100
 ```
 
 ![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)

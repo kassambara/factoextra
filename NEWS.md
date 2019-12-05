@@ -1,9 +1,4 @@
-# factoextra 1.0.5.999
-
-## New features
-
-
-## Major changes
+# factoextra 1.0.6
 
 ## Minor changes
 

@@ -11,8 +11,11 @@ I have also run R CMD check on downstream dependencies of factoextra.
 All packages that I could install passed.
 
 ## Update
-This is an update version 1.0.5 (see NEWS.md).
+This is an update version 1.0.6 (see NEWS.md).
 
+## Resubmission
+
+Invalid URIs in README.md fixed now.
 
 
 
