@@ -245,13 +245,15 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
     x = graph_layout[graph_edges[,1],1], 
     y = graph_layout[graph_edges[,1],2],
     xend = graph_layout[graph_edges[,2],1],
-    yend = graph_layout[graph_edges[,2],2]
+    yend = graph_layout[graph_edges[,2],2],
+    stringsAsFactors = TRUE
   )
   
   data.labels <- data.frame(
     x = graph_layout[1:nobs,1], 
     y = graph_layout[1:nobs,2],
-    label = phylo_tree$tip.label
+    label = phylo_tree$tip.label,
+    stringsAsFactors = TRUE
   )
   data.labels <- data.labels[order(as.vector(data.labels$label)), ]
   
@@ -498,7 +500,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
       prop_k_height + next_k_height * (1 - prop_k_height)
   }
   
-  df <- data.frame(xmin = unlist(xleft), ymin = unlist(ybottom), xmax = unlist(xright), ymax = unlist(ytop))
+  df <- data.frame(xmin = unlist(xleft), ymin = unlist(ybottom), xmax = unlist(xright), ymax = unlist(ytop), stringsAsFactors = TRUE)
   
   color <- k_colors
   if(color == "cluster") color <- "default"

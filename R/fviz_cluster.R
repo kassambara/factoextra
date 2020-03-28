@@ -190,8 +190,8 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     }
     # PCA is not performed
     else if(ncol(data) == 2){
-      ind <- as.data.frame(data)
-      ind <- cbind.data.frame(name = rownames(ind), ind)
+      ind <- as.data.frame(data, stringsAsFactors = TRUE)
+      ind <- cbind.data.frame(name = rownames(ind), ind, stringsAsFactors = TRUE)
       if(is.null(xlab)) xlab <- colnames(data)[1]
       if(is.null(ylab)) ylab <- colnames(data)[2]
       
@@ -207,7 +207,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   else if(inherits(data, "HCPC")){
     ind <- res.hcpc$call$X[, c(axes, ncol(res.hcpc$call$X))]
     colnames(ind) <- c("Dim.1", "Dim.2", "clust")
-    ind <- cbind.data.frame(name = rownames(ind), ind)
+    ind <- cbind.data.frame(name = rownames(ind), ind, stringsAsFactors = TRUE)
     colnames(ind)[2:3] <-  c("x", "y")
     label_coord <- ind
     eig <- get_eigenvalue(res.hcpc$call$t$res)[axes,2]
@@ -222,8 +222,8 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   if("text" %in% geom) label = TRUE
   if(!("point" %in% geom)) pointsize = 0
   
-  plot.data <- cbind.data.frame(ind, cluster = cluster)
-  label_coord <- cbind.data.frame(label_coord, cluster = cluster)
+  plot.data <- cbind.data.frame(ind, cluster = cluster, stringsAsFactors = TRUE)
+  label_coord <- cbind.data.frame(label_coord, cluster = cluster, stringsAsFactors = TRUE)
   # Augment data
   if(inherits(object, "Mclust")){
     plot.data$uncertainty <- object$uncertainty

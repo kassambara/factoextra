@@ -69,12 +69,12 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
   dnx <- dimnames(x)
   x <- matrix(as.vector(x), ncol = n)
   dimnames(x) <- dnx
-  x <- as.data.frame(x)
+  x <- as.data.frame(x, stringsAsFactors = TRUE)
   if (is.null(model.names)) 
     model.names <- dimnames(x)[[2]]
   x <- x[, model.names, drop = FALSE]
   # Add number of clusters
-  x <- cbind.data.frame(cluster = rownames(x), x)
+  x <- cbind.data.frame(cluster = rownames(x), x, stringsAsFactors = TRUE)
   x <- tidyr::gather_(x, key_col = "model", value_col = "BIC", 
                        gather_cols = colnames(x)[-1])
   x <- x[!is.na(x$BIC), , drop = FALSE]

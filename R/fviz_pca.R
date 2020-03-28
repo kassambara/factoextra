@@ -232,7 +232,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   colnames(var)[2:3] <-  c("x", "y")
   
   pca.ind <- get_pca_ind(X)
-  ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
+  ind <- data.frame(pca.ind$coord[, axes, drop=FALSE], stringsAsFactors = TRUE)
   colnames(ind)<- c("x", "y")
   
   # rescale variable coordinates

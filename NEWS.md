@@ -8,6 +8,7 @@
 
 ## Minor changes
 
+- Adding stringsAsFactors = TRUE to the relevant calls to data.frame to anticipate compatibility with future R 4.0.0
 
 ## Bug fixes
 

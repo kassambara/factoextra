@@ -138,7 +138,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   
   # 1.Extract the coordinates x, y and coord
   if("coord" %in% result){
-    dd <- data.frame(elmt$coord[, axes, drop=FALSE])
+    dd <- data.frame(elmt$coord[, axes, drop=FALSE], stringsAsFactors = TRUE)
     coord <- apply(dd^2, 1, sum) # x^2 + y2 + ...
     res = cbind(dd, coord = coord)
   }
@@ -166,7 +166,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   
   # 4.Extract the coordinates x, y and coord partial - MFA
   if("coord.partial" %in% result){
-    dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE])
+    dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE], stringsAsFactors = TRUE)
     # groupnames 
     groupnames <- lapply(rownames(dd), 
                           function(x){
@@ -175,16 +175,16 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
                             unlist(str_split)
                           }
                     )
-    groupnames <- as.data.frame(do.call(rbind, groupnames))
+    groupnames <- as.data.frame(do.call(rbind, groupnames), stringsAsFactors = TRUE)
     colnames(groupnames) <- c("name", "group.name")
     coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
-    res.partial <- data.frame(groupnames, dd, coord.partial)
+    res.partial <- data.frame(groupnames, dd, coord.partial, stringsAsFactors = TRUE)
   }
   
   # 5. Extract the coordinates x, y and coord partial - HMFA
   if("coord.node.partial" %in% result){
     # Select hierarchical node
-    node <- as.data.frame(elmt[[node.level]])
+    node <- as.data.frame(elmt[[node.level]], stringsAsFactors = TRUE)
     name <- rep(rownames(node), length(group.names))
     # Prepare data set
     dim.group <- dim.names <- dd <- coord.partial <- dim.coord <- dim.name <- NULL
@@ -201,7 +201,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     }
     colnames(dd) <- dim.names
     coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
-    res.partial <- data.frame(group.name = dim.group, name, dd, coord.partial)
+    res.partial <- data.frame(group.name = dim.group, name, dd, coord.partial, stringsAsFactors = TRUE)
   }
   
   if("coord.node.partial" %in% result) 
@@ -210,7 +210,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     name <- rownames(elmt$coord)
     if(is.null(name)) name <- as.character(1:nrow(elmt$coord))
     name <- as.character(name)
-    res <- cbind.data.frame(name = name, res)
+    res <- cbind.data.frame(name = name, res, stringsAsFactors = TRUE)
     rownames(res) <- name
     if(!is.null(select)) res <- .select(res, select)
     if("coord.partial" %in% result){

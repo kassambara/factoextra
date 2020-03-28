@@ -231,7 +231,7 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes
     .check_if_quanti_exists(X)
     if(missing(geom)) geom <- c("arrow", "text")
     group <- data.frame(name = rownames(X$group$Lg[-nrow(X$group$Lg),,drop=FALSE]),
-                        nvar = X$call$group, type = X$call$type)
+                        nvar = X$call$group, type = X$call$type, stringsAsFactors = TRUE)
     is.group.sup <- !is.null(X$call$num.group.sup)
     if(is.group.sup) group <- group[-X$call$num.group.sup, , drop = FALSE]
     group <- subset(group, group$type == "c")

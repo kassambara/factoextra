@@ -135,7 +135,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
         
       }
       
-      df <- data.frame(clusters = as.factor(1:k.max), y = v)
+      df <- data.frame(clusters = as.factor(1:k.max), y = v, stringsAsFactors = TRUE)
       
       ylab <- "Total Within Sum of Square"
       if(method == "silhouette") ylab <- "Average silhouette width"
@@ -202,7 +202,7 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
   #k <- length(gap)
   #k = if (any(decr)) which.max(decr) else k
 
-  df <- as.data.frame(gap_stat$Tab)
+  df <- as.data.frame(gap_stat$Tab, stringsAsFactors = TRUE)
   df$clusters <- as.factor(1:nrow(df))
   df$ymin <- gap-se
   df$ymax <- gap + se
@@ -271,7 +271,7 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
      best_nc <- x$Best.nc
     if(class(best_nc) == "numeric") print(best_nc)
      else if(class(best_nc) == "matrix"){
-    best_nc <- as.data.frame(t(best_nc))
+    best_nc <- as.data.frame(t(best_nc), stringsAsFactors = TRUE)
     best_nc$Number_clusters <- as.factor(best_nc$Number_clusters)
     
     # Summary
@@ -285,7 +285,7 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
       cat("* According to the majority rule, the best number of clusters is ",
           names(which.max(ss)),  ".\n\n")
     }
-    df <- data.frame(Number_clusters = names(ss), freq = ss )
+    df <- data.frame(Number_clusters = names(ss), freq = ss, stringsAsFactors = TRUE )
     p <- ggpubr::ggbarplot(df,  x = "Number_clusters", y = "freq", fill = barfill, color = barcolor)+
       labs(x = "Number of clusters k", y = "Frequency among all indices",
            title = paste0("Optimal number of clusters - k = ", names(which.max(ss)) ))

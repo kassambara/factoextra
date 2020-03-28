@@ -354,7 +354,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 # Add correlation circle to variables plot
 .add_corr_circle <- function(p, color = "grey70", size = 0.5){
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
+  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta), stringsAsFactors = TRUE)
   p + 
     geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color,
               size = size) +
@@ -366,7 +366,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 .arrows <- function(data, color = "black", alpha = 1, size =0.5,
                     origin = 0, xend = "x", yend = "y"){
   origin <- rep(origin, nrow(data))
-  dd <- cbind.data.frame(data, xstart = origin, ystart = origin)
+  dd <- cbind.data.frame(data, xstart = origin, ystart = origin, stringsAsFactors = TRUE)
   ggpubr::geom_exec(geom_segment, data = dd, 
                     x = "xstart", y = "ystart", xend = xend, yend = yend,
                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),

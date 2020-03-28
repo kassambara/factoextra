@@ -54,7 +54,7 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
   
   if(!inherits(df, c("data.frame", "matrix")))
      stop("df should be a data frame or a matrix")
-  if(!inherits(df, "data.frame")) df <- as.data.frame(df)
+  if(!inherits(df, "data.frame")) df <- as.data.frame(df, stringsAsFactors = TRUE)
      
   if(ncol(df) < 2)
     stop("df should have at least two columns (x and y coordinates)")

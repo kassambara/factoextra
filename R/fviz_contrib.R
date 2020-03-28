@@ -111,7 +111,7 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
     eig <- get_eigenvalue(X)[axes,1]
     theo_contrib <- sum(theo_contrib*eig)/sum(eig)
   }
-  df <- data.frame(name = factor(names(contrib), levels = names(contrib)), contrib = contrib)
+  df <- data.frame(name = factor(names(contrib), levels = names(contrib)), contrib = contrib, stringsAsFactors = TRUE)
   
   # Define color if quanti.var
   if(choice == "quanti.var") {
