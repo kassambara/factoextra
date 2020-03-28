@@ -26,7 +26,7 @@
 #'   contains the grouping of observations. Allowed values include: kmeans,
 #'   cluster::pam, cluster::clara, cluster::fanny, hcut, etc. This argument is
 #'   not required when x is an output of the function 
-#'   \code{\link[NbClust]{NbClust}}().
+#'   \code{NbClust::NbClust()}.
 #' @param diss dist object as produced by dist(), i.e.: diss = dist(x, method = 
 #'   "euclidean"). Used to compute the average silhouette width of clusters, the
 #'   within sum of square and hierarchical clustering. If NULL, dist(x) is 

@@ -24,7 +24,7 @@ clusters desired, and returns a list with a component named cluster which
 contains the grouping of observations. Allowed values include: kmeans,
 cluster::pam, cluster::clara, cluster::fanny, hcut, etc. This argument is
 not required when x is an output of the function 
-\code{\link[NbClust]{NbClust}}().}
+\code{NbClust::NbClust()}.}
 
 \item{method}{the method to be used for estimating the optimal number of 
 clusters. Possible values are "silhouette" (for average silhouette width), 
