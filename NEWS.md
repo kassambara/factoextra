@@ -1,16 +1,9 @@
-# factoextra 1.0.6.999
-
-## New features
-
-
-## Major changes
-
+# factoextra 1.0.7
 
 ## Minor changes
 
 - Adding stringsAsFactors = TRUE to the relevant calls to data.frame to anticipate compatibility with future R 4.0.0
 
-## Bug fixes
 
 # factoextra 1.0.6
 

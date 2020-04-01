@@ -4,14 +4,32 @@
 \alias{fviz_cluster}
 \title{Visualize Clustering Results}
 \usage{
-fviz_cluster(object, data = NULL, choose.vars = NULL, stand = TRUE,
-  axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  show.clust.cent = TRUE, ellipse = TRUE, ellipse.type = "convex",
-  ellipse.level = 0.95, ellipse.alpha = 0.2, shape = NULL,
-  pointsize = 1.5, labelsize = 12, main = "Cluster plot",
-  xlab = NULL, ylab = NULL, outlier.color = "black",
-  outlier.shape = 19, outlier.pointsize = pointsize,
-  outlier.labelsize = labelsize, ggtheme = theme_grey(), ...)
+fviz_cluster(
+  object,
+  data = NULL,
+  choose.vars = NULL,
+  stand = TRUE,
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  repel = FALSE,
+  show.clust.cent = TRUE,
+  ellipse = TRUE,
+  ellipse.type = "convex",
+  ellipse.level = 0.95,
+  ellipse.alpha = 0.2,
+  shape = NULL,
+  pointsize = 1.5,
+  labelsize = 12,
+  main = "Cluster plot",
+  xlab = NULL,
+  ylab = NULL,
+  outlier.color = "black",
+  outlier.shape = 19,
+  outlier.pointsize = pointsize,
+  outlier.labelsize = labelsize,
+  ggtheme = theme_grey(),
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class "partition" created by the functions pam(),

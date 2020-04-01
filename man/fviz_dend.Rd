@@ -4,14 +4,34 @@
 \alias{fviz_dend}
 \title{Enhanced Visualization of Dendrogram}
 \usage{
-fviz_dend(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,
-  show_labels = TRUE, color_labels_by_k = TRUE, label_cols = NULL,
-  labels_track_height = NULL, repel = FALSE, lwd = 0.7,
+fviz_dend(
+  x,
+  k = NULL,
+  h = NULL,
+  k_colors = NULL,
+  palette = NULL,
+  show_labels = TRUE,
+  color_labels_by_k = TRUE,
+  label_cols = NULL,
+  labels_track_height = NULL,
+  repel = FALSE,
+  lwd = 0.7,
   type = c("rectangle", "circular", "phylogenic"),
-  phylo_layout = "layout.auto", rect = FALSE, rect_border = "gray",
-  rect_lty = 2, rect_fill = FALSE, lower_rect, horiz = FALSE,
-  cex = 0.8, main = "Cluster Dendrogram", xlab = "",
-  ylab = "Height", sub = NULL, ggtheme = theme_classic(), ...)
+  phylo_layout = "layout.auto",
+  rect = FALSE,
+  rect_border = "gray",
+  rect_lty = 2,
+  rect_fill = FALSE,
+  lower_rect,
+  horiz = FALSE,
+  cex = 0.8,
+  main = "Cluster Dendrogram",
+  xlab = "",
+  ylab = "Height",
+  sub = NULL,
+  ggtheme = theme_classic(),
+  ...
+)
 }
 \arguments{
 \item{x}{an object of class dendrogram, hclust, agnes, diana, hcut, 

@@ -4,17 +4,40 @@
 \alias{fviz}
 \title{Visualizing Multivariate Analyse Outputs}
 \usage{
-fviz(X, element, axes = c(1, 2), geom = "auto", label = "all",
-  invisible = "none", labelsize = 4, pointsize = 1.5,
-  pointshape = 19, arrowsize = 0.5, habillage = "none",
-  addEllipses = FALSE, ellipse.level = 0.95, ellipse.type = "norm",
-  ellipse.alpha = 0.1, mean.point = TRUE, color = "black",
-  fill = "white", alpha = 1, gradient.cols = NULL,
-  col.row.sup = "darkblue", col.col.sup = "darkred",
+fviz(
+  X,
+  element,
+  axes = c(1, 2),
+  geom = "auto",
+  label = "all",
+  invisible = "none",
+  labelsize = 4,
+  pointsize = 1.5,
+  pointshape = 19,
+  arrowsize = 0.5,
+  habillage = "none",
+  addEllipses = FALSE,
+  ellipse.level = 0.95,
+  ellipse.type = "norm",
+  ellipse.alpha = 0.1,
+  mean.point = TRUE,
+  color = "black",
+  fill = "white",
+  alpha = 1,
+  gradient.cols = NULL,
+  col.row.sup = "darkblue",
+  col.col.sup = "darkred",
   select = list(name = NULL, cos2 = NULL, contrib = NULL),
-  title = NULL, axes.linetype = "dashed", repel = FALSE,
-  col.circle = "grey70", circlesize = 0.5, ggtheme = theme_minimal(),
-  ggp = NULL, font.family = "", ...)
+  title = NULL,
+  axes.linetype = "dashed",
+  repel = FALSE,
+  col.circle = "grey70",
+  circlesize = 0.5,
+  ggtheme = theme_minimal(),
+  ggp = NULL,
+  font.family = "",
+  ...
+)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp

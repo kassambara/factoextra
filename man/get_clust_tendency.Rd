@@ -4,8 +4,13 @@
 \alias{get_clust_tendency}
 \title{Assessing Clustering Tendency}
 \usage{
-get_clust_tendency(data, n, graph = TRUE, gradient = list(low = "red",
-  mid = "white", high = "blue"), seed = 123)
+get_clust_tendency(
+  data,
+  n,
+  graph = TRUE,
+  gradient = list(low = "red", mid = "white", high = "blue"),
+  seed = 123
+)
 }
 \arguments{
 \item{data}{a numeric data frame or matrix. Columns are variables and rows 

@@ -6,8 +6,14 @@
 \alias{hkmeans_tree}
 \title{Hierarchical k-means clustering}
 \usage{
-hkmeans(x, k, hc.metric = "euclidean", hc.method = "ward.D2",
-  iter.max = 10, km.algorithm = "Hartigan-Wong")
+hkmeans(
+  x,
+  k,
+  hc.metric = "euclidean",
+  hc.method = "ward.D2",
+  iter.max = 10,
+  km.algorithm = "Hartigan-Wong"
+)
 
 \method{print}{hkmeans}(x, ...)
 

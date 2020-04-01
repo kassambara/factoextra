@@ -7,8 +7,10 @@
 \alias{get_hmfa_partial}
 \title{Extract the results for individuals/variables/group/partial axes - HMFA}
 \usage{
-get_hmfa(res.hmfa, element = c("ind", "quanti.var", "quali.var", "group",
-  "partial.node"))
+get_hmfa(
+  res.hmfa,
+  element = c("ind", "quanti.var", "quali.var", "group", "partial.node")
+)
 
 get_hmfa_ind(res.hmfa)
 

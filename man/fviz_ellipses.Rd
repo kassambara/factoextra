@@ -4,9 +4,18 @@
 \alias{fviz_ellipses}
 \title{Draw confidence ellipses around the categories}
 \usage{
-fviz_ellipses(X, habillage, axes = c(1, 2), addEllipses = TRUE,
-  ellipse.type = "confidence", palette = NULL, pointsize = 1,
-  geom = c("point", "text"), ggtheme = theme_bw(), ...)
+fviz_ellipses(
+  X,
+  habillage,
+  axes = c(1, 2),
+  addEllipses = TRUE,
+  ellipse.type = "confidence",
+  palette = NULL,
+  pointsize = 1,
+  geom = c("point", "text"),
+  ggtheme = theme_bw(),
+  ...
+)
 }
 \arguments{
 \item{X}{an object of class MCA, PCA or MFA.}

@@ -5,14 +5,27 @@
 \alias{fviz_mclust_bic}
 \title{Plot Model-Based Clustering Results using ggplot2}
 \usage{
-fviz_mclust(object, what = c("classification", "uncertainty", "BIC"),
-  ellipse.type = "norm", ellipse.level = 0.4,
-  ggtheme = theme_classic(), ...)
+fviz_mclust(
+  object,
+  what = c("classification", "uncertainty", "BIC"),
+  ellipse.type = "norm",
+  ellipse.level = 0.4,
+  ggtheme = theme_classic(),
+  ...
+)
 
-fviz_mclust_bic(object, model.names = NULL, shape = 19,
-  color = "model", palette = NULL, legend = NULL,
-  main = "Model selection", xlab = "Number of components",
-  ylab = "BIC", ...)
+fviz_mclust_bic(
+  object,
+  model.names = NULL,
+  shape = 19,
+  color = "model",
+  palette = NULL,
+  legend = NULL,
+  main = "Model selection",
+  xlab = "Number of components",
+  ylab = "BIC",
+  ...
+)
 }
 \arguments{
 \item{object}{an object of class Mclust}

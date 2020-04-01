@@ -4,7 +4,9 @@
 \name{poison}
 \alias{poison}
 \title{Poison}
-\format{A data frame with 55 rows and 15 columns.}
+\format{
+A data frame with 55 rows and 15 columns.
+}
 \source{
 This data is from FactoMineR package.
 }

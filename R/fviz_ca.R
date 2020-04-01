@@ -63,7 +63,6 @@ NULL
 #'@param arrows Vector of two logicals specifying if the plot should contain 
 #'  points (FALSE, default) or arrows (TRUE). First value sets the rows and the 
 #'  second value sets the columns.
-#'@inheritParams ggpubr::ggpar
 #'@param ... Additional arguments. \itemize{ \item in fviz_ca_row() and 
 #'  fviz_ca_col(): Additional arguments are passed to the functions fviz() and
 #'  ggpubr::ggpar(). \item in fviz_ca_biplot() and fviz_ca(): Additional 

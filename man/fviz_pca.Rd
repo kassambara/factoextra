@@ -9,24 +9,58 @@
 \usage{
 fviz_pca(X, ...)
 
-fviz_pca_ind(X, axes = c(1, 2), geom = c("point", "text"),
-  geom.ind = geom, repel = FALSE, habillage = "none",
-  palette = NULL, addEllipses = FALSE, col.ind = "black",
-  fill.ind = "white", col.ind.sup = "blue", alpha.ind = 1,
-  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL), ...)
+fviz_pca_ind(
+  X,
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  geom.ind = geom,
+  repel = FALSE,
+  habillage = "none",
+  palette = NULL,
+  addEllipses = FALSE,
+  col.ind = "black",
+  fill.ind = "white",
+  col.ind.sup = "blue",
+  alpha.ind = 1,
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  ...
+)
 
-fviz_pca_var(X, axes = c(1, 2), geom = c("arrow", "text"),
-  geom.var = geom, repel = FALSE, col.var = "black",
-  fill.var = "white", alpha.var = 1, col.quanti.sup = "blue",
-  col.circle = "grey70", select.var = list(name = NULL, cos2 = NULL,
-  contrib = NULL), ...)
+fviz_pca_var(
+  X,
+  axes = c(1, 2),
+  geom = c("arrow", "text"),
+  geom.var = geom,
+  repel = FALSE,
+  col.var = "black",
+  fill.var = "white",
+  alpha.var = 1,
+  col.quanti.sup = "blue",
+  col.circle = "grey70",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  ...
+)
 
-fviz_pca_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  geom.ind = geom, geom.var = c("arrow", "text"), col.ind = "black",
-  fill.ind = "white", col.var = "steelblue", fill.var = "white",
-  gradient.cols = NULL, label = "all", invisible = "none",
-  repel = FALSE, habillage = "none", palette = NULL,
-  addEllipses = FALSE, title = "PCA - Biplot", ...)
+fviz_pca_biplot(
+  X,
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  geom.ind = geom,
+  geom.var = c("arrow", "text"),
+  col.ind = "black",
+  fill.ind = "white",
+  col.var = "steelblue",
+  fill.var = "white",
+  gradient.cols = NULL,
+  label = "all",
+  invisible = "none",
+  repel = FALSE,
+  habillage = "none",
+  palette = NULL,
+  addEllipses = FALSE,
+  title = "PCA - Biplot",
+  ...
+)
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 

@@ -4,9 +4,17 @@
 \alias{hcut}
 \title{Computes Hierarchical Clustering and Cut the Tree}
 \usage{
-hcut(x, k = 2, isdiss = inherits(x, "dist"), hc_func = c("hclust",
-  "agnes", "diana"), hc_method = "ward.D2", hc_metric = "euclidean",
-  stand = FALSE, graph = FALSE, ...)
+hcut(
+  x,
+  k = 2,
+  isdiss = inherits(x, "dist"),
+  hc_func = c("hclust", "agnes", "diana"),
+  hc_method = "ward.D2",
+  hc_metric = "euclidean",
+  stand = FALSE,
+  graph = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{a numeric matrix, numeric data frame or a dissimilarity matrix.}

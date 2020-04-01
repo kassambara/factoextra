@@ -7,8 +7,10 @@
 \alias{get_mfa_partial_axes}
 \title{Extract the results for individuals/variables/group/partial axes - MFA}
 \usage{
-get_mfa(res.mfa, element = c("ind", "quanti.var", "quali.var", "group",
-  "partial.axes"))
+get_mfa(
+  res.mfa,
+  element = c("ind", "quanti.var", "quali.var", "group", "partial.axes")
+)
 
 get_mfa_ind(res.mfa)
 

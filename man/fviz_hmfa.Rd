@@ -7,22 +7,48 @@
 \alias{fviz_hmfa_quali_biplot}
 \title{Visualize Hierarchical Multiple Factor Analysis}
 \usage{
-fviz_hmfa_ind(X, axes = c(1, 2), geom = c("point", "text"),
-  repel = FALSE, habillage = "none", addEllipses = FALSE,
-  shape.ind = 19, col.ind = "blue", col.ind.sup = "darkblue",
-  alpha.ind = 1, select.ind = list(name = NULL, cos2 = NULL, contrib =
-  NULL), partial = NULL, col.partial = "group", group.names = NULL,
-  node.level = 1, ...)
+fviz_hmfa_ind(
+  X,
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  repel = FALSE,
+  habillage = "none",
+  addEllipses = FALSE,
+  shape.ind = 19,
+  col.ind = "blue",
+  col.ind.sup = "darkblue",
+  alpha.ind = 1,
+  select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  partial = NULL,
+  col.partial = "group",
+  group.names = NULL,
+  node.level = 1,
+  ...
+)
 
-fviz_hmfa_var(X, choice = c("quanti.var", "quali.var", "group"),
-  axes = c(1, 2), geom = c("point", "text"), repel = FALSE,
-  col.var = "red", alpha.var = 1, shape.var = 17,
-  col.var.sup = "darkgreen", select.var = list(name = NULL, cos2 =
-  NULL, contrib = NULL), ...)
+fviz_hmfa_var(
+  X,
+  choice = c("quanti.var", "quali.var", "group"),
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  repel = FALSE,
+  col.var = "red",
+  alpha.var = 1,
+  shape.var = 17,
+  col.var.sup = "darkgreen",
+  select.var = list(name = NULL, cos2 = NULL, contrib = NULL),
+  ...
+)
 
-fviz_hmfa_quali_biplot(X, axes = c(1, 2), geom = c("point", "text"),
-  repel = FALSE, habillage = "none",
-  title = "Biplot of individuals and qualitative variables - HMFA", ...)
+fviz_hmfa_quali_biplot(
+  X,
+  axes = c(1, 2),
+  geom = c("point", "text"),
+  repel = FALSE,
+  habillage = "none",
+  title = "Biplot of individuals and qualitative variables - HMFA",
+  ...
+)
 
 fviz_hmfa(X, ...)
 }

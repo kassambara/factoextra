@@ -4,12 +4,14 @@
 \name{multishapes}
 \alias{multishapes}
 \title{A dataset containing clusters of multiple shapes}
-\format{A data frame with 1100 observations on the following 3 variables. 
+\format{
+A data frame with 1100 observations on the following 3 variables. 
  \describe{
 \item{\code{x}}{a numeric vector containing the x coordinates of observations}
 \item{\code{y}}{a numeric vector containing the y coordinates of observations}
 \item{\code{shape}}{a numeric vector corresponding to the cluster number of each observations.}
-}}
+}
+}
 \usage{
 data("multishapes")
 }

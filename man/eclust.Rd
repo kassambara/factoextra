@@ -4,11 +4,21 @@
 \alias{eclust}
 \title{Visual enhancement of clustering analysis}
 \usage{
-eclust(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust",
-  "agnes", "diana"), k = NULL, k.max = 10, stand = FALSE,
-  graph = TRUE, hc_metric = "euclidean", hc_method = "ward.D2",
-  gap_maxSE = list(method = "firstSEmax", SE.factor = 1), nboot = 100,
-  verbose = interactive(), seed = 123, ...)
+eclust(
+  x,
+  FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes", "diana"),
+  k = NULL,
+  k.max = 10,
+  stand = FALSE,
+  graph = TRUE,
+  hc_metric = "euclidean",
+  hc_method = "ward.D2",
+  gap_maxSE = list(method = "firstSEmax", SE.factor = 1),
+  nboot = 100,
+  verbose = interactive(),
+  seed = 123,
+  ...
+)
 }
 \arguments{
 \item{x}{numeric vector, data matrix or data frame}

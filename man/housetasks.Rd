@@ -4,13 +4,15 @@
 \name{housetasks}
 \alias{housetasks}
 \title{House tasks contingency table}
-\format{A data frame with 13 observations (house tasks) on the following 4 columns.
+\format{
+A data frame with 13 observations (house tasks) on the following 4 columns.
 \describe{
  \item{\code{Wife}}{a numeric vector}
  \item{\code{Alternating}}{a numeric vector}
  \item{\code{Husband}}{a numeric vector}
  \item{\code{Jointly}}{a numeric vector}
-}}
+}
+}
 \source{
 This data is from FactoMineR package.
 }

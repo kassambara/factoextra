@@ -12,11 +12,22 @@ get_eig(X)
 
 get_eigenvalue(X)
 
-fviz_eig(X, choice = c("variance", "eigenvalue"), geom = c("bar",
-  "line"), barfill = "steelblue", barcolor = "steelblue",
-  linecolor = "black", ncp = 10, addlabels = FALSE, hjust = 0,
-  main = NULL, xlab = NULL, ylab = NULL, ggtheme = theme_minimal(),
-  ...)
+fviz_eig(
+  X,
+  choice = c("variance", "eigenvalue"),
+  geom = c("bar", "line"),
+  barfill = "steelblue",
+  barcolor = "steelblue",
+  linecolor = "black",
+  ncp = 10,
+  addlabels = FALSE,
+  hjust = 0,
+  main = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  ggtheme = theme_minimal(),
+  ...
+)
 
 fviz_screeplot(...)
 }

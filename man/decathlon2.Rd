@@ -4,7 +4,8 @@
 \name{decathlon2}
 \alias{decathlon2}
 \title{Athletes' performance in decathlon}
-\format{A data frame with 27 observations on the following 13 variables.
+\format{
+A data frame with 27 observations on the following 13 variables.
 \describe{
 \item{\code{X100m}}{a numeric vector}
 \item{\code{Long.jump}}{a numeric vector}
@@ -19,7 +20,8 @@
 \item{\code{Rank}}{a numeric vector corresponding to the rank}
 \item{\code{Points}}{a numeric vector specifying the point obtained}
 \item{\code{Competition}}{a factor with levels \code{Decastar} \code{OlympicG}}
-}}
+}
+}
 \source{
 This data is a subset of decathlon data in FactoMineR package.
 }

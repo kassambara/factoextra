@@ -11,11 +11,8 @@ I have also run R CMD check on downstream dependencies of factoextra.
 All packages that I could install passed.
 
 ## Update
-This is an update version 1.0.6 (see NEWS.md).
+This is a maintenance update version 1.0.7 (see NEWS.md). Adding stringsAsFactors = TRUE to the relevant calls to data.frame to anticipate compatibility with future R 4.0.0.
 
-## Resubmission
-
-Invalid URIs in README.md fixed now.
 
 
 

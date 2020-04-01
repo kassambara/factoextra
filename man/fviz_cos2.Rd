@@ -4,10 +4,18 @@
 \alias{fviz_cos2}
 \title{Visualize the quality of representation of rows/columns}
 \usage{
-fviz_cos2(X, choice = c("row", "col", "var", "ind", "quanti.var",
-  "quali.var", "group"), axes = 1, fill = "steelblue",
-  color = "steelblue", sort.val = c("desc", "asc", "none"),
-  top = Inf, xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
+fviz_cos2(
+  X,
+  choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group"),
+  axes = 1,
+  fill = "steelblue",
+  color = "steelblue",
+  sort.val = c("desc", "asc", "none"),
+  top = Inf,
+  xtickslab.rt = 45,
+  ggtheme = theme_minimal(),
+  ...
+)
 }
 \arguments{
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];

@@ -8,9 +8,13 @@
 \usage{
 get_dist(x, method = "euclidean", stand = FALSE, ...)
 
-fviz_dist(dist.obj, order = TRUE, show_labels = TRUE,
-  lab_size = NULL, gradient = list(low = "red", mid = "white", high =
-  "blue"))
+fviz_dist(
+  dist.obj,
+  order = TRUE,
+  show_labels = TRUE,
+  lab_size = NULL,
+  gradient = list(low = "red", mid = "white", high = "blue")
+)
 }
 \arguments{
 \item{x}{a numeric matrix or a data frame.}
