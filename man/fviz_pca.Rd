@@ -175,7 +175,7 @@ Principal component analysis (PCA) reduces the dimensionality of
   variables} \item{fviz_pca(): An alias of fviz_pca_biplot()} }
   
   Note that, \code{fviz_pca_xxx()} functions are wrapper arround the core
-  function \code{\link{fviz}()}, whih is also a wrapper arround the
+  function \code{\link{fviz}()}, which is also a wrapper arround the
   function \code{\link[ggpubr]{ggscatter}()} [in ggpubr]. Therfore, further arguments, to be
   passed to the function \code{\link{fviz}()} and \code{\link[ggpubr]{ggscatter}()}, can be specified in
   \code{\link{fviz_pca_ind}()} and \code{\link{fviz_pca_var}()}.
