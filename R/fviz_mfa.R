@@ -48,7 +48,7 @@ NULL
 #'  Default is "black".
 #'@param title the title of the graph
 #'@param select.ind,select.var,select.axes a selection of individuals/partial 
-#'  individuals/ variables/groups/axes to be drawn. Allowed values are NULL or a
+#'  individuals/ variables/groups/axes to be drawn (must match at least one of the conditions). Allowed values are NULL or a
 #'  list containing the arguments name, cos2 or contrib: \itemize{ \item name is
 #'  a character vector containing individuals/variables to be drawn \item cos2 
 #'  if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 
