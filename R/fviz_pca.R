@@ -236,9 +236,10 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   colnames(ind)<- c("x", "y")
   
   # rescale variable coordinates
+ ## An error occur with parenthesis
   r <- min(
-    (max(ind[,"x"])-min(ind[,"x"])/(max(var[,"x"])-min(var[,"x"]))),
-    (max(ind[,"y"])-min(ind[,"y"])/(max(var[,"y"])-min(var[,"y"])))
+    (max(ind[,"x"])-min(ind[,"x"]))/(max(var[,"x"])-min(var[,"x"])),
+    (max(ind[,"y"])-min(ind[,"y"]))/(max(var[,"y"])-min(var[,"y"]))
   )
   
   # When fill.ind = grouping variable & col.var = continuous variable,
