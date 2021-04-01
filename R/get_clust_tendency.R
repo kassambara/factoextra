@@ -85,7 +85,8 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   p <- apply(data, 2, function(x, n){runif(n, min(x), max(x))}, n)
 
   
-  k <- round(runif(n, 1, nrow(data)))
+  k <- sample(1:nrow(data), n)
+  
   q <- as.matrix(data[k, ])
   distp = rep(0, nrow(data))
   distq = 0
