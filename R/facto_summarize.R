@@ -207,7 +207,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   if("coord.node.partial" %in% result) 
     res <- res.partial
   else {
-    coord = elmt$coord[, axes]
+    coord <- elmt$coord[, axes]
     name <- rownames(coord)
     if(is.null(name)) name <- as.character(1:nrow(coord))
     name <- as.character(name)
