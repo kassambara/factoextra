@@ -64,7 +64,7 @@ type = "phylogenic".}
 
 \item{lwd}{a numeric value specifying branches and rectangle line width.}
 
-\item{type}{type of plot. Allowed values are one of "rectangle", "triangle", 
+\item{type}{type of plot. Allowed values are one of "rectangle",
 "circular", "phylogenic".}
 
 \item{phylo_layout}{the layout to be used for phylogenic trees. Default value

@@ -23,7 +23,7 @@
 #' @param repel logical value. Use repel = TRUE to avoid label overplotting when
 #'   type = "phylogenic".
 #' @param lwd a numeric value specifying branches and rectangle line width.
-#' @param type type of plot. Allowed values are one of "rectangle", "triangle", 
+#' @param type type of plot. Allowed values are one of "rectangle",  
 #'   "circular", "phylogenic".
 #' @param phylo_layout the layout to be used for phylogenic trees. Default value
 #'   is "layout.auto". Allowed values include: 
