@@ -103,8 +103,8 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   # x is an object created by the function NbClust() [NbClust package]
   if(inherits(x, "list") & "Best.nc" %in% names(x)){
       best_nc <- x$Best.nc
-      if(class(best_nc) == "numeric") print(best_nc)
-      else if(class(best_nc) == "matrix") 
+      if(inherits(best_nc, "numeric")) print(best_nc)
+      else if(inherits(best_nc, "matrix")) 
         .viz_NbClust(x, print.summary, barfill, barcolor)
   }
   else if(is.null(FUNcluster)) stop("The argument FUNcluster is required. ",
@@ -269,8 +269,8 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
                          barfill = "steelblue", barcolor = "steelblue")
   {
      best_nc <- x$Best.nc
-    if(class(best_nc) == "numeric") print(best_nc)
-     else if(class(best_nc) == "matrix"){
+    if(inherits(best_nc, "numeric")) print(best_nc)
+     else if(inherits(best_nc, "matrix")){
     best_nc <- as.data.frame(t(best_nc), stringsAsFactors = TRUE)
     best_nc$Number_clusters <- as.factor(best_nc$Number_clusters)
     
