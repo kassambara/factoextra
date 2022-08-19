@@ -503,7 +503,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   df <- data.frame(xmin = unlist(xleft), ymin = unlist(ybottom), xmax = unlist(xright), ymax = unlist(ytop), stringsAsFactors = TRUE)
   
   color <- k_colors
-  if(color == "cluster") color <- "default"
+  if(length(color) == 1L && color == "cluster") color <- "default"
   if(ggpubr:::.is_col_palette(color)) color <- ggpubr:::.get_pal(color, k = k)
   else if(length(color) > 1 & length(color) < k){
     color <- rep(color, k)[1:k]
