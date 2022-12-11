@@ -329,14 +329,14 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
     p <- p + geom_segment(data = data$segments,
       aes_string(x = "x", y = "y", xend = "xend", yend = "yend", 
                  colour = "col", linetype = "lty", size = "lwd"), lineend = "square") +
-      guides(linetype = FALSE, col = FALSE) + #scale_colour_identity() + 
+      guides(linetype = "none", col = "none") + #scale_colour_identity() + 
       scale_size_identity() + scale_linetype_identity()
     if(is.null(palette)) p <- p + scale_colour_identity()
   }
   if (nodes) {
     p <- p + geom_point(data = data$nodes, 
       aes_string(x = "x", y = "y", colour = "col", shape = "pch", size = "cex")) + 
-      guides(shape = FALSE, col = FALSE, size = FALSE) + 
+      guides(shape = "none", col = "none", size = "none") + 
       scale_shape_identity()
   }
   if (labels) {
