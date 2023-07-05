@@ -134,7 +134,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   
   # Summarize the result
   res = NULL
-  if(element %in% c("mca.cor", "quanti.sup")) res <- elmt$coord
+  if(element %in% c("mca.cor", "quanti.sup")) res <- elmt$coord[, axes, drop = FALSE]
   
   # 1.Extract the coordinates x, y and coord
   if("coord" %in% result){
