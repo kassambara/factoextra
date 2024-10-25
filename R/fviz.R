@@ -247,7 +247,11 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   else p <- ggpubr::ggscatter(data = df, x = "x", y = "y",
                          color = color, fill = fill,  alpha = alpha, shape = pointshape, 
                          point = point, size = pointsize, mean.point = mean.point,
-                         label = label, font.label = labelsize*3, repel = repel,
+                         # show.legend.text=F to avoid overlapping 'a' character in the legend
+                         # this allows to display legend text on the plot, while displaying the correct legend information
+                         # in my case, I was calling the fviz_pca_ind() function
+                         label = label, font.label = labelsize*3, show.legend.text=F,
+                         repel = repel,
                          ellipse = addEllipses, ellipse.type = ellipse.type,
                          ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
                          main = title, ggtheme = ggtheme, ggp = ggp, font.family = font.family, ...)
