@@ -26,10 +26,17 @@
 #'@param barcolor outline color for bar plot.
 #'@param linecolor color for line plot (when geom contains "line").
 #'@param ncp a numeric value specifying the number of dimensions to be shown.
-#'@param addlabels logical value. If TRUE, labels are added at the top of bars 
+#'@param addlabels logical value. If TRUE, labels are added at the top of bars
 #'  or points showing the information retained by each dimension.
 #'@param hjust horizontal adjustment of the labels.
 #'@param main,xlab,ylab plot main and axis titles.
+#'@param parallel logical value. If TRUE, adds a parallel analysis threshold line
+#'  (Horn's method) to help determine the number of components to retain. Components
+#'  with eigenvalues above this line are considered significant. Only works when
+#'  choice = "eigenvalue" and X is a prcomp or princomp object. Default is FALSE.
+#'@param parallel.color color of the parallel analysis threshold line. Default is "red".
+#'@param parallel.lty line type for the parallel analysis line. Default is "dashed".
+#'@param parallel.iter number of iterations for parallel analysis simulation. Default is 100.
 #' @inheritParams ggpubr::ggpar
 #'@param ... optional arguments to be passed to the function \link[ggpubr]{ggpar}.
 #'  
@@ -59,7 +66,12 @@
 #' 
 #' # Use only bar  or line plot: geom = "bar" or geom = "line"
 #' fviz_eig(res.pca, geom="line")
-#'  
+#'
+#' # Parallel analysis (Horn's method) to determine number of components
+#' # Components with eigenvalues above the red line are significant
+#' fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
+#'          addlabels = TRUE, parallel.color = "red")
+#'
 #' \dontrun{         
 #' # Correspondence Analysis
 #' # +++++++++++++++++++++++++++++++++
@@ -127,9 +139,11 @@ get_eigenvalue <- function(X){
 #' @export
 fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                   barfill="steelblue", barcolor="steelblue", linecolor = "black",
-                  ncp=10, addlabels=FALSE, hjust = 0, 
-                   main = NULL, xlab = NULL, ylab = NULL, 
-                  ggtheme = theme_minimal(), ...)
+                  ncp=10, addlabels=FALSE, hjust = 0,
+                   main = NULL, xlab = NULL, ylab = NULL,
+                  ggtheme = theme_minimal(),
+                  parallel = FALSE, parallel.color = "red",
+                  parallel.lty = "dashed", parallel.iter = 100, ...)
 {
   
   eig <- get_eigenvalue(X)
@@ -165,7 +179,51 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   if("line" %in% geom) p <- p + geom_line(color = linecolor, linetype = linetype)+
     geom_point(shape=19, color=linecolor)
   if(addlabels) p <- p + geom_text(label = text_labels, vjust=-0.4, hjust = hjust)
-  
+
+  # Add parallel analysis line (Horn's method) if requested
+  if(parallel && choice == "eigenvalue") {
+    # Parallel analysis requires the original data, available from prcomp/princomp
+    if(inherits(X, "prcomp") && !is.null(X$x)) {
+      n_obs <- nrow(X$x)
+      n_var <- ncol(X$x)
+      # Simulate random data eigenvalues
+      sim_eigs <- matrix(NA, nrow = parallel.iter, ncol = n_var)
+      for(i in seq_len(parallel.iter)) {
+        random_data <- matrix(stats::rnorm(n_obs * n_var), nrow = n_obs, ncol = n_var)
+        sim_eigs[i, ] <- stats::prcomp(random_data, scale. = TRUE)$sdev^2
+      }
+      # Use 95th percentile as threshold (more conservative than mean)
+      parallel_threshold <- apply(sim_eigs, 2, function(x) stats::quantile(x, 0.95))
+      parallel_threshold <- parallel_threshold[1:min(ncp, length(parallel_threshold))]
+      df.parallel <- data.frame(dim = factor(1:length(parallel_threshold)),
+                                 threshold = parallel_threshold)
+      p <- p + geom_line(data = df.parallel, aes(x = .data[["dim"]], y = .data[["threshold"]]),
+                         color = parallel.color, linetype = parallel.lty, linewidth = 0.8) +
+               geom_point(data = df.parallel, aes(x = .data[["dim"]], y = .data[["threshold"]]),
+                          color = parallel.color, shape = 4, size = 2)
+    } else if(inherits(X, "princomp") && !is.null(X$scores)) {
+      n_obs <- nrow(X$scores)
+      n_var <- ncol(X$scores)
+      sim_eigs <- matrix(NA, nrow = parallel.iter, ncol = n_var)
+      for(i in seq_len(parallel.iter)) {
+        random_data <- matrix(stats::rnorm(n_obs * n_var), nrow = n_obs, ncol = n_var)
+        sim_eigs[i, ] <- stats::princomp(random_data, cor = TRUE)$sdev^2
+      }
+      parallel_threshold <- apply(sim_eigs, 2, function(x) stats::quantile(x, 0.95))
+      parallel_threshold <- parallel_threshold[1:min(ncp, length(parallel_threshold))]
+      df.parallel <- data.frame(dim = factor(1:length(parallel_threshold)),
+                                 threshold = parallel_threshold)
+      p <- p + geom_line(data = df.parallel, aes(x = .data[["dim"]], y = .data[["threshold"]]),
+                         color = parallel.color, linetype = parallel.lty, linewidth = 0.8) +
+               geom_point(data = df.parallel, aes(x = .data[["dim"]], y = .data[["threshold"]]),
+                          color = parallel.color, shape = 4, size = 2)
+    } else {
+      warning("Parallel analysis requires prcomp or princomp objects with score data. Skipping.")
+    }
+  } else if(parallel && choice != "eigenvalue") {
+    warning("Parallel analysis only works with choice = 'eigenvalue'. Skipping.")
+  }
+
   if(is.null(main)) main <- "Scree plot"
   if(is.null(xlab)) xlab <- "Dimensions"
   if(is.null(ylab)) ylab <- "Percentage of explained variances"

@@ -75,9 +75,11 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
     vjust <- -0.7
   }
   else if("arrow" %in% geom){
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # See: https://github.com/kassambara/factoextra/issues/190
     p <- ggp + geom_segment(data = df,
-                      aes_string(x = 0, y = 0, xend = 'x', yend = 'y'),
-                      arrow = grid::arrow(length = grid::unit(0.2, 'cm')), 
+                      aes(x = 0, y = 0, xend = .data[["x"]], yend = .data[["y"]]),
+                      arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
                       color=color, linetype=linetype)
     hjust <- 0.8
     vjust <- 0

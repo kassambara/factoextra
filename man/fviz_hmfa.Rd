@@ -107,9 +107,9 @@ then the top 5 individuals/variables with the highest cos2 are drawn. \item
 contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 the highest cos2 are drawn }}
 
-\item{partial}{list of the individuals for which the partial points should be 
-drawn. (by default, partial = NULL and no partial points are drawn). Use 
-partial = "All" to visualize partial points for all individuals.}
+\item{partial}{list of the individuals for which the partial points should be
+drawn. (by default, partial = NULL and no partial points are drawn). Use
+partial = "all" to visualize partial points for all individuals.}
 
 \item{col.partial}{color for partial individuals. By default, points are 
 colored according to the groups.}

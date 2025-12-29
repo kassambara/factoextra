@@ -25,9 +25,18 @@ NULL
 #'   Specify seed for reproducible results.
 #' @details
 #' 
-#' \strong{Hopkins statistic}: If the value of Hopkins statistic is close to 
+#' \strong{Hopkins statistic}: If the value of Hopkins statistic is close to
 #' 1 (far above 0.5), then we can conclude that the dataset is significantly
-#' clusterable.
+#' clusterable. The statistic is calculated using the correct formula from
+#' Cross and Jain (1982) with exponent d=D where D is the dimensionality
+#' (number of columns) of the data. Under the null hypothesis of spatial
+#' randomness, the Hopkins statistic follows a Beta(n, n) distribution.
+#'
+#' \strong{Note on interpretation}: This function returns the Hopkins statistic H
+#' where values close to 1 indicate clusterable data. Some other packages (e.g.,
+#' \code{performance::check_clusterstructure}) return 1-H, where values close to
+#' 0 indicate clusterability. Always check the documentation of the specific
+#' implementation you are using.
 #' 
 #' \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
 #' clustering tendency in a visual form by counting the number of square shaped
@@ -67,12 +76,9 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     data <- as.matrix(data)
   if (!(is.matrix(data))) 
     stop("data must be data.frame or matrix")
-  if (n >= nrow(data)) 
+  if (n >= nrow(data))
     stop("n must be no larger than num of samples")
-  if (!requireNamespace("reshape2", quietly = TRUE)) {
-    stop("reshape2 package needed for this function to work. Please install it.")
-   }
-  
+
   data <- na.omit(data)
   rownames(data) <- paste0("r", 1:nrow(data))
   plot <- NULL
@@ -85,7 +91,8 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   p <- apply(data, 2, function(x, n){runif(n, min(x), max(x))}, n)
 
   
-  k <- round(runif(n, 1, nrow(data)))
+  # Use sample() for uniform row selection (fixes biased sampling from PR #133)
+  k <- sample(seq_len(nrow(data)), n, replace = TRUE)
   q <- as.matrix(data[k, ])
   distp = rep(0, nrow(data))
   distq = 0
@@ -107,5 +114,11 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     minq[i] <- minqi
   }
   
-  list(hopkins_stat = sum(minp)/(sum(minp) + sum(minq)), plot = plot)
+  # Hopkins statistic formula fix: use exponent d=D (dimensionality) as per
+
+  # Cross & Jain (1982) "Measurement of Clustering Tendency" and
+  # Wright (2022) "Will the Real Hopkins Statistic Please Stand Up?" R Journal.
+  # Previous implementation incorrectly used d=1; correct formula uses d=ncol(data).
+  d <- ncol(data)
+  list(hopkins_stat = sum(minp^d)/(sum(minp^d) + sum(minq^d)), plot = plot)
 }

@@ -284,18 +284,20 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          pointsize = 2, labelsize = 4, geom = c("point", "text"), repel = FALSE)
   {
   
-  if("point" %in% geom) 
-    p <-  p + geom_point(data = outliers_data, 
-                      aes_string('x', 'y'),
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # See: https://github.com/kassambara/factoextra/issues/190
+  if("point" %in% geom)
+    p <-  p + geom_point(data = outliers_data,
+                      aes(x = .data[["x"]], y = .data[["y"]]),
                       size = pointsize, color = outlier.color, shape = outlier.shape)
   if("text" %in% geom){
     if(repel)
-      p <- p +ggrepel::geom_text_repel(data = outliers_labs, 
-                                       aes_string('x', 'y', label = 'name'),
+      p <- p +ggrepel::geom_text_repel(data = outliers_labs,
+                                       aes(x = .data[["x"]], y = .data[["y"]], label = .data[["name"]]),
                                        size = labelsize, color = outlier.color)
     else
-      p <- p + geom_text(data = outliers_labs, 
-                         aes_string('x', 'y', label = 'name'),  
+      p <- p + geom_text(data = outliers_labs,
+                         aes(x = .data[["x"]], y = .data[["y"]], label = .data[["name"]]),
                          size = labelsize, vjust = -0.7, color = outlier.color)
   }
     

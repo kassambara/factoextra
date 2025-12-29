@@ -34,8 +34,8 @@ individuals when habillage != "none".}
 \code{\link[ggplot2]{stat_ellipse}()} including one of \code{c("t", "norm", 
 "euclid")} for plotting concentration ellipses.
 
-\itemize{ \item \code{"convex"}: plot convex hull of a set o points. \item 
-\code{"confidence"}: plot confidence ellipses arround group mean points as
+\itemize{ \item \code{"convex"}: plot convex hull of a set of points. \item 
+\code{"confidence"}: plot confidence ellipses around group mean points as
 \code{\link[FactoMineR]{coord.ellipse}()}[in FactoMineR]. \item \code{"t"}:
 assumes a multivariate t-distribution. \item \code{"norm"}: assumes a
 multivariate normal distribution. \item \code{"euclid"}: draws a circle with

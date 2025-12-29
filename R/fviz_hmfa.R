@@ -52,9 +52,9 @@ NULL
 #'  "quali.var", "group") for plotting quantitative variables, qualitative 
 #'  variables and group of variables, respectively.
 #'@param ... Arguments to be passed to the function fviz() and ggpubr::ggpar()
-#'@param partial list of the individuals for which the partial points should be 
-#'  drawn. (by default, partial = NULL and no partial points are drawn). Use 
-#'  partial = "All" to visualize partial points for all individuals.
+#'@param partial list of the individuals for which the partial points should be
+#'  drawn. (by default, partial = NULL and no partial points are drawn). Use
+#'  partial = "all" to visualize partial points for all individuals.
 #'@param col.var.sup color for supplementary variables.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
 #'  labels or not.
@@ -163,9 +163,10 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
                                  colour = col.partial,
                                  shape = shape.ind, size = 1)
       # Partial segments
+      # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for geom_segment
       p <- p + ggpubr::geom_exec(geom_segment, data = ind.partial,
                                  x = "x", y = "y", xend = 'x.partial', yend = 'y.partial',
-                                 linetype = "group.name", colour = col.partial, size = 0.5)
+                                 linetype = "group.name", colour = col.partial, linewidth = 0.5)
     }
     # Edit plot title and legend title
     p <- p  + labs(colour = "Groups", linetype = "Groups")

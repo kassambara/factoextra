@@ -56,21 +56,21 @@ fviz_hmfa_group(X, ...)
 \item{res.hmfa}{an object of class HMFA [FactoMineR].}
 }
 \description{
-Deprecated functions. Will be removed in the next version.   
-  
-\itemize{ 
-\item get_mfa_var_quanti(). Deprecated. Use get_mfa_var(res.mfa, "quanti.var") instead.
-\item get_mfa_var_quali().  Deprecated. Use get_mfa_var(res.mfa, "quali.var") instead.
+Deprecated functions. Will be removed in a future version.
+
+\itemize{
+\item get_mfa_quanti_var(). Deprecated. Use get_mfa_var(res.mfa, "quanti.var") instead.
+\item get_mfa_quali_var().  Deprecated. Use get_mfa_var(res.mfa, "quali.var") instead.
 \item get_mfa_group(). Deprecated. Use get_mfa_var(res.mfa, "group") instead.
 
-\item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points). 
-Deprecated. Use fviz_mfa_ind(res.mfa, partial = "All") instead.}
+\item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points).
+Deprecated. Use fviz_mfa_ind(res.mfa, partial = "all") instead.}
 \item{fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.}
 \item{fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.}
 
  \item
-get_hmfa_var_quanti(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var")
-instead. \item get_hmfa_var_quali().  Deprecated. Use get_hmfa_var(res.hmfa,
+get_hmfa_quanti_var(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var")
+instead. \item get_hmfa_quali_var().  Deprecated. Use get_hmfa_var(res.hmfa,
 "quali.var") instead. \item get_hmfa_group(). Deprecated. Use
 get_hmfa_var(res.hmfa, "group") instead.
 
@@ -78,7 +78,7 @@ get_hmfa_var(res.hmfa, "group") instead.
 \item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
 \item{fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.}
 \item{fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.}
- 
+
 }
 }
 \author{

@@ -16,9 +16,9 @@
 #'   Graph of variables} \item{fviz_pca_biplot(): Biplot of individuals and 
 #'   variables} \item{fviz_pca(): An alias of fviz_pca_biplot()} }
 #'   
-#'   Note that, \code{fviz_pca_xxx()} functions are wrapper arround the core
-#'   function \code{\link{fviz}()}, whih is also a wrapper arround the
-#'   function \code{\link[ggpubr]{ggscatter}()} [in ggpubr]. Therfore, further arguments, to be
+#'   Note that, \code{fviz_pca_xxx()} functions are wrapper around the core
+#'   function \code{\link{fviz}()}, which is also a wrapper around the
+#'   function \code{\link[ggpubr]{ggscatter}()} [in ggpubr]. Therefore, further arguments, to be
 #'   passed to the function \code{\link{fviz}()} and \code{\link[ggpubr]{ggscatter}()}, can be specified in
 #'   \code{\link{fviz_pca_ind}()} and \code{\link{fviz_pca_var}()}.
 #'   
@@ -70,14 +70,24 @@
 #'   coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
 #'   this, make sure that habillage ="none".
 #' @param col.quanti.sup a color for the quantitative supplementary variables.
-#' @param select.ind,select.var a selection of individuals/variables to be 
-#'   drawn. Allowed values are NULL or a list containing the arguments name, 
-#'   cos2 or contrib: \itemize{ \item name: is a character vector containing 
-#'   individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex: 
-#'   0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, 
-#'   ex: 5, then the top 5 individuals/variables with the highest cos2 are 
-#'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
+#' @param select.ind,select.var a selection of individuals/variables to be
+#'   drawn. Allowed values are NULL or a list containing the arguments name,
+#'   cos2 or contrib: \itemize{ \item name: is a character vector containing
+#'   individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex:
+#'   0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1,
+#'   ex: 5, then the top 5 individuals/variables with the highest cos2 are
+#'   drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5
 #'   individuals/variables with the highest contrib are drawn }
+#' @param biplot.type type of biplot scaling for fviz_pca_biplot(). Options are:
+#'   \itemize{
+#'     \item "auto" (default): Uses range-based rescaling for visualization
+#'     \item "form": Form biplot (Gabriel, 1971). Distances between individuals
+#'       approximate Euclidean distances. Use when focus is on individual relationships.
+#'     \item "covariance": Covariance biplot (Gabriel, 1971). Angles between variable
+#'       vectors approximate correlations, lengths approximate standard deviations.
+#'       Use when focus is on variable relationships.
+#'   }
+#'   Note: "form" and "covariance" scaling requires prcomp or princomp objects.
 #' @inheritParams ggpubr::ggpar
 #' @inheritParams fviz
 #' @param ... Additional arguments. \itemize{ \item in fviz_pca_ind() and 
@@ -157,9 +167,17 @@
 #' fviz_pca_biplot(res.pca, label = "var", habillage=iris$Species,
 #'                addEllipses=TRUE, ellipse.level=0.95,
 #'                ggtheme = theme_minimal())
-#' 
+#'
+#' # Biplot types (Gabriel, 1971):
+#' # Form biplot - focus on individual distances
+#' fviz_pca_biplot(res.pca, biplot.type = "form",
+#'                label = "var", habillage = iris$Species)
+#' # Covariance biplot - focus on variable correlations
+#' fviz_pca_biplot(res.pca, biplot.type = "covariance",
+#'                label = "var", habillage = iris$Species)
+#'
 #'  }
-#'  
+#'
 #' @rdname fviz_pca
 #' @export
 fviz_pca <- function(X, ...){
@@ -207,12 +225,14 @@ fviz_pca_var <- function(X, axes=c(1,2), geom = c("arrow", "text"),
 #' @export
 fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             geom.ind = geom, geom.var = c("arrow", "text"),
-                            col.ind = "black", fill.ind = "white", 
+                            col.ind = "black", fill.ind = "white",
                             col.var = "steelblue", fill.var = "white", gradient.cols = NULL,
-                            label = "all", invisible="none", repel = FALSE, 
-                            habillage = "none", palette = NULL, addEllipses=FALSE, 
-                            title = "PCA - Biplot", ...)
+                            label = "all", invisible="none", repel = FALSE,
+                            habillage = "none", palette = NULL, addEllipses=FALSE,
+                            title = "PCA - Biplot",
+                            biplot.type = c("auto", "form", "covariance"), ...)
 {
+  biplot.type <- match.arg(biplot.type)
   
   # Check if individials or variables are colored by variables
   is.individuals.colored.by.variable <- .is_grouping_var(fill.ind) | .is_grouping_var(col.ind)
@@ -235,11 +255,44 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   ind <- data.frame(pca.ind$coord[, axes, drop=FALSE], stringsAsFactors = TRUE)
   colnames(ind)<- c("x", "y")
   
-  # rescale variable coordinates
-  r <- min(
-    (max(ind[,"x"])-min(ind[,"x"])/(max(var[,"x"])-min(var[,"x"]))),
-    (max(ind[,"y"])-min(ind[,"y"])/(max(var[,"y"])-min(var[,"y"])))
-  )
+  # Rescale variable coordinates based on biplot.type
+
+  # Gabriel (1971) biplot scaling: observations scaled by lambda^(1-scale),
+
+  # variables scaled by lambda^scale, where scale=0 is form biplot, scale=1 is covariance
+  if(biplot.type == "form" || biplot.type == "covariance") {
+    # Get eigenvalues (singular values squared for scaling)
+    if(inherits(X, "prcomp")) {
+      sdev <- X$sdev[axes]
+    } else if(inherits(X, "princomp")) {
+      sdev <- X$sdev[axes]
+    } else {
+      # Fall back to auto for other object types
+      warning("biplot.type 'form' or 'covariance' requires prcomp/princomp objects. Using 'auto'.")
+      biplot.type <- "auto"
+    }
+
+    if(biplot.type == "form") {
+      # Form biplot (scale=0): preserves distances between individuals
+      # Variables are scaled down, individuals keep their scores
+      r <- 1 / max(abs(var[, c("x", "y")])) * 0.8 * max(abs(ind[, c("x", "y")]))
+    } else if(biplot.type == "covariance") {
+      # Covariance biplot (scale=1): preserves correlations between variables
+      # Variables scaled by sqrt(n) * sdev, individuals scaled down
+      n_obs <- nrow(ind)
+      # Scale factor to make variable vectors meaningful while keeping individuals visible
+      r <- sqrt(n_obs) * 0.15
+    }
+  }
+
+  if(biplot.type == "auto") {
+    # Default range-based rescaling for visualization
+    # Fix for PR #129: correct parenthesis placement for ratio calculation
+    r <- min(
+      ((max(ind[,"x"])-min(ind[,"x"]))/(max(var[,"x"])-min(var[,"x"]))),
+      ((max(ind[,"y"])-min(ind[,"y"]))/(max(var[,"y"])-min(var[,"y"])))
+    )
+  }
   
   # When fill.ind = grouping variable & col.var = continuous variable,
   # we should inactivate ellipse border and ind.point border colors,

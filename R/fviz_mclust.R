@@ -43,7 +43,9 @@ fviz_mclust <- function(object,
     geom_point(aes(size = uncertainty, color = cluster))+
     scale_size(range =c(0, 2))+
     labs(subtitle = "Uncertainty")+
-    guides(size = FALSE)
+    # FIX: ggplot2 3.3.4+ deprecation - use "none" instead of FALSE for guides()
+    # See: https://github.com/kassambara/factoextra/issues/179
+    guides(size = "none")
   else if(what == "BIC") p <- fviz_mclust_bic(object, ggtheme = theme_classic(),  ...)
   
   return(p)
@@ -57,6 +59,9 @@ fviz_mclust <- function(object,
 fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "model",
                             palette = NULL, legend = NULL,
                             main = "Model selection", xlab = "Number of components", ylab = "BIC", ...){
+  # Avoid R CMD check NOTE for non-standard evaluation
+  cluster <- NULL
+
   if(!inherits(object, "Mclust"))
     stop("An object of class Mclust is required.")
   
@@ -75,13 +80,20 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
   x <- x[, model.names, drop = FALSE]
   # Add number of clusters
   x <- cbind.data.frame(cluster = rownames(x), x, stringsAsFactors = TRUE)
-  x <- tidyr::gather_(x, key_col = "model", value_col = "BIC", 
-                       gather_cols = colnames(x)[-1])
+  # Convert wide to long format using base R (replaces tidyr::pivot_longer)
+  value_cols <- setdiff(colnames(x), "cluster")
+  x <- stats::reshape(x, direction = "long",
+                      varying = value_cols,
+                      v.names = "BIC",
+                      timevar = "model",
+                      times = value_cols,
+                      idvar = "cluster")
+  rownames(x) <- NULL
   x <- x[!is.na(x$BIC), , drop = FALSE]
   x$model <- factor(x$model, levels = dnx[[2]])
   x$cluster <- factor(x$cluster, levels = unique(x$cluster))
  
-  if(ggpubr:::.is_col_palette(palette)) palette <- ggpubr:::.get_pal(palette, k = length(model.names))
+  if(.is_color_palette(palette)) palette <- ggpubr::get_palette(palette, k = length(model.names))
   ggline.opts <- list(data = x, x ="cluster", y = "BIC", group = "model",
                       color = color, shape = shape, palette = palette,
                       main = main, xlab = xlab, ylab = ylab,...)

@@ -59,6 +59,7 @@ fviz_pca_biplot(
   palette = NULL,
   addEllipses = FALSE,
   title = "PCA - Biplot",
+  biplot.type = c("auto", "form", "covariance"),
   ...
 )
 }
@@ -127,13 +128,13 @@ controlled by their qualities ("cos2"), contributions ("contrib"),
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
 this, make sure that habillage ="none".}
 
-\item{select.ind, select.var}{a selection of individuals/variables to be 
-drawn. Allowed values are NULL or a list containing the arguments name, 
-cos2 or contrib: \itemize{ \item name: is a character vector containing 
-individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex: 
-0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, 
-ex: 5, then the top 5 individuals/variables with the highest cos2 are 
-drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5 
+\item{select.ind, select.var}{a selection of individuals/variables to be
+drawn. Allowed values are NULL or a list containing the arguments name,
+cos2 or contrib: \itemize{ \item name: is a character vector containing
+individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex:
+0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1,
+ex: 5, then the top 5 individuals/variables with the highest cos2 are
+drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5
 individuals/variables with the highest contrib are drawn }}
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
@@ -156,6 +157,17 @@ Default value is "none". Allowed values are the combination of c("ind",
 "ind.sup", "quali", "var", "quanti.sup").}
 
 \item{title}{the title of the graph}
+
+\item{biplot.type}{type of biplot scaling for fviz_pca_biplot(). Options are:
+\itemize{
+  \item "auto" (default): Uses range-based rescaling for visualization
+  \item "form": Form biplot (Gabriel, 1971). Distances between individuals
+    approximate Euclidean distances. Use when focus is on individual relationships.
+  \item "covariance": Covariance biplot (Gabriel, 1971). Angles between variable
+    vectors approximate correlations, lengths approximate standard deviations.
+    Use when focus is on variable relationships.
+}
+Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }
 \value{
 a ggplot
@@ -174,9 +186,9 @@ Principal component analysis (PCA) reduces the dimensionality of
   Graph of variables} \item{fviz_pca_biplot(): Biplot of individuals and 
   variables} \item{fviz_pca(): An alias of fviz_pca_biplot()} }
   
-  Note that, \code{fviz_pca_xxx()} functions are wrapper arround the core
-  function \code{\link{fviz}()}, whih is also a wrapper arround the
-  function \code{\link[ggpubr]{ggscatter}()} [in ggpubr]. Therfore, further arguments, to be
+  Note that, \code{fviz_pca_xxx()} functions are wrapper around the core
+  function \code{\link{fviz}()}, which is also a wrapper around the
+  function \code{\link[ggpubr]{ggscatter}()} [in ggpubr]. Therefore, further arguments, to be
   passed to the function \code{\link{fviz}()} and \code{\link[ggpubr]{ggscatter}()}, can be specified in
   \code{\link{fviz_pca_ind}()} and \code{\link{fviz_pca_var}()}.
 }
@@ -249,8 +261,16 @@ fviz_pca_biplot(res.pca, label = "var", habillage=iris$Species,
                addEllipses=TRUE, ellipse.level=0.95,
                ggtheme = theme_minimal())
 
+# Biplot types (Gabriel, 1971):
+# Form biplot - focus on individual distances
+fviz_pca_biplot(res.pca, biplot.type = "form",
+               label = "var", habillage = iris$Species)
+# Covariance biplot - focus on variable correlations
+fviz_pca_biplot(res.pca, biplot.type = "covariance",
+               label = "var", habillage = iris$Species)
+
  }
- 
+
 }
 \seealso{
 \code{\link{fviz_ca}}, \code{\link{fviz_mca}}

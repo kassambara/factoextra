@@ -142,8 +142,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   
   k <- .get_k(dend, k, h)
   if(!is.null(k)) {
-    if(ggpubr:::.is_col_palette(k_colors)) k_colors <- ggpubr:::.get_pal(k_colors, k = k)
-    else if(is.null(k_colors)) k_colors <- ggpubr:::.get_pal("default", k = k)
+    if(.is_color_palette(k_colors)) k_colors <- ggpubr::get_palette(k_colors, k = k)
+    else if(is.null(k_colors)) k_colors <- ggpubr::get_palette("default", k = k)
     dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = k_colors)
     if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = k_colors)
   }
@@ -190,7 +190,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if(missing(lower_rect)) lower_rect = -(labels_track_height+0.5)
   if(rect){
     p <- p + .rect_dendrogram(dend, k = k, palette = rect_border, rect_fill = rect_fill,
-                              rect_lty = rect_lty, size = lwd, 
+                              rect_lty = rect_lty, linewidth = lwd, 
                               lower_rect = lower_rect)
   }
   
@@ -265,8 +265,10 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if(!is.null(dendextend::labels_cex(dend))) font.label <- round(dendextend::labels_cex(dend)[1]*12)
   else font.label <- 12
   
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # See: https://github.com/kassambara/factoextra/issues/190
   p <- ggplot() + geom_segment(data = data.segments,
-                    aes_string(x = "x", y = "y", xend = "xend", yend = "yend"),
+                    aes(x = .data[["x"]], y = .data[["y"]], xend = .data[["xend"]], yend = .data[["yend"]]),
                     lineend = "square")
   if(is.null(label_cols)) label_cols <- "col"
   if(!labels) labels <- NULL
@@ -326,17 +328,26 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   
   p <- ggplot()
   if (segments) {
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for line geoms
+    # See: https://github.com/kassambara/factoextra/issues/190, #191
     p <- p + geom_segment(data = data$segments,
-      aes_string(x = "x", y = "y", xend = "xend", yend = "yend", 
-                 colour = "col", linetype = "lty", size = "lwd"), lineend = "square") +
-      guides(linetype = FALSE, col = FALSE) + #scale_colour_identity() + 
+      aes(x = .data[["x"]], y = .data[["y"]], xend = .data[["xend"]], yend = .data[["yend"]],
+                 colour = .data[["col"]], linetype = .data[["lty"]], linewidth = .data[["lwd"]]), lineend = "square") +
+      # FIX: ggplot2 3.3.4+ deprecation - use "none" instead of FALSE for guides()
+      # See: https://github.com/kassambara/factoextra/issues/179
+      guides(linetype = "none", col = "none") + #scale_colour_identity() +
       scale_size_identity() + scale_linetype_identity()
     if(is.null(palette)) p <- p + scale_colour_identity()
   }
   if (nodes) {
-    p <- p + geom_point(data = data$nodes, 
-      aes_string(x = "x", y = "y", colour = "col", shape = "pch", size = "cex")) + 
-      guides(shape = FALSE, col = FALSE, size = FALSE) + 
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # See: https://github.com/kassambara/factoextra/issues/190
+    p <- p + geom_point(data = data$nodes,
+      aes(x = .data[["x"]], y = .data[["y"]], colour = .data[["col"]], shape = .data[["pch"]], size = .data[["cex"]])) +
+      # FIX: ggplot2 3.3.4+ deprecation - use "none" instead of FALSE for guides()
+      # See: https://github.com/kassambara/factoextra/issues/179
+      guides(shape = "none", col = "none", size = "none") +
       scale_shape_identity()
   }
   if (labels) {
@@ -503,9 +514,12 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   df <- data.frame(xmin = unlist(xleft), ymin = unlist(ybottom), xmax = unlist(xright), ymax = unlist(ytop), stringsAsFactors = TRUE)
   
   color <- k_colors
-  if(color == "cluster") color <- "default"
-  if(ggpubr:::.is_col_palette(color)) color <- ggpubr:::.get_pal(color, k = k)
-  else if(length(color) > 1 & length(color) < k){
+  # FIX: R 4.2.0+ deprecation - condition has length > 1 warning
+  # Use length() == 1 check before scalar comparison
+  # See: https://github.com/kassambara/factoextra/issues/163, #180
+  if(length(color) == 1 && color == "cluster") color <- "default"
+  if(.is_color_palette(color)) color <- ggpubr::get_palette(color, k = k)
+  else if(length(color) > 1 && length(color) < k){
     color <- rep(color, k)[1:k]
   }
   if(rect_fill){

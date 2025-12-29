@@ -1,6 +1,7 @@
 #' @include eigenvalue.R fviz_add.R
 NULL
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @importFrom ggrepel geom_text_repel
 #' @importFrom grDevices chull
 #' @importFrom graphics plot
@@ -13,7 +14,30 @@ NULL
 #' @importFrom stats rnorm
 #' @importFrom stats runif
 #' @importFrom stats var
-#' 
+#'
+
+# Helper function to check if a palette name is a predefined color palette
+# Replaces ggpubr:::.is_col_palette to avoid using unexported functions
+# Known palette names from RColorBrewer, ggsci, and ggpubr defaults
+.is_color_palette <- function(pal) {
+ if (is.null(pal)) return(FALSE)
+ # RColorBrewer palettes
+ brewer_pals <- c("Blues", "BuGn", "BuPu", "GnBu", "Greens", "Greys", "Oranges",
+                  "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples", "RdPu", "Reds",
+                  "YlGn", "YlGnBu", "YlOrBr", "YlOrRd", "BrBG", "PiYG", "PRGn",
+                  "PuOr", "RdBu", "RdGy", "RdYlBu", "RdYlGn", "Spectral",
+                  "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1",
+                  "Set2", "Set3")
+ # ggsci palettes
+ ggsci_pals <- c("npg", "aaas", "nejm", "lancet", "jama", "jco", "ucscgb",
+                 "d3", "locuszoom", "igv", "uchicago", "startrek", "tron",
+                 "futurama", "rickandmorty", "simpsons")
+ # ggpubr built-in
+ other_pals <- c("default", "hue", "grey_pal", "gray_pal")
+ all_pals <- c(brewer_pals, ggsci_pals, other_pals)
+ return(length(pal) == 1 && pal[1] %in% all_pals)
+}
+
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
@@ -132,31 +156,39 @@ NULL
 }
 
 # get supplementary columns from ca output (ca package)
+#
+# OPTIMIZATION: Replaced t(apply()) with sweep() for column-wise multiplication
+# sweep() is much faster for element-wise row/column operations
 .get_ca_col_sup <- function(res.ca){
   # supplementary points
   index <- res.ca$colsup
-  cols <- NULL 
+  cols <- NULL
   if(length(index) > 0){
-    # principal coord = standard coord X sqrt(eig)
-    coord <- t(apply(res.ca$colcoord, 1, "*", res.ca$sv))
-    cos2 <- apply(coord^2, 2, "/", res.ca$coldist^2)
-    cols <- list(coord = coord[index, , drop = FALSE], 
-                cos2 = cos2[index, , drop = FALSE]) 
+    # OPTIMIZED: principal coord = standard coord X sqrt(eig)
+    # Using sweep() instead of t(apply()) - multiply each column by sv
+    coord <- sweep(res.ca$colcoord, 2, res.ca$sv, "*")
+    # OPTIMIZED: cos2 = coord^2 / dist^2 (divide each row by its distance squared)
+    cos2 <- coord^2 / res.ca$coldist^2
+    cols <- list(coord = coord[index, , drop = FALSE],
+                cos2 = cos2[index, , drop = FALSE])
   }
   cols
 }
 
 # get supplementary rows from ca output (ca package)
+#
+# OPTIMIZATION: Replaced t(apply()) with sweep() for column-wise multiplication
 .get_ca_row_sup <- function(res.ca){
   rows <- NULL
   # supplementary points
   index <- res.ca$rowsup
   if(length(index) > 0){
-    # principal coord = standard coord X sqrt(eig)
-    coord <- t(apply(res.ca$rowcoord, 1, "*", res.ca$sv))
-    cos2 <- apply(coord^2, 2, "/", res.ca$rowdist^2)
-    rows <- list(coord = coord[index, , drop = FALSE], 
-                                     cos2 = cos2[index, , drop = FALSE]) 
+    # OPTIMIZED: principal coord = standard coord X sqrt(eig)
+    coord <- sweep(res.ca$rowcoord, 2, res.ca$sv, "*")
+    # OPTIMIZED: cos2 = coord^2 / dist^2
+    cos2 <- coord^2 / res.ca$rowdist^2
+    rows <- list(coord = coord[index, , drop = FALSE],
+                                     cos2 = cos2[index, , drop = FALSE])
   }
   rows
 }
@@ -546,7 +578,10 @@ NULL
   d <- cbind.data.frame(name = factor(names(x), levels = names(x)), val = x, stringsAsFactors = TRUE)
   
   # plot
-  p <- ggplot(d, aes_string("name", "val")) + 
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # aes_string() was soft-deprecated in ggplot2 3.0.0
+  # See: https://github.com/kassambara/factoextra/issues/190
+  p <- ggplot(d, aes(x = .data[["name"]], y = .data[["val"]])) +
     geom_bar(stat="identity", fill=fill, color = color) +
     labs(title = title,  x =xlab, y = ylab)+
     theme(axis.text.x = element_text(angle=45), 
@@ -718,8 +753,16 @@ NULL
                                     "should be the same as the number of individuals.")
     ind <- cbind.data.frame(ind, grp, stringsAsFactors = TRUE)
     ind[, colnames(grp)] <- apply(ind[, colnames(grp)], 2, as.character)
-    ind <- tidyr::gather_(ind, key_col = "facet_vars", value_col = "Groups",
-                          gather_cols = colnames(grp))
+    # Convert wide to long format using base R (replaces tidyr::pivot_longer)
+    grp_cols <- colnames(grp)
+    id_cols <- setdiff(colnames(ind), grp_cols)
+    ind <- stats::reshape(ind, direction = "long",
+                          varying = grp_cols,
+                          v.names = "Groups",
+                          timevar = "facet_vars",
+                          times = grp_cols,
+                          idvar = id_cols)
+    rownames(ind) <- NULL
     ind$facet_vars <- as.factor(ind$facet_vars)
     ind$Groups <- as.factor(ind$Groups)
     name.quali <- "Groups"

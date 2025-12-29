@@ -134,73 +134,97 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   
   # Summarize the result
   res = NULL
-  if(element %in% c("mca.cor", "quanti.sup")) res <- elmt$coord
+  # Fix for PR #143: respect axes parameter for mca.cor and quanti.sup
+  if(element %in% c("mca.cor", "quanti.sup")) res <- elmt$coord[, axes, drop = FALSE]
   
   # 1.Extract the coordinates x, y and coord
+  # OPTIMIZATION: Replaced apply(dd^2, 1, sum) with rowSums(dd^2)
+  # rowSums() is significantly faster than apply() for row summation
   if("coord" %in% result){
     dd <- data.frame(elmt$coord[, axes, drop=FALSE], stringsAsFactors = TRUE)
-    coord <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+    coord <- rowSums(dd^2) # x^2 + y2 + ... (vectorized)
     res = cbind(dd, coord = coord)
   }
-  
+
   # 2. Extract the cos2
+  # OPTIMIZATION: Replaced apply() with rowSums() for multi-axis case
   if("cos2" %in% result){
-    cos2 <- elmt$cos2[, axes]
-    if(length(axes) > 1) cos2 <- apply(cos2, 1, sum, na.rm=TRUE)
+    cos2 <- elmt$cos2[, axes, drop = FALSE]
+    if(length(axes) > 1) {
+      cos2 <- rowSums(cos2, na.rm=TRUE)
+    } else {
+      # Single axis - convert to vector to ensure column name is 'cos2'
+      cos2 <- as.vector(cos2)
+    }
     res <- cbind(res, cos2 = cos2)
   }
-  
+
   # 3. Extract the contribution
+  # OPTIMIZATION: Replaced t(apply()) with sweep() and rowSums()
+  # sweep() for element-wise multiplication, rowSums() for summation
   if("contrib" %in% result){
-    contrib <- elmt$contrib[, axes]
+    contrib <- elmt$contrib[, axes, drop = FALSE]
     if(length(axes) > 1) {
       eig <- get_eigenvalue(X)[axes,1]
-      # Adjust variable contributions by the Dimension eigenvalues
-      contrib <- t(apply(contrib, 1, 
-                         function(var.contrib, pc.eig){var.contrib*pc.eig},
-                         eig))
-      contrib <-apply(contrib, 1, sum)/sum(eig)
+      # OPTIMIZED: Adjust variable contributions by the Dimension eigenvalues
+      # Using sweep() instead of t(apply()) - much faster
+      contrib <- sweep(contrib, 2, eig, "*")
+      contrib <- rowSums(contrib) / sum(eig)
+    } else {
+      # Single axis - convert to vector to ensure column name is 'contrib'
+      contrib <- as.vector(contrib)
     }
     res <- cbind(res, contrib = contrib)
   }
   
   # 4.Extract the coordinates x, y and coord partial - MFA
+  # OPTIMIZATION: Replaced lapply/do.call with vectorized string operations
+  # and apply() with rowSums()
   if("coord.partial" %in% result){
     dd <- data.frame(elmt$coord.partiel[, axes, drop=FALSE], stringsAsFactors = TRUE)
-    # groupnames 
-    groupnames <- lapply(rownames(dd), 
-                          function(x){
-                            # split at the first instance of "."
-                            str_split <- strsplit(sub(".", "\01", x, fixed = TRUE), "\01", fixed = TRUE)
-                            unlist(str_split)
-                          }
-                    )
-    groupnames <- as.data.frame(do.call(rbind, groupnames), stringsAsFactors = TRUE)
-    colnames(groupnames) <- c("name", "group.name")
-    coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+    # OPTIMIZED: Extract group names using vectorized sub() and strsplit()
+    rnames <- rownames(dd)
+    # Split at the first instance of "." - vectorized approach
+    split_pos <- regexpr(".", rnames, fixed = TRUE)
+    name_part <- substr(rnames, 1, split_pos - 1)
+    group_part <- substr(rnames, split_pos + 1, nchar(rnames))
+    groupnames <- data.frame(name = name_part, group.name = group_part, stringsAsFactors = TRUE)
+    # OPTIMIZED: Use rowSums instead of apply
+    coord.partial <- rowSums(dd^2)
     res.partial <- data.frame(groupnames, dd, coord.partial, stringsAsFactors = TRUE)
   }
   
   # 5. Extract the coordinates x, y and coord partial - HMFA
+  # OPTIMIZATION: Pre-allocate vectors and use rowSums instead of apply
   if("coord.node.partial" %in% result){
     # Select hierarchical node
     node <- as.data.frame(elmt[[node.level]], stringsAsFactors = TRUE)
-    name <- rep(rownames(node), length(group.names))
-    # Prepare data set
-    dim.group <- dim.names <- dd <- coord.partial <- dim.coord <- dim.name <- NULL
-    for(i in axes[1]:length(axes)) {
-      dim.group <- NULL
-      for(j in 1:length(group.names)) {
+    n_rows <- nrow(node)
+    n_groups <- length(group.names)
+    n_axes <- length(axes)
+
+    name <- rep(rownames(node), n_groups)
+
+    # OPTIMIZED: Pre-allocate matrix instead of growing with cbind
+    dd <- matrix(0, nrow = n_rows * n_groups, ncol = n_axes)
+    dim.group <- character(n_rows * n_groups)
+
+    # Fill the matrix
+    row_idx <- 1
+    for(j in seq_len(n_groups)) {
+      for(i in seq_along(axes)) {
         dim.name <- paste0("Dim", axes[i], ".", j)
-        dim.coord <- abind::abind(dim.coord, node[,dim.name])
-        dim.group <- c(dim.group, rep(group.names[j], length(node[,dim.name])))
+        dd[row_idx:(row_idx + n_rows - 1), i] <- node[, dim.name]
       }
-      dim.names <- c(dim.names, paste0("Dim", axes[i]))
-      dd <- cbind(dd, dim.coord)
-      dim.coord <- NULL
+      dim.group[row_idx:(row_idx + n_rows - 1)] <- group.names[j]
+      row_idx <- row_idx + n_rows
     }
-    colnames(dd) <- dim.names
-    coord.partial <- apply(dd^2, 1, sum) # x^2 + y2 + ...
+
+    colnames(dd) <- paste0("Dim", axes)
+    dd <- as.data.frame(dd, stringsAsFactors = TRUE)
+
+    # OPTIMIZED: Use rowSums instead of apply
+    coord.partial <- rowSums(dd^2)
     res.partial <- data.frame(group.name = dim.group, name, dd, coord.partial, stringsAsFactors = TRUE)
   }
   

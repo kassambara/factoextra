@@ -26,6 +26,10 @@ fviz_eig(
   xlab = NULL,
   ylab = NULL,
   ggtheme = theme_minimal(),
+  parallel = FALSE,
+  parallel.color = "red",
+  parallel.lty = "dashed",
+  parallel.iter = 100,
   ...
 )
 
@@ -51,7 +55,7 @@ both types.}
 
 \item{ncp}{a numeric value specifying the number of dimensions to be shown.}
 
-\item{addlabels}{logical value. If TRUE, labels are added at the top of bars 
+\item{addlabels}{logical value. If TRUE, labels are added at the top of bars
 or points showing the information retained by each dimension.}
 
 \item{hjust}{horizontal adjustment of the labels.}
@@ -61,6 +65,17 @@ or points showing the information retained by each dimension.}
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{parallel}{logical value. If TRUE, adds a parallel analysis threshold line
+(Horn's method) to help determine the number of components to retain. Components
+with eigenvalues above this line are considered significant. Only works when
+choice = "eigenvalue" and X is a prcomp or princomp object. Default is FALSE.}
+
+\item{parallel.color}{color of the parallel analysis threshold line. Default is "red".}
+
+\item{parallel.lty}{line type for the parallel analysis line. Default is "dashed".}
+
+\item{parallel.iter}{number of iterations for parallel analysis simulation. Default is 100.}
 
 \item{...}{optional arguments to be passed to the function \link[ggpubr]{ggpar}.}
 }
@@ -101,7 +116,12 @@ fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
 
 # Use only bar  or line plot: geom = "bar" or geom = "line"
 fviz_eig(res.pca, geom="line")
- 
+
+# Parallel analysis (Horn's method) to determine number of components
+# Components with eigenvalues above the red line are significant
+fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
+         addlabels = TRUE, parallel.color = "red")
+
 \dontrun{         
 # Correspondence Analysis
 # +++++++++++++++++++++++++++++++++

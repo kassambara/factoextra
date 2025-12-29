@@ -201,7 +201,7 @@ fviz_ca_col <-function(X,  axes = c(1,2), shape.col = 17,
         color = col.col, alpha = alpha.col,
         pointshape = shape.col, select = select.col, 
         map = map, repel = repel, 
-        colcol.sup = col.col.sup, shape.sup = shape.col, ...)
+        col.col.sup = col.col.sup, shape.sup = shape.col, ...)
   
   
 }

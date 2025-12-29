@@ -1,36 +1,43 @@
 Package: factoextra
 Type: Package
 Title: Extract and Visualize the Results of Multivariate Data Analyses
-Version: 1.0.7.999
-Date: 2020-04-01
+Version: 1.0.8
+Date: 2025-12-19
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
-    person("Fabian", "Mundt", role = c("aut"), email = "f.mundt@inventionate.de")
+    person("Fabian", "Mundt", role = c("aut"), email = "f.mundt@inventionate.de"),
+    person("Laszlo", "Erdey", role = c("ctb"), email = "erdey.laszlo@econ.unideb.hu",
+           comment = c(ORCID = "0000-0002-6781-4303",
+                       affiliation = "Faculty of Economics and Business, University of Debrecen, Hungary",
+                       contribution = "ggplot2 3.4.0+, tidyr, and R 4.0+ compatibility fixes"))
     )
+Maintainer: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
 Description: Provides some easy-to-use functions to extract and visualize the
     output of multivariate data analyses, including 'PCA' (Principal Component
     Analysis), 'CA' (Correspondence Analysis), 'MCA' (Multiple Correspondence
-    Analysis), 'FAMD' (Factor Analysis of Mixed Data), 'MFA' (Multiple Factor Analysis) and 'HMFA' (Hierarchical Multiple
-    Factor Analysis) functions from different R packages. It contains also functions
-    for simplifying some clustering analysis steps and provides 'ggplot2' - based
-    elegant data visualization.
+    Analysis), 'FAMD' (Factor Analysis of Mixed Data), 'MFA' (Multiple Factor
+    Analysis) and 'HMFA' (Hierarchical Multiple Factor Analysis) functions from
+    different R packages. It contains also functions for simplifying some
+    clustering analysis steps and provides 'ggplot2'-based elegant data
+    visualization.
 License: GPL-2
 LazyData: true
+LazyDataCompression: xz
 Encoding: UTF-8
 Depends:
-    R (>= 3.1.2),
-    ggplot2 (>= 2.2.0)
+    R (>= 4.1.0),
+    ggplot2 (>= 3.5.2)
 Imports:
-    abind,
     cluster,
     dendextend,
     FactoMineR,
-    ggpubr(>= 0.1.5),
+    ggpubr (>= 0.6.3),
     grid,
+    rlang,
     stats,
-    reshape2,
-    ggrepel,
-    tidyr
+    ggrepel
+Remotes:
+    erdeyl/ggpubr-modern
 Suggests:
     ade4,
     ca,
@@ -38,9 +45,10 @@ Suggests:
     MASS,
     knitr,
     mclust
-URL: http://www.sthda.com/english/rpkgs/factoextra
+URL: https://github.com/kassambara/factoextra,
+    https://rpkgs.datanovia.com/factoextra/index.html
 BugReports: https://github.com/kassambara/factoextra/issues
-Collate: 
+Collate:
     'cluster_utilities.R'
     'decathlon2.R'
     'print.factoextra.R'
@@ -79,4 +87,4 @@ Collate:
     'multishapes.R'
     'poison.R'
     'zzz.R'
-RoxygenNote: 7.1.0
+RoxygenNote: 7.3.3

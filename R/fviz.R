@@ -38,8 +38,8 @@ NULL
 #'  \code{\link[ggplot2]{stat_ellipse}()} including one of \code{c("t", "norm", 
 #'  "euclid")} for plotting concentration ellipses.
 #'  
-#'  \itemize{ \item \code{"convex"}: plot convex hull of a set o points. \item 
-#'  \code{"confidence"}: plot confidence ellipses arround group mean points as
+#'  \itemize{ \item \code{"convex"}: plot convex hull of a set of points. \item 
+#'  \code{"confidence"}: plot confidence ellipses around group mean points as
 #'  \code{\link[FactoMineR]{coord.ellipse}()}[in FactoMineR]. \item \code{"t"}:
 #'  assumes a multivariate t-distribution. \item \code{"norm"}: assumes a
 #'  multivariate normal distribution. \item \code{"euclid"}: draws a circle with
@@ -241,7 +241,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   
   p <- ggplot() 
   if(hide[[element]]) {
-    if(is.null(ggp)) p <-ggplot()+geom_blank(data = df, aes_string("x","y"))
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # See: https://github.com/kassambara/factoextra/issues/190
+    if(is.null(ggp)) p <-ggplot()+geom_blank(data = df, aes(x = .data[["x"]], y = .data[["y"]]))
     else p <- ggp
   }
   else p <- ggpubr::ggscatter(data = df, x = "x", y = "y",
@@ -260,8 +262,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
-  if("arrow" %in% geom & !hide[[element]]) 
-    p <- p + .arrows(data = df, color = color, alpha = alpha, size = arrowsize)
+  if("arrow" %in% geom & !hide[[element]])
+    p <- p + .arrows(data = df, color = color, alpha = alpha, linewidth = arrowsize)
   # Add correlation circle if PCA & element = "var" & scale = TRUE
   if(facto.class == "PCA" & element == "var"){
     if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
@@ -356,21 +358,25 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
   circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta), stringsAsFactors = TRUE)
   p + 
-    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color,
-              size = size) +
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for line geoms
+    # See: https://github.com/kassambara/factoextra/issues/190, #191
+    geom_path(mapping = aes(x = .data[["xcircle"]], y = .data[["ycircle"]]), data = circle, color = color,
+              linewidth = size) +
     coord_fixed()
   
 }
 
 # Add arrow to the plot
-.arrows <- function(data, color = "black", alpha = 1, size =0.5,
+# FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for geom_segment
+.arrows <- function(data, color = "black", alpha = 1, linewidth = 0.5,
                     origin = 0, xend = "x", yend = "y"){
   origin <- rep(origin, nrow(data))
   dd <- cbind.data.frame(data, xstart = origin, ystart = origin, stringsAsFactors = TRUE)
-  ggpubr::geom_exec(geom_segment, data = dd, 
+  ggpubr::geom_exec(geom_segment, data = dd,
                     x = "xstart", y = "ystart", xend = xend, yend = yend,
                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
-                    color = color, alpha = alpha, size = size)
+                    color = color, alpha = alpha, linewidth = linewidth)
 }
 
 

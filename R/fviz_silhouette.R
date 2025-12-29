@@ -93,8 +93,10 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   if(!is.null(rownames(df))) df$name <- factor(rownames(df), levels = rownames(df))
   else df$name <- as.factor(1:nrow(df))
   df$cluster <- as.factor(df$cluster)
-  mapping <- aes_string(x = "name", y = "sil_width", 
-                        color = "cluster", fill = "cluster")
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # See: https://github.com/kassambara/factoextra/issues/190
+  mapping <- aes(x = .data[["name"]], y = .data[["sil_width"]],
+                        color = .data[["cluster"]], fill = .data[["cluster"]])
   p <- ggplot(df, mapping) +
     geom_bar(stat = "identity") +
     labs(y = "Silhouette width Si", x = "",

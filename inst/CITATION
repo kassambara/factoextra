@@ -1,0 +1,18 @@
+citHeader("To cite factoextra in publications use:")
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "factoextra: Extract and Visualize the Results of Multivariate Data Analyses",
+  author   = c(person("Alboukadel", "Kassambara"),
+               person("Fabian", "Mundt")),
+  year     = "2020",
+  note     = "R package version 1.0.8. With contributions from Laszlo Erdey (Faculty of Economics and Business, University of Debrecen, Hungary)",
+  url      = "https://CRAN.R-project.org/package=factoextra",
+  textVersion = paste(
+    "Kassambara A, Mundt F (2020).",
+    "factoextra: Extract and Visualize the Results of Multivariate Data Analyses.",
+    "R package version 1.0.8.",
+    "With contributions from Laszlo Erdey.",
+    "https://CRAN.R-project.org/package=factoextra."
+  )
+)

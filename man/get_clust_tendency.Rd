@@ -50,9 +50,18 @@ Before applying cluster methods, the first step is to assess
    website: Assessing clustering tendency}.
 }
 \details{
-\strong{Hopkins statistic}: If the value of Hopkins statistic is close to 
+\strong{Hopkins statistic}: If the value of Hopkins statistic is close to
 1 (far above 0.5), then we can conclude that the dataset is significantly
-clusterable.
+clusterable. The statistic is calculated using the correct formula from
+Cross and Jain (1982) with exponent d=D where D is the dimensionality
+(number of columns) of the data. Under the null hypothesis of spatial
+randomness, the Hopkins statistic follows a Beta(n, n) distribution.
+
+\strong{Note on interpretation}: This function returns the Hopkins statistic H
+where values close to 1 indicate clusterable data. Some other packages (e.g.,
+\code{performance::check_clusterstructure}) return 1-H, where values close to
+0 indicate clusterability. Always check the documentation of the specific
+implementation you are using.
 
 \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
 clustering tendency in a visual form by counting the number of square shaped
