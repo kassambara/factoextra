@@ -35,8 +35,6 @@
 #' # Remove without confirmation
 #' clean_lock_files(ask = FALSE)
 #' }
-#'
-#' @export
 clean_lock_files <- function(package = "factoextra", lib = .libPaths()[1], ask = TRUE) {
 
   if (package == "all") {

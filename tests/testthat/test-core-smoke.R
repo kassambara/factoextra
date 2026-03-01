@@ -95,3 +95,26 @@ test_that("FactoMineR category mapping helpers map legacy labels", {
     "unknown_level"
   )
 })
+
+test_that(".add_ind_groups handles multi-column habillage reshape path", {
+  skip_if_not_installed("FactoMineR")
+
+  pca <- FactoMineR::PCA(iris[, 1:4], graph = FALSE)
+  ind <- facto_summarize(pca, element = "ind", axes = 1:2)
+  grp <- data.frame(
+    species = iris$Species,
+    width_band = ifelse(
+      iris$Sepal.Width > stats::median(iris$Sepal.Width),
+      "high", "low"
+    ),
+    stringsAsFactors = FALSE
+  )
+
+  res <- factoextra:::.add_ind_groups(pca, ind, grp)
+  expect_true(is.list(res))
+  expect_true(res$is_multiple_habillage)
+  expect_identical(res$name.quali, "Groups")
+  expect_true(all(c("facet_vars", "Groups") %in% colnames(res$ind)))
+  expect_equal(nrow(res$ind), nrow(ind) * ncol(grp))
+  expect_setequal(levels(res$ind$facet_vars), colnames(grp))
+})

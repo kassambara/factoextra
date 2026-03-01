@@ -141,6 +141,20 @@ test_that("internal jitter and multishape helpers preserve RNG state", {
   expect_true(nrow(generated) > 0)
 })
 
+test_that(".with_preserved_seed evaluates correctly through wrapper frames", {
+  wrapper <- function(seed, expr) {
+    inner <- function(code) factoextra:::.with_preserved_seed(seed, code)
+    inner(expr)
+  }
+
+  set.seed(9090)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  out <- wrapper(123, stats::runif(5))
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_length(out, 5)
+})
+
 test_that("phylogenic dendrogram layout does not leak RNG state", {
   skip_if_not_installed("igraph")
   set.seed(4040)

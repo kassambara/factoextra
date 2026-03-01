@@ -63,7 +63,7 @@ NULL
     }
   }, add = TRUE)
   set.seed(seed)
-  eval(substitute(expr), envir = parent.frame())
+  force(expr)
 }
 
 # Check and get the class of the output of a factor analysis

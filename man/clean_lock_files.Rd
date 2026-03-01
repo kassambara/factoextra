@@ -35,5 +35,4 @@ clean_lock_files("all")
 # Remove without confirmation
 clean_lock_files(ask = FALSE)
 }
-
 }
