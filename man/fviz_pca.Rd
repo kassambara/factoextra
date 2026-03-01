@@ -163,9 +163,9 @@ Default value is "none". Allowed values are the combination of c("ind",
 \itemize{
   \item "auto" (default): Uses range-based rescaling for visualization
   \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
-  readability of individual relationships.
+    readability of individual relationships.
   \item "covariance": Covariance-oriented scaling (Gabriel-style).
-  Prioritizes readability of variable relationships.
+    Prioritizes readability of variable relationships.
 }
 Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }

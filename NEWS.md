@@ -1,4 +1,4 @@
-# factoextra 1.2.0.6
+# factoextra 1.2.0
 
 ## Maintenance and Compatibility
 
