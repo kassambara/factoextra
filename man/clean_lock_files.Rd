@@ -36,3 +36,4 @@ clean_lock_files("all")
 clean_lock_files(ask = FALSE)
 }
 }
+\keyword{internal}

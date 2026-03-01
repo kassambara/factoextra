@@ -149,8 +149,14 @@ test_that(".with_preserved_seed evaluates correctly through wrapper frames", {
 
   set.seed(9090)
   seed_before <- get(".Random.seed", envir = .GlobalEnv)
+
+  set.seed(123)
+  expected <- stats::runif(5)
+  assign(".Random.seed", seed_before, envir = .GlobalEnv)
+
   out <- wrapper(123, stats::runif(5))
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_equal(out, expected)
   expect_identical(seed_after, seed_before)
   expect_length(out, 5)
 })

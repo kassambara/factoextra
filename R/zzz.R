@@ -23,6 +23,7 @@
 #' @param ask Logical. If TRUE (default), asks for confirmation before removing.
 #'
 #' @return Invisibly returns TRUE if files were removed, FALSE otherwise.
+#' @keywords internal
 #'
 #' @examples
 #' \dontrun{
