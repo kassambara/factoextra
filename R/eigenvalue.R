@@ -37,6 +37,8 @@
 #'@param parallel.color color of the parallel analysis threshold line. Default is "red".
 #'@param parallel.lty line type for the parallel analysis line. Default is "dashed".
 #'@param parallel.iter number of iterations for parallel analysis simulation. Default is 100.
+#'@param parallel.seed integer seed for reproducible parallel analysis simulation.
+#'  If NULL (default), the current RNG stream is used.
 #' @inheritParams ggpubr::ggpar
 #'@param ... optional arguments to be passed to the function \link[ggpubr]{ggpar}.
 #'  
@@ -70,7 +72,7 @@
 #' # Parallel analysis (Horn's method) to determine number of components
 #' # Components with eigenvalues above the red line are significant
 #' fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
-#'          addlabels = TRUE, parallel.color = "red")
+#'          addlabels = TRUE, parallel.color = "red", parallel.seed = 123)
 #'
 #' \dontrun{         
 #' # Correspondence Analysis
@@ -143,7 +145,8 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                    main = NULL, xlab = NULL, ylab = NULL,
                   ggtheme = theme_minimal(),
                   parallel = FALSE, parallel.color = "red",
-                  parallel.lty = "dashed", parallel.iter = 100, ...)
+                  parallel.lty = "dashed", parallel.iter = 100,
+                  parallel.seed = NULL, ...)
 {
   
   eig <- get_eigenvalue(X)
@@ -183,20 +186,37 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
     geom_point(shape=19, color=linecolor)
   if(addlabels) p <- p + geom_text(label = text_labels, vjust=-0.4, hjust = hjust)
 
+  if(!is.null(parallel.seed)){
+    if(!is.numeric(parallel.seed) || length(parallel.seed) != 1L || is.na(parallel.seed))
+      stop("parallel.seed must be NULL or a single numeric value.")
+  }
+
   # Add parallel analysis line (Horn's method) if requested
   if(parallel && choice == "eigenvalue") {
+    compute_parallel_threshold <- function(n_obs, n_var, fit_fn){
+      sim_eigs <- matrix(NA_real_, nrow = parallel.iter, ncol = n_var)
+      for(i in seq_len(parallel.iter)) {
+        random_data <- matrix(stats::rnorm(n_obs * n_var), nrow = n_obs, ncol = n_var)
+        sim_eigs[i, ] <- fit_fn(random_data)
+      }
+      apply(sim_eigs, 2, function(x) stats::quantile(x, 0.95))
+    }
+
     # Parallel analysis requires the original data, available from prcomp/princomp
     if(inherits(X, "prcomp") && !is.null(X$x)) {
       n_obs <- nrow(X$x)
       n_var <- ncol(X$x)
-      # Simulate random data eigenvalues
-      sim_eigs <- matrix(NA, nrow = parallel.iter, ncol = n_var)
-      for(i in seq_len(parallel.iter)) {
-        random_data <- matrix(stats::rnorm(n_obs * n_var), nrow = n_obs, ncol = n_var)
-        sim_eigs[i, ] <- stats::prcomp(random_data, scale. = TRUE)$sdev^2
+      if(is.null(parallel.seed)) {
+        parallel_threshold <- compute_parallel_threshold(
+          n_obs, n_var, fit_fn = function(random_data) stats::prcomp(random_data, scale. = TRUE)$sdev^2
+        )
+      } else {
+        parallel_threshold <- .with_preserved_seed(parallel.seed, {
+          compute_parallel_threshold(
+            n_obs, n_var, fit_fn = function(random_data) stats::prcomp(random_data, scale. = TRUE)$sdev^2
+          )
+        })
       }
-      # Use 95th percentile as threshold (more conservative than mean)
-      parallel_threshold <- apply(sim_eigs, 2, function(x) stats::quantile(x, 0.95))
       parallel_threshold <- parallel_threshold[seq_len(min(ncp, length(parallel_threshold)))]
       df.parallel <- data.frame(dim = factor(seq_along(parallel_threshold)),
                                  threshold = parallel_threshold)
@@ -207,12 +227,17 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
     } else if(inherits(X, "princomp") && !is.null(X$scores)) {
       n_obs <- nrow(X$scores)
       n_var <- ncol(X$scores)
-      sim_eigs <- matrix(NA, nrow = parallel.iter, ncol = n_var)
-      for(i in seq_len(parallel.iter)) {
-        random_data <- matrix(stats::rnorm(n_obs * n_var), nrow = n_obs, ncol = n_var)
-        sim_eigs[i, ] <- stats::princomp(random_data, cor = TRUE)$sdev^2
+      if(is.null(parallel.seed)) {
+        parallel_threshold <- compute_parallel_threshold(
+          n_obs, n_var, fit_fn = function(random_data) stats::princomp(random_data, cor = TRUE)$sdev^2
+        )
+      } else {
+        parallel_threshold <- .with_preserved_seed(parallel.seed, {
+          compute_parallel_threshold(
+            n_obs, n_var, fit_fn = function(random_data) stats::princomp(random_data, cor = TRUE)$sdev^2
+          )
+        })
       }
-      parallel_threshold <- apply(sim_eigs, 2, function(x) stats::quantile(x, 0.95))
       parallel_threshold <- parallel_threshold[seq_len(min(ncp, length(parallel_threshold)))]
       df.parallel <- data.frame(dim = factor(seq_along(parallel_threshold)),
                                  threshold = parallel_threshold)

@@ -50,7 +50,7 @@ NULL
 #'  points, respectively.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
-#'  compatibility and is silently converted to \code{repel = TRUE}.
+#'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param select.col,select.row a selection of columns/rows to be drawn. Allowed 
 #'  values are NULL or a list containing the arguments name, cos2 or contrib: 
 #'  \itemize{ \item name is a character vector containing column/row names to be

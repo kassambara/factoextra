@@ -75,7 +75,7 @@ NULL
 #' @export
 get_clust_tendency <- function(data, n, graph = TRUE,
                                gradient = list(low = "red", mid = "white", high = "blue"),
-                               seed = 123) 
+                               seed = NULL) 
 {
   if (is.data.frame(data)) 
     data <- as.matrix(data)
@@ -106,14 +106,15 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     set.seed(seed)
   }
 
-  if (isTRUE(getOption("factoextra.warn_hopkins", TRUE))) {
+  if (isTRUE(getOption("factoextra.warn_hopkins", TRUE)) &&
+      !isTRUE(.factoextra_state$hopkins_warned)) {
     warning(
       "Hopkins statistic uses the corrected formula (Wright 2022); results ",
       "differ from legacy factoextra. Set options(factoextra.warn_hopkins = FALSE) ",
       "to silence this warning.",
       call. = FALSE
     )
-    options(factoextra.warn_hopkins = FALSE)
+    .factoextra_state$hopkins_warned <- TRUE
   }
   plot <- NULL
   if(graph){

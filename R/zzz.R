@@ -1,17 +1,12 @@
+.factoextra_state <- new.env(parent = emptyenv())
+
+.onLoad <- function(libname, pkgname) {
+  .factoextra_state$hopkins_warned <- FALSE
+}
+
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("Welcome to factoextra! ggpubr and FactoMineR have been loaded.")
   packageStartupMessage("Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa")
-
-  # Check for stale lock files and warn user
-  lib_path <- .libPaths()[1]
-  lock_dir <- file.path(lib_path, paste0("00LOCK-", pkgname))
-
-  if (dir.exists(lock_dir)) {
-    packageStartupMessage(
-      "Note: A stale lock directory was detected: ", lock_dir, "\n",
-      "This may cause installation issues. Run factoextra::clean_lock_files() to remove it."
-    )
-  }
 }
 
 #' Clean up stale package lock files

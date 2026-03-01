@@ -81,11 +81,10 @@
 #' @param biplot.type type of biplot scaling for fviz_pca_biplot(). Options are:
 #'   \itemize{
 #'     \item "auto" (default): Uses range-based rescaling for visualization
-#'     \item "form": Form biplot (Gabriel, 1971). Distances between individuals
-#'       approximate Euclidean distances. Use when focus is on individual relationships.
-#'     \item "covariance": Covariance biplot (Gabriel, 1971). Angles between variable
-#'       vectors approximate correlations, lengths approximate standard deviations.
-#'       Use when focus is on variable relationships.
+#'     \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
+#'       readability of individual relationships.
+#'     \item "covariance": Covariance-oriented scaling (Gabriel-style).
+#'       Prioritizes readability of variable relationships.
 #'   }
 #'   Note: "form" and "covariance" scaling requires prcomp or princomp objects.
 #' @inheritParams ggpubr::ggpar
@@ -168,7 +167,7 @@
 #'                addEllipses=TRUE, ellipse.level=0.95,
 #'                ggtheme = theme_minimal())
 #'
-#' # Biplot types (Gabriel, 1971):
+#' # Biplot scaling modes:
 #' # Form biplot - focus on individual distances
 #' fviz_pca_biplot(res.pca, biplot.type = "form",
 #'                label = "var", habillage = iris$Species)
@@ -257,9 +256,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   # Rescale variable coordinates based on biplot.type
 
-  # Gabriel (1971) biplot scaling: observations scaled by lambda^(1-scale),
-
-  # variables scaled by lambda^scale, where scale=0 is form biplot, scale=1 is covariance
+  # Heuristic Gabriel-style scaling choices for improved readability.
   if(biplot.type == "form" || biplot.type == "covariance") {
     # Get eigenvalues (singular values squared for scaling)
     if(inherits(X, "prcomp")) {

@@ -978,6 +978,14 @@ NULL
 #'   qualitative categories when available.
 #' @return A data.frame with current labels, variable names, levels, and legacy
 #'   naming patterns.
+#' @examples
+#' \donttest{
+#' if (requireNamespace("FactoMineR", quietly = TRUE)) {
+#'   data(poison)
+#'   res.mca <- FactoMineR::MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
+#'   head(factominer_category_map(res.mca, element = "var"))
+#' }
+#' }
 #' @export
 factominer_category_map <- function(X, element = c("quali.var", "quali.sup", "var")){
   element <- match.arg(element)
@@ -1072,6 +1080,15 @@ factominer_category_map <- function(X, element = c("quali.var", "quali.sup", "va
 #'   qualitative categories when available.
 #' @param quiet if TRUE, suppress warnings.
 #' @return Character vector of mapped labels.
+#' @examples
+#' \donttest{
+#' if (requireNamespace("FactoMineR", quietly = TRUE)) {
+#'   data(poison)
+#'   res.mca <- FactoMineR::MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
+#'   map <- factominer_category_map(res.mca, element = "var")
+#'   map_factominer_legacy_names(res.mca, map$legacy_underscore[1:3], element = "var")
+#' }
+#' }
 #' @export
 map_factominer_legacy_names <- function(X, names, element = c("quali.var", "quali.sup", "var"), quiet = FALSE){
   element <- match.arg(element)

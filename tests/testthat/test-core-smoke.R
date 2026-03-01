@@ -26,3 +26,52 @@ test_that("CA extractors work with FactoMineR outputs", {
   expect_true(all(c("coord", "cos2", "contrib") %in% names(cols)))
   expect_true(all(c("coord", "cos2", "contrib") %in% names(rows)))
 })
+
+test_that("facto_summarize respects axes for MCA supplementary elements", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(123)
+  mca_df <- data.frame(
+    a = factor(sample(letters[1:3], 80, TRUE)),
+    b = factor(sample(LETTERS[1:4], 80, TRUE)),
+    c = factor(sample(c("x", "y", "z"), 80, TRUE)),
+    sup_q = factor(sample(c("q1", "q2"), 80, TRUE)),
+    sup_n = rnorm(80)
+  )
+  mca <- FactoMineR::MCA(mca_df, quali.sup = 4, quanti.sup = 5, graph = FALSE)
+
+  mca12 <- facto_summarize(mca, element = "mca.cor", axes = 1:2)
+  mca23 <- facto_summarize(mca, element = "mca.cor", axes = 2:3)
+  expect_equal(ncol(mca12), 3)
+  expect_equal(ncol(mca23), 3)
+  expect_false(isTRUE(all.equal(mca12[, 2:3], mca23[, 2:3])))
+
+  q12 <- facto_summarize(mca, element = "quanti.sup", axes = 1:2)
+  q23 <- facto_summarize(mca, element = "quanti.sup", axes = 2:3)
+  expect_equal(ncol(q12), 3)
+  expect_equal(ncol(q23), 3)
+  expect_false(isTRUE(all.equal(q12[, 2:3], q23[, 2:3])))
+})
+
+test_that("FactoMineR category mapping helpers map legacy labels", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(456)
+  mca_df <- data.frame(
+    color = factor(sample(c("red", "blue", "green"), 100, TRUE)),
+    shape = factor(sample(c("round", "square"), 100, TRUE)),
+    size = factor(sample(c("small", "medium", "large"), 100, TRUE))
+  )
+  mca <- FactoMineR::MCA(mca_df, graph = FALSE)
+  map <- factominer_category_map(mca, element = "var")
+  expect_s3_class(map, "data.frame")
+  expect_true(all(c("current", "legacy_underscore") %in% colnames(map)))
+
+  candidates <- map$legacy_underscore
+  candidates <- candidates[!is.na(candidates) & nzchar(candidates)]
+  uniq <- candidates[!(duplicated(candidates) | duplicated(candidates, fromLast = TRUE))]
+  skip_if(length(uniq) < 1)
+
+  mapped <- map_factominer_legacy_names(mca, uniq[1], element = "var", quiet = TRUE)
+  expect_true(mapped %in% map$current)
+})

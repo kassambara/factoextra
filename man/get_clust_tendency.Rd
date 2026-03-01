@@ -9,7 +9,7 @@ get_clust_tendency(
   n,
   graph = TRUE,
   gradient = list(low = "red", mid = "white", high = "blue"),
-  seed = 123
+  seed = NULL
 )
 }
 \arguments{

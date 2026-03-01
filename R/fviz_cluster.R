@@ -25,7 +25,7 @@
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
-#'  compatibility and is silently converted to \code{repel = TRUE}.
+#'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
 #'@param ellipse logical value; if TRUE, draws outline around points of each
 #'  cluster
@@ -120,21 +120,36 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          outlier.pointsize = pointsize, outlier.labelsize = labelsize,
                          ggtheme = theme_grey(), ...){
   
-  # Backward compatibility: deprecated arguments silently converted
+  # Backward compatibility: deprecated arguments converted with warning
   extra_args <- list(...)
   .check_axes(axes, .length = 2)
 
   # jitter -> repel (silent conversion)
   if (!is.null(extra_args$jitter)) {
+    .facto_dep("jitter", "repel = TRUE", NULL)
     if(!is.null(extra_args$jitter$width) || !is.null(extra_args$jitter$height) ) repel = TRUE
   }
 
   # frame -> ellipse (silent conversion)
-  if(!is.null(extra_args$frame)) ellipse <- extra_args$frame
-  if(!is.null(extra_args$frame.type)) ellipse.type <- extra_args$frame.type
-  if(!is.null(extra_args$frame.level)) ellipse.level <- extra_args$frame.level
-  if(!is.null(extra_args$frame.alpha)) ellipse.alpha <- extra_args$frame.alpha
+  if(!is.null(extra_args$frame)) {
+    .facto_dep("frame", "ellipse", NULL)
+    ellipse <- extra_args$frame
+  }
+  if(!is.null(extra_args$frame.type)) {
+    .facto_dep("frame.type", "ellipse.type", NULL)
+    ellipse.type <- extra_args$frame.type
+  }
+  if(!is.null(extra_args$frame.level)) {
+    .facto_dep("frame.level", "ellipse.level", NULL)
+    ellipse.level <- extra_args$frame.level
+  }
+  if(!is.null(extra_args$frame.alpha)) {
+    .facto_dep("frame.alpha", "ellipse.alpha", NULL)
+    ellipse.alpha <- extra_args$frame.alpha
+  }
   if(!is.null(extra_args$title)) main <- extra_args$title
+  extra_args <- extra_args[setdiff(names(extra_args),
+                                   c("jitter", "frame", "frame.type", "frame.level", "frame.alpha", "title"))]
   
   
   # object from cluster package
@@ -257,17 +272,22 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   if(inherits(object, "partition") && missing(show.clust.cent))
     show.clust.cent <- FALSE # hide mean point for PAM, CLARA
   
-  p <- ggpubr::ggscatter(plot.data, "x", "y",
-                         color="cluster", shape = shape, size = pointsize,
-                         point = "point" %in% geom, 
-                         label = lab,
-                         font.label = labelsize, repel = repel,
-                         mean.point = show.clust.cent, 
-                         ellipse = ellipse, ellipse.type = ellipse.type,
-                         ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
-                         main = main, xlab = xlab, ylab = ylab,
-                         ggtheme = ggtheme, ...
-                         )
+  ggscatter_args <- c(
+    list(
+      data = plot.data, x = "x", y = "y",
+      color = "cluster", shape = shape, size = pointsize,
+      point = "point" %in% geom,
+      label = lab,
+      font.label = labelsize, repel = repel,
+      mean.point = show.clust.cent,
+      ellipse = ellipse, ellipse.type = ellipse.type,
+      ellipse.alpha = ellipse.alpha, ellipse.level = ellipse.level,
+      main = main, xlab = xlab, ylab = ylab,
+      ggtheme = ggtheme
+    ),
+    extra_args
+  )
+  p <- do.call(ggpubr::ggscatter, ggscatter_args)
   
   # Add outliers (can exist only in dbscan)
   if(is_outliers)

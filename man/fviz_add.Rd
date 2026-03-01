@@ -44,7 +44,7 @@ Allowed values are "point" or "arrow" or "text"}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
 labels or not. The old \code{jitter} argument is kept for backward
-compatibility and is silently converted to \code{repel = TRUE}.}
+compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{font.family}{character vector specifying font family.}
 

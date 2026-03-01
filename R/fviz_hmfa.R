@@ -58,7 +58,7 @@ NULL
 #'@param col.var.sup color for supplementary variables.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
-#'  compatibility and is silently converted to \code{repel = TRUE}.
+#'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@return a ggplot
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}

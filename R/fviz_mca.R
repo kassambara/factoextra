@@ -53,7 +53,7 @@ NULL
 #'  supplementary variables.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
-#'  compatibility and is silently converted to \code{repel = TRUE}.
+#'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param choice the graph to plot. Allowed values include: i) "var" and 
 #'  "mca.cor" for plotting the correlation between variables and principal 
 #'  dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for

@@ -88,7 +88,7 @@ c("arrow", "text").}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
 labels or not. The old \code{jitter} argument is kept for backward
-compatibility and is silently converted to \code{repel = TRUE}.}
+compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by
 groups. Default value is "none". If X is a PCA object from FactoMineR 
@@ -162,11 +162,10 @@ Default value is "none". Allowed values are the combination of c("ind",
 \item{biplot.type}{type of biplot scaling for fviz_pca_biplot(). Options are:
 \itemize{
   \item "auto" (default): Uses range-based rescaling for visualization
-  \item "form": Form biplot (Gabriel, 1971). Distances between individuals
-    approximate Euclidean distances. Use when focus is on individual relationships.
-  \item "covariance": Covariance biplot (Gabriel, 1971). Angles between variable
-    vectors approximate correlations, lengths approximate standard deviations.
-    Use when focus is on variable relationships.
+  \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
+  readability of individual relationships.
+  \item "covariance": Covariance-oriented scaling (Gabriel-style).
+  Prioritizes readability of variable relationships.
 }
 Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }
@@ -262,7 +261,7 @@ fviz_pca_biplot(res.pca, label = "var", habillage=iris$Species,
                addEllipses=TRUE, ellipse.level=0.95,
                ggtheme = theme_minimal())
 
-# Biplot types (Gabriel, 1971):
+# Biplot scaling modes:
 # Form biplot - focus on individual distances
 fviz_pca_biplot(res.pca, biplot.type = "form",
                label = "var", habillage = iris$Species)

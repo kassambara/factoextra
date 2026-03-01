@@ -30,6 +30,7 @@ fviz_eig(
   parallel.color = "red",
   parallel.lty = "dashed",
   parallel.iter = 100,
+  parallel.seed = NULL,
   ...
 )
 
@@ -77,6 +78,9 @@ choice = "eigenvalue" and X is a prcomp or princomp object. Default is FALSE.}
 
 \item{parallel.iter}{number of iterations for parallel analysis simulation. Default is 100.}
 
+\item{parallel.seed}{integer seed for reproducible parallel analysis simulation.
+If NULL (default), the current RNG stream is used.}
+
 \item{...}{optional arguments to be passed to the function \link[ggpubr]{ggpar}.}
 }
 \value{
@@ -120,7 +124,7 @@ fviz_eig(res.pca, geom="line")
 # Parallel analysis (Horn's method) to determine number of components
 # Components with eigenvalues above the red line are significant
 fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
-         addlabels = TRUE, parallel.color = "red")
+         addlabels = TRUE, parallel.color = "red", parallel.seed = 123)
 
 \dontrun{         
 # Correspondence Analysis

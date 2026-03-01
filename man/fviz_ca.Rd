@@ -78,7 +78,7 @@ variables. Default values are 19 for rows and 17 for columns.}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
 labels or not. The old \code{jitter} argument is kept for backward
-compatibility and is silently converted to \code{repel = TRUE}.}
+compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_ca_row() and 
 fviz_ca_col(): Additional arguments are passed to the functions fviz() and

@@ -35,3 +35,44 @@ test_that("cluster visual helpers work on hcut/hkmeans outputs", {
   expect_s3_class(p2, "ggplot")
   expect_s3_class(p3, "ggplot")
 })
+
+test_that("fviz_pca_biplot supports form and covariance scaling modes", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+  p_form <- fviz_pca_biplot(res.pca, biplot.type = "form")
+  p_cov <- fviz_pca_biplot(res.pca, biplot.type = "covariance")
+  expect_s3_class(p_form, "ggplot")
+  expect_s3_class(p_cov, "ggplot")
+})
+
+test_that("fviz_eig parallel analysis is reproducible with parallel.seed", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  extract_parallel_threshold <- function(p) {
+    layers <- ggplot2::ggplot_build(p)$data
+    idx <- which(vapply(layers, function(df) {
+      "shape" %in% names(df) && all(df$shape == 4)
+    }, logical(1)))
+    if(length(idx) == 0) return(numeric(0))
+    layers[[idx[1]]]$y
+  }
+
+  p1 <- fviz_eig(
+    res.pca, choice = "eigenvalue", parallel = TRUE,
+    parallel.iter = 20, parallel.seed = 42
+  )
+  p2 <- fviz_eig(
+    res.pca, choice = "eigenvalue", parallel = TRUE,
+    parallel.iter = 20, parallel.seed = 42
+  )
+  p3 <- fviz_eig(
+    res.pca, choice = "eigenvalue", parallel = TRUE,
+    parallel.iter = 20, parallel.seed = 43
+  )
+
+  th1 <- extract_parallel_threshold(p1)
+  th2 <- extract_parallel_threshold(p2)
+  th3 <- extract_parallel_threshold(p3)
+  expect_true(length(th1) > 0)
+  expect_equal(th1, th2)
+  expect_false(isTRUE(all.equal(th1, th3)))
+})

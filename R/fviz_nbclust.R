@@ -315,10 +315,10 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
      else if(is.matrix(best_nc)){
     best_nc <- as.data.frame(t(best_nc))
     best_nc$Number_clusters <- as.factor(best_nc$Number_clusters)
+    ss <- summary(best_nc$Number_clusters)
     
     # Summary
     if(print.summary){
-      ss <- summary(best_nc$Number_clusters)
       cat ("Among all indices: \n===================\n")
       for(i in seq_along(ss)){
         cat("*", ss[i], "proposed ", names(ss)[i], "as the best number of clusters\n" )

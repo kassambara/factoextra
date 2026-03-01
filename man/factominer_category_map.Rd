@@ -20,3 +20,12 @@ A data.frame with current labels, variable names, levels, and legacy
 \description{
 Map FactoMineR category labels to legacy naming patterns
 }
+\examples{
+\donttest{
+if (requireNamespace("FactoMineR", quietly = TRUE)) {
+  data(poison)
+  res.mca <- FactoMineR::MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
+  head(factominer_category_map(res.mca, element = "var"))
+}
+}
+}

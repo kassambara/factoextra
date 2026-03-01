@@ -10,6 +10,29 @@ test_that("get_clust_tendency restores RNG state when seed is provided", {
   expect_identical(seed_after, seed_before)
 })
 
+test_that("get_clust_tendency Hopkins value matches regression baseline", {
+  old_opt <- getOption("factoextra.warn_hopkins", TRUE)
+  on.exit(options(factoextra.warn_hopkins = old_opt), add = TRUE)
+  options(factoextra.warn_hopkins = FALSE)
+
+  res <- get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123)
+  expect_equal(res$hopkins_stat, 0.989362891844348, tolerance = 1e-12)
+})
+
+test_that("get_clust_tendency emits correction warning only once per session", {
+  old_opt <- getOption("factoextra.warn_hopkins", TRUE)
+  on.exit(options(factoextra.warn_hopkins = old_opt), add = TRUE)
+  options(factoextra.warn_hopkins = TRUE)
+
+  state <- getFromNamespace(".factoextra_state", "factoextra")
+  state$hopkins_warned <- FALSE
+  expect_warning(
+    get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123),
+    "corrected formula"
+  )
+  expect_no_warning(get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123))
+})
+
 test_that("fviz_nbclust gap_stat handles maxSE in dots and forwards clusGap args", {
   set.seed(123)
   x <- scale(iris[, 1:4])
@@ -20,6 +43,28 @@ test_that("fviz_nbclust gap_stat handles maxSE in dots and forwards clusGap args
     maxSE = list(method = "firstmax", SE.factor = 1)
   )
   expect_s3_class(p, "ggplot")
+})
+
+test_that("fviz_nbclust handles matrix Best.nc and preserves numeric cluster order", {
+  best_nc <- rbind(
+    Number_clusters = c(2, 10, 3, 10),
+    Value_Index = c(1, 1, 1, 1)
+  )
+  p <- fviz_nbclust(list(Best.nc = best_nc), print.summary = FALSE)
+  expect_s3_class(p, "ggplot")
+  expect_identical(levels(p$data$Number_clusters), c("2", "3", "10"))
+})
+
+test_that("fviz_nbclust silhouette handles k >= n without error", {
+  x <- matrix(seq_len(20), ncol = 4)
+  toy_cluster <- function(x, k, ...) {
+    n <- nrow(as.matrix(x))
+    if (k >= n) cl <- seq_len(n) else cl <- rep(seq_len(k), length.out = n)
+    list(cluster = cl)
+  }
+  p <- fviz_nbclust(x, FUNcluster = toy_cluster, method = "silhouette", k.max = 5)
+  expect_s3_class(p, "ggplot")
+  expect_true(anyNA(p$data$y))
 })
 
 test_that(".is_color returns a logical vector type-stably", {
@@ -68,4 +113,18 @@ test_that("phylogenic dendrogram layout does not leak RNG state", {
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
   expect_identical(seed_after, seed_before)
   expect_s3_class(p, "ggplot")
+})
+
+test_that("legacy fviz_cluster arguments emit deprecation warnings", {
+  x <- scale(USArrests)
+  km <- stats::kmeans(x, centers = 3, nstart = 5)
+
+  expect_warning(
+    fviz_cluster(km, data = x, jitter = list(width = 0.1)),
+    "deprecated"
+  )
+  expect_warning(
+    fviz_cluster(km, data = x, frame = TRUE),
+    "deprecated"
+  )
 })
