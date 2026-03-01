@@ -133,7 +133,11 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   # jitter -> repel (converted with warning)
   if (!is.null(jitter_arg)) {
     .facto_dep("jitter", "repel = TRUE", NULL)
-    if(!is.null(jitter_arg$width) || !is.null(jitter_arg$height) ) repel = TRUE
+    if(is.list(jitter_arg)) {
+      if(!is.null(jitter_arg$width) || !is.null(jitter_arg$height)) repel <- TRUE
+    } else if(is.logical(jitter_arg) && length(jitter_arg) == 1L && !is.na(jitter_arg) && jitter_arg) {
+      repel <- TRUE
+    }
   }
 
   # frame -> ellipse (converted with warning)

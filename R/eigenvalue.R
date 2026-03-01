@@ -188,8 +188,12 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
 
   if(!is.null(parallel.seed)){
     if(!is.numeric(parallel.seed) || length(parallel.seed) != 1L || is.na(parallel.seed) ||
-       !is.finite(parallel.seed) || parallel.seed != as.integer(parallel.seed))
-      stop("parallel.seed must be NULL or a single integer value.")
+       !is.finite(parallel.seed) || parallel.seed %% 1 != 0 ||
+       parallel.seed < 0 || parallel.seed > .Machine$integer.max)
+      stop(
+        "parallel.seed must be NULL or a single integer value in [0, ",
+        .Machine$integer.max, "]."
+      )
     parallel.seed <- as.integer(parallel.seed)
   }
 

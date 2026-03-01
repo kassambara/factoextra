@@ -180,4 +180,34 @@ test_that("legacy fviz_cluster arguments emit deprecation warnings", {
     fviz_cluster(km, data = x, title = "Legacy title"),
     "deprecated"
   )
+  expect_warning({
+    p_jitter_true <- fviz_cluster(km, data = x, jitter = TRUE)
+    expect_s3_class(p_jitter_true, "ggplot")
+  }, "deprecated")
+})
+
+test_that("fviz_eig validates parallel.seed range and integer-ness", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = 2, parallel.seed = 1e10
+    ),
+    "single integer value in"
+  )
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = 2, parallel.seed = -1
+    ),
+    "single integer value in"
+  )
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = 2, parallel.seed = 1.5
+    ),
+    "single integer value in"
+  )
 })
