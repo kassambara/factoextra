@@ -17,7 +17,8 @@ This release aligns `factoextra` with the maintained compatibility baseline whil
   * corrected Hopkins statistic implementation (Wright 2022),
   * stricter input validation,
   * one-time warning option `options(factoextra.warn_hopkins = FALSE)`,
-  * RNG state preservation when seed is supplied.
+  * RNG state preservation when seed is supplied,
+  * default `seed` changed from `123` to `NULL` (now follows caller RNG stream unless explicitly set).
 * `hcut()` and `hkmeans()` input checks and error handling.
 * `eclust()` and internal random helpers to preserve caller RNG state.
 * FactoMineR extraction/plotting helpers for improved compatibility with newer object structures and mixed groups.
@@ -146,6 +147,8 @@ This version addresses the following **30 issues** from the original factoextra 
 ## New features
 
 ## Major changes
+
+Development placeholder release retained from upstream history; no user-facing changes recorded.
    
    
 # factoextra 1.0.7

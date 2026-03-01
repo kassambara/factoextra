@@ -51,6 +51,13 @@ test_that("facto_summarize respects axes for MCA supplementary elements", {
   expect_equal(ncol(q12), 3)
   expect_equal(ncol(q23), 3)
   expect_false(isTRUE(all.equal(q12[, 2:3], q23[, 2:3])))
+
+  ind12 <- facto_summarize(mca, element = "ind", axes = 1:2)
+  ind23 <- facto_summarize(mca, element = "ind", axes = 2:3)
+  expect_equal(ncol(ind12), 6)
+  expect_equal(ncol(ind23), 6)
+  expect_identical(colnames(ind12)[2:3], c("Dim.1", "Dim.2"))
+  expect_identical(colnames(ind23)[2:3], c("Dim.2", "Dim.3"))
 })
 
 test_that("FactoMineR category mapping helpers map legacy labels", {
@@ -74,4 +81,17 @@ test_that("FactoMineR category mapping helpers map legacy labels", {
 
   mapped <- map_factominer_legacy_names(mca, uniq[1], element = "var", quiet = TRUE)
   expect_true(mapped %in% map$current)
+
+  expect_warning(
+    map_factominer_legacy_names(mca, uniq[1], element = "var", quiet = FALSE),
+    "Mapped legacy FactoMineR category labels"
+  )
+  expect_warning(
+    map_factominer_legacy_names(mca, "unknown_level", element = "var", quiet = FALSE),
+    "not found in the current FactoMineR output"
+  )
+  expect_identical(
+    map_factominer_legacy_names(mca, "unknown_level", element = "var", quiet = TRUE),
+    "unknown_level"
+  )
 })

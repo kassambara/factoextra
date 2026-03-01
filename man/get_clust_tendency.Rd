@@ -70,6 +70,10 @@ formula (Wright 2022). Results differ from legacy factoextra and a one-time
 warning is emitted. Set \code{options(factoextra.warn_hopkins = FALSE)} to
 silence the warning.
 
+For large datasets, nearest-neighbor distances are computed with a low-memory
+fallback when the full pairwise matrix would exceed
+\code{getOption("factoextra.hopkins.max_matrix_cells", 2e7)} cells.
+
 \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
 clustering tendency in a visual form by counting the number of square shaped
 dark (or colored) blocks along the diagonal in a VAT image.

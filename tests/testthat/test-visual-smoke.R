@@ -36,6 +36,12 @@ test_that("cluster visual helpers work on hcut/hkmeans outputs", {
   expect_s3_class(p3, "ggplot")
 })
 
+test_that("fviz_dend supports rectangular dendrogram layout", {
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- fviz_dend(hc, k = 3, rect = TRUE, show_labels = FALSE)
+  expect_s3_class(p, "ggplot")
+})
+
 test_that("fviz_pca_biplot supports form and covariance scaling modes", {
   res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
   p_form <- fviz_pca_biplot(res.pca, biplot.type = "form")

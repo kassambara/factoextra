@@ -19,6 +19,27 @@ test_that("get_clust_tendency Hopkins value matches regression baseline", {
   expect_equal(res$hopkins_stat, 0.989362891844348, tolerance = 1e-12)
 })
 
+test_that("get_clust_tendency low-memory fallback matches vectorized computation", {
+  old_warn <- getOption("factoextra.warn_hopkins", TRUE)
+  old_cells <- getOption("factoextra.hopkins.max_matrix_cells", 2e7)
+  on.exit(
+    options(
+      factoextra.warn_hopkins = old_warn,
+      factoextra.hopkins.max_matrix_cells = old_cells
+    ),
+    add = TRUE
+  )
+  options(factoextra.warn_hopkins = FALSE)
+
+  options(factoextra.hopkins.max_matrix_cells = 1)
+  res_loop <- get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123)
+
+  options(factoextra.hopkins.max_matrix_cells = 1e9)
+  res_vec <- get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123)
+
+  expect_equal(res_loop$hopkins_stat, res_vec$hopkins_stat, tolerance = 1e-12)
+})
+
 test_that("get_clust_tendency emits correction warning only once per session", {
   old_opt <- getOption("factoextra.warn_hopkins", TRUE)
   on.exit(options(factoextra.warn_hopkins = old_opt), add = TRUE)
@@ -43,6 +64,15 @@ test_that("fviz_nbclust gap_stat handles maxSE in dots and forwards clusGap args
     maxSE = list(method = "firstmax", SE.factor = 1)
   )
   expect_s3_class(p, "ggplot")
+})
+
+test_that("fviz_nbclust wss path returns ggplot and forwards FUNcluster args", {
+  set.seed(123)
+  x <- scale(iris[, 1:4])
+  p <- fviz_nbclust(x, FUNcluster = stats::kmeans, method = "wss", k.max = 4, nstart = 5)
+  expect_s3_class(p, "ggplot")
+  expect_equal(nrow(p$data), 4)
+  expect_false(anyNA(p$data$y))
 })
 
 test_that("fviz_nbclust handles matrix Best.nc and preserves numeric cluster order", {
@@ -75,6 +105,13 @@ test_that(".is_color returns a logical vector type-stably", {
   res <- factoextra:::.is_color(c("red", "not-a-color"))
   expect_type(res, "logical")
   expect_identical(unname(res), c(TRUE, FALSE))
+})
+
+test_that(".is_color_palette recognizes known palette names", {
+  expect_true(factoextra:::.is_color_palette("Blues"))
+  expect_true(factoextra:::.is_color_palette("jco"))
+  expect_false(factoextra:::.is_color_palette("not-a-palette"))
+  expect_false(factoextra:::.is_color_palette(NULL))
 })
 
 test_that("eclust restores RNG state after execution", {
@@ -125,6 +162,22 @@ test_that("legacy fviz_cluster arguments emit deprecation warnings", {
   )
   expect_warning(
     fviz_cluster(km, data = x, frame = TRUE),
+    "deprecated"
+  )
+  expect_warning(
+    fviz_cluster(km, data = x, frame.type = "norm"),
+    "deprecated"
+  )
+  expect_warning(
+    fviz_cluster(km, data = x, frame.level = 0.8),
+    "deprecated"
+  )
+  expect_warning(
+    fviz_cluster(km, data = x, frame.alpha = 0.3),
+    "deprecated"
+  )
+  expect_warning(
+    fviz_cluster(km, data = x, title = "Legacy title"),
     "deprecated"
   )
 })

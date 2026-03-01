@@ -122,32 +122,41 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   
   # Backward compatibility: deprecated arguments converted with warning
   extra_args <- list(...)
+  jitter_arg <- extra_args[["jitter"]]
+  frame_arg <- extra_args[["frame"]]
+  frame_type_arg <- extra_args[["frame.type"]]
+  frame_level_arg <- extra_args[["frame.level"]]
+  frame_alpha_arg <- extra_args[["frame.alpha"]]
+  title_arg <- extra_args[["title"]]
   .check_axes(axes, .length = 2)
 
-  # jitter -> repel (silent conversion)
-  if (!is.null(extra_args$jitter)) {
+  # jitter -> repel (converted with warning)
+  if (!is.null(jitter_arg)) {
     .facto_dep("jitter", "repel = TRUE", NULL)
-    if(!is.null(extra_args$jitter$width) || !is.null(extra_args$jitter$height) ) repel = TRUE
+    if(!is.null(jitter_arg$width) || !is.null(jitter_arg$height) ) repel = TRUE
   }
 
-  # frame -> ellipse (silent conversion)
-  if(!is.null(extra_args$frame)) {
+  # frame -> ellipse (converted with warning)
+  if(!is.null(frame_arg)) {
     .facto_dep("frame", "ellipse", NULL)
-    ellipse <- extra_args$frame
+    ellipse <- frame_arg
   }
-  if(!is.null(extra_args$frame.type)) {
+  if(!is.null(frame_type_arg)) {
     .facto_dep("frame.type", "ellipse.type", NULL)
-    ellipse.type <- extra_args$frame.type
+    ellipse.type <- frame_type_arg
   }
-  if(!is.null(extra_args$frame.level)) {
+  if(!is.null(frame_level_arg)) {
     .facto_dep("frame.level", "ellipse.level", NULL)
-    ellipse.level <- extra_args$frame.level
+    ellipse.level <- frame_level_arg
   }
-  if(!is.null(extra_args$frame.alpha)) {
+  if(!is.null(frame_alpha_arg)) {
     .facto_dep("frame.alpha", "ellipse.alpha", NULL)
-    ellipse.alpha <- extra_args$frame.alpha
+    ellipse.alpha <- frame_alpha_arg
   }
-  if(!is.null(extra_args$title)) main <- extra_args$title
+  if(!is.null(title_arg)) {
+    .facto_dep("title", "main", NULL)
+    main <- title_arg
+  }
   extra_args <- extra_args[setdiff(names(extra_args),
                                    c("jitter", "frame", "frame.type", "frame.level", "frame.alpha", "title"))]
   

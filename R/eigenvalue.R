@@ -187,8 +187,10 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   if(addlabels) p <- p + geom_text(label = text_labels, vjust=-0.4, hjust = hjust)
 
   if(!is.null(parallel.seed)){
-    if(!is.numeric(parallel.seed) || length(parallel.seed) != 1L || is.na(parallel.seed))
-      stop("parallel.seed must be NULL or a single numeric value.")
+    if(!is.numeric(parallel.seed) || length(parallel.seed) != 1L || is.na(parallel.seed) ||
+       !is.finite(parallel.seed) || parallel.seed != as.integer(parallel.seed))
+      stop("parallel.seed must be NULL or a single integer value.")
+    parallel.seed <- as.integer(parallel.seed)
   }
 
   # Add parallel analysis line (Horn's method) if requested

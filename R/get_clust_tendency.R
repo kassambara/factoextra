@@ -44,6 +44,10 @@ NULL
 #' formula (Wright 2022). Results differ from legacy factoextra and a one-time
 #' warning is emitted. Set \code{options(factoextra.warn_hopkins = FALSE)} to
 #' silence the warning.
+#'
+#' For large datasets, nearest-neighbor distances are computed with a low-memory
+#' fallback when the full pairwise matrix would exceed
+#' \code{getOption("factoextra.hopkins.max_matrix_cells", 2e7)} cells.
 #' 
 #' \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
 #' clustering tendency in a visual form by counting the number of square shaped
@@ -134,6 +138,15 @@ get_clust_tendency <- function(data, n, graph = TRUE,
   k <- sample(seq_len(nrow(data)), n, replace = TRUE)
   q <- data[k, , drop = FALSE]
 
+  max_matrix_cells <- getOption("factoextra.hopkins.max_matrix_cells", 2e7)
+  if(!is.numeric(max_matrix_cells) || length(max_matrix_cells) != 1L ||
+     is.na(max_matrix_cells) || max_matrix_cells <= 0){
+    max_matrix_cells <- 2e7
+  }
+
+  use_vectorized <- (nrow(p) * nrow(data) <= max_matrix_cells) &&
+                    (nrow(q) * nrow(data) <= max_matrix_cells)
+
   euclid_sq <- function(a, b){
     a_sq <- rowSums(a^2)
     b_sq <- rowSums(b^2)
@@ -141,15 +154,35 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     pmax(outer(a_sq, b_sq, "+") - 2 * tcrossprod(a, b), 0)
   }
 
-  d2p <- euclid_sq(p, data)
-  minp <- sqrt(apply(d2p, 1, min))
+  min_sq_dist <- function(a, b, exclude_identical = FALSE){
+    if(use_vectorized){
+      d2 <- euclid_sq(a, b)
+      if(exclude_identical) d2[d2 <= .Machine$double.eps] <- Inf
+      mins <- apply(d2, 1, min)
+      mins[!is.finite(mins)] <- 0
+      return(mins)
+    }
 
-  d2q <- euclid_sq(q, data)
-  # Exclude self/identical observations from nearest-neighbor lookup.
-  d2q[d2q <= .Machine$double.eps] <- Inf
-  minq_sq <- apply(d2q, 1, min)
-  minq_sq[!is.finite(minq_sq)] <- 0
-  minq <- sqrt(minq_sq)
+    # Chunked fallback keeps memory bounded while preserving vectorized math.
+    chunk_size <- floor(max_matrix_cells / nrow(b))
+    if(!is.finite(chunk_size) || chunk_size < 1) chunk_size <- 1
+    chunk_size <- as.integer(chunk_size)
+    mins <- numeric(nrow(a))
+    starts <- seq.int(1L, nrow(a), by = chunk_size)
+    for(start in starts){
+      end <- min(start + chunk_size - 1L, nrow(a))
+      idx <- start:end
+      d2 <- euclid_sq(a[idx, , drop = FALSE], b)
+      if(exclude_identical) d2[d2 <= .Machine$double.eps] <- Inf
+      block_mins <- apply(d2, 1, min)
+      block_mins[!is.finite(block_mins)] <- 0
+      mins[idx] <- block_mins
+    }
+    mins
+  }
+
+  minp <- sqrt(min_sq_dist(p, data, exclude_identical = FALSE))
+  minq <- sqrt(min_sq_dist(q, data, exclude_identical = TRUE))
   
   # Hopkins statistic formula fix: use exponent d=D (dimensionality) as per
 
