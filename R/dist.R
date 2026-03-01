@@ -4,7 +4,7 @@ NULL
 #' @description Clustering methods classify data samples into groups of similar 
 #'   objects. This process requires some methods for measuring the distance or 
 #'   the (dis)similarity between the observations. Read more: 
-#'   \href{http://www.sthda.com/english/wiki/clarifying-distance-measures-unsupervised-machine-learning}{STHDA
+#'   \href{https://www.datanovia.com/en/lessons/clustering-distance-measures/}{STHDA
 #'    website - clarifying distance measures.}. \itemize{ \item get_dist(): 
 #'   Computes a distance matrix between the rows of a data matrix. Compared to
 #'   the standard \code{\link[stats]{dist}}() function, it supports 
@@ -68,10 +68,18 @@ fviz_dist<- function(dist.obj, order = TRUE, show_labels = TRUE, lab_size = NULL
   else dist.obj <- as.matrix(dist.obj)
   
   rownames(dist.obj ) <- colnames(dist.obj ) <- paste0(rownames(dist.obj), "-")
-  
-  d <- reshape2::melt(dist.obj)
-  p <- ggplot(d, aes_string(x = "Var1", y = "Var2"))+ 
-    ggplot2::geom_tile(aes_string(fill="value")) 
+
+  # Convert distance matrix to long format (replacing reshape2::melt)
+  # This creates a data frame with Var1, Var2, value columns
+  d <- data.frame(
+    Var1 = rep(rownames(dist.obj), ncol(dist.obj)),
+    Var2 = rep(colnames(dist.obj), each = nrow(dist.obj)),
+    value = as.vector(dist.obj)
+  )
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # See: https://github.com/kassambara/factoextra/issues/190
+  p <- ggplot(d, aes(x = .data[["Var1"]], y = .data[["Var2"]]))+
+    ggplot2::geom_tile(aes(fill = .data[["value"]])) 
   if(is.null(gradient$mid)) p <- p + ggplot2::scale_fill_gradient(low=gradient$low, high=gradient$high)
   else p <- p + ggplot2::scale_fill_gradient2(midpoint=mean(dist.obj), low=gradient$low, 
                                                     mid=gradient$mid, high=gradient$high, space = "Lab")

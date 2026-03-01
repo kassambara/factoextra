@@ -50,8 +50,9 @@ NULL
 #'   contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 #'   the highest cos2 are drawn }
 #' @param ... Arguments to be passed to the function fviz()
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'   labels or not.
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text
+#'   labels or not. The old \code{jitter} argument is kept for backward
+#'   compatibility and is silently converted to \code{repel = TRUE}.
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @examples

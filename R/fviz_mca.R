@@ -7,7 +7,7 @@ NULL
 #'  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
 #'  the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
 #'  ExPosition]. Read more: 
-#'  \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
+#'  \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/}{Multiple
 #'   Correspondence Analysis Essentials.}
 #'  
 #'  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
@@ -51,8 +51,9 @@ NULL
 #'@param shape.ind,shape.var point shapes of individuals and variables.
 #'@param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative 
 #'  supplementary variables.
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'  labels or not.
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
+#'  labels or not. The old \code{jitter} argument is kept for backward
+#'  compatibility and is silently converted to \code{repel = TRUE}.
 #'@param choice the graph to plot. Allowed values include: i) "var" and 
 #'  "mca.cor" for plotting the correlation between variables and principal 
 #'  dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for
@@ -227,7 +228,7 @@ fviz_mca_var <- function(X, choice = c("var.cat", "mca.cor", "var", "quanti.sup"
   
   col.col.sup <- col.quanti.sup
   extra_args <- list(...)
-  if(missing(choice) & !is.null(extra_args$choix))
+  if(missing(choice) && !is.null(extra_args$choix))
     choice <- extra_args$choix
   
   # Define plot types
@@ -282,6 +283,5 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 fviz_mca <- function(X, ...){
   fviz_mca_biplot(X, ...)
 }
-
 
 

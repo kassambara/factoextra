@@ -37,8 +37,7 @@ Allowed values are "none" (no sorting), "asc" (for ascending) or "desc"
 
 \item{top}{a numeric value specifying the number of top elements to be shown.}
 
-\item{xtickslab.rt}{Same as x.text.angle and y.text.angle,
-respectively. Will be deprecated in the near future.}
+\item{xtickslab.rt}{rotation angle for x axis tick labels. Default is 45 degrees.}
 
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),

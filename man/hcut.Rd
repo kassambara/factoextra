@@ -19,9 +19,12 @@ hcut(
 \arguments{
 \item{x}{a numeric matrix, numeric data frame or a dissimilarity matrix.}
 
-\item{k}{the number of clusters to be generated.}
+\item{k}{a single integer specifying the number of clusters to be generated.
+Must be at least 2 and smaller than the number of observations.}
 
-\item{isdiss}{logical value specifying wether x is a dissimilarity matrix.}
+\item{isdiss}{logical value specifying whether \code{x} is already a
+dissimilarity matrix. If TRUE, \code{x} must inherit from class
+\code{"dist"}.}
 
 \item{hc_func}{the hierarchical clustering function to be used. Default value is "hclust". Possible values 
 is one of "hclust", "agnes", "diana". Abbreviation is allowed.}

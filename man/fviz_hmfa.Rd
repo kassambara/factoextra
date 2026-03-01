@@ -65,8 +65,9 @@ values are the combination of \code{c("point", "arrow", "text")}. Use
 texts. Using \code{c("arrow", "text")} is sensible only for the graph of 
 variables.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
-labels or not.}
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
+labels or not. The old \code{jitter} argument is kept for backward
+compatibility and is silently converted to \code{repel = TRUE}.}
 
 \item{habillage}{an optional factor variable for coloring the observations by 
 groups. Default value is "none". If X is an HMFA object from FactoMineR 
@@ -107,9 +108,9 @@ then the top 5 individuals/variables with the highest cos2 are drawn. \item
 contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 the highest cos2 are drawn }}
 
-\item{partial}{list of the individuals for which the partial points should be 
-drawn. (by default, partial = NULL and no partial points are drawn). Use 
-partial = "All" to visualize partial points for all individuals.}
+\item{partial}{list of the individuals for which the partial points should be
+drawn. (by default, partial = NULL and no partial points are drawn). Use
+partial = "all" to visualize partial points for all individuals.}
 
 \item{col.partial}{color for partial individuals. By default, points are 
 colored according to the groups.}

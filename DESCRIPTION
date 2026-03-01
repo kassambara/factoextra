@@ -1,46 +1,52 @@
 Package: factoextra
 Type: Package
 Title: Extract and Visualize the Results of Multivariate Data Analyses
-Version: 1.0.7.999
-Date: 2020-04-01
+Version: 1.2.0.6
+Date: 2026-03-01
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
-    person("Fabian", "Mundt", role = c("aut"), email = "f.mundt@inventionate.de")
+    person("Fabian", "Mundt", role = "aut", email = "f.mundt@inventionate.de"),
+    person("Laszlo", "Erdey", role = "ctb", email = "erdey.laszlo@econ.unideb.hu",
+           comment = c(ORCID = "0000-0002-6781-4303",
+                       affiliation = "Faculty of Economics and Business, University of Debrecen, Hungary",
+                       contribution = "Modern compatibility fixes, tests, and maintenance updates"))
     )
-Description: Provides some easy-to-use functions to extract and visualize the
-    output of multivariate data analyses, including 'PCA' (Principal Component
-    Analysis), 'CA' (Correspondence Analysis), 'MCA' (Multiple Correspondence
-    Analysis), 'FAMD' (Factor Analysis of Mixed Data), 'MFA' (Multiple Factor Analysis) and 'HMFA' (Hierarchical Multiple
-    Factor Analysis) functions from different R packages. It contains also functions
-    for simplifying some clustering analysis steps and provides 'ggplot2' - based
-    elegant data visualization.
+Maintainer: Alboukadel Kassambara <alboukadel.kassambara@gmail.com>
+Description: Provides easy-to-use functions to extract and visualize the output
+    of multivariate data analyses, including 'PCA' (Principal Component Analysis),
+    'CA' (Correspondence Analysis), 'MCA' (Multiple Correspondence Analysis),
+    'FAMD' (Factor Analysis of Mixed Data), 'MFA' (Multiple Factor Analysis),
+    and 'HMFA' (Hierarchical Multiple Factor Analysis) from different R packages.
+    It also includes helpers for simplifying clustering analysis workflows and
+    provides 'ggplot2'-based data visualization.
 License: GPL-2
 LazyData: true
+LazyDataCompression: xz
 Encoding: UTF-8
 Depends:
-    R (>= 3.1.2),
-    ggplot2 (>= 2.2.0)
+    R (>= 4.1.0),
+    ggplot2 (>= 3.5.2)
 Imports:
-    abind,
-    cluster,
-    dendextend,
-    FactoMineR,
-    ggpubr(>= 0.1.5),
+    cluster (>= 2.1.8.2),
+    dendextend (>= 1.19.1),
+    FactoMineR (>= 2.13),
+    ggpubr (>= 0.6.3),
     grid,
+    rlang (>= 1.1.7),
     stats,
-    reshape2,
-    ggrepel,
-    tidyr
+    ggrepel (>= 0.9.5)
 Suggests:
     ade4,
     ca,
     igraph,
     MASS,
     knitr,
-    mclust
-URL: http://www.sthda.com/english/rpkgs/factoextra
+    mclust,
+    testthat (>= 3.0.0)
+URL: https://github.com/kassambara/factoextra,
+    https://rpkgs.datanovia.com/factoextra/index.html
 BugReports: https://github.com/kassambara/factoextra/issues
-Collate: 
+Collate:
     'cluster_utilities.R'
     'decathlon2.R'
     'print.factoextra.R'
@@ -79,4 +85,5 @@ Collate:
     'multishapes.R'
     'poison.R'
     'zzz.R'
-RoxygenNote: 7.1.0
+RoxygenNote: 7.3.3
+Config/testthat/edition: 3

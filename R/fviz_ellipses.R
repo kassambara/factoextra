@@ -44,7 +44,7 @@ fviz_ellipses <- function(X, habillage, axes = c(1,2),
   df <- dd$ind
   color <- dd$name.quali
   
-  if(length(habillage)==1 | is.factor(habillage)) legend. <- "right" else legend. = "none"
+  if(length(habillage) == 1 || is.factor(habillage)) legend. <- "right" else legend. = "none"
   
   label <- NULL
   if("text" %in% geom) label <- "name"

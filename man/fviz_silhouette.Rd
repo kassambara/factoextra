@@ -31,7 +31,7 @@ Silhouette (Si) analysis is a cluster validation approach that
  factoextra].
  
  Read more: 
- \href{http://www.sthda.com/english/wiki/clustering-validation-statistics-4-vital-things-everyone-should-know-unsupervised-machine-learning}{Clustering
+ \href{https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/}{Clustering
   Validation Statistics}.
 }
 \details{

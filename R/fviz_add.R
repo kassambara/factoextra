@@ -14,8 +14,9 @@
 #' @param pointsize the size of points
 #' @param shape point shape when geom ="point"
 #' @param linetype the linetype to be used when geom ="arrow"
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'   labels or not.
+#' @param repel a boolean, whether to use ggrepel to avoid overplotting text
+#'   labels or not. The old \code{jitter} argument is kept for backward
+#'   compatibility and is silently converted to \code{repel = TRUE}.
 #' @param font.family character vector specifying font family.
 #' @param ... Additional arguments, not used
 #' @return a ggplot2 plot
@@ -44,17 +45,16 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
                      addlabel = TRUE, labelsize = 4, pointsize = 2, shape=19, linetype ="dashed",
                      repel = FALSE, font.family = "", ...)
 {
-  # Deprecated arguments
+  # Backward compatibility: jitter argument silently converted to repel
+
   extra_args <- list(...)
   if (!is.null(extra_args$jitter)) {
-    warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
-            call. = FALSE)
-    if(!is.null(extra_args$jitter$width) | !is.null(extra_args$jitter$height) ) repel = TRUE
+    if(!is.null(extra_args$jitter$width) || !is.null(extra_args$jitter$height) ) repel = TRUE
   }
   
   if(!inherits(df, c("data.frame", "matrix")))
      stop("df should be a data frame or a matrix")
-  if(!inherits(df, "data.frame")) df <- as.data.frame(df, stringsAsFactors = TRUE)
+  if(!inherits(df, "data.frame")) df <- as.data.frame(df)
      
   if(ncol(df) < 2)
     stop("df should have at least two columns (x and y coordinates)")
@@ -75,9 +75,11 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
     vjust <- -0.7
   }
   else if("arrow" %in% geom){
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # See: https://github.com/kassambara/factoextra/issues/190
     p <- ggp + geom_segment(data = df,
-                      aes_string(x = 0, y = 0, xend = 'x', yend = 'y'),
-                      arrow = grid::arrow(length = grid::unit(0.2, 'cm')), 
+                      aes(x = 0, y = 0, xend = .data[["x"]], yend = .data[["y"]]),
+                      arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
                       color=color, linetype=linetype)
     hjust <- 0.8
     vjust <- 0
@@ -87,7 +89,7 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
     p <- ggp
   }
   
-  if(addlabel | "text" %in% geom){
+  if(addlabel || "text" %in% geom){
     if(repel){
       p <- p + ggpubr::geom_exec(ggrepel::geom_text_repel, data = df, x = "x", y = "y", 
                                  label = "name", color = color, size = labelsize,
@@ -97,10 +99,6 @@ fviz_add <- function(ggp, df, axes = c(1,2), geom=c("point", "arrow"), color ="b
       p <- p + ggpubr::geom_exec(geom_text, data = df, x = "x", y = "y", 
                                  label = "name", color = color, size = labelsize,
                                  vjust=vjust, hjust = hjust, family = font.family)
-      
-#       p <- p + geom_text(data = df, aes_string("x", "y"), color = color,
-#                          label = df$name, size = labelsize, vjust=vjust, hjust = hjust)
-      
     } 
   }
   

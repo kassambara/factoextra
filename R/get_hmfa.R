@@ -66,7 +66,7 @@ get_hmfa_ind <- function(res.hmfa){
   # FactoMineR package
   if(inherits(res.hmfa, c("HMFA"))) ind <- res.hmfa$ind
   # @todo ade4 Support muss noch eingebaut werden!
-  else stop("An object of class : ", class(res.hmfa), 
+  else stop("An object of class : ", paste(class(res.hmfa), collapse = ", "), 
             " can't be handled by the function get_hmfa_ind()")
   class(ind)<-c("factoextra", "hmfa", "hmfa_ind")
   attr(ind, "element") <- "individuals"
@@ -79,11 +79,11 @@ get_hmfa_var <- function(res.hmfa, element = c( "quanti.var", "quali.var", "grou
   
   choice <- match.arg(element)
   if(!inherits(res.hmfa, "HMFA"))
-    stop("An object of class : ", class(res.hmfa), " can't be handled.")
+    stop("An object of class : ", paste(class(res.hmfa), collapse = ", "), " can't be handled.")
   
-  if(choice == "quanti.var" & is.null(res.hmfa$quanti.var)) 
+  if(choice == "quanti.var" && is.null(res.hmfa$quanti.var)) 
     stop("There are no quantitative variables in this HMFA.")
-  else if(choice == "quali.var" & is.null(res.hmfa$quali.var)) 
+  else if(choice == "quali.var" && is.null(res.hmfa$quali.var)) 
     stop("There are no qualitative variables in this HMFA.")
   
   
@@ -109,7 +109,7 @@ get_hmfa_partial <- function(res.hmfa){
   # FactoMineR package
   # Group calculation is only for first layer valid (see Pages 2015)
   if(inherits(res.hmfa, c("HMFA"))) partial <- res.hmfa$partial
-  else stop("An object of class : ", class(res.hmfa), 
+  else stop("An object of class : ", paste(class(res.hmfa), collapse = ", "), 
             " can't be handled by the function get_hmfa_partial()")
   class(partial)<-c("list",  "hmfa_partial")
   attr(partial, "element") <- "partial node"

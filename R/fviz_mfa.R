@@ -56,11 +56,12 @@ NULL
 #'  highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the top 5
 #'  individuals/variables with the highest cos2 are drawn }
 #'@param ... Arguments to be passed to the function fviz()
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'  labels or not.
-#'@param partial list of the individuals for which the partial points should be 
-#'  drawn. (by default, partial = NULL and no partial points are drawn). Use 
-#'  partial = "All" to visualize partial points for all individuals.
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
+#'  labels or not. The old \code{jitter} argument is kept for backward
+#'  compatibility and is silently converted to \code{repel = TRUE}.
+#'@param partial list of the individuals for which the partial points should be
+#'  drawn. (by default, partial = NULL and no partial points are drawn). Use
+#'  partial = "all" to visualize partial points for all individuals.
 #'  
 #'@return a ggplot2 plot
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
@@ -124,7 +125,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   extra_args <- list(...)
   
   if(col.ind %in% c("cos2","contrib", "coord")) partial = NULL
-  if(!is.null(partial) & missing(col.ind)) col.ind <- "black"
+  if(!is.null(partial) && missing(col.ind)) col.ind <- "black"
   
   p <- fviz (X, element = "ind", axes = axes, geom = geom, habillage = habillage, 
         addEllipses = addEllipses, palette = palette, pointshape = shape.ind,
@@ -133,10 +134,10 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
         select = select.ind, repel = repel, ...)
   
   # Add supplementary qualitative variables if they exist
-  show.quali.var <- !("quali.var" %in% extra_args$invisible) & is.null(partial)
+  show.quali.var <- !("quali.var" %in% extra_args$invisible) && is.null(partial)
   is_habillage <- habillage[1] != "none" 
-  if(!is.null(X$quali.var.sup) & show.quali.var){
-    if(!(col.ind %in% c("cos2", "contrib")) & !is_habillage) col.quali.var.sup  = "quali.sup"
+  if(!is.null(X$quali.var.sup) && show.quali.var){
+    if(!(col.ind %in% c("cos2", "contrib")) && !is_habillage) col.quali.var.sup  = "quali.sup"
     quali.sup <- .get_supp(X, element = "quali.var.sup", axes = axes)
     quali.sup$quali.sup <- .get_quali_var_sup_names(X)
     colnames(quali.sup)[2:3] <-  c("x", "y")
@@ -172,16 +173,17 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     # elements to be hidden
     hide <- .hide(invisible)
     # Plot
-    if(!hide$ind & "point" %in% geom) {
+    if(!hide$ind && "point" %in% geom) {
       # Partial point
       p <- p + ggpubr::geom_exec(geom_point, data = ind.partial,
                                  x = "x.partial", y = "y.partial", 
                                  colour = col.partial,
                                  shape = shape.ind, size = 1)
       # Partial segments
+      # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for geom_segment
       p <- p + ggpubr::geom_exec(geom_segment, data = ind.partial,
                                  x = "x", y = "y", xend = 'x.partial', yend = 'y.partial',
-                                 linetype = "group.name", colour = col.partial, size = 0.5)
+                                 linetype = "group.name", colour = col.partial, linewidth = 0.5)
     }
     # Edit plot title and legend title
     p <- p  + labs(colour = "Groups", linetype = "Groups")
@@ -222,7 +224,7 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes
 {
   
   extra_args <- list(...)
-  if(missing(choice) & !is.null(extra_args$choix)) choice <- extra_args$choix
+  if(missing(choice) && !is.null(extra_args$choix)) choice <- extra_args$choix
   choice <- match.arg(choice)
  
  
@@ -230,12 +232,7 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes
   if(choice == "quanti.var") {
     .check_if_quanti_exists(X)
     if(missing(geom)) geom <- c("arrow", "text")
-    group <- data.frame(name = rownames(X$group$Lg[-nrow(X$group$Lg),,drop=FALSE]),
-                        nvar = X$call$group, type = X$call$type, stringsAsFactors = TRUE)
-    is.group.sup <- !is.null(X$call$num.group.sup)
-    if(is.group.sup) group <- group[-X$call$num.group.sup, , drop = FALSE]
-    group <- subset(group, group$type == "c")
-    habillage <- rep(group$name, group$nvar)
+    habillage <- .get_quanti_var_groups(X)
   }
   else if(choice== "quali.var"){
     .check_if_quali_exists(X)
@@ -263,9 +260,11 @@ fviz_mfa_axes <- function(X,  axes = c(1,2), geom=c("arrow", "text"),
   habillage <- "none"
   if(is.null(col.axes)){
     axes.names <- rownames(X$partial.axes$coord)
-    axes.groups <- sapply(axes.names, 
-                          function(x) gsub("^Dim[0-9]+\\.",  "", x, perl = TRUE)
-                          )
+    axes.groups <- vapply(
+      axes.names,
+      function(x) gsub("^Dim[0-9]+\\.",  "", x, perl = TRUE),
+      character(1)
+    )
     habillage <- as.factor(axes.groups)
   }
   fviz (X, element = "partial.axes", axes = axes, geom = geom,
@@ -288,25 +287,15 @@ fviz_mfa <- function(X, partial = "all", ...){
 
 # Check if there are quantitative variables.
 .check_if_quanti_exists <- function(X){
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(!c("c" %in% group.all) )
-    if(!c("s" %in% group.all)) 
-      stop("There are no quantitative variables to plot.")
+  map <- .mfa_group_map(X)
+  if(is.null(map) || !any(map$var.type == "quanti" & !map$is.group.sup))
+    stop("There are no quantitative variables to plot.")
   
 }
 
 # Check if qualitative variables exists
 .check_if_quali_exists <- function (X){
-  # Check if there are qualitative variables.
-  if(!is.null(X$call$num.group.sup))
-    group.all <- X$call$type[-X$call$num.group.sup]
-  else
-    group.all <- X$call$type
-  if(!("n" %in% group.all))
+  map <- .mfa_group_map(X)
+  if(is.null(map) || !any(map$var.type == "quali" & !map$is.group.sup))
     stop("There are no qualitative variables to plot.")
 }
-
-

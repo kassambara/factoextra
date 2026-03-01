@@ -82,7 +82,7 @@ Returns an object of class "eclust" containing the result of the
 \description{
 Provides solution for enhancing the workflow of clustering
   analyses and ggplot2-based elegant data visualization. Read more: 
- \href{http://www.sthda.com/english/wiki/visual-enhancement-of-clustering-analysis-unsupervised-machine-learning}{Visual enhancement of clustering analysis}.
+ \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
 }
 \examples{
 # Load and scale data

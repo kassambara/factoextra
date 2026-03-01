@@ -53,8 +53,9 @@ values are the combination of \code{c("point", "arrow", "text")}. Use
 texts. Using \code{c("arrow", "text")} is sensible only for the graph of 
 variables.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
-labels or not.}
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
+labels or not. The old \code{jitter} argument is kept for backward
+compatibility and is silently converted to \code{repel = TRUE}.}
 
 \item{habillage}{an optional factor variable for coloring the observations by
 groups. Default value is "none". If X is an MFA object from FactoMineR 

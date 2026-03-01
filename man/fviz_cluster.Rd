@@ -55,7 +55,8 @@ values are the combination of c("point", "text"). Use "point" (to show only
 points);  "text" to show only labels; c("point", "text") to show both types.}
 
 \item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not.}
+labels or not. The old \code{jitter} argument is kept for backward
+compatibility and is silently converted to \code{repel = TRUE}.}
 
 \item{show.clust.cent}{logical; if TRUE, shows cluster centers}
 

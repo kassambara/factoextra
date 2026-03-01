@@ -11,7 +11,7 @@
 #'  factoextra].
 #'  
 #'  Read more: 
-#'  \href{http://www.sthda.com/english/wiki/clustering-validation-statistics-4-vital-things-everyone-should-know-unsupervised-machine-learning}{Clustering
+#'  \href{https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/}{Clustering
 #'   Validation Statistics}.
 #'@details - Observations with a large silhouhette Si (almost 1) are very well 
 #'  clustered.
@@ -82,19 +82,21 @@
 fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   
   if(inherits(sil.obj, c("eclust", "hcut", "pam", "clara", "fanny"))){
-    df <- as.data.frame(sil.obj$silinfo$widths, stringsAsFactors = TRUE)
+    df <- as.data.frame(sil.obj$silinfo$widths)
   }
   else if(inherits(sil.obj, "silhouette"))
-    df <- as.data.frame(sil.obj[, 1:3], stringsAsFactors = TRUE)
-  else stop("Don't support an oject of class ", class(sil.obj))
+    df <- as.data.frame(sil.obj[, 1:3])
+  else stop("Don't support an oject of class ", paste(class(sil.obj), collapse = ", "))
   
   # order by cluster and by sil_width
   df <- df[order(df$cluster, -df$sil_width), ]
   if(!is.null(rownames(df))) df$name <- factor(rownames(df), levels = rownames(df))
-  else df$name <- as.factor(1:nrow(df))
+  else df$name <- as.factor(seq_len(nrow(df)))
   df$cluster <- as.factor(df$cluster)
-  mapping <- aes_string(x = "name", y = "sil_width", 
-                        color = "cluster", fill = "cluster")
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # See: https://github.com/kassambara/factoextra/issues/190
+  mapping <- aes(x = .data[["name"]], y = .data[["sil_width"]],
+                        color = .data[["cluster"]], fill = .data[["cluster"]])
   p <- ggplot(df, mapping) +
     geom_bar(stat = "identity") +
     labs(y = "Silhouette width Si", x = "",
@@ -114,10 +116,9 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   ave <- tapply(df$sil_width, df$cluster, mean)
   n <- tapply(df$cluster, df$cluster, length)
   sil.sum <- data.frame(cluster = names(ave), size = n,
-                      ave.sil.width = round(ave,2), stringsAsFactors = TRUE)
+                      ave.sil.width = round(ave,2))
   if(print.summary) print(sil.sum)
   
   p
 }
-
 

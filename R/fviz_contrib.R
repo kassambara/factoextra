@@ -111,7 +111,7 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
     eig <- get_eigenvalue(X)[axes,1]
     theo_contrib <- sum(theo_contrib*eig)/sum(eig)
   }
-  df <- data.frame(name = factor(names(contrib), levels = names(contrib)), contrib = contrib, stringsAsFactors = TRUE)
+  df <- data.frame(name = factor(names(contrib), levels = names(contrib)), contrib = contrib)
   
   # Define color if quanti.var
   if(choice == "quanti.var") {
@@ -127,11 +127,6 @@ fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var",
                          sort.by.groups = FALSE, ...
                          )+
     geom_hline(yintercept=theo_contrib, linetype=2, color="red")
-  
-#   p <- .ggbarplot(contrib, fill =fill, color = color,
-#                   sort.value = sort.val[1], top = top,
-#                   title = title, ylab ="Contributions (%)")+
-#     geom_hline(yintercept=theo_contrib, linetype=2, color="red")
 
   p
 }
@@ -154,5 +149,4 @@ fviz_pca_contrib <- function(X, choice = c("var", "ind"), axes=1,
                top = top, ...)
   p
 }
-
 

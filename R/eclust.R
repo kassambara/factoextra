@@ -4,7 +4,7 @@ NULL
 #' 
 #' @description Provides solution for enhancing the workflow of clustering
 #'   analyses and ggplot2-based elegant data visualization. Read more: 
-#'  \href{http://www.sthda.com/english/wiki/visual-enhancement-of-clustering-analysis-unsupervised-machine-learning}{Visual enhancement of clustering analysis}.
+#'  \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
 #' @param x numeric vector, data matrix or data frame
 #' @param FUNcluster a clustering function including "kmeans", "pam", "clara", 
 #'   "fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.
@@ -85,6 +85,15 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
                    nboot = 100, verbose = interactive(),
                    seed = 123,  ...)
   {
+  has_seed <- exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
+  if(has_seed) old_seed <- get(".Random.seed", envir = .GlobalEnv)
+  on.exit({
+    if(!has_seed && exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)){
+      rm(".Random.seed", envir = .GlobalEnv)
+    } else if(has_seed){
+      assign(".Random.seed", old_seed, envir = .GlobalEnv)
+    }
+  }, add = TRUE)
   set.seed(seed)
   data <- x
   if(stand) x <- scale(x)
@@ -165,6 +174,5 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   k <- .maxSE(gap, se, method = gap_maxSE$method, SE.factor = gap_maxSE$SE.factor)
   list(stat = gap_stat, k = k)
 }
-
 
 

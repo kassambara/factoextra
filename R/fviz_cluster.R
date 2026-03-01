@@ -24,7 +24,8 @@
 #'  values are the combination of c("point", "text"). Use "point" (to show only
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not.
+#'  labels or not. The old \code{jitter} argument is kept for backward
+#'  compatibility and is silently converted to \code{repel = TRUE}.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
 #'@param ellipse logical value; if TRUE, draws outline around points of each
 #'  cluster
@@ -119,27 +120,27 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          outlier.pointsize = pointsize, outlier.labelsize = labelsize,
                          ggtheme = theme_grey(), ...){
   
-  # Deprecated arguments
+  # Backward compatibility: deprecated arguments silently converted
   extra_args <- list(...)
   .check_axes(axes, .length = 2)
-  
+
+  # jitter -> repel (silent conversion)
   if (!is.null(extra_args$jitter)) {
-    warning("argument jitter is deprecated; please use repel = TRUE instead, to avoid overlapping of labels.", 
-            call. = FALSE)
-    if(!is.null(extra_args$jitter$width) | !is.null(extra_args$jitter$height) ) repel = TRUE
+    if(!is.null(extra_args$jitter$width) || !is.null(extra_args$jitter$height) ) repel = TRUE
   }
-  
-  if(!is.null(extra_args$frame)) ellipse <- .facto_dep("frame", "ellipse", ellipse)
-  if(!is.null(extra_args$frame.type)) ellipse.type <- .facto_dep("frame.type", "ellipse.type", extra_args$frame.type)
-  if(!is.null(extra_args$frame.level)) ellipse.level <- .facto_dep("frame.level", "ellipse.level", extra_args$frame.level)
-  if(!is.null(extra_args$frame.alpha)) ellipse.alpha <- .facto_dep("frame.alpha", "ellipse.alpha", extra_args$frame.alpha)
-  if(!is.null(extra_args$title)) main <- .facto_dep("title", "main", extra_args$title)
+
+  # frame -> ellipse (silent conversion)
+  if(!is.null(extra_args$frame)) ellipse <- extra_args$frame
+  if(!is.null(extra_args$frame.type)) ellipse.type <- extra_args$frame.type
+  if(!is.null(extra_args$frame.level)) ellipse.level <- extra_args$frame.level
+  if(!is.null(extra_args$frame.alpha)) ellipse.alpha <- extra_args$frame.alpha
+  if(!is.null(extra_args$title)) main <- extra_args$title
   
   
   # object from cluster package
   if(inherits(object, c("partition", "hkmeans", "eclust"))) data <- object$data
   # Object from kmeans (stats package)
-  else if((inherits(object, "kmeans") & !inherits(object, "eclust"))| inherits(object, "dbscan")){
+  else if((inherits(object, "kmeans") && !inherits(object, "eclust")) || inherits(object, "dbscan")){
     if(is.null(data)) stop("data is required for plotting kmeans/dbscan clusters")
   } 
   # Object from mclust package
@@ -162,11 +163,11 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     else data <- object$data
   }
   # Any obects containing data and cluster elements
-  else if(!is.null(object$data) & !is.null(object$cluster)){
+  else if(!is.null(object$data) && !is.null(object$cluster)){
     data <- object$data
     cluster <- object$cluster
   }
-  else stop("Can't handle an object of class ", class(object))
+  else stop("Can't handle an object of class ", paste(class(object), collapse = ", "))
   
   # Choose variables
   if(!is.null(choose.vars))
@@ -190,8 +191,8 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     }
     # PCA is not performed
     else if(ncol(data) == 2){
-      ind <- as.data.frame(data, stringsAsFactors = TRUE)
-      ind <- cbind.data.frame(name = rownames(ind), ind, stringsAsFactors = TRUE)
+      ind <- as.data.frame(data)
+      ind <- cbind.data.frame(name = rownames(ind), ind)
       if(is.null(xlab)) xlab <- colnames(data)[1]
       if(is.null(ylab)) ylab <- colnames(data)[2]
       
@@ -207,14 +208,14 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   else if(inherits(data, "HCPC")){
     ind <- res.hcpc$call$X[, c(axes, ncol(res.hcpc$call$X))]
     colnames(ind) <- c("Dim.1", "Dim.2", "clust")
-    ind <- cbind.data.frame(name = rownames(ind), ind, stringsAsFactors = TRUE)
+    ind <- cbind.data.frame(name = rownames(ind), ind)
     colnames(ind)[2:3] <-  c("x", "y")
     label_coord <- ind
     eig <- get_eigenvalue(res.hcpc$call$t$res)[axes,2]
     if(is.null(xlab)) xlab = paste0("Dim", axes[1], " (", round(eig[1], 1), "%)") 
     if(is.null(ylab)) ylab = paste0("Dim", axes[2], " (", round(eig[2], 1),"%)")
   }
-  else stop("A data of class ", class(data), " is not supported.")
+  else stop("A data of class ", paste(class(data), collapse = ", "), " is not supported.")
   
   # Plot data and labels
   # ++++++++++++++++++++++++
@@ -222,8 +223,8 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   if("text" %in% geom) label = TRUE
   if(!("point" %in% geom)) pointsize = 0
   
-  plot.data <- cbind.data.frame(ind, cluster = cluster, stringsAsFactors = TRUE)
-  label_coord <- cbind.data.frame(label_coord, cluster = cluster, stringsAsFactors = TRUE)
+  plot.data <- cbind.data.frame(ind, cluster = cluster)
+  label_coord <- cbind.data.frame(label_coord, cluster = cluster)
   # Augment data
   if(inherits(object, "Mclust")){
     plot.data$uncertainty <- object$uncertainty
@@ -253,7 +254,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   if("text" %in% geom) lab <- "name"
   if(is.null(shape)) shape <- "cluster"
   
-  if(inherits(object, "partition") & missing(show.clust.cent))
+  if(inherits(object, "partition") && missing(show.clust.cent))
     show.clust.cent <- FALSE # hide mean point for PAM, CLARA
   
   p <- ggpubr::ggscatter(plot.data, "x", "y",
@@ -284,21 +285,22 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          pointsize = 2, labelsize = 4, geom = c("point", "text"), repel = FALSE)
   {
   
-  if("point" %in% geom) 
-    p <-  p + geom_point(data = outliers_data, 
-                      aes_string('x', 'y'),
+  # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+  # See: https://github.com/kassambara/factoextra/issues/190
+  if("point" %in% geom)
+    p <-  p + geom_point(data = outliers_data,
+                      aes(x = .data[["x"]], y = .data[["y"]]),
                       size = pointsize, color = outlier.color, shape = outlier.shape)
   if("text" %in% geom){
     if(repel)
-      p <- p +ggrepel::geom_text_repel(data = outliers_labs, 
-                                       aes_string('x', 'y', label = 'name'),
+      p <- p +ggrepel::geom_text_repel(data = outliers_labs,
+                                       aes(x = .data[["x"]], y = .data[["y"]], label = .data[["name"]]),
                                        size = labelsize, color = outlier.color)
     else
-      p <- p + geom_text(data = outliers_labs, 
-                         aes_string('x', 'y', label = 'name'),  
+      p <- p + geom_text(data = outliers_labs,
+                         aes(x = .data[["x"]], y = .data[["y"]], label = .data[["name"]]),
                          size = labelsize, vjust = -0.7, color = outlier.color)
   }
     
   return(p)
 }
-

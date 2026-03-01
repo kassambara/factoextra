@@ -70,7 +70,7 @@ get_mfa_ind <- function(res.mfa){
   # FactoMineR package
   if(inherits(res.mfa, c("MFA"))) ind <- res.mfa$ind
   # @todo ade4 Support muss noch eingebaut werden!
-  else stop("An object of class : ", class(res.mfa), 
+  else stop("An object of class : ", paste(class(res.mfa), collapse = ", "), 
             " can't be handled by the function get_mfa_ind()")
   class(ind)<-c("factoextra", "mfa", "mfa_ind")
   attr(ind, "element") <- "individuals"
@@ -83,11 +83,11 @@ get_mfa_var <- function(res.mfa, element = c( "quanti.var", "quali.var", "group"
   
   choice <- match.arg(element)
   if(!inherits(res.mfa, "MFA"))
-    stop("An object of class : ", class(res.mfa), " can't be handled.")
+    stop("An object of class : ", paste(class(res.mfa), collapse = ", "), " can't be handled.")
   
-  if(choice == "quanti.var" & is.null(res.mfa$quanti.var)) 
+  if(choice == "quanti.var" && is.null(res.mfa$quanti.var)) 
     stop("There are no quantitative variables in this MFA.")
-  else if(choice == "quali.var" & is.null(res.mfa$quali.var)) 
+  else if(choice == "quali.var" && is.null(res.mfa$quali.var)) 
     stop("There are no qualitative variables in this MFA.")
     
   
@@ -112,7 +112,7 @@ get_mfa_var <- function(res.mfa, element = c( "quanti.var", "quali.var", "group"
 get_mfa_partial_axes <- function(res.mfa){
   # FactoMineR package
   if(inherits(res.mfa, c("MFA"))) partial_axes <- res.mfa$partial.axes
-  else stop("An object of class : ", class(res.mfa), 
+  else stop("An object of class : ", paste(class(res.mfa), collapse = ", "), 
             " can't be handled by the function get_mfa_partial_axes()")
   class(partial_axes)<-c("factoextra", "mfa", "mfa_partial_axes")
   attr(partial_axes, "element") <- "partial axes"

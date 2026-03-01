@@ -14,7 +14,7 @@
 #' @export
 print.factoextra<-function(x, ...){
   if(!inherits(x, "factoextra"))
-    stop("Can't handle data of class ", class(x))
+    stop("Can't handle data of class ", paste(class(x), collapse = ", "))
   
   if(inherits(x, "pca_ind")){
     cat("Principal Component Analysis Results for individuals\n",
