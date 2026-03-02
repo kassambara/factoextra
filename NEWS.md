@@ -24,6 +24,11 @@ This release aligns `factoextra` with the maintained compatibility baseline whil
 * FactoMineR extraction/plotting helpers for improved compatibility with newer object structures and mixed groups.
 * CA/MCA/PCA extractor internals refactored to vectorized, type-stable code paths.
 
+### Fixed
+
+* `.onAttach` startup message no longer falsely claims that ggpubr and FactoMineR have been loaded (they are imported, not attached).
+* `.add_ind_groups()` no longer crashes when `habillage` is a single-column data frame (`drop = FALSE` added).
+
 ### Metadata
 
 * Dependency baseline updated for modern stack compatibility:
