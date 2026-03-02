@@ -4,7 +4,8 @@ Title: Extract and Visualize the Results of Multivariate Data Analyses
 Version: 2.0.0
 Date: 2026-03-02
 Authors@R: c(
-    person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com"),
+    person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com",
+           comment = c(ORCID = "0009-0002-9136-0791")),
     person("Fabian", "Mundt", role = "aut", email = "f.mundt@inventionate.de"),
     person("Laszlo", "Erdey", role = "ctb", email = "erdey.laszlo@econ.unideb.hu",
            comment = c(ORCID = "0000-0002-6781-4303",
