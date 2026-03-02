@@ -9,7 +9,7 @@ get_clust_tendency(
   n,
   graph = TRUE,
   gradient = list(low = "red", mid = "white", high = "blue"),
-  seed = 123
+  seed = NULL
 )
 }
 \arguments{
@@ -17,8 +17,9 @@ get_clust_tendency(
 are samples. Computation are done on rows (samples) by default. If you want
 to calculate Hopkins statistic on variables, transpose the data before.}
 
-\item{n}{the number of points selected from sample space which is also the 
-number of points selected from the given sample(data).}
+\item{n}{a positive integer specifying the number of points selected from
+sample space and from the observed data. Must be smaller than the number
+of complete observations.}
 
 \item{graph}{logical value; if TRUE the ordered dissimilarity image (ODI) is 
 shown.}
@@ -27,8 +28,9 @@ shown.}
 low, mid and high values in the ordered dissimilarity image. The element 
 "mid" can take the value of NULL.}
 
-\item{seed}{an integer specifying the seed for random number generator. 
-Specify seed for reproducible results.}
+\item{seed}{an integer seed for reproducibility, or NULL to use the current
+RNG stream. When non-NULL, the function restores the caller RNG state on
+exit.}
 }
 \value{
 A list containing the elements:
@@ -46,13 +48,31 @@ Before applying cluster methods, the first step is to assess
   image (ODI) is shown. Objects belonging to the same cluster are displayed 
   in consecutive order using hierarchical clustering. For more details and 
   interpretation, see 
-  \href{http://www.sthda.com/english/articles/29-cluster-validation-essentials/95-assessing-clustering-tendency-essentials/}{STHDA
+  \href{https://www.datanovia.com/en/lessons/assessing-clustering-tendency/}{STHDA
    website: Assessing clustering tendency}.
 }
 \details{
-\strong{Hopkins statistic}: If the value of Hopkins statistic is close to 
+\strong{Hopkins statistic}: If the value of Hopkins statistic is close to
 1 (far above 0.5), then we can conclude that the dataset is significantly
-clusterable.
+clusterable. The statistic is calculated using the correct formula from
+Cross and Jain (1982) with exponent d=D where D is the dimensionality
+(number of columns) of the data. Under the null hypothesis of spatial
+randomness, the Hopkins statistic follows a Beta(n, n) distribution.
+
+\strong{Note on interpretation}: This function returns the Hopkins statistic H
+where values close to 1 indicate clusterable data. Some other packages (e.g.,
+\code{performance::check_clusterstructure}) return 1-H, where values close to
+0 indicate clusterability. Always check the documentation of the specific
+implementation you are using.
+
+\strong{Breaking change}: factoextra uses the corrected Hopkins statistic
+formula (Wright 2022). Results differ from legacy factoextra and a one-time
+warning is emitted. Set \code{options(factoextra.warn_hopkins = FALSE)} to
+silence the warning.
+
+For large datasets, nearest-neighbor distances are computed with a low-memory
+fallback when the full pairwise matrix would exceed
+\code{getOption("factoextra.hopkins.max_matrix_cells", 2e7)} cells.
 
 \strong{VAT (Visual Assessment of cluster Tendency)}: The VAT detects the
 clustering tendency in a visual form by counting the number of square shaped

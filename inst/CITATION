@@ -1,0 +1,15 @@
+citHeader("To cite factoextra in publications use:")
+meta_year <- format(as.Date(meta[["Date"]]), "%Y")
+
+bibentry(
+  bibtype  = "Manual",
+  title    = "factoextra: Extract and Visualize the Results of Multivariate Data Analyses",
+  author   = c(person("Alboukadel", "Kassambara"),
+               person("Fabian", "Mundt")),
+  year     = meta_year,
+  note     = paste0(
+    "R package version ", meta[["Version"]],
+    ". With contributions from Laszlo Erdey (Faculty of Economics and Business, University of Debrecen, Hungary)"
+  ),
+  url      = "https://CRAN.R-project.org/package=factoextra"
+)

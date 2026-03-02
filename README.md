@@ -1,58 +1,123 @@
-[![Build Status](https://api.travis-ci.org/kassambara/factoextra.png)](https://travis-ci.org/kassambara/factoextra) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/factoextra)](https://cran.r-project.org/package=factoextra) [![Downloads](http://cranlogs.r-pkg.org/badges/factoextra)](https://cran.r-project.org/package=factoextra) [![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/factoextra?color=orange)](http://cranlogs.r-pkg.org/badges/grand-total/factoextra) [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active) [![Pending Pull-Requests](http://githubbadges.herokuapp.com/kassambara/factoextra/pulls.svg?style=flat)](https://github.com/kassambara/factoextra/pulls) [![Github Issues](http://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](https://github.com/kassambara/factoextra/issues)
+[![R-CMD-check](https://github.com/kassambara/factoextra/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kassambara/factoextra/actions/workflows/R-CMD-check.yaml)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/factoextra)](https://cran.r-project.org/package=factoextra)
+[![Downloads](https://cranlogs.r-pkg.org/badges/factoextra)](https://cran.r-project.org/package=factoextra)
+[![Total
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/factoextra?color=orange)](https://cranlogs.r-pkg.org/badges/grand-total/factoextra)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![Pending
+Pull-Requests](https://githubbadges.herokuapp.com/kassambara/factoextra/pulls.svg?style=flat)](https://github.com/kassambara/factoextra/pulls)
+[![Github
+Issues](https://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](https://github.com/kassambara/factoextra/issues)
 
-factoextra : Extract and Visualize the Results of Multivariate Data Analyses
-============================================================================
+# factoextra : Extract and Visualize the Results of Multivariate Data Analyses
 
-[**factoextra**](http://www.sthda.com/english/rpkgs/factoextra) is an R package making easy to *extract* and *visualize* the output of exploratory **multivariate data analyses**, including:
+[**factoextra**](https://rpkgs.datanovia.com/factoextra/index.html) is
+an R package making easy to *extract* and *visualize* the output of
+exploratory **multivariate data analyses**, including:
 
-1.  [Principal Component Analysis (PCA)](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/), which is used to summarize the information contained in a continuous (i.e, quantitative) multivariate data by reducing the dimensionality of the data without loosing important information.
+1.  [Principal Component Analysis
+    (PCA)](https://www.sthda.com/english/articles/index.php?url=/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/),
+    which is used to summarize the information contained in a continuous
+    (i.e, quantitative) multivariate data by reducing the dimensionality
+    of the data without loosing important information.
 
-2.  [Correspondence Analysis (CA)](http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining), which is an extension of the principal component analysis suited to analyse a large contingency table formed by two *qualitative variables* (or categorical data).
+2.  [Correspondence Analysis
+    (CA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/),
+    which is an extension of the principal component analysis suited to
+    analyse a large contingency table formed by two *qualitative
+    variables* (or categorical data).
 
-3.  [Multiple Correspondence Analysis (MCA)](http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining), which is an adaptation of CA to a data table containing more than two categorical variables.
+3.  [Multiple Correspondence Analysis
+    (MCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/),
+    which is an adaptation of CA to a data table containing more than
+    two categorical variables.
 
-4.  [Multiple Factor Analysis (MFA)](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_mfa.html) dedicated to datasets where variables are organized into groups (qualitative and/or quantitative variables).
+4.  [Multiple Factor Analysis
+    (MFA)](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html)
+    dedicated to datasets where variables are organized into groups
+    (qualitative and/or quantitative variables).
 
-5.  [Hierarchical Multiple Factor Analysis (HMFA)](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_hmfa.html): An extension of MFA in a situation where the data are organized into a hierarchical structure.
+5.  [Hierarchical Multiple Factor Analysis
+    (HMFA)](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html):
+    An extension of MFA in a situation where the data are organized into
+    a hierarchical structure.
 
-6.  [Factor Analysis of Mixed Data (FAMD)](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_famd.html), a particular case of the MFA, dedicated to analyze a data set containing both quantitative and qualitative variables.
+6.  [Factor Analysis of Mixed Data
+    (FAMD)](https://rpkgs.datanovia.com/factoextra/reference/fviz_famd.html),
+    a particular case of the MFA, dedicated to analyze a data set
+    containing both quantitative and qualitative variables.
 
-There are a number of R packages implementing principal component methods. These packages include: *FactoMineR*, *ade4*, *stats*, *ca*, *MASS* and *ExPosition*.
+There are a number of R packages implementing principal component
+methods. These packages include: *FactoMineR*, *ade4*, *stats*, *ca*,
+*MASS* and *ExPosition*.
 
-However, the result is presented differently according to the used packages. To help in the interpretation and in the visualization of multivariate analysis - such as cluster analysis and dimensionality reduction analysis - we developed an easy-to-use R package named [factoextra](http://www.sthda.com/english/rpkgs/factoextra).
+However, the result is presented differently according to the used
+packages. To help in the interpretation and in the visualization of
+multivariate analysis - such as cluster analysis and dimensionality
+reduction analysis - we developed an easy-to-use R package named
+[factoextra](https://rpkgs.datanovia.com/factoextra/index.html).
 
--   The R package **factoextra** has flexible and easy-to-use methods to extract quickly, in a human readable standard data format, the analysis results from the different packages mentioned above.
--   It produces a **ggplot2**-based **elegant data visualization** with less typing.
--   It contains also many functions facilitating clustering analysis and visualization.
+- The R package **factoextra** has flexible and easy-to-use methods to
+  extract quickly, in a human readable standard data format, the
+  analysis results from the different packages mentioned above.  
+- It produces a **ggplot2**-based **elegant data visualization** with
+  less typing.
+- It contains also many functions facilitating clustering analysis and
+  visualization.
 
-> We'll use i) the FactoMineR package (Sebastien Le, et al., 2008) to compute PCA, (M)CA, FAMD, MFA and HCPC; ii) and the factoextra package for extracting and visualizing the results.
+> We’ll use i) the FactoMineR package (Sebastien Le, et al., 2008) to
+> compute PCA, (M)CA, FAMD, MFA and HCPC; ii) and the factoextra package
+> for extracting and visualizing the results.
 
-The figure below shows methods, which outputs can be visualized using the factoextra package. The official online documentation is available at: <http://www.sthda.com/english/rpkgs/factoextra>.
+The figure below shows methods, which outputs can be visualized using
+the factoextra package. The official online documentation is available
+at: <https://rpkgs.datanovia.com/factoextra/index.html>.
 
-![factoextra R package](tools/factoextra-r-package.png)
+<figure>
+<img src="tools/factoextra-r-package.png" alt="factoextra R package" />
+<figcaption aria-hidden="true">factoextra R package</figcaption>
+</figure>
 
-Why using factoextra?
----------------------
+## Why using factoextra?
 
-1.  The *factoextra* R package can handle the results of PCA, CA, MCA, MFA, FAMD and HMFA from several packages, for extracting and visualizing the most important information contained in your data.
+1.  The *factoextra* R package can handle the results of PCA, CA, MCA,
+    MFA, FAMD and HMFA from several packages, for extracting and
+    visualizing the most important information contained in your data.
 
-2.  *After PCA, CA, MCA, MFA, FAMD and HMFA, the most important row/column elements* can be highlighted using :
+2.  *After PCA, CA, MCA, MFA, FAMD and HMFA, the most important
+    row/column elements* can be highlighted using :  
 
--   their cos2 values corresponding to their quality of representation on the factor map
--   their contributions to the definition of the principal dimensions.
+- their cos2 values corresponding to their quality of representation on
+  the factor map
+- their contributions to the definition of the principal dimensions.
 
-<span class="success">If you want to do this, the factoextra package provides a convenient solution.</span>
+<span class="success">If you want to do this, the factoextra package
+provides a convenient solution.</span>
 
-1.  *PCA and (M)CA are used sometimes for prediction problems* : one can predict the coordinates of new supplementary variables (quantitative and qualitative) and supplementary individuals using the information provided by the previously performed PCA or (M)CA. This can be done easily using the [FactoMineR](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/) package.
+1.  *PCA and (M)CA are used sometimes for prediction problems* : one can
+    predict the coordinates of new supplementary variables (quantitative
+    and qualitative) and supplementary individuals using the information
+    provided by the previously performed PCA or (M)CA. This can be done
+    easily using the
+    [FactoMineR](https://www.sthda.com/english/articles/index.php?url=/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/)
+    package.
 
-<span class="success">If you want to make predictions with PCA/MCA and to visualize the position of the supplementary variables/individuals on the factor map using ggplot2: then factoextra can help you. It's quick, write less and do more...</span>
+<span class="success">If you want to make predictions with PCA/MCA and
+to visualize the position of the supplementary variables/individuals on
+the factor map using ggplot2: then factoextra can help you. It’s quick,
+write less and do more…</span>
 
-1.  *Several functions from different packages - FactoMineR, ade4, ExPosition, stats - are available in R for performing PCA, CA or MCA*. However, The components of the output vary from package to package.
+1.  *Several functions from different packages - FactoMineR, ade4,
+    ExPosition, stats - are available in R for performing PCA, CA or
+    MCA*. However, The components of the output vary from package to
+    package.
 
-<span class="success">No matter the package you decided to use, factoextra can give you a human understandable output.</span>
+<span class="success">No matter the package you decided to use,
+factoextra can give you a human understandable output.</span>
 
-Installing FactoMineR
----------------------
+## Installing FactoMineR
 
 The FactoMineR package can be installed and loaded as follow:
 
@@ -64,223 +129,144 @@ install.packages("FactoMineR")
 library("FactoMineR")
 ```
 
-Installing and loading factoextra
----------------------------------
+## Installing and loading factoextra
 
--   factoextra can be installed from [CRAN](https://cran.r-project.org/package=factoextra) as follow:
+- factoextra can be installed from
+  [CRAN](https://cran.r-project.org/package=factoextra) as follow:
 
 ``` r
 install.packages("factoextra")
 ```
 
--   Or, install the latest version from [Github](https://github.com/kassambara/factoextra)
+- Or, install the latest version from
+  [Github](https://github.com/kassambara/factoextra)
 
 ``` r
-if(!require(devtools)) install.packages("devtools")
-devtools::install_github("kassambara/factoextra")
+if(!require(remotes)) install.packages("remotes")
+remotes::install_github("kassambara/factoextra")
 ```
 
--   Load factoextra as follow :
+The current maintenance baseline targets:
+
+- `R >= 4.1.0`
+
+- `ggplot2 >= 3.5.2`
+
+- `ggpubr >= 0.6.3` (CRAN)
+
+- `FactoMineR >= 2.13`
+
+- Load factoextra as follow :
 
 ``` r
 library("factoextra")
-#> Loading required package: ggplot2
-#> Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
 ```
 
-Main functions in the factoextra package
-----------------------------------------
+## Recent compatibility updates
 
-<span class="warning">See the online documentation (<http://www.sthda.com/english/rpkgs/factoextra>) for a complete list.</span>
+``` r
+# New helper: map legacy FactoMineR category labels
+map_factominer_legacy_names(res.mfa, c("var.level"))
+
+# New helper: remove stale package lock directories
+clean_lock_files()
+
+# Hopkins statistic uses corrected formula (Wright 2022)
+# Set this option to silence the one-time warning
+options(factoextra.warn_hopkins = FALSE)
+```
+
+## Main functions in the factoextra package
+
+<span class="warning">See the online documentation
+(<https://rpkgs.datanovia.com/factoextra/index.html>) for a complete
+list.</span>
 
 ### Visualizing dimension reduction analysis outputs
 
-<table style="width:97%;">
-<colgroup>
-<col width="13%" />
-<col width="83%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Functions</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><em>fviz_eig (or fviz_eigenvalue)</em></td>
-<td>Extract and visualize the eigenvalues/variances of dimensions.</td>
-</tr>
-<tr class="even">
-<td><em>fviz_pca</em></td>
-<td>Graph of individuals/variables from the output of <em>Principal Component Analysis</em> (PCA).</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_ca</em></td>
-<td>Graph of column/row variables from the output of <em>Correspondence Analysis</em> (CA).</td>
-</tr>
-<tr class="even">
-<td><em>fviz_mca</em></td>
-<td>Graph of individuals/variables from the output of <em>Multiple Correspondence Analysis</em> (MCA).</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_mfa</em></td>
-<td>Graph of individuals/variables from the output of <em>Multiple Factor Analysis</em> (MFA).</td>
-</tr>
-<tr class="even">
-<td><em>fviz_famd</em></td>
-<td>Graph of individuals/variables from the output of <em>Factor Analysis of Mixed Data</em> (FAMD).</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_hmfa</em></td>
-<td>Graph of individuals/variables from the output of <em>Hierarchical Multiple Factor Analysis</em> (HMFA).</td>
-</tr>
-<tr class="even">
-<td><em>fviz_ellipses</em></td>
-<td>Draw confidence ellipses around the categories.</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_cos2</em></td>
-<td>Visualize the quality of representation of the row/column variable from the results of PCA, CA, MCA functions.</td>
-</tr>
-<tr class="even">
-<td><em>fviz_contrib</em></td>
-<td>Visualize the contributions of row/column elements from the results of PCA, CA, MCA functions.</td>
-</tr>
-</tbody>
-</table>
+| Functions | Description |
+|-----------|-------------------------------------------------------------|
+| *fviz_eig (or fviz_eigenvalue)* | Extract and visualize the eigenvalues/variances of dimensions. |
+| *fviz_pca* | Graph of individuals/variables from the output of *Principal Component Analysis* (PCA). |
+| *fviz_ca* | Graph of column/row variables from the output of *Correspondence Analysis* (CA). |
+| *fviz_mca* | Graph of individuals/variables from the output of *Multiple Correspondence Analysis* (MCA). |
+| *fviz_mfa* | Graph of individuals/variables from the output of *Multiple Factor Analysis* (MFA). |
+| *fviz_famd* | Graph of individuals/variables from the output of *Factor Analysis of Mixed Data* (FAMD). |
+| *fviz_hmfa* | Graph of individuals/variables from the output of *Hierarchical Multiple Factor Analysis* (HMFA). |
+| *fviz_ellipses* | Draw confidence ellipses around the categories. |
+| *fviz_cos2* | Visualize the quality of representation of the row/column variable from the results of PCA, CA, MCA functions. |
+| *fviz_contrib* | Visualize the contributions of row/column elements from the results of PCA, CA, MCA functions. |
 
 ### Extracting data from dimension reduction analysis outputs
 
-<table style="width:97%;">
-<colgroup>
-<col width="13%" />
-<col width="83%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Functions</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><em>get_eigenvalue</em></td>
-<td>Extract and visualize the eigenvalues/variances of dimensions.</td>
-</tr>
-<tr class="even">
-<td><em>get_pca</em></td>
-<td>Extract all the results (coordinates, squared cosine, contributions) for the active individuals/variables from <em>Principal Component Analysis</em> (PCA) outputs.</td>
-</tr>
-<tr class="odd">
-<td><em>get_ca</em></td>
-<td>Extract all the results (coordinates, squared cosine, contributions) for the active column/row variables from <em>Correspondence Analysis</em> outputs.</td>
-</tr>
-<tr class="even">
-<td><em>get_mca</em></td>
-<td>Extract results from <em>Multiple Correspondence Analysis</em> outputs.</td>
-</tr>
-<tr class="odd">
-<td><em>get_mfa</em></td>
-<td>Extract results from <em>Multiple Factor Analysis</em> outputs.</td>
-</tr>
-<tr class="even">
-<td><em>get_famd</em></td>
-<td>Extract results from <em>Factor Analysis of Mixed Data</em> outputs.</td>
-</tr>
-<tr class="odd">
-<td><em>get_hmfa</em></td>
-<td>Extract results from <em>Hierarchical Multiple Factor Analysis</em> outputs.</td>
-</tr>
-<tr class="even">
-<td><em>facto_summarize</em></td>
-<td>Subset and summarize the output of factor analyses.</td>
-</tr>
-</tbody>
-</table>
+| Functions | Description |
+|-----------|-------------------------------------------------------------|
+| *get_eigenvalue* | Extract and visualize the eigenvalues/variances of dimensions. |
+| *get_pca* | Extract all the results (coordinates, squared cosine, contributions) for the active individuals/variables from *Principal Component Analysis* (PCA) outputs. |
+| *get_ca* | Extract all the results (coordinates, squared cosine, contributions) for the active column/row variables from *Correspondence Analysis* outputs. |
+| *get_mca* | Extract results from *Multiple Correspondence Analysis* outputs. |
+| *get_mfa* | Extract results from *Multiple Factor Analysis* outputs. |
+| *get_famd* | Extract results from *Factor Analysis of Mixed Data* outputs. |
+| *get_hmfa* | Extract results from *Hierarchical Multiple Factor Analysis* outputs. |
+| *facto_summarize* | Subset and summarize the output of factor analyses. |
 
 ### Clustering analysis and visualization
 
-<table style="width:97%;">
-<colgroup>
-<col width="13%" />
-<col width="83%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Functions</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><em>dist</em>(fviz_dist, get_dist)</td>
-<td>Enhanced Distance Matrix Computation and Visualization.</td>
-</tr>
-<tr class="even">
-<td><em>get_clust_tendency</em></td>
-<td>Assessing Clustering Tendency.</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_nbclust</em>(fviz_gap_stat)</td>
-<td>Determining and Visualizing the Optimal Number of Clusters.</td>
-</tr>
-<tr class="even">
-<td><em>fviz_dend</em></td>
-<td>Enhanced Visualization of Dendrogram</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_cluster</em></td>
-<td>Visualize Clustering Results</td>
-</tr>
-<tr class="even">
-<td><em>fviz_mclust</em></td>
-<td>Visualize Model-based Clustering Results</td>
-</tr>
-<tr class="odd">
-<td><em>fviz_silhouette</em></td>
-<td>Visualize Silhouette Information from Clustering.</td>
-</tr>
-<tr class="even">
-<td><em>hcut</em></td>
-<td>Computes Hierarchical Clustering and Cut the Tree</td>
-</tr>
-<tr class="odd">
-<td><em>hkmeans</em> (hkmeans_tree, print.hkmeans)</td>
-<td>Hierarchical k-means clustering.</td>
-</tr>
-<tr class="even">
-<td><em>eclust</em></td>
-<td>Visual enhancement of clustering analysis</td>
-</tr>
-</tbody>
-</table>
+| Functions | Description |
+|-----------|-------------------------------------------------------------|
+| *dist*(fviz_dist, get_dist) | Enhanced Distance Matrix Computation and Visualization. |
+| *get_clust_tendency* | Assessing Clustering Tendency. |
+| *fviz_nbclust*(fviz_gap_stat) | Determining and Visualizing the Optimal Number of Clusters. |
+| *fviz_dend* | Enhanced Visualization of Dendrogram |
+| *fviz_cluster* | Visualize Clustering Results |
+| *fviz_mclust* | Visualize Model-based Clustering Results |
+| *fviz_silhouette* | Visualize Silhouette Information from Clustering. |
+| *hcut* | Computes Hierarchical Clustering and Cut the Tree |
+| *hkmeans* (hkmeans_tree, print.hkmeans) | Hierarchical k-means clustering. |
+| *eclust* | Visual enhancement of clustering analysis |
 
-Dimension reduction and factoextra
-----------------------------------
+## Dimension reduction and factoextra
 
-As depicted in the figure below, the type of analysis to be performed depends on the data set formats and structures.
+As depicted in the figure below, the type of analysis to be performed
+depends on the data set formats and structures.
 
-![dimension reduction and factoextra](tools/multivariate-analysis-factoextra.png)
+<figure>
+<img src="tools/multivariate-analysis-factoextra.png"
+alt="dimension reduction and factoextra" />
+<figcaption aria-hidden="true">dimension reduction and
+factoextra</figcaption>
+</figure>
 
-In this section we start by illustrating classical methods - such as PCA, CA and MCA - for analyzing a data set containing continuous variables, contingency table and qualitative variables, respectively.
+In this section we start by illustrating classical methods - such as
+PCA, CA and MCA - for analyzing a data set containing continuous
+variables, contingency table and qualitative variables, respectively.
 
-We continue by discussing advanced methods - such as FAMD, MFA and HMFA - for analyzing a data set containing a mix of variables (qualitatives & quantitatives) organized or not into groups.
+We continue by discussing advanced methods - such as FAMD, MFA and
+HMFA - for analyzing a data set containing a mix of variables
+(qualitatives & quantitatives) organized or not into groups.
 
-Finally, we show how to perform hierarchical clustering on principal components (HCPC), which useful for performing clustering with a data set containing only qualitative variables or with a mixed data of qualitative and quantitative variables.
+Finally, we show how to perform hierarchical clustering on principal
+components (HCPC), which useful for performing clustering with a data
+set containing only qualitative variables or with a mixed data of
+qualitative and quantitative variables.
 
 ### Principal component analysis
 
--   Data: *decathlon2* \[in *factoextra* package\]
--   PCA function: *FactoMineR::PCA*()
--   Visualization *factoextra::fviz\_pca*()
+- Data: *decathlon2* \[in *factoextra* package\]
+- PCA function: *FactoMineR::PCA*()
+- Visualization *factoextra::fviz_pca*()
 
-<span class="success">Read more about computing and interpreting principal component analysis at: [**Principal Component Analysis** (PCA)](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/).</span>
+<span class="success">Read more about computing and interpreting
+principal component analysis at: [**Principal Component Analysis**
+(PCA)](https://www.sthda.com/english/articles/index.php?url=/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/).</span>
 
 1.  **Loading data**
 
 ``` r
 library("factoextra")
+#> Loading required package: ggplot2
+#> Welcome to factoextra! ggpubr and FactoMineR have been loaded.
+#> Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
 data("decathlon2")
 df <- decathlon2[1:23, 1:10]
 ```
@@ -351,7 +337,8 @@ fviz_pca_var(res.pca, col.var = "black")
 
 ![](tools/README-pca-variables-1.png)
 
-It's possible to control variable colors using their contributions ("contrib") to the principal axes:
+It’s possible to control variable colors using their contributions
+(“contrib”) to the principal axes:
 
 ``` r
 # Control variable colors using their contributions
@@ -439,13 +426,15 @@ fviz_pca_ind(iris.pca,
 
 ### Correspondence analysis
 
--   Data: *housetasks* \[in factoextra\]
--   CA function *FactoMineR::CA*()
--   Visualize with *factoextra::fviz\_ca*()
+- Data: *housetasks* \[in factoextra\]
+- CA function *FactoMineR::CA*()
+- Visualize with *factoextra::fviz_ca*()
 
-<span class="success">Read more about computing and interpreting correspondence analysis at: [**Correspondence Analysis** (CA)](http://www.sthda.com/english/wiki/correspondence-analysis-in-r-the-ultimate-guide-for-the-analysis-the-visualization-and-the-interpretation-r-software-and-data-mining).</span>
+<span class="success">Read more about computing and interpreting
+correspondence analysis at: [**Correspondence Analysis**
+(CA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/).</span>
 
--   **Compute CA**:
+- **Compute CA**:
 
 ``` r
  # Loading data
@@ -456,7 +445,7 @@ library("FactoMineR")
 res.ca <- CA(housetasks, graph = FALSE)
 ```
 
--   **Extract results for row/column variables**:
+- **Extract results for row/column variables**:
 
 ``` r
 # Result for row variables
@@ -466,7 +455,7 @@ get_ca_row(res.ca)
 get_ca_col(res.ca)
 ```
 
--   **Biplot of rows and columns**
+- **Biplot of rows and columns**
 
 ``` r
 fviz_ca_biplot(res.ca, repel = TRUE)
@@ -492,11 +481,14 @@ fviz_contrib(res.ca, choice ="col", axes = 1)
 
 ### Multiple correspondence analysis
 
--   Data: **poison** \[in factoextra\]
--   MCA function **FactoMineR::MCA**()
--   Visualization **factoextra::fviz\_mca**()
+- Data: **poison** \[in factoextra\]
+- MCA function **FactoMineR::MCA**()
+- Visualization **factoextra::fviz_mca**()
 
-<span class="success">Read more about computing and interpreting multiple correspondence analysis at: [**Multiple Correspondence Analysis** (MCA)](http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining).</span>
+<span class="success">Read more about computing and interpreting
+multiple correspondence analysis at: [**Multiple Correspondence
+Analysis**
+(MCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/).</span>
 
 1.  **Computing MCA**:
 
@@ -559,33 +551,47 @@ fviz_mca_biplot(res.mca, repel = TRUE)
 
 ### Advanced methods
 
-The factoextra R package has also functions that support the visualization of advanced methods such:
+The factoextra R package has also functions that support the
+visualization of advanced methods such:
 
--   Factor Analysis of Mixed Data (FAMD): : [FAMD Examples](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_famd.html)
--   Multiple Factor Analysis (MFA): [MFA Examples](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_mfa.html)
--   Hierarchical Multiple Factor Analysis (HMFA): [HMFA Examples](http://www.sthda.com/english/rpkgs/factoextra/reference/fviz_hmfa.html)
--   [Hierachical Clustering on Principal Components (HCPC)](http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/117-hcpc-hierarchical-clustering-on-principal-components-essentials/)
+- Factor Analysis of Mixed Data (FAMD): : [FAMD
+  Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_famd.html)
+- Multiple Factor Analysis (MFA): [MFA
+  Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html)
+- Hierarchical Multiple Factor Analysis (HMFA): [HMFA
+  Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html)
+- [Hierachical Clustering on Principal Components
+  (HCPC)](https://www.sthda.com/english/articles/index.php?url=/31-principal-component-methods-in-r-practical-guide/117-hcpc-hierarchical-clustering-on-principal-components-essentials/)
 
-Cluster analysis and factoextra
--------------------------------
+## Cluster analysis and factoextra
 
-To learn more about cluster analysis, you can refer to the book available at: [Practical Guide to Cluster Analysis in R](http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book)
+To learn more about cluster analysis, you can refer to the book
+available at: [Practical Guide to Cluster Analysis in
+R](https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/)
 
-<a href = "http://www.sthda.com/english/wiki/practical-guide-to-cluster-analysis-in-r-book"><img src = "tools/clustering-e1-cover.png" alt = "clustering book cover"/></a>
+<a href = "https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/"><img src = "tools/clustering-e1-cover.png" alt = "clustering book cover"/></a>
 
 The main parts of the book include:
 
--   *distance measures*,
--   *partitioning clustering*,
--   *hierarchical clustering*,
--   *cluster validation methods*, as well as,
--   *advanced clustering methods* such as fuzzy clustering, density-based clustering and model-based clustering.
+- *distance measures*,
+- *partitioning clustering*,
+- *hierarchical clustering*,
+- *cluster validation methods*, as well as,
+- *advanced clustering methods* such as fuzzy clustering, density-based
+  clustering and model-based clustering.
 
-The book presents the basic principles of these tasks and provide many examples in R. It offers solid guidance in data mining for students and researchers.
+The book presents the basic principles of these tasks and provide many
+examples in R. It offers solid guidance in data mining for students and
+researchers.
 
 ### Partitioning clustering
 
-![Partitioning cluster analysis](tools/partitioning-clustering.png)
+<figure>
+<img src="tools/partitioning-clustering.png"
+alt="Partitioning cluster analysis" />
+<figcaption aria-hidden="true">Partitioning cluster
+analysis</figcaption>
+</figure>
 
 ``` r
 # 1. Loading and preparing data
@@ -607,12 +613,15 @@ fviz_cluster(km.res, data = df,
 
 ![](tools/README-partitioning-clustering-1.png)
 
-<br/>
+<br/>  
+
 Read more:
 
-1.  [Cluster analysis in R: All what you should know](http://www.sthda.com/english/wiki/cluster-analysis-in-r-unsupervised-machine-learning).
+1.  [Cluster analysis in R: All what you should
+    know](https://www.datanovia.com/en/blog/types-of-clustering-methods-overview-and-quick-start-r-code/).
 
-2.  [Partitioning cluster analysis](http://www.sthda.com/english/wiki/partitioning-cluster-analysis-quick-start-guide-unsupervised-machine-learning).
+2.  [Partitioning cluster
+    analysis](https://www.datanovia.com/en/courses/partitional-clustering-in-r-the-essentials/).
 
 <br/>
 
@@ -630,12 +639,15 @@ fviz_dend(res, rect = TRUE, cex = 0.5,
 
 ![](tools/README-hierarchical-clustering-1.png)
 
-<br/>
+<br/>  
+
 Read more:
 
-1.  [Cluster analysis in R: All what you should know](http://www.sthda.com/english/wiki/cluster-analysis-in-r-unsupervised-machine-learning)
+1.  [Cluster analysis in R: All what you should
+    know](https://www.datanovia.com/en/blog/types-of-clustering-methods-overview-and-quick-start-r-code/)
 
-2.  [Hierarchical clustering essentials](http://www.sthda.com/english/wiki/hierarchical-clustering-essentials-unsupervised-machine-learning)
+2.  [Hierarchical clustering
+    essentials](https://www.datanovia.com/en/courses/hierarchical-clustering-in-r-the-essentials/)
 
 <br/>
 
@@ -650,17 +662,39 @@ fviz_nbclust(my_data, kmeans, method = "gap_stat")
 
 ![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)
 
-Acknoweledgment
----------------
+## Acknoweledgment
 
-I would like to thank [Fabian Mundt](https://github.com/inventionate) for his active contributions to factoextra.
+Original package authors:
 
-We sincerely thank all developers for their efforts behind the packages that **factoextra** depends on, namely, [ggplot2](https://cran.r-project.org/package=ggplot2) (Hadley Wickham, Springer-Verlag New York, 2009), [FactoMineR](https://cran.r-project.org/package=FactoMineR) (Sebastien Le et al., Journal of Statistical Software, 2008), [dendextend](https://cran.r-project.org/package=dendextend) (Tal Galili, Bioinformatics, 2015), [cluster](https://cran.r-project.org/package=dendextend) (Martin Maechler et al., 2016) and more .....
+- [Alboukadel Kassambara](https://github.com/kassambara)
+- [Fabian Mundt](https://github.com/inventionate)
 
-References
-----------
+Contributor:
 
--   H. Wickham (2009). ggplot2: Elegant Graphics for Data Analysis. Springer-Verlag New York.
--   Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., Hornik, K.(2016). cluster: Cluster Analysis Basics and Extensions. R package version 2.0.5.
--   Sebastien Le, Julie Josse, Francois Husson (2008). FactoMineR: An R Package for Multivariate Analysis. Journal of Statistical Software, 25(1), 1-18. 10.18637/jss.v025.i01
--   Tal Galili (2015). dendextend: an R package for visualizing, adjusting, and comparing trees of hierarchical clustering. Bioinformatics. DOI: 10.1093/bioinformatics/btv428
+- Laszlo Erdey (Faculty of Economics and Business, University of
+  Debrecen, Hungary)
+
+We sincerely thank all developers for their efforts behind the packages
+that **factoextra** depends on, namely,
+[ggplot2](https://cran.r-project.org/package=ggplot2) (Hadley Wickham,
+Springer-Verlag New York, 2009),
+[FactoMineR](https://cran.r-project.org/package=FactoMineR) (Sebastien
+Le et al., Journal of Statistical Software, 2008),
+[dendextend](https://cran.r-project.org/package=dendextend) (Tal Galili,
+Bioinformatics, 2015),
+[cluster](https://cran.r-project.org/package=dendextend) (Martin
+Maechler et al., 2016) and more …..
+
+## References
+
+- H. Wickham (2009). ggplot2: Elegant Graphics for Data Analysis.
+  Springer-Verlag New York.
+- Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., Hornik, K.(2016).
+  cluster: Cluster Analysis Basics and Extensions. R package version
+  2.0.5.
+- Sebastien Le, Julie Josse, Francois Husson (2008). FactoMineR: An R
+  Package for Multivariate Analysis. Journal of Statistical Software,
+  25(1), 1-18. 10.18637/jss.v025.i01
+- Tal Galili (2015). dendextend: an R package for visualizing,
+  adjusting, and comparing trees of hierarchical clustering.
+  Bioinformatics. DOI: 10.1093/bioinformatics/btv428

@@ -60,7 +60,7 @@ get_famd <- function(res.famd, element = c("ind",  "var", "quanti.var", "quali.v
 get_famd_ind <- function(res.famd){
   # FactoMineR package
   if(inherits(res.famd, c("FAMD"))) ind <- res.famd$ind
-  else stop("An object of class : ", class(res.famd), 
+  else stop("An object of class : ", paste(class(res.famd), collapse = ", "), 
             " can't be handled by the function get_famd_ind()")
   class(ind)<-c("factoextra", "famd", "famd_ind")
   attr(ind, "element") <- "individuals"
@@ -84,7 +84,7 @@ get_famd_var <- function(res.famd, element = c( "var", "quanti.var", "quali.var"
                       quali.var = "qualitative variable categories"
     )
   }
-  else stop("An object of class : ", class(res.famd), 
+  else stop("An object of class : ", paste(class(res.famd), collapse = ", "), 
             " can't be handled.")
   
   class(vars)<-c("factoextra",  "famd", paste0("famd_", gsub(".", "_", choice, fixed = TRUE)))

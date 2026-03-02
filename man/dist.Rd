@@ -49,7 +49,7 @@ the ordered dissimilarity image. The element "mid" can take the value of NULL.}
 Clustering methods classify data samples into groups of similar 
   objects. This process requires some methods for measuring the distance or 
   the (dis)similarity between the observations. Read more: 
-  \href{http://www.sthda.com/english/wiki/clarifying-distance-measures-unsupervised-machine-learning}{STHDA
+  \href{https://www.datanovia.com/en/lessons/clustering-distance-measures/}{STHDA
    website - clarifying distance measures.}. \itemize{ \item get_dist(): 
   Computes a distance matrix between the rows of a data matrix. Compared to
   the standard \code{\link[stats]{dist}}() function, it supports 

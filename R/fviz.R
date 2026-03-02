@@ -22,8 +22,9 @@ NULL
 #'@param pointshape the shape of points
 #'@param arrowsize the size of arrows. Controls the thickness of arrows.
 #'@param title the title of the graph
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text 
-#'  labels or not.
+#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
+#'  labels or not. The old \code{jitter} argument is kept for backward
+#'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param habillage an optional factor variable for coloring the observations by 
 #'  groups. Default value is "none". If X is a PCA object from FactoMineR 
 #'  package, habillage can also specify the supplementary qualitative variable 
@@ -38,8 +39,8 @@ NULL
 #'  \code{\link[ggplot2]{stat_ellipse}()} including one of \code{c("t", "norm", 
 #'  "euclid")} for plotting concentration ellipses.
 #'  
-#'  \itemize{ \item \code{"convex"}: plot convex hull of a set o points. \item 
-#'  \code{"confidence"}: plot confidence ellipses arround group mean points as
+#'  \itemize{ \item \code{"convex"}: plot convex hull of a set of points. \item 
+#'  \code{"confidence"}: plot confidence ellipses around group mean points as
 #'  \code{\link[FactoMineR]{coord.ellipse}()}[in FactoMineR]. \item \code{"t"}:
 #'  assumes a multivariate t-distribution. \item \code{"norm"}: assumes a
 #'  multivariate normal distribution. \item \code{"euclid"}: draws a circle with
@@ -141,9 +142,12 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   .check_axes(axes, .length = 2)
   facto.class <- .get_facto_class(X)
     
-  # Deprecated arguments: jitter
+  # Backward compatibility: jitter argument converted with warning
   extra_args <- list(...)
-  if(!is.null(extra_args$jitter)) repel <- .facto_dep("jitter", "repel", TRUE)
+  if(!is.null(extra_args$jitter)) {
+    .facto_dep("jitter", "repel = TRUE", NULL)
+    repel <- TRUE
+  }
   # Elements to be labelled or hidden
   lab <- .label(label)
   hide <- .hide(invisible)
@@ -164,26 +168,26 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Define geometry if auto
   if(geom[1] == "auto"){
     geom <- c("point", "text")
-    if(element == "var" & facto.class == "PCA") geom <- c("arrow", "text")
+    if(element == "var" && facto.class == "PCA") geom <- c("arrow", "text")
   }
   # Define color if missing
   if(facto.class %in% c("CA", "MCA")){
-    if(element %in% c("row", "ind") & missing(color)) color = "blue"
-    else if(element %in% c("col", "var", "mca.cor") & missing(color)) color = "red"
+    if(element %in% c("row", "ind") && missing(color)) color = "blue"
+    else if(element %in% c("col", "var", "mca.cor") && missing(color)) color = "red"
   }
 
   # Data preparation
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # Data frame to be used for plotting
   summary.res <- c("coord", "contrib", "cos2")
-  if(element == "partial.axes" | (element == "quali.var" & facto.class == "HMFA")) 
+  if(element == "partial.axes" || (element == "quali.var" && facto.class == "HMFA")) 
     summary.res <- c("coord", "contrib")
-  else if(element == "group" & facto.class == "HMFA") summary.res <- "coord"
+  else if(element == "group" && facto.class == "HMFA") summary.res <- "coord"
   df <- facto_summarize(X, element = element, axes = axes, result = summary.res)
   colnames(df)[2:3] <-  c("x", "y")
   # Color by grouping variables
   #::::::::::::::::::::::::::::::::::::::
-  is_grouping_var_exists <- !("none" %in% habillage) | .is_grouping_var(color) | .is_grouping_var(fill)
+  is_grouping_var_exists <- !("none" %in% habillage) || .is_grouping_var(color) || .is_grouping_var(fill)
   # Augment data, if qualitative variable is used to color points by groups
   if(!("none" %in% habillage)){
     dd <- .add_ind_groups(X, df, habillage)
@@ -197,7 +201,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                                     "should be the same as the number of rows in the data.")
     .col.name <- "Col."
     df[[.col.name]] <- color
-    if(missing(pointshape) & .is_grouping_var(color)) pointshape <- .col.name
+    if(missing(pointshape) && .is_grouping_var(color)) pointshape <- .col.name
     color <- .col.name
   }
   # Augment data if fill is a continuous variable or a factor variable
@@ -216,32 +220,37 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Selection
   df.all <- df
+  if(!is.null(select) && !is.null(select$name) && .factominer_needs_category_map(facto.class, element)){
+    select$name <- map_factominer_legacy_names(X, select$name, element = element)
+  }
   if(!is.null(select)) df <- .select(df, select)
   
   # Special cases: data transformation
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   # Used by fviz_pca_biplot() only:  Multiply the variables data by scale. before biplotting
-  if(facto.class == "PCA" & element == "var" & !is.null(extra_args$scale.) )
+  if(facto.class == "PCA" && element == "var" && !is.null(extra_args$scale.) )
     df[, c("x", "y")] <- df[, c("x", "y")]*extra_args$scale.
   # (M)CA: scale coords according to the type of map
-  if(facto.class %in% c("CA", "MCA") & !(element %in% c("mca.cor", "quanti.sup"))){
+  if(facto.class %in% c("CA", "MCA") && !(element %in% c("mca.cor", "quanti.sup"))){
   if(!is.null(extra_args$map)) df <- .scale_ca(df, res.ca = X,  element = element, 
                                                type = extra_args$map, axes = axes)
   }
   # Main plot
   #%%%%%%%%%%%%%%%%%%%
-  is.pca.var <- element == "var" & facto.class == "PCA" # We don't want meanpoint for PCA variables colored by groups
-  point <- ("point" %in% geom) & (!hide[[element]]) # to show points, should be TRUE
+  is.pca.var <- element == "var" && facto.class == "PCA" # We don't want meanpoint for PCA variables colored by groups
+  point <- ("point" %in% geom) && (!hide[[element]]) # to show points, should be TRUE
   if(missing(mean.point))
-    mean.point <- (is_grouping_var_exists & !is.pca.var) & ("point" %in% geom) & (!hide[["quali"]]) # to show mean point
+    mean.point <- (is_grouping_var_exists && !is.pca.var) && ("point" %in% geom) && (!hide[["quali"]]) # to show mean point
   if(element == "quanti.var") mean.point <- FALSE # MFA, don't show the mean point of groups of variables
   
   label <- NULL
-  if(lab[[element]] & "text" %in% geom & !hide[[element]]) label <- "name"
+  if(lab[[element]] && "text" %in% geom && !hide[[element]]) label <- "name"
   
   p <- ggplot() 
   if(hide[[element]]) {
-    if(is.null(ggp)) p <-ggplot()+geom_blank(data = df, aes_string("x","y"))
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # See: https://github.com/kassambara/factoextra/issues/190
+    if(is.null(ggp)) p <-ggplot()+geom_blank(data = df, aes(x = .data[["x"]], y = .data[["y"]]))
     else p <- ggp
   }
   else p <- ggpubr::ggscatter(data = df, x = "x", y = "y",
@@ -260,14 +269,14 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
-  if("arrow" %in% geom & !hide[[element]]) 
-    p <- p + .arrows(data = df, color = color, alpha = alpha, size = arrowsize)
+  if("arrow" %in% geom && !hide[[element]])
+    p <- p + .arrows(data = df, color = color, alpha = alpha, linewidth = arrowsize)
   # Add correlation circle if PCA & element = "var" & scale = TRUE
-  if(facto.class == "PCA" & element == "var"){
-    if(.get_scale_unit(X) & is.null(extra_args$scale.)) 
+  if(facto.class == "PCA" && element == "var"){
+    if(.get_scale_unit(X) && is.null(extra_args$scale.)) 
       p <- .add_corr_circle(p, color = col.circle, size = circlesize)
   }
-  else if(facto.class %in% c("MCA", "MFA", "HMFA", "FAMD") & element %in% c("quanti.sup", "quanti.var", "partial.axes")){
+  else if(facto.class %in% c("MCA", "MFA", "HMFA", "FAMD") && element %in% c("quanti.sup", "quanti.var", "partial.axes")){
       p <- .add_corr_circle(p, color = col.circle, size = circlesize)
   }
   # Faceting when multiple variables are used to color individuals
@@ -314,24 +323,24 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 
 # Check if fill/color variable is continous in the context of PCA
 .is_continuous_var <- function(x){
-  x[1] %in% c("cos2", "contrib", "x", "y") | is.numeric(x)
+  x[1] %in% c("cos2", "contrib", "x", "y") || is.numeric(x)
 }
 
 .is_grouping_var <- function(x){
-  length(x) > 1 & (is.character(x) | is.factor(x))
+  length(x) > 1 && (is.character(x) || is.factor(x))
 }
 # Check if is continuous or grouping variable in the context of PCA
 .is_variable <- function(x){
-  .is_continuous_var(x) | .is_grouping_var(x)
+  .is_continuous_var(x) || .is_grouping_var(x)
 }
 
 
 # Check if character string is a valid color representation
 .is_color <- function(x) {
-  sapply(x, function(X) {
+  vapply(x, function(X) {
     tryCatch(is.matrix(grDevices::col2rgb(X)),
              error = function(e) FALSE)
-  })
+  }, logical(1))
 }
 
 
@@ -343,10 +352,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale) 
   else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1 
   else if(inherits(X, "expoOutput")) scale_unit <- !all(X$ExPosition.Data$scale==1) 
-  else if(inherits(X, 'pca') & inherits(X, 'dudi')) scale_unit <- length(unique(X$norm))>1 
+  else if(inherits(X, "pca") && inherits(X, "dudi")) scale_unit <- length(unique(X$norm)) > 1 
   else {
     warning(".get_scale_unit function: can't handle an object of class ",
-            class(X))
+            paste(class(X), collapse = ", "))
   }
   scale_unit
 }
@@ -354,23 +363,27 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 # Add correlation circle to variables plot
 .add_corr_circle <- function(p, color = "grey70", size = 0.5){
   theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
-  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta), stringsAsFactors = TRUE)
+  circle <- data.frame(xcircle = cos(theta), ycircle = sin(theta))
   p + 
-    geom_path(mapping = aes_string("xcircle", "ycircle"), data = circle, color = color,
-              size = size) +
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for line geoms
+    # See: https://github.com/kassambara/factoextra/issues/190, #191
+    geom_path(mapping = aes(x = .data[["xcircle"]], y = .data[["ycircle"]]), data = circle, color = color,
+              linewidth = size) +
     coord_fixed()
   
 }
 
 # Add arrow to the plot
-.arrows <- function(data, color = "black", alpha = 1, size =0.5,
+# FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for geom_segment
+.arrows <- function(data, color = "black", alpha = 1, linewidth = 0.5,
                     origin = 0, xend = "x", yend = "y"){
   origin <- rep(origin, nrow(data))
-  dd <- cbind.data.frame(data, xstart = origin, ystart = origin, stringsAsFactors = TRUE)
-  ggpubr::geom_exec(geom_segment, data = dd, 
+  dd <- cbind.data.frame(data, xstart = origin, ystart = origin)
+  ggpubr::geom_exec(geom_segment, data = dd,
                     x = "xstart", y = "ystart", xend = xend, yend = yend,
                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
-                    color = color, alpha = alpha, size = size)
+                    color = color, alpha = alpha, linewidth = linewidth)
 }
 
 
@@ -388,32 +401,30 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     
   res <- NULL
   # Supplementary individuals
-  if(element == "ind" & inherits(X, c('PCA', "MCA", "MFA", "FAMD")) & !hide$ind.sup)
-    res <- list(name = "ind.sup", addlabel = (lab$ind.sup & "text" %in% geom))
+  if(element == "ind" && inherits(X, c("PCA", "MCA", "MFA", "FAMD")) && !hide$ind.sup)
+    res <- list(name = "ind.sup", addlabel = (lab$ind.sup && "text" %in% geom))
   # Supplementary quantitative variables
-  else if(element == "var" & inherits(X, 'PCA') & !hide$quanti.sup)
-    res <- list(name = "quanti", addlabel = (lab$quanti.sup & "text" %in% geom))
-  else if(element == "mca.cor" & inherits(X, 'MCA') & !hide$quanti)
-    res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti & "text" %in% geom))
-  else if(element %in% "var" & inherits(X, 'MCA') & !hide$quali.sup)
-    res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
-  else if(element %in% "quali.var" & inherits(X, 'MFA') & !hide$quali.sup)
-    res <- list(name = "quali.sup", addlabel = (lab$quali.sup & "text" %in% geom))
-  else if(element %in% "var" & inherits(X, 'FAMD') & !hide$quanti.sup)
-    res <- list(name = "quanti.sup", addlabel = (lab$quanti.sup & "text" %in% geom))
+  else if(element == "var" && inherits(X, "PCA") && !hide$quanti.sup)
+    res <- list(name = "quanti", addlabel = (lab$quanti.sup && "text" %in% geom))
+  else if(element == "mca.cor" && inherits(X, "MCA") && !hide$quanti)
+    res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti && "text" %in% geom))
+  else if(element %in% "var" && inherits(X, "MCA") && !hide$quali.sup)
+    res <- list(name = "quali.sup", addlabel = (lab$quali.sup && "text" %in% geom))
+  else if(element %in% "quali.var" && inherits(X, "MFA") && !hide$quali.sup)
+    res <- list(name = "quali.sup", addlabel = (lab$quali.sup && "text" %in% geom))
+  else if(element %in% "var" && inherits(X, "FAMD") && !hide$quanti.sup)
+    res <- list(name = "quanti.sup", addlabel = (lab$quanti.sup && "text" %in% geom))
   # CA
-  else if(element == "row" & inherits(X, c('CA', 'ca')) & !hide$row.sup)
-    res <- list(name = "row.sup", addlabel = (lab$row.sup & "text" %in% geom))
-  else if(element == "col" & inherits(X, c('CA', 'ca')) & !hide$row.sup)
-    res <- list(name = "col.sup", addlabel = (lab$col.sup & "text" %in% geom))
-  else if(element == "group" & inherits(X, c('MFA')) & !hide$group.sup)
-    res <- list(name = "group", addlabel = (lab$group.sup & "text" %in% geom))
-  else if(element == "quanti.var" & inherits(X, c('MFA')) & !hide$quanti.var.sup)
-    res <- list(name = "quanti.var.sup", addlabel = (lab$quanti.var.sup & "text" %in% geom))
+  else if(element == "row" && inherits(X, c("CA", "ca")) && !hide$row.sup)
+    res <- list(name = "row.sup", addlabel = (lab$row.sup && "text" %in% geom))
+  else if(element == "col" && inherits(X, c("CA", "ca")) && !hide$row.sup)
+    res <- list(name = "col.sup", addlabel = (lab$col.sup && "text" %in% geom))
+  else if(element == "group" && inherits(X, "MFA") && !hide$group.sup)
+    res <- list(name = "group", addlabel = (lab$group.sup && "text" %in% geom))
+  else if(element == "quanti.var" && inherits(X, "MFA") && !hide$quanti.var.sup)
+    res <- list(name = "quanti.var.sup", addlabel = (lab$quanti.var.sup && "text" %in% geom))
   
   res$color <- color
   res$shape <- shape.sup
   res
 }
-
-

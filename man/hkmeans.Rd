@@ -22,7 +22,8 @@ hkmeans_tree(hkmeans, rect.col = NULL, ...)
 \arguments{
 \item{x}{a numeric matrix, data frame or vector}
 
-\item{k}{the number of clusters to be generated}
+\item{k}{a single integer specifying the number of clusters to be generated.
+Must be at least 2 and smaller than \code{nrow(x)}.}
 
 \item{hc.metric}{the distance measure to be used. Possible values are "euclidean", "maximum", "manhattan", 
 "canberra", "binary" or "minkowski" (see ?dist).}
@@ -52,7 +53,7 @@ hkmeans returns an object of class "hkmeans" containing the following components
 The final k-means clustering solution is very sensitive to the initial random selection 
 of cluster centers. This function provides a solution using an hybrid approach by combining 
 the hierarchical clustering and the k-means methods. The procedure is explained in "Details" section. Read more:
-  \href{http://www.sthda.com/english/wiki/hybrid-hierarchical-k-means-clustering-for-optimizing-clustering-outputs-unsupervised-machine-learning}{Hybrid hierarchical k-means clustering for optimizing clustering outputs}.
+  \href{https://www.datanovia.com/en/lessons/hierarchical-k-means-clustering-optimize-clusters/}{Hybrid hierarchical k-means clustering for optimizing clustering outputs}.
 \itemize{
 \item hkmeans(): compute hierarchical k-means clustering
 \item print.hkmeans(): prints the result of hkmeans

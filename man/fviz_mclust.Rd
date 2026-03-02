@@ -81,11 +81,11 @@ Plots the classification, the uncertainty and the BIC values returned by the Mcl
 }
 \section{Functions}{
 \itemize{
-\item \code{fviz_mclust}: Plots classification and uncertainty.
+\item \code{fviz_mclust()}: Plots classification and uncertainty.
 
-\item \code{fviz_mclust_bic}: Plots the BIC values.
+\item \code{fviz_mclust_bic()}: Plots the BIC values.
+
 }}
-
 \examples{
 
 if(require("mclust")){

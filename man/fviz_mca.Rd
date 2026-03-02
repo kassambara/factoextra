@@ -80,8 +80,9 @@ variables.}
 respectively. Default is geom.ind = c("point", "text), geom.var =
 c("point", "text").}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text 
-labels or not.}
+\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
+labels or not. The old \code{jitter} argument is kept for backward
+compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by 
 groups. Default value is "none". If X is an MCA object from FactoMineR 
@@ -175,7 +176,7 @@ Multiple Correspondence Analysis (MCA) is an extension of simple
  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
  the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
  ExPosition]. Read more: 
- \href{http://www.sthda.com/english/wiki/multiple-correspondence-analysis-essentials-interpretation-and-application-to-investigate-the-associations-between-categories-of-multiple-qualitative-variables-r-software-and-data-mining}{Multiple
+ \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/}{Multiple
   Correspondence Analysis Essentials.}
  
  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 

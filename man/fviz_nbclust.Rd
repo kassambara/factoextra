@@ -61,22 +61,26 @@ using gap statistic.}
 \item{print.summary}{logical value. If true, the optimal number of clusters 
 are printed in fviz_nbclust().}
 
-\item{...}{optionally further arguments for FUNcluster()}
+\item{...}{optionally further arguments:
+arguments for FUNcluster() in "wss"/"silhouette" modes; arguments for
+\code{\link[cluster]{clusGap}}() in "gap_stat" mode. A \code{maxSE} list
+can also be supplied in "gap_stat" mode and is forwarded to
+\code{fviz_gap_stat()}.}
 
 \item{gap_stat}{an object of class "clusGap" returned by the function
 clusGap() [in cluster package]}
 
 \item{maxSE}{a list containing the parameters (method and SE.factor) for
 determining the location of the maximum of the gap statistic (Read the
-documentation ?cluster::maxSE). Allowed values for maxSE$method include: 
+documentation ?cluster::maxSE). Allowed values for maxSE$method include:
 \itemize{ \item "globalmax": simply corresponds to the global maximum,
 i.e., is which.max(gap) \item "firstmax": gives the location of the first
 local maximum \item "Tibs2001SEmax": uses the criterion, Tibshirani et al
-(2001) proposed: "the smallest k such that gap(k) >= gap(k+1) - s_{k+1}". 
+(2001) proposed: "the smallest k such that gap(k) >= gap(k+1) - s(k+1)".
 It's also possible to use "the smallest k such that gap(k) >= gap(k+1) -
-SE.factor*s_{k+1}" where SE.factor is a numeric value which can be 1
+SE.factor*s(k+1)" where SE.factor is a numeric value which can be 1
 (default), 2, 3, etc. \item "firstSEmax": location of the first f() value
-which is not larger than the first local maximum minus SE.factor * SE.f[],
+which is not larger than the first local maximum minus SE.factor * SE.f,
 i.e, within an "f S.E." range of that maximum. \item
 see ?cluster::maxSE for more options }}
 }
@@ -95,9 +99,19 @@ Partitioning methods, such as k-means clustering require the
   (?cluster::clustGap).} }
   
   Read more: 
-  \href{http://www.sthda.com/english/wiki/determining-the-optimal-number-of-clusters-3-must-known-methods-unsupervised-machine-learning}{Determining
+  \href{https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/}{Determining
    the optimal number of clusters}
 }
+\section{Method selection for gap statistic}{
+
+  The default method "firstSEmax" (developed by Martin Maechler, 2012) is
+  recommended as a robust alternative to "Tibs2001SEmax". The original
+  Tibshirani method can be overly conservative and often returns k=1 when
+  standard deviations are large relative to gap differences. The "firstSEmax"
+  method finds the smallest k within one standard error of the first local
+  maximum, providing more stable results in practice.
+}
+
 \examples{
 set.seed(123)
 

@@ -12,7 +12,7 @@
 #'   (?cluster::clustGap).} }
 #'   
 #'   Read more: 
-#'   \href{http://www.sthda.com/english/wiki/determining-the-optimal-number-of-clusters-3-must-known-methods-unsupervised-machine-learning}{Determining
+#'   \href{https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/}{Determining
 #'    the optimal number of clusters}
 #'   
 #' @param x numeric matrix or data frame. In the function fviz_nbclust(), x can 
@@ -39,7 +39,11 @@
 #' @param linecolor color for lines
 #' @param print.summary logical value. If true, the optimal number of clusters 
 #'   are printed in fviz_nbclust().
-#' @param ... optionally further arguments for FUNcluster()
+#' @param ... optionally further arguments:
+#'   arguments for FUNcluster() in "wss"/"silhouette" modes; arguments for
+#'   \code{\link[cluster]{clusGap}}() in "gap_stat" mode. A \code{maxSE} list
+#'   can also be supplied in "gap_stat" mode and is forwarded to
+#'   \code{fviz_gap_stat()}.
 #'   
 #' @return \itemize{ \item fviz_nbclust, fviz_gap_stat: return a ggplot2 }
 #' @seealso \code{\link{fviz_cluster}}, \code{\link{eclust}}
@@ -93,18 +97,20 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
                           barfill="steelblue", barcolor="steelblue", 
                           linecolor = "steelblue", print.summary = TRUE,  ...) 
   {
-  set.seed(123)
   if(k.max < 2) stop("k.max must bet > = 2")
   method = match.arg(method)
-  if(!inherits(x, c("data.frame", "matrix")) & !("Best.nc" %in% names(x)))
+  if(!inherits(x, c("data.frame", "matrix")) && !("Best.nc" %in% names(x)))
     stop("x should be an object of class matrix/data.frame or ",
          "an object created by the function NbClust() [NbClust package].")
   
   # x is an object created by the function NbClust() [NbClust package]
-  if(inherits(x, "list") & "Best.nc" %in% names(x)){
+  if(inherits(x, "list") && "Best.nc" %in% names(x)){
       best_nc <- x$Best.nc
-      if(class(best_nc) == "numeric") print(best_nc)
-      else if(class(best_nc) == "matrix") 
+      # FIX: R 4.0.0+ deprecation - class() can return multiple values for matrices
+      # Using inherits() or is.X() functions instead of class() == comparison
+      # See: https://github.com/kassambara/factoextra/issues/171
+      if(is.numeric(best_nc) && !is.matrix(best_nc)) print(best_nc)
+      else if(is.matrix(best_nc))
         .viz_NbClust(x, print.summary, barfill, barcolor)
   }
   else if(is.null(FUNcluster)) stop("The argument FUNcluster is required. ",
@@ -135,17 +141,21 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
         
       }
       
-      df <- data.frame(clusters = as.factor(1:k.max), y = v, stringsAsFactors = TRUE)
+      df <- data.frame(clusters = as.factor(1:k.max), y = v)
       
       ylab <- "Total Within Sum of Square"
-      if(method == "silhouette") ylab <- "Average silhouette width"
-      
+      main_title <- "Optimal number of clusters"
+      if(method == "silhouette") {
+        ylab <- "Average silhouette width"
+        main_title <- "Optimal number of clusters (method = \"silhouette\")"
+      }
+
       p <- ggpubr::ggline(df, x = "clusters", y = "y", group = 1,
                           color = linecolor, ylab = ylab,
                           xlab = "Number of clusters k",
-                          main = "Optimal number of clusters"
+                          main = main_title
                           )
-      if(method == "silhouette") 
+      if(method == "silhouette")
         p <- p + geom_vline(xintercept = which.max(v), linetype=2, color = linecolor)
       
       return(p) 
@@ -153,10 +163,14 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   
   else if(method == "gap_stat"){
     extra_args <- list(...)
-    gap_stat <- cluster::clusGap(x, FUNcluster, K.max = k.max,  B = nboot, 
-                                 verbose = verbose, ...)
-    if(!is.null(extra_args$maxSE)) maxSE <- extra_args$maxSE
-    else maxSE <- list(method = "firstSEmax", SE.factor = 1)
+    if(!is.null(extra_args$maxSE)) {
+      maxSE <- extra_args$maxSE
+      extra_args$maxSE <- NULL
+    } else {
+      maxSE <- list(method = "firstSEmax", SE.factor = 1)
+    }
+    gap_stat <- do.call(cluster::clusGap, c(list(x = x, FUNcluster = FUNcluster, K.max = k.max, B = nboot,
+                                                  verbose = verbose), extra_args))
     p <- fviz_gap_stat(gap_stat,  linecolor = linecolor, maxSE = maxSE)
     return(p) 
   }
@@ -169,19 +183,27 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
 #'   clusGap() [in cluster package]
 #' @param maxSE a list containing the parameters (method and SE.factor) for
 #'   determining the location of the maximum of the gap statistic (Read the
-#'   documentation ?cluster::maxSE). Allowed values for maxSE$method include: 
+#'   documentation ?cluster::maxSE). Allowed values for maxSE$method include:
 #'   \itemize{ \item "globalmax": simply corresponds to the global maximum,
 #'   i.e., is which.max(gap) \item "firstmax": gives the location of the first
 #'   local maximum \item "Tibs2001SEmax": uses the criterion, Tibshirani et al
-#'   (2001) proposed: "the smallest k such that gap(k) >= gap(k+1) - s_{k+1}". 
+#'   (2001) proposed: "the smallest k such that gap(k) >= gap(k+1) - s(k+1)".
 #'   It's also possible to use "the smallest k such that gap(k) >= gap(k+1) -
-#'   SE.factor*s_{k+1}" where SE.factor is a numeric value which can be 1
+#'   SE.factor*s(k+1)" where SE.factor is a numeric value which can be 1
 #'   (default), 2, 3, etc. \item "firstSEmax": location of the first f() value
-#'   which is not larger than the first local maximum minus SE.factor * SE.f[],
+#'   which is not larger than the first local maximum minus SE.factor * SE.f,
 #'   i.e, within an "f S.E." range of that maximum. \item
 #'   see ?cluster::maxSE for more options }
-#'   
-#'   
+#'
+#' @section Method selection for gap statistic:
+#'   The default method "firstSEmax" (developed by Martin Maechler, 2012) is
+#'   recommended as a robust alternative to "Tibs2001SEmax". The original
+#'   Tibshirani method can be overly conservative and often returns k=1 when
+#'   standard deviations are large relative to gap differences. The "firstSEmax"
+#'   method finds the smallest k within one standard error of the first local
+#'   maximum, providing more stable results in practice.
+#'
+#'
 #' @export
 fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
                           maxSE = list(method = "firstSEmax", SE.factor = 1)){
@@ -196,21 +218,19 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
   # first local max
   gap <- gap_stat$Tab[, "gap"]
   se <- gap_stat$Tab[, "SE.sim"]
-  decr <- diff(gap) <= 0
   k <- .maxSE(gap, se, method = maxSE$method, SE.factor = maxSE$SE.factor)
-  
-  #k <- length(gap)
-  #k = if (any(decr)) which.max(decr) else k
 
-  df <- as.data.frame(gap_stat$Tab, stringsAsFactors = TRUE)
-  df$clusters <- as.factor(1:nrow(df))
+  df <- as.data.frame(gap_stat$Tab)
+  df$clusters <- as.factor(seq_len(nrow(df)))
   df$ymin <- gap-se
   df$ymax <- gap + se
   p <- ggpubr::ggline(df, x = "clusters", y = "gap", group = 1, color = linecolor)+
-    ggplot2::geom_errorbar(aes_string(ymin="ymin", ymax="ymax"), width=.2, color = linecolor)+
+    # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
+    # See: https://github.com/kassambara/factoextra/issues/190
+    ggplot2::geom_errorbar(aes(ymin = .data[["ymin"]], ymax = .data[["ymax"]]), width=.2, color = linecolor)+
     geom_vline(xintercept = k, linetype=2, color = linecolor)+
     labs(y = "Gap statistic (k)", x = "Number of clusters k",
-         title = "Optimal number of clusters")
+         title = "Optimal number of clusters (method = \"gap_stat\")")
   p
 }
 
@@ -222,11 +242,17 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
 # Cluster package required
 # d: dist object
 # cluster: cluster number of observation
+# Returns NA if silhouette cannot be computed (e.g., k <= 1 or k >= n)
+# Fixes GitHub issues #113 and #147
 .get_ave_sil_width <- function(d, cluster){
   if (!requireNamespace("cluster", quietly = TRUE)) {
     stop("cluster package needed for this function to work. Please install it.")
   }
   ss <- cluster::silhouette(cluster, d)
+  # Handle case where silhouette() returns NA (when k <= 1 or k >= n)
+  if (length(ss) == 1 && is.na(ss)) {
+    return(NA_real_)
+  }
   mean(ss[, 3])
 }
 
@@ -234,28 +260,41 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
 # +++++++++++++++++++++++++++++
 # d: dist object
 # cluster: cluster number of observation
+#
+# OPTIMIZATION: Replaced explicit loops with vapply() for better performance
+# - Pre-compute cluster indices once using split()
+# - Use vapply for type-safe vectorized computation
+# - Avoid repeated subsetting of distance matrix
+# - Maintains identical econometric results
 .get_withinSS <- function(d, cluster){
   d <- stats::as.dist(d)
-  cn <- max(cluster)
+  dmat <- as.matrix(d)
+
+  # Handle cluster renumbering if needed
   clusterf <- as.factor(cluster)
   clusterl <- levels(clusterf)
-  cnn <- length(clusterl)
-  
-  if (cn != cnn) {
+  cn <- length(clusterl)
+
+  if (max(cluster) != cn) {
     warning("cluster renumbered because maximum != number of clusters")
-    for (i in 1:cnn) cluster[clusterf == clusterl[i]] <- i
-    cn <- cnn
+    cluster <- as.integer(clusterf)
   }
-  cwn <- cn
-  # Compute total within sum of square
-  dmat <- as.matrix(d)
-  within.cluster.ss <- 0
-  for (i in 1:cn) {
-    cluster.size <- sum(cluster == i)
-    di <- as.dist(dmat[cluster == i, cluster == i])
-    within.cluster.ss <- within.cluster.ss + sum(di^2)/cluster.size
-  }
-  within.cluster.ss
+
+  # OPTIMIZED: Pre-compute cluster membership indices
+  # split() creates a list of indices for each cluster - computed once
+  cluster_indices <- split(seq_along(cluster), cluster)
+
+  # OPTIMIZED: Compute within-cluster SS using vapply (faster than for loop)
+  # For each cluster: sum(d[i,j]^2) / cluster_size for all pairs in cluster
+  within_ss <- vapply(cluster_indices, function(idx) {
+    if (length(idx) <= 1) return(0)
+    # Extract submatrix for this cluster and compute sum of squared distances
+    di <- dmat[idx, idx, drop = FALSE]
+    # Only use lower triangle (as.dist) to avoid double counting
+    sum(di[lower.tri(di)]^2) / length(idx)
+  }, FUN.VALUE = numeric(1))
+
+  sum(within_ss)
 }
 
 
@@ -269,23 +308,34 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
                          barfill = "steelblue", barcolor = "steelblue")
   {
      best_nc <- x$Best.nc
-    if(class(best_nc) == "numeric") print(best_nc)
-     else if(class(best_nc) == "matrix"){
-    best_nc <- as.data.frame(t(best_nc), stringsAsFactors = TRUE)
+    # FIX: R 4.0.0+ deprecation - class() can return multiple values for matrices
+    # Using inherits() or is.X() functions instead of class() == comparison
+    # See: https://github.com/kassambara/factoextra/issues/171
+    if(is.numeric(best_nc) && !is.matrix(best_nc)) print(best_nc)
+     else if(is.matrix(best_nc)){
+    best_nc <- as.data.frame(t(best_nc))
     best_nc$Number_clusters <- as.factor(best_nc$Number_clusters)
+    ss <- summary(best_nc$Number_clusters)
     
     # Summary
     if(print.summary){
-      ss <- summary(best_nc$Number_clusters)
       cat ("Among all indices: \n===================\n")
-      for(i in 1 :length(ss)){
+      for(i in seq_along(ss)){
         cat("*", ss[i], "proposed ", names(ss)[i], "as the best number of clusters\n" )
       }
       cat("\nConclusion\n=========================\n")
       cat("* According to the majority rule, the best number of clusters is ",
           names(which.max(ss)),  ".\n\n")
     }
-    df <- data.frame(Number_clusters = names(ss), freq = ss, stringsAsFactors = TRUE )
+    # Fix for Issue #131: ensure numeric ordering of clusters (not alphabetical)
+    # When clusters > 9, alphabetical ordering would put "10" before "2"
+    cluster_names <- names(ss)
+    cluster_order <- order(as.numeric(cluster_names))
+    df <- data.frame(
+      Number_clusters = factor(cluster_names, levels = cluster_names[cluster_order]),
+      freq = ss,
+      stringsAsFactors = FALSE
+    )
     p <- ggpubr::ggbarplot(df,  x = "Number_clusters", y = "freq", fill = barfill, color = barcolor)+
       labs(x = "Number of clusters k", y = "Frequency among all indices",
            title = paste0("Optimal number of clusters - k = ", names(which.max(ss)) ))
