@@ -12,6 +12,8 @@ reference:
       - fviz_famd
       - fviz_mfa
       - fviz_hmfa
+      - fviz
+      - fviz_ellipses
       - fviz_cos2
       - fviz_contrib
   - title: Extracting Data from Dimension Reduction Analysis Outputs
@@ -45,9 +47,12 @@ reference:
       - poison
       - multishapes
   - title: Others
-    contents: 
+    contents:
       - fviz_add
       - print.factoextra
+      - factominer_category_map
+      - map_factominer_legacy_names
+      - deprecated
     
 
 
