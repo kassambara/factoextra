@@ -6,7 +6,7 @@
 
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("Welcome to factoextra!")
-  packageStartupMessage("Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa")
+  packageStartupMessage("Want to learn more? See two factoextra-related books at https://www.datanovia.com/en/product/practical-guide-to-principal-component-methods-in-r/")
 }
 
 #' Clean up stale package lock files
