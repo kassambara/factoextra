@@ -1,161 +1,61 @@
-# factoextra 1.2.0
+# factoextra 2.0.0
 
-## Maintenance and Compatibility
+Major modernization release after 6 years. Resolves 30+ open issues and aligns
+with the current R/ggplot2/FactoMineR ecosystem.
 
-This release aligns `factoextra` with the maintained compatibility baseline while keeping the original package identity.
+## Breaking Changes
 
-### Added
+* **R >= 4.1.0** required (was >= 3.1.2).
+* **ggplot2 >= 3.5.2** required (previously no minimum).
+* **FactoMineR >= 2.13** required.
+* `get_clust_tendency()`: Hopkins statistic now uses the corrected Wright (2022)
+  formula — values will differ from earlier versions. Default `seed` changed
+  from `123` to `NULL`.
+* **tidyr and reshape2 no longer needed** — replaced with base R internally.
 
-* `clean_lock_files()` helper for removing stale `00LOCK-*` directories.
-* `factominer_category_map()` and `map_factominer_legacy_names()` for robust FactoMineR category-name compatibility.
-* Expanded `testthat` coverage (core smoke tests, CA backend checks, clustering/visual regressions, input validation).
-* GitHub Actions `R-CMD-check` workflow.
+## ggplot2 Compatibility Fixes
 
-### Updated
-
-* `get_clust_tendency()`:
-  * corrected Hopkins statistic implementation (Wright 2022),
-  * stricter input validation,
-  * one-time warning option `options(factoextra.warn_hopkins = FALSE)`,
-  * RNG state preservation when seed is supplied,
-  * default `seed` changed from `123` to `NULL` (now follows caller RNG stream unless explicitly set).
-* `hcut()` and `hkmeans()` input checks and error handling.
-* `eclust()` and internal random helpers to preserve caller RNG state.
-* FactoMineR extraction/plotting helpers for improved compatibility with newer object structures and mixed groups.
-* CA/MCA/PCA extractor internals refactored to vectorized, type-stable code paths.
-
-### Fixed
-
-* `.onAttach` startup message no longer falsely claims that ggpubr and FactoMineR have been loaded (they are imported, not attached).
-* `.add_ind_groups()` no longer crashes when `habillage` is a single-column data frame (`drop = FALSE` added).
-
-### Metadata
-
-* Dependency baseline updated for modern stack compatibility:
-  * `R >= 4.1.0`
-  * `ggplot2 >= 3.5.2`
-  * `ggpubr >= 0.6.3` (CRAN)
-  * `FactoMineR >= 2.13`
-* Original authors retained; Laszlo Erdey listed as contributor (`ctb`).
-
----
-
-# factoextra 1.0.8
-
-## Issues Addressed
-
-This version addresses the following **30 issues** from the original factoextra repository:
-
-| Issue | Description |
-|-------|-------------|
-| #192 | aes_string() deprecation warnings |
-| #191 | aes_string() and size aesthetic deprecation |
-| #190 | aes_string() deprecation warnings |
-| #189 | tidyr::gather_() deprecation |
-| #188 | aes_string() deprecation warnings |
-| #183 | guides(FALSE) deprecation in fviz_dend |
-| #180 | fviz_dend condition has length > 1 error |
-| #179 | guides(FALSE) deprecation warning |
-| #178 | linewidth for ellipses (size deprecation) |
-| #174 | guides(FALSE) warning in factoextra |
-| #173 | guides(FALSE) warning in ggplot_dend |
-| #171 | fviz_nbclust condition has length > 1 error |
-| #167 | PR: facto_summarize dimension selection fix |
-| #166 | fviz_mca_var axes parameter ignored |
-| #163 | fviz_dend rect_border error |
-| #162 | tidyr::gather_() replacement |
-| #159 | PR: guides(FALSE) deprecation fix |
-| #156 | guides(FALSE) deprecation warning |
-| #151 | fviz_dend condition has length > 1 error |
-| #149 | fviz_nbclust class() comparison error |
-| #148 | PR: class() == comparison fix |
-| #143 | PR: facto_summarize axes parameter fix |
-| #141 | fviz_dend guides(FALSE) deprecation |
-| #133 | Hopkins statistic biased sampling |
-| #131 | fviz_nbclust cluster ordering with k > 9 |
-| #129 | PR: fviz_pca_biplot rescaling fix |
-| #150 | fviz_ca_col() typo colcol.sup -> col.col.sup |
-| #147 | fviz_nbclust silhouette NA with fewer rows than columns |
-| #120 | fviz_mca_var mca.cor axes ignored |
-| #113 | fviz_nbclust silhouette error with k.max > 15 |
-| #64  | Documentation typos |
-
-## Major Changes
-
-### Package Metadata Updates
-
-* **Raised minimum R version** to R >= 4.1.0 (from R >= 3.1.2) to align with
-  current dependency requirements (ggplot2, rlang) and modern CRAN policies.
-
-* **Added ggplot2 version requirement** (>= 3.5.2) to ensure compatibility
-  with the modernized code that uses linewidth and other 3.5.2+ features.
-
-* **Added LazyDataCompression: xz** to comply with modern CRAN policies for
-  efficient data storage.
-
-### ggplot2 3.5.2+ Compatibility Fixes
-
-* **aes_string() deprecation** (Issues #179, #183, #188, #190, #191, #192):
-  Replaced all uses of the deprecated aes_string() function with aes() +
-  .data pronoun from rlang package.
-
-* **guides(... = FALSE) deprecation** (Issues #141, #156, #159, #173, #174, #179, #183):
-  Replaced FALSE with "none" in all guides() calls as required by ggplot2 3.3.4+.
-
-* **size aesthetic deprecation for lines** (Issues #178, #191): Replaced size
-  with linewidth for line-based geoms (geom_path, geom_segment, ellipses).
-
-### Dependency Reduction
-
-* **Removed tidyr dependency** (Issues #162, #189): Replaced deprecated
-  tidyr::gather_() with base R stats::reshape().
-
-* **Removed reshape2 dependency**: Replaced reshape2::melt() with base R.
-
-### R 4.0+ Compatibility Fixes
-
-* **class() == comparison bug** (Issues #148, #149, #151, #163, #171, #180):
-  Fixed condition has length > 1 warnings by using inherits() checks.
+* Replaced all `aes_string()` with `aes()` + `.data` pronoun (rlang).
+  (#188, #190, #191, #192)
+* Replaced `guides(... = FALSE)` with `guides(... = "none")`.
+  (#141, #156, #174, #179, #183)
+* Replaced `size` with `linewidth` for line-based geoms. (#178, #191)
 
 ## Bug Fixes
 
-* Fixed fviz_dend() rect_border error (Issues #151, #163, #180)
-* Fixed fviz_nbclust() condition length error (Issues #148, #149, #171)
-* Fixed biased Hopkins statistic sampling (Issue #133)
-* Fixed facto_summarize() axes parameter (Issues #120, #143, #166, #167)
-* Fixed fviz_pca_biplot() rescaling (PR #129)
-* Fixed fviz_nbclust() cluster ordering k > 9 (Issue #131)
-* Fixed fviz_nbclust() silhouette error when k >= n (Issues #113, #147)
-* Fixed fviz_ca_col() parameter name typo (Issue #150)
-* Fixed Hopkins statistic formula (Wright 2022)
+* `fviz_dend()`: fixed `rect_border` error and "condition has length > 1" crash.
+  (#151, #163, #180)
+* `fviz_nbclust()`: fixed class-comparison crash, cluster ordering for k > 9,
+  and silhouette error when k >= n. (#113, #131, #147, #148, #149, #171)
+* `facto_summarize()`: axes parameter now correctly selects requested dimensions.
+  (#120, #143, #166, #167)
+* `fviz_ca_col()`: fixed `col.col.sup` parameter name typo. (#150)
+* `fviz_pca_biplot()`: fixed rescaling. (#129)
+* `get_clust_tendency()`: fixed biased Hopkins sampling. (#133)
+* `.onAttach()`: startup message no longer falsely claims ggpubr/FactoMineR
+  are "loaded" (they are imported, not attached).
+* `.add_ind_groups()`: no longer crashes with single-column habillage data frame.
 
 ## New Features
 
-* fviz_eig() parallel analysis (Horn 1965)
-* fviz_pca_biplot() scaling types (Gabriel 1971)
+* `fviz_eig()`: parallel analysis support (Horn 1965).
+* `fviz_pca_biplot()`: scaling types (Gabriel 1971).
+* `get_clust_tendency()`: stricter input validation, RNG state preservation,
+  `options(factoextra.warn_hopkins = FALSE)` to suppress one-time warning.
+* `hcut()` and `hkmeans()`: improved input checks and error handling.
+* Expanded `testthat` test suite (113 tests).
+* GitHub Actions R-CMD-check workflow.
 
-## Documentation Fixes
+## Internal
 
-* Fixed typos (Issue #64)
-* Added Hopkins statistic clarification
-* Added fviz_gap_stat() documentation
-
-## Contributors
-
-* Laszlo Erdey (University of Debrecen, Hungary)
-
----
+* CA/MCA/PCA extractor internals refactored to vectorized, type-stable code.
+* `factominer_category_map()` and `map_factominer_legacy_names()` helpers
+  for FactoMineR category-name compatibility.
+* `clean_lock_files()` helper for removing stale `00LOCK-*` directories.
+* Added `LazyDataCompression: xz` for CRAN compliance.
+* Laszlo Erdey added as contributor.
 
 
-# factoextra 1.0.7.999
-
-## New features
-
-## Major changes
-
-Development placeholder release retained from upstream history; no user-facing changes recorded.
-   
-   
 # factoextra 1.0.7
 
 ## Minor changes
