@@ -1,50 +1,67 @@
-name: R-CMD-check
-
+# Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
+# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
   push:
-    branches:
-      - master
+    branches: [main, master]
   pull_request:
-    branches:
-      - master
-  workflow_dispatch:
+    branches: [main, master]
+
+name: R-CMD-check
 
 jobs:
   R-CMD-check:
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - os: ubuntu-latest
-            r: release
-            extra_packages: any::rcmdcheck
-          - os: ubuntu-latest
-            r: devel
-            extra_packages: any::rcmdcheck
-          - os: ubuntu-latest
-            r: oldrel-1
-            extra_packages: any::rcmdcheck, any::ggrepel@0.9.5
-          - os: macos-latest
-            r: release
-            extra_packages: any::rcmdcheck
-          - os: windows-latest
-            r: release
-            extra_packages: any::rcmdcheck
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
+        config:
+          - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
     steps:
       - uses: actions/checkout@v4
 
+      - uses: r-lib/actions/setup-pandoc@v2
+
       - uses: r-lib/actions/setup-r@v2
         with:
-          r-version: ${{ matrix.r }}
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Pin RSPM snapshot for oldrel-1 dependency resolution
+        if: ${{ matrix.config.r == 'oldrel-1' }}
+        run: |
+          SNAPSHOT_DATE=2026-02-25
+          SNAPSHOT_RSPM="${RSPM%/latest}/${SNAPSHOT_DATE}"
+          echo "RSPM=${SNAPSHOT_RSPM}" >> "$GITHUB_ENV"
+          echo "RENV_CONFIG_REPOS_OVERRIDE=${SNAPSHOT_RSPM}" >> "$GITHUB_ENV"
+
       - uses: r-lib/actions/setup-r-dependencies@v2
+        if: ${{ matrix.config.r == 'oldrel-1' }}
         with:
+          # ggrepel 0.9.6 currently fails dependency solving on R 4.4.x in CI.
+          # Pin to the last compatible release for oldrel-1 only.
+          extra-packages: |
+            any::rcmdcheck
+            cran::ggrepel@0.9.5
           needs: check
-          extra-packages: ${{ matrix.extra_packages }}
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        if: ${{ matrix.config.r != 'oldrel-1' }}
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
