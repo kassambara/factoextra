@@ -5,7 +5,7 @@
 }
 
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Welcome to factoextra! ggpubr and FactoMineR have been loaded.")
+  packageStartupMessage("Welcome to factoextra!")
   packageStartupMessage("Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa")
 }
 

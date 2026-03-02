@@ -790,7 +790,7 @@ NULL
     if(nrow(ind) != nrow(grp)) stop("The length of grouping variables ",
                                     "should be the same as the number of individuals.")
     ind <- cbind.data.frame(ind, grp)
-    ind[, colnames(grp)] <- apply(ind[, colnames(grp)], 2, as.character)
+    ind[, colnames(grp)] <- apply(ind[, colnames(grp), drop = FALSE], 2, as.character)
     # Convert wide to long format using base R (replaces tidyr::pivot_longer)
     grp_cols <- colnames(grp)
     id_cols <- setdiff(colnames(ind), grp_cols)
