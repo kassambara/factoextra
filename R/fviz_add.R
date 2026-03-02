@@ -21,7 +21,7 @@
 #' @param ... Additional arguments, not used
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com
+#' @references \url{https://www.sthda.com/english/}
 #' @examples
 #' \donttest{
 #' # Principal component analysis

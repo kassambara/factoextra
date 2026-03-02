@@ -12,9 +12,9 @@
 #'   \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/}{Principal
 #'    Component Analysis}
 #'   
-#'   \itemize{ \item{fviz_pca_ind(): Graph of individuals} \item{fviz_pca_var():
-#'   Graph of variables} \item{fviz_pca_biplot(): Biplot of individuals and 
-#'   variables} \item{fviz_pca(): An alias of fviz_pca_biplot()} }
+#'   \itemize{ \item fviz_pca_ind(): Graph of individuals \item fviz_pca_var():
+#'   Graph of variables \item fviz_pca_biplot(): Biplot of individuals and
+#'   variables \item fviz_pca(): An alias of fviz_pca_biplot() }
 #'   
 #'   Note that, \code{fviz_pca_xxx()} functions are wrapper around the core
 #'   function \code{\link{fviz}()}, which is also a wrapper around the

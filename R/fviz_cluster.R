@@ -87,7 +87,7 @@
 #'
 #' # PAM clustering
 #' # ++++++++++++++++++++
-#' require(cluster)
+#' requireNamespace("cluster", quietly = TRUE)
 #' pam.res <- pam(iris.scaled, 3)
 #'  # Visualize pam clustering
 #' fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")

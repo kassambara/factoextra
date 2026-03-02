@@ -76,6 +76,9 @@ hide xlab.}
 \item{ylab}{character vector specifying y axis labels. Use ylab = FALSE to
 hide ylab.}
 }
+\value{
+A ggplot2 object.
+}
 \description{
 Plots the classification, the uncertainty and the BIC values returned by the Mclust() function.
 }
@@ -88,10 +91,10 @@ Plots the classification, the uncertainty and the BIC values returned by the Mcl
 }}
 \examples{
 
-if(require("mclust")){
+if(requireNamespace("mclust", quietly = TRUE)){
 
-# Compute model-based-clustering 
-require("mclust")
+# Compute model-based-clustering
+library("mclust")
 data("diabetes")
 mc <- Mclust(diabetes[, -1])
 

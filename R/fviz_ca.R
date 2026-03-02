@@ -11,9 +11,9 @@ NULL
 #'  \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/}{Correspondence
 #'   Analysis}
 #'  
-#'  \itemize{ \item{fviz_ca_row(): Graph of row variables} \item{fviz_ca_col():
-#'  Graph of column variables} \item{fviz_ca_biplot(): Biplot of row and column
-#'  variables} \item{fviz_ca(): An alias of fviz_ca_biplot()} }
+#'  \itemize{ \item fviz_ca_row(): Graph of row variables \item fviz_ca_col():
+#'  Graph of column variables \item fviz_ca_biplot(): Biplot of row and column
+#'  variables \item fviz_ca(): An alias of fviz_ca_biplot() }
 #'  
 #'@param X an object of class CA [FactoMineR], ca [ca], coa [ade4]; 
 #'  correspondence [MASS] and expOutput/epCA [ExPosition].
@@ -91,7 +91,7 @@ NULL
 #'@return a ggplot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}
-#'@references http://www.sthda.com
+#'@references \url{https://www.sthda.com/english/}
 #' @examples
 #' # Correspondence Analysis
 #' # ++++++++++++++++++++++++++++++

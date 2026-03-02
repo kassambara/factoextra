@@ -76,7 +76,7 @@ fviz_add(p, coord, color ="blue", geom="arrow")
  
 }
 \references{
-http://www.sthda.com
+\url{https://www.sthda.com/english/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

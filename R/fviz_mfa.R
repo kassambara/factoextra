@@ -6,11 +6,11 @@ NULL
 #'  which individuals are described by several sets of variables (quantitative 
 #'  and/or qualitative) structured into groups. fviz_mfa() provides
 #'  ggplot2-based elegant visualization of MFA outputs from the R function: MFA
-#'  [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
-#'  \item{fviz_mfa_var(): Graph of variables} \item{fviz_mfa_axes(): Graph of 
-#'  partial axes} \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = 
-#'  "all")} \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
-#'  variables} }
+#'  [FactoMineR].\cr\cr \itemize{ \item fviz_mfa_ind(): Graph of individuals
+#'  \item fviz_mfa_var(): Graph of variables \item fviz_mfa_axes(): Graph of
+#'  partial axes \item fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial =
+#'  "all") \item fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
+#'  variables }
 #'  
 #'@param X an object of class MFA [FactoMineR].
 #'@inheritParams fviz_mca
@@ -66,7 +66,7 @@ NULL
 #'@return a ggplot2 plot
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@references http://www.sthda.com/english/
+#'@references \url{https://www.sthda.com/english/}
 #' @examples
 #' # Compute Multiple Factor Analysis
 #' library("FactoMineR")

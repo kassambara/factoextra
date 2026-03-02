@@ -10,10 +10,10 @@
 #' 
 #' @examples
 #' 
-#' if(require("mclust")){
-#' 
-#' # Compute model-based-clustering 
-#' require("mclust")
+#' if(requireNamespace("mclust", quietly = TRUE)){
+#'
+#' # Compute model-based-clustering
+#' library("mclust")
 #' data("diabetes")
 #' mc <- Mclust(diabetes[, -1])
 #' 
@@ -24,6 +24,7 @@
 #' fviz_mclust(mc, "classification", geom = "point")
 #' }
 #' 
+#' @return A ggplot2 object.
 #' @describeIn fviz_mclust Plots classification and uncertainty.
 #' @export
 fviz_mclust <- function(object, 

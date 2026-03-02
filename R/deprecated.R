@@ -9,10 +9,10 @@ NULL
 #' \item get_mfa_quali_var().  Deprecated. Use get_mfa_var(res.mfa, "quali.var") instead.
 #' \item get_mfa_group(). Deprecated. Use get_mfa_var(res.mfa, "group") instead.
 #'
-#' \item{fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points).
-#' Deprecated. Use fviz_mfa_ind(res.mfa, partial = "all") instead.}
-#' \item{fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.}
-#' \item{fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.}
+#' \item fviz_mfa_ind_starplot(): Star graph of individuals (draws partial points).
+#' Deprecated. Use fviz_mfa_ind(res.mfa, partial = "all") instead.
+#' \item fviz_mfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_mfa(X, "quanti.var") instead.
+#' \item fviz_mfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_mfa(X, "quali.var") instead.
 #'
 #'  \item
 #' get_hmfa_quanti_var(). Deprecated. Use get_hmfa_var(res.hmfa, "quanti.var")
@@ -20,10 +20,10 @@ NULL
 #' "quali.var") instead. \item get_hmfa_group(). Deprecated. Use
 #' get_hmfa_var(res.hmfa, "group") instead.
 #'
-#' \item{fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.}
-#' \item{fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.}
-#' \item{fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.}
-#' \item{fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.}
+#' \item fviz_hmfa_ind_starplot(): Graph of partial individuals. Deprecated. Use fviz_hmfa_ind(X, partial = "all") instead.
+#' \item fviz_hmfa_quanti_var(): Graph of quantitative variables. Deprecated. Use fviz_hmfa_var(X, "quanti.var") instead.
+#' \item fviz_hmfa_quali_var(): Graph of qualitative variables. Deprecated. Use fviz_hmfa_var(X, "quali.var") instead.
+#' \item fviz_hmfa_group(): Graph of the groups representation. Deprecated. Use fviz_hmfa_var(X, "group") instead.
 #'
 #' }
 #'

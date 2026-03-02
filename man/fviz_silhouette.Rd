@@ -62,8 +62,8 @@ fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")+
 theme_minimal()
 
 # Visualize silhouhette information
-require("cluster")
-sil <- silhouette(km.res$cluster, dist(iris.scaled))
+requireNamespace("cluster", quietly = TRUE)
+sil <- cluster::silhouette(km.res$cluster, dist(iris.scaled))
 fviz_silhouette(sil)
 
 # Identify observation with negative silhouette
@@ -72,8 +72,8 @@ sil[neg_sil_index, , drop = FALSE]
 \dontrun{
 # PAM clustering
 # ++++++++++++++++++++
-require(cluster)
-pam.res <- pam(iris.scaled, 3)
+requireNamespace("cluster", quietly = TRUE)
+pam.res <- cluster::pam(iris.scaled, 3)
 # Visualize pam clustering
 fviz_cluster(pam.res, ellipse.type = "norm")+
 theme_minimal()

@@ -21,7 +21,7 @@ NULL
 #'
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com/english/
+#' @references \url{https://www.sthda.com/english/}
 #' @examples
 #' \donttest{
 #' # Principal component analysis

@@ -139,7 +139,7 @@ fviz_cluster(km.res, iris[, -5], geom = "text")
 
 # PAM clustering
 # ++++++++++++++++++++
-require(cluster)
+requireNamespace("cluster", quietly = TRUE)
 pam.res <- pam(iris.scaled, 3)
  # Visualize pam clustering
 fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")

@@ -84,19 +84,19 @@ If NULL (default), the current RNG stream is used.}
 \item{...}{optional arguments to be passed to the function \link[ggpubr]{ggpar}.}
 }
 \value{
-\itemize{ \item{get_eig() (or get_eigenvalue()): returns a data.frame 
- containing 3 columns: the eigenvalues, the percentage of variance and  the 
- cumulative percentage of variance retained by each dimension.} 
- \item{fviz_eig() (or fviz_screeplot()): returns a ggplot2} }
+\itemize{ \item get_eig() (or get_eigenvalue()): returns a data.frame
+ containing 3 columns: the eigenvalues, the percentage of variance and  the
+ cumulative percentage of variance retained by each dimension.
+ \item fviz_eig() (or fviz_screeplot()): returns a ggplot2 }
 }
 \description{
 Eigenvalues correspond to the amount of the variation explained 
  by each principal component (PC). 
  
- \itemize{ \item{get_eig(): Extract the eigenvalues/variances of the 
- principal dimensions} \item{fviz_eig(): Plot the eigenvalues/variances 
- against the number of dimensions} \item{get_eigenvalue(): an alias of 
- get_eig()} \item{fviz_screeplot(): an alias of fviz_eig()} }
+ \itemize{ \item get_eig(): Extract the eigenvalues/variances of the
+ principal dimensions \item fviz_eig(): Plot the eigenvalues/variances
+ against the number of dimensions \item get_eigenvalue(): an alias of
+ get_eig() \item fviz_screeplot(): an alias of fviz_eig() }
  
  These functions support the results of Principal Component Analysis (PCA), 
  Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
@@ -149,7 +149,7 @@ fviz_eig(res.mca, linecolor = "#FC4E07",
 
 }
 \references{
-http://www.sthda.com/english/
+\url{https://www.sthda.com/english/}
 }
 \seealso{
 \code{\link{fviz_pca}}, \code{\link{fviz_ca}},

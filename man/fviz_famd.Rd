@@ -126,9 +126,9 @@ Factor analysis of mixed data (FAMD) is, a particular case of
   MFA, used to analyze a data set containing both quantitative and
   qualitative variables. fviz_famd() provides ggplot2-based elegant
   visualization of FAMD outputs from the R function: FAMD [FactoMineR].\cr\cr
-  \itemize{ \item{fviz_famd_ind(): Graph of individuals}
-  \item{fviz_famd_var(): Graph of variables} \item{fviz_famd(): An alias of
-  fviz_famd_ind(res.famd)} }
+  \itemize{ \item fviz_famd_ind(): Graph of individuals
+  \item fviz_famd_var(): Graph of variables \item fviz_famd(): An alias of
+  fviz_famd_ind(res.famd) }
 }
 \examples{
 # Compute FAMD

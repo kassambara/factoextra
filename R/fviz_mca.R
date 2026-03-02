@@ -10,9 +10,9 @@ NULL
 #'  \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/}{Multiple
 #'   Correspondence Analysis Essentials.}
 #'  
-#'  \itemize{ \item{fviz_mca_ind(): Graph of individuals} \item{fviz_mca_var(): 
-#'  Graph of variables} \item{fviz_mca_biplot(): Biplot of individuals and 
-#'  variables} \item{fviz_mca(): An alias of fviz_mca_biplot()}}
+#'  \itemize{ \item fviz_mca_ind(): Graph of individuals \item fviz_mca_var():
+#'  Graph of variables \item fviz_mca_biplot(): Biplot of individuals and
+#'  variables \item fviz_mca(): An alias of fviz_mca_biplot() }
 #'@param X an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
 #'  [ExPosition].
 #'@inheritParams fviz_pca

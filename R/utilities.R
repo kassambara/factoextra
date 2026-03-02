@@ -387,7 +387,7 @@ NULL
   sv <- sqrt(eig)
   
   # rows/columns in principal coordinates
-  if(type %in% c("symmetric", "colprincipal", "colgab", "cogreen")) res <- data
+  if(type %in% c("symmetric", "colprincipal", "colgab", "colgreen")) res <- data
   else{
     # get standard coordinates 
     x <- res$x/sqrt(eig[1])

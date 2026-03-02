@@ -138,9 +138,9 @@ Hierarchical Multiple Factor Analysis (HMFA) is, an extension of
  MFA, used in a situation where the data are organized into a hierarchical
  structure.  fviz_hmfa() provides ggplot2-based elegant visualization of HMFA
  outputs from the R function: HMFA [FactoMineR].\cr\cr \itemize{
- \item{fviz_hmfa_ind(): Graph of individuals} \item{fviz_hmfa_var(): Graph of
- variables} \item{fviz_hmfa_quali_biplot(): Biplot of individuals and
- qualitative variables} \item{fviz_hmfa(): An alias of fviz_hmfa_ind()} }
+ \item fviz_hmfa_ind(): Graph of individuals \item fviz_hmfa_var(): Graph of
+ variables \item fviz_hmfa_quali_biplot(): Biplot of individuals and
+ qualitative variables \item fviz_hmfa(): An alias of fviz_hmfa_ind() }
 }
 \examples{
 # Hierarchical Multiple Factor Analysis
@@ -188,7 +188,7 @@ fviz_hmfa_ind(res.hmfa, partial = "all", palette = "Dark2")
 
 }
 \references{
-http://www.sthda.com/english/
+\url{https://www.sthda.com/english/}
 }
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}

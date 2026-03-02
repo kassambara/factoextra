@@ -148,7 +148,7 @@ fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
  }
 }
 \references{
-http://www.sthda.com/english/
+\url{https://www.sthda.com/english/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

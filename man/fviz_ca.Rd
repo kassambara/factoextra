@@ -136,9 +136,9 @@ Correspondence analysis (CA) is an extension of Principal
  \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/}{Correspondence
   Analysis}
  
- \itemize{ \item{fviz_ca_row(): Graph of row variables} \item{fviz_ca_col():
- Graph of column variables} \item{fviz_ca_biplot(): Biplot of row and column
- variables} \item{fviz_ca(): An alias of fviz_ca_biplot()} }
+ \itemize{ \item fviz_ca_row(): Graph of row variables \item fviz_ca_col():
+ Graph of column variables \item fviz_ca_biplot(): Biplot of row and column
+ variables \item fviz_ca(): An alias of fviz_ca_biplot() }
 }
 \details{
 The default plot of (M)CA is a "symmetric" plot in which both rows
@@ -239,7 +239,7 @@ fviz_ca_col(res.ca, select.col = list(contrib = 3))
  
 }
 \references{
-http://www.sthda.com
+\url{https://www.sthda.com/english/}
 }
 \seealso{
 \code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}

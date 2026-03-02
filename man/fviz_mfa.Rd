@@ -162,11 +162,11 @@ Multiple factor analysis (MFA) is used to analyze a data set in
  which individuals are described by several sets of variables (quantitative 
  and/or qualitative) structured into groups. fviz_mfa() provides
  ggplot2-based elegant visualization of MFA outputs from the R function: MFA
- [FactoMineR].\cr\cr \itemize{ \item{fviz_mfa_ind(): Graph of individuals} 
- \item{fviz_mfa_var(): Graph of variables} \item{fviz_mfa_axes(): Graph of 
- partial axes} \item{fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial = 
- "all")} \item{fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
- variables} }
+ [FactoMineR].\cr\cr \itemize{ \item fviz_mfa_ind(): Graph of individuals
+ \item fviz_mfa_var(): Graph of variables \item fviz_mfa_axes(): Graph of
+ partial axes \item fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial =
+ "all") \item fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
+ variables }
 }
 \examples{
 # Compute Multiple Factor Analysis
@@ -214,7 +214,7 @@ fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
 
 }
 \references{
-http://www.sthda.com/english/
+\url{https://www.sthda.com/english/}
 }
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}

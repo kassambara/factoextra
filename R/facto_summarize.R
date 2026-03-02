@@ -33,7 +33,7 @@ NULL
 #'   column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the 
 #'   coordinates of the points on the specified axes.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references http://www.sthda.com/english/
+#' @references \url{https://www.sthda.com/english/}
 #' @examples
 #' # Principal component analysis
 #' # +++++++++++++++++++++++++++++
