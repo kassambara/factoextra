@@ -2,8 +2,8 @@ test_that("hcut validates k and scaled inputs", {
   x <- iris[, 1:4]
   expect_error(hcut(x, k = 1), "k must be a single integer >= 2")
   expect_error(
-    hcut(x, k = nrow(x)),
-    "k must be smaller than the number of observations"
+    hcut(x, k = nrow(x) + 1),
+    "elements of 'k' must be between 1 and"
   )
 
   x_const <- data.frame(a = 1:10, b = rep(1, 10))
@@ -25,8 +25,8 @@ test_that("hkmeans validates inputs and k bounds", {
   x <- iris[, 1:4]
   expect_error(hkmeans(x, k = 1), "k must be a single integer >= 2")
   expect_error(
-    hkmeans(x, k = nrow(x)),
-    "k must be smaller than the number of rows in x"
+    hkmeans(x, k = nrow(x) + 1),
+    "elements of 'k' must be between 1 and"
   )
   expect_error(hkmeans(1:10, k = 2), "x must be a matrix or data.frame")
 })

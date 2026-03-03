@@ -81,13 +81,7 @@ hcut <- function(x, k = 2, isdiss = inherits(x, "dist"),
   hc_func <- hc_func[1]
   
   if(!isdiss) x <- get_dist(x, method = hc_metric)
-  n_obs <- attr(x, "Size")
-  if(is.null(n_obs) || !is.numeric(n_obs))
-    stop("Unable to determine number of observations from distance data")
-  if(k >= n_obs)
-    stop("k must be smaller than the number of observations")
-  
-  
+
   if(hc_func == "hclust") hc <- stats::hclust(x, method = hc_method)
   else if(hc_func == "agnes") {
     if(hc_method %in%c("ward.D", "ward.D2")) hc_method = "ward"

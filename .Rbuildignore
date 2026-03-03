@@ -18,3 +18,4 @@
 ^Rplots\.pdf$
 ^\.claude$
 ^CLAUDE\.md$
+^CRAN-SUBMISSION$

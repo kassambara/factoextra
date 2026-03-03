@@ -8,7 +8,7 @@ All checks run via GitHub Actions.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
 
 ## Major version bump
 
@@ -20,6 +20,15 @@ This is a major update (1.0.7 → 2.0.0). The last CRAN release was in April 202
 * Replaced deprecated ggplot2 functions (`aes_string()`, `stat()`, `guide_legend(override.aes)`)
 * Added comprehensive test suite (113 tests via testthat)
 * Fixed documentation issues (lost braces, bare URLs, missing `\value` tags)
+
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Added a note about `datanovia.com` URLs returning HTTP 503 to automated
+  crawlers. The URLs are valid and accessible in a browser; the server
+  returns 503 to automated crawlers. This affects URLs in DESCRIPTION,
+  README.md, and man/*.Rd files.
 
 ## Downstream dependencies
 
