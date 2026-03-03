@@ -43,7 +43,11 @@ with the current R/ggplot2/FactoMineR ecosystem.
 * `get_clust_tendency()`: stricter input validation, RNG state preservation,
   `options(factoextra.warn_hopkins = FALSE)` to suppress one-time warning.
 * `hcut()` and `hkmeans()`: improved input checks and error handling.
+  Redundant `k >= n` checks removed to preserve backward-compatible error
+  messages from `cutree()` / `kmeans()` (avoids breaking reverse dependencies
+  such as `chooseGCM`). ([@erdeyl, #199](https://github.com/kassambara/factoextra/pull/199))
 * Expanded `testthat` test suite (113 tests).
+  ([@erdeyl, #199](https://github.com/kassambara/factoextra/pull/199))
 * GitHub Actions R-CMD-check workflow.
 
 ## Internal
