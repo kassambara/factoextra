@@ -1,3 +1,7 @@
+# factoextra 2.0.0.999
+
+* (development version)
+
 # factoextra 2.0.0
 
 Major modernization release after 6 years. Resolves 30+ open issues and aligns
