@@ -322,8 +322,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                  colour = .data[["col"]], linetype = .data[["lty"]], linewidth = .data[["lwd"]]), lineend = "square") +
       # FIX: ggplot2 3.3.4+ deprecation - use "none" instead of FALSE for guides()
       # See: https://github.com/kassambara/factoextra/issues/179
-      guides(linetype = "none", col = "none") + #scale_colour_identity() +
-      scale_size_identity() + scale_linetype_identity()
+      guides(linetype = "none", col = "none", linewidth = "none") + #scale_colour_identity() +
+      scale_linewidth_identity() + scale_linetype_identity()
     if(is.null(palette)) p <- p + scale_colour_identity()
   }
   if (nodes) {
