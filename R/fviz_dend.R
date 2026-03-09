@@ -22,7 +22,8 @@
 #'   labels. Used only when type = "rectangle".
 #' @param repel logical value. Use repel = TRUE to avoid label overplotting when
 #'   type = "phylogenic".
-#' @param lwd a numeric value specifying branches and rectangle line width.
+#' @param lwd a numeric value specifying dendrogram branch and rectangle line
+#'   width.
 #' @param type type of plot. Allowed values are one of "rectangle", "triangle", 
 #'   "circular", "phylogenic".
 #' @param phylo_layout the layout to be used for phylogenic trees. Default value
@@ -60,6 +61,9 @@
 #' 
 #' # Default plot
 #' fviz_dend(res.hc)
+#'
+#' # Increase branch and rectangle line widths
+#' fviz_dend(res.hc, lwd = 2)
 #' 
 #' # Cut the tree
 #' fviz_dend(res.hc, cex = 0.5, k = 4, color_labels_by_k = TRUE)
