@@ -2,7 +2,7 @@
 
 * (development version)
 * `fviz_dend()`: `lwd` now controls ggplot branch thickness correctly and no
-  longer triggers a spurious linewidth legend. (#200)
+  longer triggers a spurious linewidth legend. (#200, @erdeyl)
 
 # factoextra 2.0.0
 
