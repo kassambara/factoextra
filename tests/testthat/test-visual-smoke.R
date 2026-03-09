@@ -42,6 +42,38 @@ test_that("fviz_dend supports rectangular dendrogram layout", {
   expect_s3_class(p, "ggplot")
 })
 
+test_that("fviz_dend applies lwd to branch segments without adding a linewidth guide", {
+  hc <- hclust(dist(scale(USArrests)))
+
+  p_default <- fviz_dend(hc)
+  p_custom <- fviz_dend(hc, lwd = 2)
+
+  default_layers <- ggplot2::ggplot_build(p_default)
+  custom_layers <- ggplot2::ggplot_build(p_custom)
+  legend_labels <- function(plot) {
+    gt <- ggplot2::ggplotGrob(plot)
+    idx <- which(gt$layout$name == "guide-box-right")
+    if(length(idx) == 0) return(character(0))
+    legend <- gt$grobs[[idx[1]]]$grobs[[1]]
+    extract_labels <- function(grob) {
+      out <- character()
+      if(inherits(grob, "text")) out <- c(out, grob$label)
+      if(!is.null(grob$children)) {
+        for(child in grob$children) out <- c(out, extract_labels(child))
+      }
+      if(!is.null(grob$grobs)) {
+        for(child in grob$grobs) out <- c(out, extract_labels(child))
+      }
+      out
+    }
+    unique(Filter(nzchar, extract_labels(legend)))
+  }
+
+  expect_equal(unique(default_layers$data[[1]]$linewidth), 0.7)
+  expect_equal(unique(custom_layers$data[[1]]$linewidth), 2)
+  expect_false("lwd" %in% legend_labels(p_custom))
+})
+
 test_that("fviz_pca_biplot supports form and covariance scaling modes", {
   res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
   p_form <- fviz_pca_biplot(res.pca, biplot.type = "form")

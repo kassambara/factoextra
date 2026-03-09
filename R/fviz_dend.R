@@ -22,7 +22,8 @@
 #'   labels. Used only when type = "rectangle".
 #' @param repel logical value. Use repel = TRUE to avoid label overplotting when
 #'   type = "phylogenic".
-#' @param lwd a numeric value specifying branches and rectangle line width.
+#' @param lwd a numeric value specifying dendrogram branch and rectangle line
+#'   width.
 #' @param type type of plot. Allowed values are one of "rectangle", "triangle", 
 #'   "circular", "phylogenic".
 #' @param phylo_layout the layout to be used for phylogenic trees. Default value
@@ -60,6 +61,9 @@
 #' 
 #' # Default plot
 #' fviz_dend(res.hc)
+#'
+#' # Increase branch and rectangle line widths
+#' fviz_dend(res.hc, lwd = 2)
 #' 
 #' # Cut the tree
 #' fviz_dend(res.hc, cex = 0.5, k = 4, color_labels_by_k = TRUE)
@@ -322,8 +326,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                  colour = .data[["col"]], linetype = .data[["lty"]], linewidth = .data[["lwd"]]), lineend = "square") +
       # FIX: ggplot2 3.3.4+ deprecation - use "none" instead of FALSE for guides()
       # See: https://github.com/kassambara/factoextra/issues/179
-      guides(linetype = "none", col = "none") + #scale_colour_identity() +
-      scale_size_identity() + scale_linetype_identity()
+      guides(linetype = "none", col = "none", linewidth = "none") + #scale_colour_identity() +
+      scale_linewidth_identity() + scale_linetype_identity()
     if(is.null(palette)) p <- p + scale_colour_identity()
   }
   if (nodes) {

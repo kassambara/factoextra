@@ -62,7 +62,8 @@ labels. Used only when type = "rectangle".}
 \item{repel}{logical value. Use repel = TRUE to avoid label overplotting when
 type = "phylogenic".}
 
-\item{lwd}{a numeric value specifying branches and rectangle line width.}
+\item{lwd}{a numeric value specifying dendrogram branch and rectangle line
+width.}
 
 \item{type}{type of plot. Allowed values are one of "rectangle", "triangle", 
 "circular", "phylogenic".}
@@ -120,6 +121,9 @@ res.hc <- hclust(dist(df))
 
 # Default plot
 fviz_dend(res.hc)
+
+# Increase branch and rectangle line widths
+fviz_dend(res.hc, lwd = 2)
 
 # Cut the tree
 fviz_dend(res.hc, cex = 0.5, k = 4, color_labels_by_k = TRUE)
