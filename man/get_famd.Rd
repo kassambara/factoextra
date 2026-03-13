@@ -40,6 +40,8 @@ for the active individuals and variables from Factor Analysis of Mixed Date (FAM
  library("FactoMineR")
  data(wine)
  res.famd <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)], graph = FALSE)
+ res.famd.sup <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)],
+                      sup.var = 2, graph = FALSE)
  
  # Extract the results for qualitative variable categories
  quali.var <- get_famd_var(res.famd, "quali.var")
@@ -47,7 +49,7 @@ for the active individuals and variables from Factor Analysis of Mixed Date (FAM
  head(quali.var$coord) # coordinates of qualitative variables
 
  # Extract the results for supplementary qualitative variable categories
- quali.sup <- get_famd_var(res.famd, "quali.sup")
+ quali.sup <- get_famd_var(res.famd.sup, "quali.sup")
  print(quali.sup)
  head(quali.sup$coord) # coordinates of supplementary qualitative variables
 

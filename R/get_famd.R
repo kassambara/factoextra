@@ -25,11 +25,18 @@ NULL
 #'  library("FactoMineR")
 #'  data(wine)
 #'  res.famd <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)], graph = FALSE)
+#'  res.famd.sup <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)],
+#'                       sup.var = 2, graph = FALSE)
 #'  
 #'  # Extract the results for qualitative variable categories
 #'  quali.var <- get_famd_var(res.famd, "quali.var")
 #'  print(quali.var)
 #'  head(quali.var$coord) # coordinates of qualitative variables
+#' 
+#'  # Extract the results for supplementary qualitative variable categories
+#'  quali.sup <- get_famd_var(res.famd.sup, "quali.sup")
+#'  print(quali.sup)
+#'  head(quali.sup$coord) # coordinates of supplementary qualitative variables
 #'  
 #'  # Extract the results for quantitative variables
 #'  quanti.var <- get_famd_var(res.famd, "quanti.var")
@@ -75,18 +82,19 @@ get_famd_var <- function(res.famd, element = c("var", "quanti.var", "quali.var",
   choice <- match.arg(element)
   # FactoMineR package
   if(inherits(res.famd, "FAMD")) {
+    quali.sup <- .get_factominer_quali_sup(res.famd)
     if(choice == "quanti.var" && is.null(res.famd$quanti.var))
       stop("There are no quantitative variables in this FAMD.")
     else if(choice == "quali.var" && is.null(res.famd$quali.var))
       stop("There are no qualitative variables in this FAMD.")
-    else if(choice == "quali.sup" && is.null(res.famd$quali.sup))
+    else if(choice == "quali.sup" && is.null(quali.sup))
       stop("There are no supplementary qualitative variables in this FAMD.")
 
     vars <- switch(choice,
                    var = res.famd$var,
                    quanti.var = res.famd$quanti.var,
                    quali.var = res.famd$quali.var,
-                   quali.sup = res.famd$quali.sup
+                   quali.sup = quali.sup
                    )
     element_desc <- switch(choice,
                       var = "variables",

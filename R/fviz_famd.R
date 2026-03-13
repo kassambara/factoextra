@@ -15,7 +15,7 @@ NULL
 #' @inheritParams fviz_pca
 #' @inheritParams fviz
 #' @inheritParams ggpubr::ggpar
-#' @param choice The graph to plot inf fviz_mfa_var(). Allowed values include
+#' @param choice The graph to plot in fviz_famd_var(). Allowed values include
 #'   one of c("var", "quanti.var", "quali.var", "quali.sup").
 #' @param habillage an optional factor variable for coloring the observations by
 #'   groups. Default value is "none". If X is an MFA object from FactoMineR 
@@ -60,6 +60,8 @@ NULL
 #'  library("FactoMineR")
 #'  data(wine)
 #'  res.famd <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)], graph = FALSE)
+#'  res.famd.sup <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)],
+#'                       sup.var = 2, graph = FALSE)
 #'                
 #' # Eigenvalues/variances of dimensions
 #' fviz_screeplot(res.famd)
@@ -70,7 +72,7 @@ NULL
 #' # Qualitative variables
 #' fviz_famd_var(res.famd, "quali.var", col.var = "black")
 #' # Supplementary qualitative variable categories
-#' fviz_famd_var(res.famd, "quali.sup", col.var = "darkgreen")
+#' fviz_famd_var(res.famd.sup, "quali.sup", col.var = "darkgreen")
 #' # Graph of individuals colored by cos2
 #' fviz_famd_ind(res.famd, col.ind = "cos2", 
 #'   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
@@ -89,12 +91,13 @@ fviz_famd_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
                          ...)
 {
   extra_args <- list(...)
+  invisible <- if(is.null(extra_args$invisible)) "none" else extra_args$invisible
+  quali.sup <- .get_factominer_quali_sup(X)
   
   if(col.ind %in% c("cos2","contrib", "coord")) partial = NULL
   
-  invisible <- ifelse(is.null(extra_args$invisible), "none", extra_args$invisible)
   show.quali.var <- !("quali.var" %in% invisible) && !is.null(X$quali.var)
-  show.quali.sup <- !("quali.sup" %in% invisible) && !is.null(X$quali.sup)
+  show.quali.sup <- !("quali.sup" %in% invisible) && !is.null(quali.sup)
   p <- NULL
   
   if(show.quali.var)
@@ -138,7 +141,7 @@ fviz_famd_var <- function(X, choice = c("var", "quanti.var", "quali.var", "quali
   else if(choice == "quali.var" && is.null(X$quali.var)) {
     stop("There are no qualitative variables to plot.")
   }
-  else if(choice == "quali.sup" && is.null(X$quali.sup)) {
+  else if(choice == "quali.sup" && is.null(.get_factominer_quali_sup(X))) {
     stop("There are no supplementary qualitative variables to plot.")
   }
   # Main plot

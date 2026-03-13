@@ -155,6 +155,26 @@ test_that("fviz_famd_ind can show supplementary qualitative categories without a
   expect_true(any(layer_rows == nlevels(famd_df$sup_q)))
 })
 
+test_that("fviz_famd_ind respects multi-element invisible vectors", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(4343)
+  famd_df <- data.frame(
+    cat_a = factor(sample(c("a", "b", "c"), 60, TRUE)),
+    num_a = rnorm(60),
+    num_b = rnorm(60),
+    sup_q = factor(sample(c("north", "south"), 60, TRUE))
+  )
+  res.famd <- FactoMineR::FAMD(famd_df, sup.var = 4, graph = FALSE)
+
+  p <- fviz_famd_ind(res.famd, invisible = c("quali.var", "ind"), repel = TRUE)
+  layer_rows <- vapply(ggplot2::ggplot_build(p)$data, nrow, integer(1))
+
+  expect_s3_class(p, "ggplot")
+  expect_true(any(layer_rows == nlevels(famd_df$sup_q)))
+  expect_false(any(layer_rows == nrow(famd_df)))
+})
+
 test_that("fviz_mfa_var supports supplementary qualitative categories", {
   skip_if_not_installed("FactoMineR")
 
@@ -181,4 +201,37 @@ test_that("fviz_mfa_var supports supplementary qualitative categories", {
   expect_s3_class(p_biplot, "ggplot")
   expect_true(any(overlay_rows == sup_n))
   expect_equal(sum(biplot_rows == sup_n), 2)
+})
+
+test_that("quali.sup plots reject contrib-based selection cleanly", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(5151)
+  famd_df <- data.frame(
+    cat_a = factor(sample(c("a", "b", "c"), 60, TRUE)),
+    cat_b = factor(sample(c("x", "y"), 60, TRUE)),
+    num_a = rnorm(60),
+    num_b = rnorm(60),
+    sup_q = factor(sample(c("north", "south"), 60, TRUE))
+  )
+  res.famd <- FactoMineR::FAMD(famd_df, sup.var = 5, graph = FALSE)
+
+  data(poison, package = "FactoMineR")
+  res.mfa <- FactoMineR::MFA(
+    poison,
+    group = c(2, 2, 5, 6),
+    type = c("s", "n", "n", "n"),
+    name.group = c("desc", "desc2", "symptom", "eat"),
+    num.group.sup = 1:2,
+    graph = FALSE
+  )
+
+  expect_error(
+    fviz_famd_var(res.famd, choice = "quali.sup", select.var = list(contrib = 1)),
+    "Contributions are not available"
+  )
+  expect_error(
+    fviz_mfa_var(res.mfa, choice = "quali.sup", select.var = list(contrib = 1)),
+    "Contributions are not available"
+  )
 })
