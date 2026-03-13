@@ -147,6 +147,8 @@ test_that("MFA supplementary qualitative variables can be extracted and mapped",
   map <- factominer_category_map(res.mfa, element = "quali.sup")
   expect_s3_class(map, "data.frame")
   expect_identical(map$current, rownames(res.mfa$quali.var.sup$coord))
+
+  expect_no_error(print(quali.sup))
 })
 
 test_that(".add_ind_groups handles multi-column habillage reshape path", {
