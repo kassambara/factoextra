@@ -31,7 +31,7 @@ fviz_mfa_quali_biplot(
   X,
   axes = c(1, 2),
   geom = c("point", "text"),
-  repel = repel,
+  repel = FALSE,
   title = "Biplot of individuals and qualitative variables - MFA",
   ...
 )

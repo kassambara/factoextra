@@ -29,7 +29,7 @@ NULL
 #'   values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
 #'   ....), make sure that habillage ="none".
 #' @param col.var.sup color for supplementary variables.
-#' @param col.quali.var color for qualitative variables in fviz_mfa_ind(). 
+#' @param col.quali.var color for qualitative variables in fviz_famd_ind(). 
 #'   Default is "black".
 #' @param alpha.ind,alpha.var controls the transparency of individuals and 
 #'   variables, respectively. The value can variate from 0 (total transparency) 

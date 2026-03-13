@@ -96,7 +96,7 @@ values("x") or y values("y"). To use this, make sure that habillage
 \item{shape.ind, shape.var}{point shapes of individuals, variables, groups and
 axes}
 
-\item{col.quali.var}{color for qualitative variables in fviz_mfa_ind(). 
+\item{col.quali.var}{color for qualitative variables in fviz_famd_ind(). 
 Default is "black".}
 
 \item{select.ind, select.var}{a selection of individuals and variables to be 

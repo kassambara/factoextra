@@ -21,13 +21,13 @@ get_famd_var(res.famd, element = c("var", "quanti.var", "quali.var", "quali.sup"
 \value{
 a list of matrices containing the results for the active 
 individuals and variables, including : 
-\item{coord}{coordinates of indiiduals/variables.}
+\item{coord}{coordinates of individuals/variables.}
 \item{cos2}{cos2 values representing the quality of representation on the factor map.}
 \item{contrib}{contributions of individuals / variables to the principal components.}
 }
 \description{
 Extract all the results (coordinates, squared cosine and contributions) 
-for the active individuals and variables from Factor Analysis of Mixed Date (FAMD) outputs.\cr\cr
+for the active individuals and variables from Factor Analysis of Mixed Data (FAMD) outputs.\cr\cr
 \itemize{
 \item get_famd(): Extract the results for variables and individuals
 \item get_famd_ind(): Extract the results for individuals only

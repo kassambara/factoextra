@@ -117,6 +117,12 @@ test_that("FAMD supplementary qualitative variables can be extracted and summari
   sup.sum <- facto_summarize(res.famd, element = "quali.sup", axes = 1:2)
   expect_true(all(c("name", "Dim.1", "Dim.2", "coord", "cos2") %in% colnames(sup.sum)))
   expect_false("contrib" %in% colnames(sup.sum))
+
+  res.famd.no.sup <- FactoMineR::FAMD(famd_df[, 1:4], graph = FALSE)
+  expect_error(
+    get_famd_var(res.famd.no.sup, "quali.sup"),
+    "There are no supplementary qualitative variables"
+  )
 })
 
 test_that("MFA supplementary qualitative variables can be extracted and mapped", {
@@ -149,6 +155,18 @@ test_that("MFA supplementary qualitative variables can be extracted and mapped",
   expect_identical(map$current, rownames(res.mfa$quali.var.sup$coord))
 
   expect_no_error(print(quali.sup))
+
+  res.mfa.no.sup <- FactoMineR::MFA(
+    poison,
+    group = c(2, 2, 5, 6),
+    type = c("s", "n", "n", "n"),
+    name.group = c("desc", "desc2", "symptom", "eat"),
+    graph = FALSE
+  )
+  expect_error(
+    get_mfa_var(res.mfa.no.sup, "quali.sup"),
+    "There are no supplementary qualitative variables"
+  )
 })
 
 test_that(".add_ind_groups handles multi-column habillage reshape path", {

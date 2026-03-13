@@ -126,6 +126,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          ...)
 {
   extra_args <- list(...)
+  invisible <- if(is.null(extra_args$invisible)) "none" else extra_args$invisible
   
   if(col.ind %in% c("cos2","contrib", "coord")) partial = NULL
   if(!is.null(partial) && missing(col.ind)) col.ind <- "black"
@@ -137,9 +138,9 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
         select = select.ind, repel = repel, ...)
   
   # Add supplementary qualitative variables if they exist
-  show.quali.var <- !("quali.var" %in% extra_args$invisible) && is.null(partial)
+  show.quali.sup <- !("quali.sup" %in% invisible) && is.null(partial)
   is_habillage <- habillage[1] != "none" 
-  if(!is.null(X$quali.var.sup) && show.quali.var){
+  if(!is.null(X$quali.var.sup) && show.quali.sup){
     if(!(col.ind %in% c("cos2", "contrib")) && !is_habillage) col.quali.var.sup  = "quali.sup"
     quali.sup <- .get_supp(X, element = "quali.var.sup", axes = axes)
     quali.sup$quali.sup <- .get_quali_var_sup_names(X)
@@ -152,7 +153,6 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   
   # Add partial points
   if(!is.null(partial)){
-    invisible <- ifelse(is.null(extra_args$invisible), "none", extra_args$invisible)
     if(!(partial[1] %in% c("All", "all"))) select.partial = list(name = partial)
     else select.partial <- NULL
     if(col.partial %in% c("group", "groups")) col.partial <- "group.name"
@@ -200,18 +200,27 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = repel,
+fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
                                   title = "Biplot of individuals and qualitative variables - MFA", ...)
 {
   extra_args <- list(...)
-  invisible <- if(is.null(extra_args$invisible)) "quali.sup" else unique(c(extra_args$invisible, "quali.sup"))
+  invisible.ind <- extra_args$invisible
+  invisible.var <- if(is.null(invisible.ind)) "quali.sup" else unique(c(invisible.ind, "quali.sup"))
+  extra_args$invisible <- NULL
+
   # Individuals
-  p <- fviz_mfa_ind(X,  axes = axes, geom = geom, repel = repel,  ...)
+  ind.args <- c(list(X = X, axes = axes, geom = geom, repel = repel), extra_args)
+  if(!is.null(invisible.ind)) ind.args$invisible <- invisible.ind
+  p <- do.call(fviz_mfa_ind, ind.args)
   
   # Variable
   # Add variables
-  p <- fviz_mfa_var(X, "quali.var", axes = axes, geom =  geom, repel = repel, 
-                  ggp = p, invisible = invisible, ...)
+  var.args <- c(
+    list(X = X, choice = "quali.var", axes = axes, geom = geom, repel = repel,
+         ggp = p, invisible = invisible.var),
+    extra_args
+  )
+  p <- do.call(fviz_mfa_var, var.args)
   
   p+labs(title=title)
 }

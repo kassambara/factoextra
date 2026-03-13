@@ -119,6 +119,7 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
                           group.names = NULL, node.level = 1,  ...)
 {
   extra_args <- list(...)
+  invisible <- if(is.null(extra_args$invisible)) "none" else extra_args$invisible
   
   p <- fviz (X, element = "ind", axes = axes, geom = geom, habillage = habillage, 
              addEllipses = addEllipses, pointshape = shape.ind,
@@ -128,7 +129,6 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
   
   # Add partial points
   if(!is.null(partial)){
-    invisible <- ifelse(is.null(extra_args$invisible), "none", extra_args$invisible)
     if(!(partial[1] %in% c("All", "all"))) select.partial = list(name = partial)
     else select.partial <- NULL
     if(col.partial %in% c("group", "groups")) col.partial <- "group.name"
