@@ -14,7 +14,10 @@ get_mfa(
 
 get_mfa_ind(res.mfa)
 
-get_mfa_var(res.mfa, element = c("quanti.var", "quali.var", "quali.sup", "group"))
+get_mfa_var(
+  res.mfa,
+  element = c("quanti.var", "quali.var", "quali.sup", "group")
+)
 
 get_mfa_partial_axes(res.mfa)
 }
@@ -22,7 +25,8 @@ get_mfa_partial_axes(res.mfa)
 \item{res.mfa}{an object of class MFA [FactoMineR].}
 
 \item{element}{the element to subset from the output. Possible values are
-"ind", "quanti.var", "quali.var", "quali.sup", "group" or "partial.axes".}
+"ind", "quanti.var", "quali.var", "quali.sup", "group" or
+"partial.axes".}
 }
 \value{
 a list of matrices containing the results for the active 

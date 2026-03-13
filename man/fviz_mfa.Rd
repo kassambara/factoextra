@@ -189,7 +189,7 @@ fviz_mfa_ind(res.mfa, col.ind = "cos2",
   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
   repel = TRUE)
 # Partial individuals
-fviz_mfa_ind(res.mfa, partial = "all") 
+fviz_mfa_ind(res.mfa, partial = rownames(wine)[1:3], col.partial = "black") 
 # Partial axes
 fviz_mfa_axes(res.mfa)
 

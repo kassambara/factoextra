@@ -6,11 +6,17 @@
 \alias{get_famd_var}
 \title{Extract the results for individuals and variables - FAMD}
 \usage{
-get_famd(res.famd, element = c("ind", "var", "quanti.var", "quali.var", "quali.sup"))
+get_famd(
+  res.famd,
+  element = c("ind", "var", "quanti.var", "quali.var", "quali.sup")
+)
 
 get_famd_ind(res.famd)
 
-get_famd_var(res.famd, element = c("var", "quanti.var", "quali.var", "quali.sup"))
+get_famd_var(
+  res.famd,
+  element = c("var", "quanti.var", "quali.var", "quali.sup")
+)
 }
 \arguments{
 \item{res.famd}{an object of class FAMD [FactoMineR].}
@@ -52,7 +58,7 @@ for the active individuals and variables from Factor Analysis of Mixed Data (FAM
  quali.sup <- get_famd_var(res.famd.sup, "quali.sup")
  print(quali.sup)
  head(quali.sup$coord) # coordinates of supplementary qualitative variables
-
+ 
  # Extract the results for quantitative variables
  quanti.var <- get_famd_var(res.famd, "quanti.var")
  print(quanti.var)

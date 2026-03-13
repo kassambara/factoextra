@@ -63,7 +63,7 @@
 #' 
 #' 
 #' # Visualize the hkmeans final clusters
-#' fviz_cluster(res.hk, frame.type = "norm", frame.level = 0.68)
+#' fviz_cluster(res.hk, ellipse.type = "norm", ellipse.level = 0.68)
 #' }
 #' @name hkmeans
 #' @rdname hkmeans
@@ -125,4 +125,3 @@ hkmeans_tree <- function(hkmeans, rect.col = NULL, ...)
   k <- length(unique(res.hk$cluster))
   stats::rect.hclust(res.hk$hclust, k = k, border = rect.col)
 }
-

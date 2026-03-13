@@ -104,7 +104,7 @@ NULL
 #'     
 #' # Graph of partial individuals (starplot)
 #' # +++++++++++++++++++++++++++++++++++++++
-#' fviz_hmfa_ind(res.hmfa, partial = "all", palette = "Dark2")
+#' fviz_hmfa_ind(res.hmfa, partial = "all", col.partial = "black")
 #'  
 #'
 #'@name fviz_hmfa

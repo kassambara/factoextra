@@ -10,6 +10,17 @@ All checks run via GitHub Actions.
 
 0 errors | 0 warnings | 1 note
 
+## Additional local pre-submission checks (March 13, 2026)
+
+* macOS Tahoe 26.3.1 — R 4.5.3
+* `devtools::run_examples(run_donttest = TRUE)`: clean after refreshing examples and manuals
+* `R CMD check factoextra_2.0.0.999.tar.gz`: 0 errors | 0 warnings | 0 notes
+* `R CMD check --as-cran factoextra_2.0.0.999.tar.gz`: 0 errors | 0 warnings | 1 note
+
+The remaining `--as-cran` note is environment-specific:
+
+* `unable to verify current time`
+
 ## Major version bump
 
 This is a major update (1.0.7 → 2.0.0). The last CRAN release was in April 2020. Key changes include:

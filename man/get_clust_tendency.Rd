@@ -81,6 +81,10 @@ dark (or colored) blocks along the diagonal in a VAT image.
 \examples{
 data(iris)
 
+# Silence the one-time compatibility warning in examples
+old_hopkins_warn <- getOption("factoextra.warn_hopkins")
+options(factoextra.warn_hopkins = FALSE)
+
 # Clustering tendency
 gradient_col = list(low = "steelblue", high = "white")
 get_clust_tendency(iris[,-5], n = 50, gradient = gradient_col)
@@ -92,6 +96,7 @@ random_df <- apply(iris[, -5], 2,
                    function(x){runif(length(x), min(x), max(x))}
                    )
 get_clust_tendency(random_df, n = 50, gradient = gradient_col)
+options(factoextra.warn_hopkins = old_hopkins_warn)
 
 }
 \seealso{

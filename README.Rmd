@@ -1,7 +1,6 @@
 ---
 output:
-  md_document:
-    variant: markdown_github
+  github_document: default
 ---
 
 
@@ -143,6 +142,12 @@ library("factoextra")
 # New helper: map legacy FactoMineR category labels
 map_factominer_legacy_names(res.mfa, c("var.level"))
 
+# New support: supplementary qualitative categories in FactoMineR FAMD/MFA
+get_famd(res.famd, "quali.sup")
+fviz_famd_var(res.famd, "quali.sup")
+get_mfa(res.mfa, "quali.sup")
+fviz_mfa_var(res.mfa, "quali.sup")
+
 # New helper: remove stale package lock directories
 clean_lock_files()
 
@@ -172,8 +177,8 @@ Functions | Description
 *fviz_pca* | Graph of individuals/variables from the output of *Principal Component Analysis* (PCA).
 *fviz_ca* | Graph of column/row variables from the output of *Correspondence Analysis* (CA).
 *fviz_mca* | Graph of individuals/variables from the output of *Multiple Correspondence Analysis* (MCA).
-*fviz_mfa* | Graph of individuals/variables from the output of *Multiple Factor Analysis* (MFA).
-*fviz_famd* | Graph of individuals/variables from the output of *Factor Analysis of Mixed Data* (FAMD).
+*fviz_mfa* | Graph of individuals/variables from the output of *Multiple Factor Analysis* (MFA), including supplementary qualitative categories.
+*fviz_famd* | Graph of individuals/variables from the output of *Factor Analysis of Mixed Data* (FAMD), including supplementary qualitative categories.
 *fviz_hmfa* | Graph of individuals/variables from the output of *Hierarchical Multiple Factor Analysis* (HMFA).
 *fviz_ellipses* | Draw confidence ellipses around the categories.
 *fviz_cos2* | Visualize the quality of representation of the row/column variable from the results of PCA, CA, MCA functions.
@@ -191,8 +196,8 @@ Functions | Description
 *get_pca* | Extract all the results (coordinates, squared cosine, contributions) for the active individuals/variables from *Principal Component Analysis* (PCA) outputs.
 *get_ca* | Extract all the results (coordinates, squared cosine, contributions) for the active column/row variables from *Correspondence Analysis* outputs.
 *get_mca* | Extract results from *Multiple Correspondence Analysis* outputs.
-*get_mfa* | Extract results from *Multiple Factor Analysis* outputs.
-*get_famd* | Extract results from *Factor Analysis of Mixed Data* outputs.
+*get_mfa* | Extract results from *Multiple Factor Analysis* outputs, including supplementary qualitative categories.
+*get_famd* | Extract results from *Factor Analysis of Mixed Data* outputs, including supplementary qualitative categories.
 *get_hmfa* | Extract results from *Hierarchical Multiple Factor Analysis* outputs.
 *facto_summarize* | Subset and summarize the output of factor analyses. 
 

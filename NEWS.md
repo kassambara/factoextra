@@ -3,6 +3,11 @@
 * (development version)
 * `fviz_dend()`: `lwd` now controls ggplot branch thickness correctly and no
   longer triggers a spurious linewidth legend. (#200, @erdeyl)
+* `get_famd()`, `get_mfa()`, `facto_summarize()`, `fviz_famd_*()`, and
+  `fviz_mfa_*()` now support supplementary qualitative variable categories via
+  `quali.sup`, including the related overlay, print, and category-name
+  compatibility paths. Regression coverage and examples were expanded
+  accordingly. (#202, @erdeyl)
 
 # factoextra 2.0.0
 
