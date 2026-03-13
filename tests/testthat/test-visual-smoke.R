@@ -114,3 +114,71 @@ test_that("fviz_eig parallel analysis is reproducible with parallel.seed", {
   expect_equal(th1, th2)
   expect_false(isTRUE(all.equal(th1, th3)))
 })
+
+test_that("fviz_famd_var supports supplementary qualitative categories", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(321)
+  famd_df <- data.frame(
+    cat_a = factor(sample(c("a", "b", "c"), 60, TRUE)),
+    cat_b = factor(sample(c("x", "y"), 60, TRUE)),
+    num_a = rnorm(60),
+    num_b = rnorm(60),
+    sup_q = factor(sample(c("north", "south"), 60, TRUE))
+  )
+  res.famd <- FactoMineR::FAMD(famd_df, sup.var = 5, graph = FALSE)
+
+  p_sup <- fviz_famd_var(res.famd, choice = "quali.sup", repel = TRUE, col.var = "cos2")
+  p_overlay <- fviz_famd_var(res.famd, choice = "quali.var", invisible = "var", repel = TRUE)
+
+  expect_s3_class(p_sup, "ggplot")
+  expect_s3_class(p_overlay, "ggplot")
+  expect_gt(length(p_overlay$layers), 1)
+})
+
+test_that("fviz_famd_ind can show supplementary qualitative categories without active ones", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(4242)
+  famd_df <- data.frame(
+    cat_a = factor(sample(c("a", "b", "c"), 60, TRUE)),
+    num_a = rnorm(60),
+    num_b = rnorm(60),
+    sup_q = factor(sample(c("north", "south"), 60, TRUE))
+  )
+  res.famd <- FactoMineR::FAMD(famd_df, sup.var = 4, graph = FALSE)
+
+  p <- fviz_famd_ind(res.famd, invisible = "quali.var", repel = TRUE)
+  layer_rows <- vapply(ggplot2::ggplot_build(p)$data, nrow, integer(1))
+
+  expect_s3_class(p, "ggplot")
+  expect_true(any(layer_rows == nlevels(famd_df$sup_q)))
+})
+
+test_that("fviz_mfa_var supports supplementary qualitative categories", {
+  skip_if_not_installed("FactoMineR")
+
+  data(poison, package = "FactoMineR")
+  res.mfa <- FactoMineR::MFA(
+    poison,
+    group = c(2, 2, 5, 6),
+    type = c("s", "n", "n", "n"),
+    name.group = c("desc", "desc2", "symptom", "eat"),
+    num.group.sup = 1:2,
+    graph = FALSE
+  )
+
+  p_sup <- fviz_mfa_var(res.mfa, choice = "quali.sup", repel = TRUE, col.var = "cos2")
+  p_overlay <- fviz_mfa_var(res.mfa, choice = "quali.var", invisible = "quali.var", repel = TRUE)
+  p_biplot <- fviz_mfa_quali_biplot(res.mfa, repel = TRUE)
+
+  overlay_rows <- vapply(ggplot2::ggplot_build(p_overlay)$data, nrow, integer(1))
+  biplot_rows <- vapply(ggplot2::ggplot_build(p_biplot)$data, nrow, integer(1))
+  sup_n <- nrow(res.mfa$quali.var.sup$coord)
+
+  expect_s3_class(p_sup, "ggplot")
+  expect_s3_class(p_overlay, "ggplot")
+  expect_s3_class(p_biplot, "ggplot")
+  expect_true(any(overlay_rows == sup_n))
+  expect_equal(sum(biplot_rows == sup_n), 2)
+})

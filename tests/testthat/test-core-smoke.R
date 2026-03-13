@@ -96,6 +96,59 @@ test_that("FactoMineR category mapping helpers map legacy labels", {
   )
 })
 
+test_that("FAMD supplementary qualitative variables can be extracted and summarized", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(789)
+  famd_df <- data.frame(
+    cat_a = factor(sample(c("a", "b", "c"), 80, TRUE)),
+    cat_b = factor(sample(c("x", "y"), 80, TRUE)),
+    num_a = rnorm(80),
+    num_b = rnorm(80),
+    sup_q = factor(sample(c("north", "south", "west"), 80, TRUE))
+  )
+  res.famd <- FactoMineR::FAMD(famd_df, sup.var = 5, graph = FALSE)
+
+  quali.sup <- get_famd_var(res.famd, "quali.sup")
+  expect_s3_class(quali.sup, "factoextra")
+  expect_true(all(c("coord", "cos2") %in% names(quali.sup)))
+  expect_gt(nrow(quali.sup$coord), 0)
+
+  sup.sum <- facto_summarize(res.famd, element = "quali.sup", axes = 1:2)
+  expect_true(all(c("name", "Dim.1", "Dim.2", "coord", "cos2") %in% colnames(sup.sum)))
+  expect_false("contrib" %in% colnames(sup.sum))
+})
+
+test_that("MFA supplementary qualitative variables can be extracted and mapped", {
+  skip_if_not_installed("FactoMineR")
+
+  data(poison, package = "FactoMineR")
+  res.mfa <- FactoMineR::MFA(
+    poison,
+    group = c(2, 2, 5, 6),
+    type = c("s", "n", "n", "n"),
+    name.group = c("desc", "desc2", "symptom", "eat"),
+    num.group.sup = 1:2,
+    graph = FALSE
+  )
+
+  quali.sup <- get_mfa_var(res.mfa, "quali.sup")
+  expect_s3_class(quali.sup, "factoextra")
+  expect_true(all(c("coord", "cos2") %in% names(quali.sup)))
+  expect_identical(
+    rownames(quali.sup$coord),
+    rownames(res.mfa$quali.var.sup$coord)
+  )
+
+  sup.sum <- facto_summarize(res.mfa, element = "quali.sup", axes = 1:2)
+  expect_true(all(c("name", "Dim.1", "Dim.2", "coord", "cos2") %in% colnames(sup.sum)))
+  expect_false("contrib" %in% colnames(sup.sum))
+
+  map <- factominer_category_map(res.mfa, element = "quali.sup")
+  expect_s3_class(map, "data.frame")
+  expect_identical(map$current, rownames(res.mfa$quali.var.sup$coord))
+})
+
 test_that(".add_ind_groups handles multi-column habillage reshape path", {
   skip_if_not_installed("FactoMineR")
 

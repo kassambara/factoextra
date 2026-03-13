@@ -6,16 +6,17 @@
 \alias{get_famd_var}
 \title{Extract the results for individuals and variables - FAMD}
 \usage{
-get_famd(res.famd, element = c("ind", "var", "quanti.var", "quali.var"))
+get_famd(res.famd, element = c("ind", "var", "quanti.var", "quali.var", "quali.sup"))
 
 get_famd_ind(res.famd)
 
-get_famd_var(res.famd, element = c("var", "quanti.var", "quali.var"))
+get_famd_var(res.famd, element = c("var", "quanti.var", "quali.var", "quali.sup"))
 }
 \arguments{
 \item{res.famd}{an object of class FAMD [FactoMineR].}
 
-\item{element}{the element to subset from the output. Possible values are "ind", "quanti.var" or "quali.var".}
+\item{element}{the element to subset from the output. Possible values are
+"ind", "var", "quanti.var", "quali.var" or "quali.sup".}
 }
 \value{
 a list of matrices containing the results for the active 
@@ -44,7 +45,12 @@ for the active individuals and variables from Factor Analysis of Mixed Date (FAM
  quali.var <- get_famd_var(res.famd, "quali.var")
  print(quali.var)
  head(quali.var$coord) # coordinates of qualitative variables
- 
+
+ # Extract the results for supplementary qualitative variable categories
+ quali.sup <- get_famd_var(res.famd, "quali.sup")
+ print(quali.sup)
+ head(quali.sup$coord) # coordinates of supplementary qualitative variables
+
  # Extract the results for quantitative variables
  quanti.var <- get_famd_var(res.famd, "quanti.var")
  print(quanti.var)

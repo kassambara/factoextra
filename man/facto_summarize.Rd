@@ -20,7 +20,7 @@ and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput
 
 \item{element}{the element to subset from the output. Possible values are 
 "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
-'quanti.var', 'quali.var' , 'group' or 'ind' for FAMD, MFA and HMFA.}
+'quanti.var', 'quali.var', 'quali.sup', 'group' or 'ind' for FAMD, MFA and HMFA.}
 
 \item{node.level}{a single number indicating the HMFA node level.}
 

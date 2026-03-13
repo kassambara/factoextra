@@ -11,7 +11,8 @@ NULL
 #' \item get_famd_var(): Extract the results for quantitative and qualitative variables only
 #' }
 #' @param res.famd an object of class FAMD [FactoMineR].
-#' @param element the element to subset from the output. Possible values are "ind", "quanti.var" or "quali.var".
+#' @param element the element to subset from the output. Possible values are
+#'   "ind", "var", "quanti.var", "quali.var" or "quali.sup".
 #' @return a list of matrices containing the results for the active 
 #' individuals and variables, including : 
 #' \item{coord}{coordinates of indiiduals/variables.}
@@ -45,13 +46,14 @@ NULL
 #' 
 #' @rdname get_famd
 #' @export 
-get_famd <- function(res.famd, element = c("ind",  "var", "quanti.var", "quali.var")){
+get_famd <- function(res.famd, element = c("ind",  "var", "quanti.var", "quali.var", "quali.sup")){
   elmt <- match.arg(element)
   switch(elmt,
          ind = get_famd_ind(res.famd),
          var = get_famd_var(res.famd, "var"),
          quanti.var = get_famd_var(res.famd, "quanti.var"),
-         quali.var = get_famd_var(res.famd, "quali.var")
+         quali.var = get_famd_var(res.famd, "quali.var"),
+         quali.sup = get_famd_var(res.famd, "quali.sup")
          )
 }
 
@@ -69,19 +71,28 @@ get_famd_ind <- function(res.famd){
 
 #' @rdname get_famd
 #' @export
-get_famd_var <- function(res.famd, element = c( "var", "quanti.var", "quali.var")){
+get_famd_var <- function(res.famd, element = c("var", "quanti.var", "quali.var", "quali.sup")){
   choice <- match.arg(element)
   # FactoMineR package
   if(inherits(res.famd, "FAMD")) {
+    if(choice == "quanti.var" && is.null(res.famd$quanti.var))
+      stop("There are no quantitative variables in this FAMD.")
+    else if(choice == "quali.var" && is.null(res.famd$quali.var))
+      stop("There are no qualitative variables in this FAMD.")
+    else if(choice == "quali.sup" && is.null(res.famd$quali.sup))
+      stop("There are no supplementary qualitative variables in this FAMD.")
+
     vars <- switch(choice,
                    var = res.famd$var,
                    quanti.var = res.famd$quanti.var,
-                   quali.var = res.famd$quali.var
+                   quali.var = res.famd$quali.var,
+                   quali.sup = res.famd$quali.sup
                    )
     element_desc <- switch(choice,
                       var = "variables",
                       quanti.var = "quantitative variables",
-                      quali.var = "qualitative variable categories"
+                      quali.var = "qualitative variable categories",
+                      quali.sup = "supplementary qualitative variable categories"
     )
   }
   else stop("An object of class : ", paste(class(res.famd), collapse = ", "), 

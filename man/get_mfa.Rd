@@ -9,19 +9,20 @@
 \usage{
 get_mfa(
   res.mfa,
-  element = c("ind", "quanti.var", "quali.var", "group", "partial.axes")
+  element = c("ind", "quanti.var", "quali.var", "quali.sup", "group", "partial.axes")
 )
 
 get_mfa_ind(res.mfa)
 
-get_mfa_var(res.mfa, element = c("quanti.var", "quali.var", "group"))
+get_mfa_var(res.mfa, element = c("quanti.var", "quali.var", "quali.sup", "group"))
 
 get_mfa_partial_axes(res.mfa)
 }
 \arguments{
 \item{res.mfa}{an object of class MFA [FactoMineR].}
 
-\item{element}{the element to subset from the output. Possible values are "ind", "quanti.var", "quali.var", "group" or "partial.axes".}
+\item{element}{the element to subset from the output. Possible values are
+"ind", "quanti.var", "quali.var", "quali.sup", "group" or "partial.axes".}
 }
 \value{
 a list of matrices containing the results for the active 
@@ -69,6 +70,7 @@ graph = FALSE)
  # You can also use the function get_mfa()
  get_mfa(res.mfa, "ind") # Results for individuals
  get_mfa(res.mfa, "quali.var") # Results for qualitative variable categories
+ get_mfa(res.mfa, "quali.sup") # Results for supplementary qualitative variable categories
  
 }
 \author{

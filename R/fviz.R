@@ -159,6 +159,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     element_desc <- list(ind = "Individuals", var = "Variables",
                          col = "Column points", row = "Row points",
                          mca.cor = "Variables", quanti.sup = "Quantitative variables",
+                         quali.sup = "Supplementary qualitative variable categories",
                          quanti.var = "Quantitative variables",
                          quali.var = "Qualitative variable categories",
                          group = "Variable groups", partial.axes = "Partial axes")
@@ -411,6 +412,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   else if(element %in% "var" && inherits(X, "MCA") && !hide$quali.sup)
     res <- list(name = "quali.sup", addlabel = (lab$quali.sup && "text" %in% geom))
   else if(element %in% "quali.var" && inherits(X, "MFA") && !hide$quali.sup)
+    res <- list(name = "quali.sup", addlabel = (lab$quali.sup && "text" %in% geom))
+  else if(element %in% "quali.var" && inherits(X, "FAMD") && !hide$quali.sup)
     res <- list(name = "quali.sup", addlabel = (lab$quali.sup && "text" %in% geom))
   else if(element %in% "var" && inherits(X, "FAMD") && !hide$quanti.sup)
     res <- list(name = "quanti.sup", addlabel = (lab$quanti.sup && "text" %in% geom))

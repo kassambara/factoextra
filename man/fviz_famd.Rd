@@ -26,7 +26,7 @@ fviz_famd_ind(
 
 fviz_famd_var(
   X,
-  choice = c("var", "quanti.var", "quali.var"),
+  choice = c("var", "quanti.var", "quali.var", "quali.sup"),
   axes = c(1, 2),
   geom = c("point", "text"),
   repel = FALSE,
@@ -113,8 +113,8 @@ values include brewer and ggsci color palettes.}
 
 \item{...}{Arguments to be passed to the function fviz()}
 
-\item{choice}{The graph to plot inf fviz_mfa_var(). Allowed values include 
-one of c("var", quanti.var",  "quali.var").}
+\item{choice}{The graph to plot inf fviz_mfa_var(). Allowed values include
+one of c("var", "quanti.var", "quali.var", "quali.sup").}
 
 \item{col.var.sup}{color for supplementary variables.}
 }
@@ -144,6 +144,8 @@ fviz_famd_var(res.famd)
 fviz_famd_var(res.famd, "quanti.var", repel = TRUE, col.var = "black")
 # Qualitative variables
 fviz_famd_var(res.famd, "quali.var", col.var = "black")
+# Supplementary qualitative variable categories
+fviz_famd_var(res.famd, "quali.sup", col.var = "darkgreen")
 # Graph of individuals colored by cos2
 fviz_famd_ind(res.famd, col.ind = "cos2", 
   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
