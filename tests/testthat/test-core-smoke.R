@@ -113,6 +113,7 @@ test_that("FAMD supplementary qualitative variables can be extracted and summari
   expect_s3_class(quali.sup, "factoextra")
   expect_true(all(c("coord", "cos2") %in% names(quali.sup)))
   expect_gt(nrow(quali.sup$coord), 0)
+  expect_no_error(print(quali.sup))
 
   sup.sum <- facto_summarize(res.famd, element = "quali.sup", axes = 1:2)
   expect_true(all(c("name", "Dim.1", "Dim.2", "coord", "cos2") %in% colnames(sup.sum)))
