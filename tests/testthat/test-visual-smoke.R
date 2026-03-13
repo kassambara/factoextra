@@ -213,10 +213,14 @@ test_that("fviz_mfa_var supports supplementary qualitative categories", {
   p_biplot <- fviz_mfa_quali_biplot(res.mfa, repel = TRUE)
   p_biplot_default <- fviz_mfa_quali_biplot(res.mfa)
   p_biplot_hidden <- fviz_mfa_quali_biplot(res.mfa, repel = TRUE, invisible = "ind")
+  p_biplot_choice <- fviz_mfa_quali_biplot(res.mfa, choice = "group")
+  p_biplot_ggp <- fviz_mfa_quali_biplot(res.mfa, ggp = ggplot2::ggplot())
 
   overlay_rows <- vapply(ggplot2::ggplot_build(p_overlay)$data, nrow, integer(1))
   biplot_rows <- vapply(ggplot2::ggplot_build(p_biplot)$data, nrow, integer(1))
   biplot_default_rows <- vapply(ggplot2::ggplot_build(p_biplot_default)$data, nrow, integer(1))
+  biplot_choice_rows <- vapply(ggplot2::ggplot_build(p_biplot_choice)$data, nrow, integer(1))
+  biplot_ggp_rows <- vapply(ggplot2::ggplot_build(p_biplot_ggp)$data, nrow, integer(1))
   sup_rows <- vapply(ggplot2::ggplot_build(p_sup)$data, nrow, integer(1))
   sup_n <- nrow(res.mfa$quali.var.sup$coord)
 
@@ -225,9 +229,13 @@ test_that("fviz_mfa_var supports supplementary qualitative categories", {
   expect_s3_class(p_biplot, "ggplot")
   expect_s3_class(p_biplot_default, "ggplot")
   expect_s3_class(p_biplot_hidden, "ggplot")
+  expect_s3_class(p_biplot_choice, "ggplot")
+  expect_s3_class(p_biplot_ggp, "ggplot")
   expect_true(any(overlay_rows == sup_n))
   expect_equal(sum(biplot_rows == sup_n), sum(sup_rows == sup_n))
   expect_equal(sum(biplot_default_rows == sup_n), sum(sup_rows == sup_n))
+  expect_equal(sum(biplot_choice_rows == sup_n), sum(sup_rows == sup_n))
+  expect_equal(sum(biplot_ggp_rows == sup_n), sum(sup_rows == sup_n))
 })
 
 test_that("fviz_mfa_ind respects multi-element invisible vectors for partial plots", {

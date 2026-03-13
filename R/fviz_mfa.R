@@ -206,7 +206,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), re
   extra_args <- list(...)
   invisible.ind <- extra_args$invisible
   invisible.var <- if(is.null(invisible.ind)) "quali.sup" else unique(c(invisible.ind, "quali.sup"))
-  extra_args$invisible <- NULL
+  extra_args[c("invisible", "choice", "ggp")] <- NULL
 
   # Individuals
   ind.args <- c(list(X = X, axes = axes, geom = geom, repel = repel), extra_args)
