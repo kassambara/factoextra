@@ -26,7 +26,7 @@ fviz_famd_ind(
 
 fviz_famd_var(
   X,
-  choice = c("var", "quanti.var", "quali.var"),
+  choice = c("var", "quanti.var", "quali.var", "quali.sup"),
   axes = c(1, 2),
   geom = c("point", "text"),
   repel = FALSE,
@@ -96,7 +96,7 @@ values("x") or y values("y"). To use this, make sure that habillage
 \item{shape.ind, shape.var}{point shapes of individuals, variables, groups and
 axes}
 
-\item{col.quali.var}{color for qualitative variables in fviz_mfa_ind(). 
+\item{col.quali.var}{color for qualitative variables in fviz_famd_ind(). 
 Default is "black".}
 
 \item{select.ind, select.var}{a selection of individuals and variables to be 
@@ -113,8 +113,8 @@ values include brewer and ggsci color palettes.}
 
 \item{...}{Arguments to be passed to the function fviz()}
 
-\item{choice}{The graph to plot inf fviz_mfa_var(). Allowed values include 
-one of c("var", quanti.var",  "quali.var").}
+\item{choice}{The graph to plot in fviz_famd_var(). Allowed values include
+one of c("var", "quanti.var", "quali.var", "quali.sup").}
 
 \item{col.var.sup}{color for supplementary variables.}
 }
@@ -135,6 +135,8 @@ Factor analysis of mixed data (FAMD) is, a particular case of
  library("FactoMineR")
  data(wine)
  res.famd <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)], graph = FALSE)
+ res.famd.sup <- FAMD(wine[,c(1,2, 16, 22, 29, 28, 30,31)],
+                      sup.var = 2, graph = FALSE)
                
 # Eigenvalues/variances of dimensions
 fviz_screeplot(res.famd)
@@ -144,6 +146,8 @@ fviz_famd_var(res.famd)
 fviz_famd_var(res.famd, "quanti.var", repel = TRUE, col.var = "black")
 # Qualitative variables
 fviz_famd_var(res.famd, "quali.var", col.var = "black")
+# Supplementary qualitative variable categories
+fviz_famd_var(res.famd.sup, "quali.sup", col.var = "darkgreen")
 # Graph of individuals colored by cos2
 fviz_famd_ind(res.famd, col.ind = "cos2", 
   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),

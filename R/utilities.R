@@ -52,6 +52,12 @@ NULL
   out
 }
 
+.get_factominer_quali_sup <- function(X){
+  if(!is.null(X$quali.var.sup)) return(X$quali.var.sup)
+  if(!is.null(X$quali.sup)) return(X$quali.sup)
+  NULL
+}
+
 .with_preserved_seed <- function(seed, expr){
   has_seed <- exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE)
   if(has_seed) old_seed <- get(".Random.seed", envir = .GlobalEnv)
@@ -105,6 +111,8 @@ NULL
   
   if(inherits(X, "MFA") && element == "group")
     elmt <- .get_mfa_group_sup(X)
+  else if(element == "quali.sup")
+    elmt <- .get_factominer_quali_sup(X)
   else if(inherits(X, c("CA", "PCA", "MCA", "MFA", "HMFA", "FAMD"))) {
     elmt <- .extract_nested_element(X, element)
   }
@@ -1001,7 +1009,7 @@ factominer_category_map <- function(X, element = c("quali.var", "quali.sup", "va
     if(!is.null(X$quali.var)) elmt <- X$quali.var
     else if(inherits(X, "MCA")) elmt <- X$var
   } else if(element == "quali.sup"){
-    elmt <- X$quali.sup
+    elmt <- .get_factominer_quali_sup(X)
   }
 
   if(is.null(elmt) || is.null(elmt$coord)){
@@ -1086,7 +1094,7 @@ factominer_category_map <- function(X, element = c("quali.var", "quali.sup", "va
 #'   data(poison)
 #'   res.mca <- FactoMineR::MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
 #'   map <- factominer_category_map(res.mca, element = "var")
-#'   map_factominer_legacy_names(res.mca, map$legacy_underscore[1:3], element = "var")
+#'   map_factominer_legacy_names(res.mca, map$legacy_underscore[1:3], element = "var", quiet = TRUE)
 #' }
 #' }
 #' @export

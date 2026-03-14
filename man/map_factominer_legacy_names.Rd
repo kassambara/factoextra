@@ -34,7 +34,7 @@ if (requireNamespace("FactoMineR", quietly = TRUE)) {
   data(poison)
   res.mca <- FactoMineR::MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
   map <- factominer_category_map(res.mca, element = "var")
-  map_factominer_legacy_names(res.mca, map$legacy_underscore[1:3], element = "var")
+  map_factominer_legacy_names(res.mca, map$legacy_underscore[1:3], element = "var", quiet = TRUE)
 }
 }
 }

@@ -1,3 +1,4 @@
+
 [![R-CMD-check](https://github.com/kassambara/factoextra/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kassambara/factoextra/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/factoextra)](https://cran.r-project.org/package=factoextra)
 [![Downloads](https://cranlogs.r-pkg.org/badges/factoextra)](https://cran.r-project.org/package=factoextra)
@@ -61,7 +62,7 @@ reduction analysis - we developed an easy-to-use R package named
 
 - The R package **factoextra** has flexible and easy-to-use methods to
   extract quickly, in a human readable standard data format, the
-  analysis results from the different packages mentioned above.  
+  analysis results from the different packages mentioned above.\
 - It produces a **ggplot2**-based **elegant data visualization** with
   less typing.
 - It contains also many functions facilitating clustering analysis and
@@ -87,7 +88,7 @@ at: <https://rpkgs.datanovia.com/factoextra/index.html>.
     visualizing the most important information contained in your data.
 
 2.  *After PCA, CA, MCA, MFA, FAMD and HMFA, the most important
-    row/column elements* can be highlighted using :  
+    row/column elements* can be highlighted using :\
 
 - their cos2 values corresponding to their quality of representation on
   the factor map
@@ -96,7 +97,7 @@ at: <https://rpkgs.datanovia.com/factoextra/index.html>.
 <span class="success">If you want to do this, the factoextra package
 provides a convenient solution.</span>
 
-1.  *PCA and (M)CA are used sometimes for prediction problems* : one can
+3.  *PCA and (M)CA are used sometimes for prediction problems* : one can
     predict the coordinates of new supplementary variables (quantitative
     and qualitative) and supplementary individuals using the information
     provided by the previously performed PCA or (M)CA. This can be done
@@ -109,7 +110,7 @@ to visualize the position of the supplementary variables/individuals on
 the factor map using ggplot2: then factoextra can help you. It’s quick,
 write less and do more…</span>
 
-1.  *Several functions from different packages - FactoMineR, ade4,
+4.  *Several functions from different packages - FactoMineR, ade4,
     ExPosition, stats - are available in R for performing PCA, CA or
     MCA*. However, The components of the output vary from package to
     package.
@@ -168,6 +169,12 @@ library("factoextra")
 # New helper: map legacy FactoMineR category labels
 map_factominer_legacy_names(res.mfa, c("var.level"))
 
+# New support: supplementary qualitative categories in FactoMineR FAMD/MFA
+get_famd(res.famd, "quali.sup")
+fviz_famd_var(res.famd, "quali.sup")
+get_mfa(res.mfa, "quali.sup")
+fviz_mfa_var(res.mfa, "quali.sup")
+
 # New helper: remove stale package lock directories
 clean_lock_files()
 
@@ -185,13 +192,13 @@ list.</span>
 ### Visualizing dimension reduction analysis outputs
 
 | Functions | Description |
-|-----------|-------------------------------------------------------------|
+|----|----|
 | *fviz_eig (or fviz_eigenvalue)* | Extract and visualize the eigenvalues/variances of dimensions. |
 | *fviz_pca* | Graph of individuals/variables from the output of *Principal Component Analysis* (PCA). |
 | *fviz_ca* | Graph of column/row variables from the output of *Correspondence Analysis* (CA). |
 | *fviz_mca* | Graph of individuals/variables from the output of *Multiple Correspondence Analysis* (MCA). |
-| *fviz_mfa* | Graph of individuals/variables from the output of *Multiple Factor Analysis* (MFA). |
-| *fviz_famd* | Graph of individuals/variables from the output of *Factor Analysis of Mixed Data* (FAMD). |
+| *fviz_mfa* | Graph of individuals/variables from the output of *Multiple Factor Analysis* (MFA), including supplementary qualitative categories. |
+| *fviz_famd* | Graph of individuals/variables from the output of *Factor Analysis of Mixed Data* (FAMD), including supplementary qualitative categories. |
 | *fviz_hmfa* | Graph of individuals/variables from the output of *Hierarchical Multiple Factor Analysis* (HMFA). |
 | *fviz_ellipses* | Draw confidence ellipses around the categories. |
 | *fviz_cos2* | Visualize the quality of representation of the row/column variable from the results of PCA, CA, MCA functions. |
@@ -200,20 +207,20 @@ list.</span>
 ### Extracting data from dimension reduction analysis outputs
 
 | Functions | Description |
-|-----------|-------------------------------------------------------------|
+|----|----|
 | *get_eigenvalue* | Extract and visualize the eigenvalues/variances of dimensions. |
 | *get_pca* | Extract all the results (coordinates, squared cosine, contributions) for the active individuals/variables from *Principal Component Analysis* (PCA) outputs. |
 | *get_ca* | Extract all the results (coordinates, squared cosine, contributions) for the active column/row variables from *Correspondence Analysis* outputs. |
 | *get_mca* | Extract results from *Multiple Correspondence Analysis* outputs. |
-| *get_mfa* | Extract results from *Multiple Factor Analysis* outputs. |
-| *get_famd* | Extract results from *Factor Analysis of Mixed Data* outputs. |
+| *get_mfa* | Extract results from *Multiple Factor Analysis* outputs, including supplementary qualitative categories. |
+| *get_famd* | Extract results from *Factor Analysis of Mixed Data* outputs, including supplementary qualitative categories. |
 | *get_hmfa* | Extract results from *Hierarchical Multiple Factor Analysis* outputs. |
 | *facto_summarize* | Subset and summarize the output of factor analyses. |
 
 ### Clustering analysis and visualization
 
 | Functions | Description |
-|-----------|-------------------------------------------------------------|
+|----|----|
 | *dist*(fviz_dist, get_dist) | Enhanced Distance Matrix Computation and Visualization. |
 | *get_clust_tendency* | Assessing Clustering Tendency. |
 | *fviz_nbclust*(fviz_gap_stat) | Determining and Visualizing the Optimal Number of Clusters. |
@@ -265,20 +272,20 @@ principal component analysis at: [**Principal Component Analysis**
 ``` r
 library("factoextra")
 #> Loading required package: ggplot2
-#> Welcome to factoextra! ggpubr and FactoMineR have been loaded.
-#> Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+#> Welcome to factoextra!
+#> Want to learn more? See two factoextra-related books at https://www.datanovia.com/en/product/practical-guide-to-principal-component-methods-in-r/
 data("decathlon2")
 df <- decathlon2[1:23, 1:10]
 ```
 
-1.  **Principal component analysis**
+2.  **Principal component analysis**
 
 ``` r
 library("FactoMineR")
 res.pca <- PCA(df,  graph = FALSE)
 ```
 
-1.  **Extract and visualize eigenvalues/variances**:
+3.  **Extract and visualize eigenvalues/variances**:
 
 ``` r
 # Extract eigenvalues/variances
@@ -298,7 +305,7 @@ get_eig(res.pca)
 fviz_screeplot(res.pca, addlabels = TRUE, ylim = c(0, 50))
 ```
 
-![](tools/README-pca-eigenvalue-1.png)
+![](tools/README-pca-eigenvalue-1.png)<!-- -->
 
 4.**Extract and visualize results for variables**:
 
@@ -335,7 +342,7 @@ head(var$contrib)
 fviz_pca_var(res.pca, col.var = "black")
 ```
 
-![](tools/README-pca-variables-1.png)
+![](tools/README-pca-variables-1.png)<!-- -->
 
 It’s possible to control variable colors using their contributions
 (“contrib”) to the principal axes:
@@ -348,9 +355,9 @@ fviz_pca_var(res.pca, col.var="contrib",
              )
 ```
 
-![](tools/README-pca-variable-colors-by-contributions-1.png)
+![](tools/README-pca-variable-colors-by-contributions-1.png)<!-- -->
 
-1.  **Variable contributions to the principal axes**:
+5.  **Variable contributions to the principal axes**:
 
 ``` r
 # Contributions of variables to PC1
@@ -362,7 +369,7 @@ fviz_contrib(res.pca, choice = "var", axes = 2, top = 10)
 
 ![](tools/README-pca-variable-contributions-1.png)![](tools/README-pca-variable-contributions-2.png)
 
-1.  **Extract and visualize results for individuals**:
+6.  **Extract and visualize results for individuals**:
 
 ``` r
 # Extract the results for individuals
@@ -395,16 +402,16 @@ fviz_pca_ind(res.pca, col.ind = "cos2",
              )
 ```
 
-![](tools/README-principal-component-analysis-data-mining-1.png)
+![](tools/README-principal-component-analysis-data-mining-1.png)<!-- -->
 
 ``` r
 # Biplot of individuals and variables
 fviz_pca_biplot(res.pca, repel = TRUE)
 ```
 
-![](tools/README-principal-component-analysis-data-mining-2.png)
+![](tools/README-principal-component-analysis-data-mining-2.png)<!-- -->
 
-1.  **Color individuals by groups**:
+7.  **Color individuals by groups**:
 
 ``` r
 # Compute PCA on the iris data set
@@ -422,7 +429,7 @@ fviz_pca_ind(iris.pca,
              )
 ```
 
-![](tools/README-individuals-factor-map-color-by-groups-1.png)
+![](tools/README-individuals-factor-map-color-by-groups-1.png)<!-- -->
 
 ### Correspondence analysis
 
@@ -461,7 +468,7 @@ get_ca_col(res.ca)
 fviz_ca_biplot(res.ca, repel = TRUE)
 ```
 
-![](tools/README-correspondence-analysis-biplot-1.png)
+![](tools/README-correspondence-analysis-biplot-1.png)<!-- -->
 
 To visualize only row points or column points, type this:
 
@@ -499,7 +506,7 @@ res.mca <- MCA(poison, quanti.sup = 1:2,
               quali.sup = 3:4, graph=FALSE)
 ```
 
-1.  **Extract results for variables and individuals**:
+2.  **Extract results for variables and individuals**:
 
 ``` r
 # Extract the results for variable categories
@@ -509,7 +516,7 @@ get_mca_var(res.mca)
 get_mca_ind(res.mca)
 ```
 
-1.  **Contribution of variables and individuals to the principal axes**:
+3.  **Contribution of variables and individuals to the principal axes**:
 
 ``` r
 # Visualize variable categorie contributions on axes 1
@@ -520,7 +527,7 @@ fviz_contrib(res.mca, choice ="var", axes = 1)
 fviz_contrib(res.mca, choice ="ind", axes = 1, top = 20)
 ```
 
-1.  **Graph of individuals**
+4.  **Graph of individuals**
 
 ``` r
 # Color by groups
@@ -531,23 +538,23 @@ fviz_mca_ind(res.mca,  habillage = grp,
              addEllipses = TRUE, repel = TRUE)
 ```
 
-![](tools/README-mca-graph-of-individuals-1.png)
+![](tools/README-mca-graph-of-individuals-1.png)<!-- -->
 
-1.  **Graph of variable categories**:
+5.  **Graph of variable categories**:
 
 ``` r
 fviz_mca_var(res.mca, repel = TRUE)
 ```
 
-![](tools/README-mca-graph-variables-1.png)
+![](tools/README-mca-graph-variables-1.png)<!-- -->
 
-1.  **Biplot of individuals and variables**:
+6.  **Biplot of individuals and variables**:
 
 ``` r
 fviz_mca_biplot(res.mca, repel = TRUE)
 ```
 
-![](tools/README-mca-biplot-1.png)
+![](tools/README-mca-biplot-1.png)<!-- -->
 
 ### Advanced methods
 
@@ -611,9 +618,11 @@ fviz_cluster(km.res, data = df,
              )
 ```
 
-![](tools/README-partitioning-clustering-1.png)
+![](tools/README-partitioning-clustering-1.png)<!-- -->
 
-<br/>  
+<br/>\
+
+<div class="success">
 
 Read more:
 
@@ -622,6 +631,8 @@ Read more:
 
 2.  [Partitioning cluster
     analysis](https://www.datanovia.com/en/courses/partitional-clustering-in-r-the-essentials/).
+
+</div>
 
 <br/>
 
@@ -637,9 +648,11 @@ fviz_dend(res, rect = TRUE, cex = 0.5,
           k_colors = c("#00AFBB","#2E9FDF", "#E7B800", "#FC4E07"))
 ```
 
-![](tools/README-hierarchical-clustering-1.png)
+![](tools/README-hierarchical-clustering-1.png)<!-- -->
 
-<br/>  
+<br/>\
+
+<div class="success">
 
 Read more:
 
@@ -648,6 +661,8 @@ Read more:
 
 2.  [Hierarchical clustering
     essentials](https://www.datanovia.com/en/courses/hierarchical-clustering-in-r-the-essentials/)
+
+</div>
 
 <br/>
 
@@ -660,7 +675,7 @@ my_data <- scale(USArrests)
 fviz_nbclust(my_data, kmeans, method = "gap_stat")
 ```
 
-![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)
+![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)<!-- -->
 
 ## Acknoweledgment
 

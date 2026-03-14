@@ -20,7 +20,8 @@ and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput
 
 \item{element}{the element to subset from the output. Possible values are 
 "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
-'quanti.var', 'quali.var' , 'group' or 'ind' for FAMD, MFA and HMFA.}
+'quanti.var', 'quali.var', 'quali.sup', 'group' or 'ind' for FAMD, MFA
+and HMFA.}
 
 \item{node.level}{a single number indicating the HMFA node level.}
 
@@ -112,7 +113,7 @@ data(poison)
 res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
                name.group=c("desc","desc2","symptom","eat"),
                num.group.sup=1:2, graph=FALSE)
-# Summarize categorcial variables on axes 1:2
+# Summarize categorical variables on axes 1:2
 res <- facto_summarize(res.mfa, "quali.var", axes = 1:2)
 head(res)
 # Summarize individuals on axes 1:2

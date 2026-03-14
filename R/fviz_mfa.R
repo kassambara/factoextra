@@ -18,8 +18,9 @@ NULL
 #'@inheritParams fviz
 #'@inheritParams ggpubr::ggpar
 #'@param choice the graph to plot. Allowed values include one of c("quanti.var",
-#'  "quali.var", "group") for plotting quantitative variables, qualitative 
-#'  variables and group of variables, respectively.
+#'  "quali.var", "quali.sup", "group") for plotting quantitative variables,
+#'  qualitative variables, supplementary qualitative variables and group of
+#'  variables, respectively.
 #'@param habillage an optional factor variable for coloring the observations by 
 #'  groups. Default value is "none". If X is an MFA object from FactoMineR 
 #'  package, habillage can also specify the index of the factor variable in the 
@@ -87,7 +88,7 @@ NULL
 #'   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
 #'   repel = TRUE)
 #' # Partial individuals
-#' fviz_mfa_ind(res.mfa, partial = "all") 
+#' fviz_mfa_ind(res.mfa, partial = rownames(wine)[1:3], col.partial = "black") 
 #' # Partial axes
 #' fviz_mfa_axes(res.mfa)
 #' 
@@ -101,6 +102,8 @@ NULL
 #'
 #' # Plot of qualitative variables
 #' fviz_mfa_var(res.mfa, "quali.var")
+#' # Plot of supplementary qualitative variables
+#' fviz_mfa_var(res.mfa, "quali.sup")
 #'  
 #'  
 #' 
@@ -123,6 +126,7 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
                          ...)
 {
   extra_args <- list(...)
+  invisible <- if(is.null(extra_args$invisible)) "none" else extra_args$invisible
   
   if(col.ind %in% c("cos2","contrib", "coord")) partial = NULL
   if(!is.null(partial) && missing(col.ind)) col.ind <- "black"
@@ -134,9 +138,9 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
         select = select.ind, repel = repel, ...)
   
   # Add supplementary qualitative variables if they exist
-  show.quali.var <- !("quali.var" %in% extra_args$invisible) && is.null(partial)
+  show.quali.sup <- !("quali.sup" %in% invisible) && is.null(partial)
   is_habillage <- habillage[1] != "none" 
-  if(!is.null(X$quali.var.sup) && show.quali.var){
+  if(!is.null(X$quali.var.sup) && show.quali.sup){
     if(!(col.ind %in% c("cos2", "contrib")) && !is_habillage) col.quali.var.sup  = "quali.sup"
     quali.sup <- .get_supp(X, element = "quali.var.sup", axes = axes)
     quali.sup$quali.sup <- .get_quali_var_sup_names(X)
@@ -149,7 +153,6 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
   
   # Add partial points
   if(!is.null(partial)){
-    invisible <- ifelse(is.null(extra_args$invisible), "none", extra_args$invisible)
     if(!(partial[1] %in% c("All", "all"))) select.partial = list(name = partial)
     else select.partial <- NULL
     if(col.partial %in% c("group", "groups")) col.partial <- "group.name"
@@ -197,16 +200,27 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = repel,
+fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FALSE,
                                   title = "Biplot of individuals and qualitative variables - MFA", ...)
 {
+  extra_args <- list(...)
+  invisible.ind <- extra_args$invisible
+  invisible.var <- if(is.null(invisible.ind)) "quali.sup" else unique(c(invisible.ind, "quali.sup"))
+  extra_args[c("invisible", "choice", "ggp")] <- NULL
+
   # Individuals
-  p <- fviz_mfa_ind(X,  axes = axes, geom = geom, repel = repel,  ...)
+  ind.args <- c(list(X = X, axes = axes, geom = geom, repel = repel), extra_args)
+  if(!is.null(invisible.ind)) ind.args$invisible <- invisible.ind
+  p <- do.call(fviz_mfa_ind, ind.args)
   
   # Variable
   # Add variables
-  p <- fviz_mfa_var(X, "quali.var", axes = axes, geom =  geom, repel = repel, 
-                  ggp = p, ...)
+  var.args <- c(
+    list(X = X, choice = "quali.var", axes = axes, geom = geom, repel = repel,
+         ggp = p, invisible = invisible.var),
+    extra_args
+  )
+  p <- do.call(fviz_mfa_var, var.args)
   
   p+labs(title=title)
 }
@@ -216,7 +230,7 @@ fviz_mfa_quali_biplot <- function(X,  axes = c(1,2), geom=c("point", "text"), re
 
 #' @rdname fviz_mfa
 #' @export
-fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes = c(1,2), 
+fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var", "quali.sup"), axes = c(1,2), 
                          geom = c("point", "text"), repel = FALSE, habillage = "none",
                          col.var ="red", alpha.var=1, shape.var = 17, 
                          col.var.sup = "darkgreen", palette = NULL,
@@ -236,6 +250,10 @@ fviz_mfa_var <- function(X, choice = c("quanti.var", "group", "quali.var"), axes
   }
   else if(choice== "quali.var"){
     .check_if_quali_exists(X)
+  }
+  else if(choice == "quali.sup"){
+    if(is.null(.get_factominer_quali_sup(X)))
+      stop("There are no supplementary qualitative variables to plot.")
   }
   if(!missing(col.var)) habillage = "none"
   # Main plot

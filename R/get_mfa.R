@@ -14,7 +14,9 @@ NULL
 #'     
 #' 
 #' @param res.mfa an object of class MFA [FactoMineR].
-#' @param element the element to subset from the output. Possible values are "ind", "quanti.var", "quali.var", "group" or "partial.axes".
+#' @param element the element to subset from the output. Possible values are
+#'   "ind", "quanti.var", "quali.var", "quali.sup", "group" or
+#'   "partial.axes".
 #' @return a list of matrices containing the results for the active 
 #' individuals/quantitative variable categories/qualitative variable categories/groups/partial axes including : 
 #' \item{coord}{coordinates for the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
@@ -51,15 +53,16 @@ NULL
 #'  # You can also use the function get_mfa()
 #'  get_mfa(res.mfa, "ind") # Results for individuals
 #'  get_mfa(res.mfa, "quali.var") # Results for qualitative variable categories
+#'  get_mfa(res.mfa, "quali.sup") # Results for supplementary qualitative variable categories
 #'  
 #' @name get_mfa
 #' 
 #' @rdname get_mfa
 #' @export 
-get_mfa <- function(res.mfa, element = c("ind", "quanti.var", "quali.var", "group", "partial.axes")){
+get_mfa <- function(res.mfa, element = c("ind", "quanti.var", "quali.var", "quali.sup", "group", "partial.axes")){
   elmt <- match.arg(element)
   if(elmt == "ind") get_mfa_ind(res.mfa)
-  else if(elmt %in% c("quanti.var", "quali.var", "group"))
+  else if(elmt %in% c("quanti.var", "quali.var", "quali.sup", "group"))
     get_mfa_var(res.mfa, elmt)
   else if(elmt == "partial.axes") get_mfa_partial_axes(res.mfa)
 }
@@ -79,7 +82,7 @@ get_mfa_ind <- function(res.mfa){
 
 #' @rdname get_mfa
 #' @export
-get_mfa_var <- function(res.mfa, element = c( "quanti.var", "quali.var", "group")){
+get_mfa_var <- function(res.mfa, element = c("quanti.var", "quali.var", "quali.sup", "group")){
   
   choice <- match.arg(element)
   if(!inherits(res.mfa, "MFA"))
@@ -89,16 +92,20 @@ get_mfa_var <- function(res.mfa, element = c( "quanti.var", "quali.var", "group"
     stop("There are no quantitative variables in this MFA.")
   else if(choice == "quali.var" && is.null(res.mfa$quali.var)) 
     stop("There are no qualitative variables in this MFA.")
+  else if(choice == "quali.sup" && is.null(.get_factominer_quali_sup(res.mfa)))
+    stop("There are no supplementary qualitative variables in this MFA.")
     
   
     vars <- switch(choice,
                    quanti.var = res.mfa$quanti.var,
                    quali.var = res.mfa$quali.var,
+                   quali.sup = .get_factominer_quali_sup(res.mfa),
                    group = res.mfa$group
     )
     element_desc <- switch(choice,
                            quanti.var = "quantitative variables",
                            quali.var = "qualitative variable categories",
+                           quali.sup = "supplementary qualitative variable categories",
                            group = "variable groups"
     )
   

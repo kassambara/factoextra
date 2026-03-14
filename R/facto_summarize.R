@@ -10,7 +10,8 @@ NULL
 #'   and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput [ExPosition].
 #' @param element the element to subset from the output. Possible values are 
 #'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
-#'   'quanti.var', 'quali.var' , 'group' or 'ind' for FAMD, MFA and HMFA.
+#'   'quanti.var', 'quali.var', 'quali.sup', 'group' or 'ind' for FAMD, MFA
+#'   and HMFA.
 #' @param result the result to be extracted for the element. Possible values are
 #'   the combination of c("cos2", "contrib", "coord")
 #' @param group.names a vector containing the name of the groups (by default, 
@@ -88,7 +89,7 @@ NULL
 #' res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 #'                name.group=c("desc","desc2","symptom","eat"),
 #'                num.group.sup=1:2, graph=FALSE)
-#' # Summarize categorcial variables on axes 1:2
+#' # Summarize categorical variables on axes 1:2
 #' res <- facto_summarize(res.mfa, "quali.var", axes = 1:2)
 #' head(res)
 #' # Summarize individuals on axes 1:2
@@ -102,11 +103,15 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
   { 
   # check element
   allowed_elmts <- c("row", "col", "var", "ind", "quanti.var", "quali.var",
+                     "quali.sup",
                      "mca.cor", "quanti.sup",  "group", "partial.axes", "partial.node")
   if(!element %in% allowed_elmts) stop("Can't handle element = '", element, "'") 
   if(element %in% c("mca.cor", "quanti.sup")) {
     if(!inherits(X, "MCA")) stop("element = 'mca_cor' is supported only for FactoMineR::MCA().")
     result <- NULL
+  }
+  if(element == "quali.sup") {
+    result <- intersect(result, c("coord", "cos2"))
   }
   
   # Check and get the classe of X

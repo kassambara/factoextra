@@ -27,7 +27,7 @@ NULL
 #' res.mca <- MCA(poison, quanti.sup = 1:2, 
 #'               quali.sup = 3:4, graph=FALSE)
 #'               
-#' fviz_ellipses(res.mca, 1:4, geom = "point",
+#' fviz_ellipses(res.mca, 3:4, geom = "point",
 #' palette = "jco") 
 #' 
 #'  }

@@ -16,6 +16,29 @@ print.factoextra<-function(x, ...){
   if(!inherits(x, "factoextra"))
     stop("Can't handle data of class ", paste(class(x), collapse = ", "))
   
+  .factoextra_descriptions <- function(nms){
+    desc_map <- c(
+      coord = "Coordinates",
+      cor = "Correlations between variables and dimensions",
+      cos2 = "Cos2, quality of representation",
+      contrib = "Contributions",
+      inertia = "Inertia",
+      correlation = "Correlation between groups and principal dimensions",
+      canonical = "canonical correlation coefficient",
+      `coord.partiel` = "Partial coordinates",
+      `coord.partial` = "Partial coordinates",
+      `within.inertia` = "Within inertia",
+      `within.partial.inertia` = "Within partial inertia",
+      `v.test` = "V-test"
+    )
+    desc <- unname(desc_map[nms])
+    missing <- is.na(desc)
+    if(any(missing)){
+      desc[missing] <- tools::toTitleCase(gsub("[.]", " ", nms[missing]))
+    }
+    desc
+  }
+  
   if(inherits(x, "pca_ind")){
     cat("Principal Component Analysis Results for individuals\n",
         "===================================================\n")
@@ -80,35 +103,24 @@ print.factoextra<-function(x, ...){
     element <- attr(x, "element") # description
     cat("FAMD results for", element, "\n",
         "===================================================\n")
-    res <- array(data="", dim=c(3,2), dimnames=list(1:3, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates")
-    res[2, ] <- c("$cos2", "Cos2, quality of representation")
-    res[3, ] <- c("$contrib", "Contributions")
-    print(res[1:3,])
+    nms <- names(x)
+    nrows <- length(nms)
+    res <- array(data="", dim = c(nrows, 2), dimnames = list(seq_len(nrows), c("Name", "Description")))
+    res[, 1] <- paste0("$", nms)
+    res[, 2] <- .factoextra_descriptions(nms)
+    print(res[seq_len(nrows),], ...)
   }
   else if(inherits(x, "mfa")){
-    # result: nrows x 2 cols
-    if(inherits(x, "mfa_ind")) nrows <- 6
-    else if(inherits(x, c("mfa_quali_var", "mfa_quanti_var", "mfa_partial_axes"))) nrows <-3
-    else if(inherits(x, "mfa_group")) nrows <- 4
-    res <- array(data="", dim = c(nrows, 2), dimnames=list(1:nrows, c("Name", "Description")))
-    
     # Element
     element <- attr(x, "element") # description
     cat("Multiple Factor Analysis results for", element, "\n",
         "===================================================\n")
-    res[1, ] <- c("$coord", "Coordinates")
-    res[2, ] <- c("$cos2", "Cos2, quality of representation")
-    res[3, ] <- c("$contrib", "Contributions")
-    
-    if(inherits(x, "mfa_group")) 
-      res[4, ] <- c("$correlation", "Correlation between groups and principal dimensions")
-    else if(inherits(x, "mfa_ind")){
-      res[4, ] <- c("$coord.partiel", "Partial coordinates")
-      res[5, ] <- c("$within.inertia", "Within inertia")
-      res[6, ] <- c("$within.partial.inertia", "Within partial inertia")
-    }
-    print(res[1:nrows,], ...)
+    nms <- names(x)
+    nrows <- length(nms)
+    res <- array(data="", dim = c(nrows, 2), dimnames=list(seq_len(nrows), c("Name", "Description")))
+    res[, 1] <- paste0("$", nms)
+    res[, 2] <- .factoextra_descriptions(nms)
+    print(res[seq_len(nrows),], ...)
   }
   else if(inherits(x, c("hmfa_ind", "hmfa_quali_var", "hmfa_quanti_var"))){
     element <- attr(x, "element") # description

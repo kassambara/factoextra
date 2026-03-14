@@ -2,7 +2,7 @@ Package: factoextra
 Type: Package
 Title: Extract and Visualize the Results of Multivariate Data Analyses
 Version: 2.0.0.999
-Date: 2026-03-09
+Date: 2026-03-13
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com",
            comment = c(ORCID = "0009-0002-9136-0791")),
@@ -17,8 +17,9 @@ Description: Provides easy-to-use functions to extract and visualize the output
     'CA' (Correspondence Analysis), 'MCA' (Multiple Correspondence Analysis),
     'FAMD' (Factor Analysis of Mixed Data), 'MFA' (Multiple Factor Analysis),
     and 'HMFA' (Hierarchical Multiple Factor Analysis) from different R packages.
-    It also includes helpers for simplifying clustering analysis workflows and
-    provides 'ggplot2'-based data visualization.
+    It also includes support for supplementary qualitative variables in
+    'FactoMineR' 'FAMD' and 'MFA' workflows, helpers for simplifying clustering
+    analysis workflows, and 'ggplot2'-based data visualization.
 License: GPL-2
 LazyData: true
 LazyDataCompression: xz

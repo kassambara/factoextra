@@ -31,14 +31,14 @@ fviz_mfa_quali_biplot(
   X,
   axes = c(1, 2),
   geom = c("point", "text"),
-  repel = repel,
+  repel = FALSE,
   title = "Biplot of individuals and qualitative variables - MFA",
   ...
 )
 
 fviz_mfa_var(
   X,
-  choice = c("quanti.var", "group", "quali.var"),
+  choice = c("quanti.var", "group", "quali.var", "quali.sup"),
   axes = c(1, 2),
   geom = c("point", "text"),
   repel = FALSE,
@@ -146,8 +146,9 @@ colored according to the groups.}
 \item{title}{the title of the graph}
 
 \item{choice}{the graph to plot. Allowed values include one of c("quanti.var",
-"quali.var", "group") for plotting quantitative variables, qualitative 
-variables and group of variables, respectively.}
+"quali.var", "quali.sup", "group") for plotting quantitative variables,
+qualitative variables, supplementary qualitative variables and group of
+variables, respectively.}
 
 \item{col.var.sup}{color for supplementary variables.}
 
@@ -188,7 +189,7 @@ fviz_mfa_ind(res.mfa, col.ind = "cos2",
   gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
   repel = TRUE)
 # Partial individuals
-fviz_mfa_ind(res.mfa, partial = "all") 
+fviz_mfa_ind(res.mfa, partial = rownames(wine)[1:3], col.partial = "black") 
 # Partial axes
 fviz_mfa_axes(res.mfa)
 
@@ -202,6 +203,8 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 
 # Plot of qualitative variables
 fviz_mfa_var(res.mfa, "quali.var")
+# Plot of supplementary qualitative variables
+fviz_mfa_var(res.mfa, "quali.sup")
  
  
 
