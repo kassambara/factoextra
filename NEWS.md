@@ -39,6 +39,10 @@
 * `fviz_dend()` now uses current `igraph` phylogenic helpers internally while
   keeping `phylo_layout = "layout.auto"` as a backward-compatible alias and
   accepting `phylo_layout = "layout_nicely"` as an additional option. (@erdeyl)
+* `fviz_dend()` now also keeps `phylo_layout = "layout.gem"` and
+  `phylo_layout = "layout.mds"` as backward-compatible aliases while accepting
+  `phylo_layout = "layout_with_gem"` and `phylo_layout = "layout_with_mds"` as
+  additional modern options. (@erdeyl)
 
 # factoextra 2.0.0
 

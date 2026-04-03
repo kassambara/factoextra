@@ -73,7 +73,8 @@ is "layout.auto", which is kept as a compatibility alias for
 \code{"layout_nicely"}. Allowed values include:
 \code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_nicely}},
 \code{\link[igraph]{layout_with_drl}}, \code{\link[igraph]{layout_as_tree}},
-\code{\link[igraph]{layout.gem}}, \code{\link[igraph]{layout.mds}} and
+\code{\link[igraph]{layout.gem}}, \code{\link[igraph]{layout_with_gem}},
+\code{\link[igraph]{layout.mds}}, \code{\link[igraph]{layout_with_mds}} and
 \code{\link[igraph]{layout_with_lgl}}.}
 
 \item{rect}{logical value specifying whether to add a rectangle around 

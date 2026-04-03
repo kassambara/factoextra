@@ -284,6 +284,58 @@ test_that("phylogenic dendrogram accepts layout_nicely compatibility alias", {
   expect_s3_class(p, "ggplot")
 })
 
+test_that("phylogenic dendrogram keeps legacy layout.gem warning-free", {
+  skip_if_not_installed("igraph")
+  set.seed(6060)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout.gem", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram accepts layout_with_gem alias", {
+  skip_if_not_installed("igraph")
+  set.seed(7070)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout_with_gem", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram keeps legacy layout.mds warning-free", {
+  skip_if_not_installed("igraph")
+  set.seed(8080)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout.mds", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram accepts layout_with_mds alias", {
+  skip_if_not_installed("igraph")
+  set.seed(9090)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout_with_mds", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
 test_that("hmfa group printing lists only available result components", {
   skip_if_not_installed("FactoMineR")
 

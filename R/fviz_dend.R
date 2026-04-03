@@ -31,7 +31,8 @@
 #'   \code{"layout_nicely"}. Allowed values include:
 #'   \code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_nicely}},
 #'   \code{\link[igraph]{layout_with_drl}}, \code{\link[igraph]{layout_as_tree}},
-#'   \code{\link[igraph]{layout.gem}}, \code{\link[igraph]{layout.mds}} and
+#'   \code{\link[igraph]{layout.gem}}, \code{\link[igraph]{layout_with_gem}},
+#'   \code{\link[igraph]{layout.mds}}, \code{\link[igraph]{layout_with_mds}} and
 #'   \code{\link[igraph]{layout_with_lgl}}.
 #' @param rect logical value specifying whether to add a rectangle around 
 #'   groups. Used only when k != NULL.
@@ -207,7 +208,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   
   
   allowed_layouts <- c("layout.auto", "layout_nicely", "layout_with_drl", "layout_as_tree",
-                      "layout.gem", "layout.mds", "layout_with_lgl")
+                      "layout.gem", "layout_with_gem", "layout.mds", "layout_with_mds", "layout_with_lgl")
   
   if(!(phylo_layout %in% allowed_layouts)) stop( phylo_layout, " is not supported as layout. ", "Allowed phylogenic layout are: ",
                                                 paste( allowed_layouts, collapse = ", "))
@@ -217,8 +218,10 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                         layout_nicely = igraph::layout_nicely,
                         layout_with_drl = igraph::layout_with_drl,
                         layout_as_tree = igraph::layout_as_tree,
-                        layout.gem = igraph::layout.gem,
-                        layout.mds = igraph::layout.mds,
+                        layout.gem = igraph::layout_with_gem,
+                        layout_with_gem = igraph::layout_with_gem,
+                        layout.mds = igraph::layout_with_mds,
+                        layout_with_mds = igraph::layout_with_mds,
                         layout_with_lgl = igraph::layout_with_lgl
                         )
   
