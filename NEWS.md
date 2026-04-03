@@ -6,7 +6,8 @@
 * `fviz_nbclust()` now computes the `k = 1` WSS baseline internally, and
   `eclust()` now handles hierarchical auto-selected `k = 1` results without
   calling `hcut(..., k = 1)`. Direct `hcut()` and `hkmeans()` validation stays
-  unchanged. (#203, @erdeyl)
+  unchanged. `fviz_silhouette()` now errors cleanly when silhouette data is
+  unavailable for one-cluster results. (#203, @erdeyl)
 * `get_famd()`, `get_mfa()`, `facto_summarize()`, `fviz_famd_*()`, and
   `fviz_mfa_*()` now support supplementary qualitative variable categories via
   `quali.sup`, including the related overlay, print, and category-name

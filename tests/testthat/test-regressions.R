@@ -178,6 +178,27 @@ test_that("eclust hierarchical auto-k handles a one-cluster gap selection", {
   }
 })
 
+test_that("fviz_silhouette errors cleanly for one-cluster hierarchical results", {
+  x <- scale(iris[, 1:4])
+  fake_gap <- structure(
+    list(Tab = cbind(gap = c(0.5, 0.4, 0.3), SE.sim = c(0.05, 0.05, 0.05))),
+    class = "clusGap"
+  )
+  testthat::local_mocked_bindings(
+    .gap_stat = function(...) list(stat = fake_gap, k = 1L),
+    .env = environment(eclust)
+  )
+
+  res <- eclust(
+    x, FUNcluster = "hclust", k = NULL, k.max = 3, nboot = 2,
+    verbose = FALSE, graph = FALSE, hc_method = "complete", seed = 1
+  )
+  expect_error(
+    fviz_silhouette(res),
+    "Silhouette information is unavailable"
+  )
+})
+
 test_that("internal jitter and multishape helpers preserve RNG state", {
   set.seed(3030)
   seed_before <- get(".Random.seed", envir = .GlobalEnv)

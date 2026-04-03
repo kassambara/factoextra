@@ -82,6 +82,12 @@
 fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   
   if(inherits(sil.obj, c("eclust", "hcut", "pam", "clara", "fanny"))){
+    if(is.null(sil.obj$silinfo) || is.null(sil.obj$silinfo$widths)) {
+      stop(
+        "Silhouette information is unavailable for this clustering result. ",
+        "Silhouette plots require at least 2 clusters."
+      )
+    }
     df <- as.data.frame(sil.obj$silinfo$widths)
   }
   else if(inherits(sil.obj, "silhouette"))
@@ -121,4 +127,3 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   
   p
 }
-
