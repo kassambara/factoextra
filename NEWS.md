@@ -3,11 +3,49 @@
 * (development version)
 * `fviz_dend()`: `lwd` now controls ggplot branch thickness correctly and no
   longer triggers a spurious linewidth legend. (#200, @erdeyl)
+* `fviz_nbclust()` now computes the `k = 1` WSS baseline internally, and
+  `eclust()` now handles hierarchical auto-selected `k = 1` results without
+  calling `hcut(..., k = 1)`. Direct `hcut()` and `hkmeans()` validation stays
+  unchanged. `fviz_silhouette()` now errors cleanly when silhouette data is
+  unavailable for one-cluster results. (#203, @erdeyl)
 * `get_famd()`, `get_mfa()`, `facto_summarize()`, `fviz_famd_*()`, and
   `fviz_mfa_*()` now support supplementary qualitative variable categories via
   `quali.sup`, including the related overlay, print, and category-name
   compatibility paths. Regression coverage and examples were expanded
   accordingly. (#202, @erdeyl)
+* `get_dist()`, `hcut()`, `fviz_dist()`, and `fviz_cluster()` now reject
+  invalid standardized data and non-finite distance matrices with package-level
+  validation errors instead of leaking low-level clustering or plotting
+  failures. (@erdeyl)
+* `eclust()` now rejects invalid standardized inputs consistently across
+  clustering backends, and `fviz_eig()` now validates `parallel.iter` before
+  running Horn's parallel analysis simulation. (@erdeyl)
+* `get_mca_var()` now reports missing quantitative supplementary MCA variables
+  cleanly, `facto_summarize()` and related plotting helpers now validate axis
+  indices consistently, and `fviz_eig()` now validates `ncp` before plotting.
+  (@erdeyl)
+* Help pages, examples, and package metadata now document the helper-level
+  clustering `k = 1` paths and the stricter validation added across the
+  clustering, MCA, and eigenvalue helpers. (@erdeyl)
+* Follow-up review fixes now preserve observation names on hierarchical
+  auto-selected one-cluster `eclust()` results, omit the undefined `k = 1`
+  silhouette point in `fviz_nbclust()`, keep the silhouette optimum guide
+  aligned with the displayed cluster count, and accept near-integer doubles
+  for validated `fviz_eig()` integer arguments. (@erdeyl)
+* Final follow-up defect fixes now print HMFA group summaries without blank
+  placeholder rows, validate `k > n_obs` cleanly in `hcut()` and `hkmeans()`,
+  keep `get_pca_ind()` and `fviz_pca_biplot()` finite on degenerate PCA edge
+  cases, and repair the phylogenic dendrogram regression coverage. (@erdeyl)
+* `fviz_dend()` now uses current `igraph` phylogenic helpers internally while
+  keeping `phylo_layout = "layout.auto"` as a backward-compatible alias and
+  accepting `phylo_layout = "layout_nicely"` as an additional option. (@erdeyl)
+* `fviz_dend()` now also keeps `phylo_layout = "layout.gem"` and
+  `phylo_layout = "layout.mds"` as backward-compatible aliases while accepting
+  `phylo_layout = "layout_with_gem"` and `phylo_layout = "layout_with_mds"` as
+  additional modern options. (@erdeyl)
+* README examples, `fviz_dend()` examples, and package metadata now document
+  the final backward-compatible phylogenic layout compatibility surface.
+  (@erdeyl)
 
 # factoextra 2.0.0
 

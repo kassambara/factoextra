@@ -163,24 +163,43 @@ The current maintenance baseline targets:
 library("factoextra")
 ```
 
-## Recent compatibility updates
+## Recent maintenance highlights
+
+The current development version includes:
+
+- helper-level `k = 1` handling for clustering diagnostics such as
+  `fviz_nbclust(..., method = "wss")` and hierarchical `eclust()`
+  auto-selection
+- silhouette diagnostics now omit the undefined `k = 1` point and keep
+  the optimal-k guide aligned with the displayed cluster count
+- stricter validation for scaled clustering data and non-finite distance
+  objects
+- clearer MCA `quanti.sup`, `axes`, `ncp`, and `parallel.iter`
+  validation paths, including integer-like numeric support for
+  `fviz_eig()`
+- refreshed examples and manuals for the updated clustering and
+  validation workflows
 
 ``` r
-# New helper: map legacy FactoMineR category labels
-map_factominer_legacy_names(res.mfa, c("var.level"))
+data(iris)
+iris.scaled <- scale(iris[, -5])
+res.pca <- prcomp(iris[, -5], scale = TRUE)
 
-# New support: supplementary qualitative categories in FactoMineR FAMD/MFA
-get_famd(res.famd, "quali.sup")
-fviz_famd_var(res.famd, "quali.sup")
-get_mfa(res.mfa, "quali.sup")
-fviz_mfa_var(res.mfa, "quali.sup")
+# WSS now computes the k = 1 baseline internally
+fviz_nbclust(iris.scaled, hcut, method = "wss", hc_method = "complete")
 
-# New helper: remove stale package lock directories
-clean_lock_files()
+# Parallel analysis validation is explicit and reproducible
+fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
+         parallel.iter = 10, parallel.seed = 123)
 
-# Hopkins statistic uses corrected formula (Wright 2022)
-# Set this option to silence the one-time warning
-options(factoextra.warn_hopkins = FALSE)
+# FactoMineR MCA quantitative supplementary variables are supported directly
+library(FactoMineR)
+data(poison)
+res.mca <- MCA(poison, quanti.sup = 1:2, graph = FALSE)
+get_mca(res.mca, "quanti.sup")
+
+# If installation leaves stale 00LOCK-* directories in your library,
+# remove those directories manually before reinstalling.
 ```
 
 ## Main functions in the factoextra package
@@ -649,6 +668,17 @@ fviz_dend(res, rect = TRUE, cex = 0.5,
 ```
 
 ![](tools/README-hierarchical-clustering-1.png)<!-- -->
+
+``` r
+if (requireNamespace("igraph", quietly = TRUE)) {
+  # The default compatibility alias "layout.auto" still works, and
+  # modern igraph layout names are accepted as well.
+  fviz_dend(res, type = "phylogenic", phylo_layout = "layout_nicely",
+            show_labels = FALSE)
+}
+```
+
+![](tools/README-hierarchical-clustering-phylogenic-1.png)<!-- -->
 
 <br/>\
 

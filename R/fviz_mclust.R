@@ -17,7 +17,7 @@
 #' data("diabetes")
 #' mc <- Mclust(diabetes[, -1])
 #' 
-#' # Visaulize BIC values
+#' # Visualize BIC values
 #' fviz_mclust_bic(mc)
 #' 
 #' # Visualize classification
@@ -110,5 +110,4 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
     guides(color = guide_legend(nrow=5,byrow=TRUE))
   else p + theme(legend.position = legend)
 }
-
 

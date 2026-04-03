@@ -7,8 +7,10 @@
 fviz_silhouette(sil.obj, label = FALSE, print.summary = TRUE, ...)
 }
 \arguments{
-\item{sil.obj}{an object of class silhouette: pam, clara, fanny [in cluster 
-package]; eclust and hcut [in factoextra].}
+\item{sil.obj}{an object of class silhouette: pam, clara, fanny [in cluster
+package]; eclust and hcut [in factoextra]. For \code{eclust} and
+\code{hcut}, silhouette information must be available, which requires at
+least two clusters.}
 
 \item{label}{logical value. If true, x axis tick labels are shown}
 
@@ -18,7 +20,7 @@ are printed in fviz_silhouette().}
 \item{...}{other arguments to be passed to the function ggpubr::ggpar().}
 }
 \value{
-return a ggplot
+a ggplot2 object.
 }
 \description{
 Silhouette (Si) analysis is a cluster validation approach that
@@ -28,7 +30,8 @@ Silhouette (Si) analysis is a cluster validation approach that
  \code{\link[cluster]{silhouette}}(), \code{\link[cluster]{pam}}(),
  \code{\link[cluster]{clara}}() and \code{\link[cluster]{fanny}}() [in
  cluster package]; ii) \code{\link{eclust}}() and \code{\link{hcut}}() [in
- factoextra].
+ factoextra]. Results without silhouette information, such as one-cluster
+ \code{eclust}/\code{hcut} objects, are rejected with a package-level error.
  
  Read more: 
  \href{https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/}{Clustering
@@ -42,6 +45,9 @@ Silhouette (Si) analysis is a cluster validation approach that
  clusters.
  
  - Observations with a negative Si are probably placed in the wrong cluster.
+
+ - Silhouette plots require at least two clusters and available silhouette
+ widths.
 }
 \examples{
 set.seed(123)
@@ -61,7 +67,7 @@ km.res <- kmeans(iris.scaled, 3, nstart = 2)
 fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")+
 theme_minimal()
 
-# Visualize silhouhette information
+# Visualize silhouette information
 requireNamespace("cluster", quietly = TRUE)
 sil <- cluster::silhouette(km.res$cluster, dist(iris.scaled))
 fviz_silhouette(sil)
@@ -77,7 +83,7 @@ pam.res <- cluster::pam(iris.scaled, 3)
 # Visualize pam clustering
 fviz_cluster(pam.res, ellipse.type = "norm")+
 theme_minimal()
-# Visualize silhouhette information
+# Visualize silhouette information
 fviz_silhouette(pam.res)
 
 # Hierarchical clustering
@@ -86,8 +92,8 @@ fviz_silhouette(pam.res)
 hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 # Visualize dendrogram
 fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
-# Visualize silhouhette information
-fviz_silhouette(hc.cut)
+# Visualize silhouette information
+if (hc.cut$nbclust > 1) fviz_silhouette(hc.cut)
 }
 }
 \seealso{

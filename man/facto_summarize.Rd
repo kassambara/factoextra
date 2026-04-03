@@ -18,10 +18,10 @@ facto_summarize(
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
 and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput [ExPosition].}
 
-\item{element}{the element to subset from the output. Possible values are 
-"row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
-'quanti.var', 'quali.var', 'quali.sup', 'group' or 'ind' for FAMD, MFA
-and HMFA.}
+\item{element}{the element to subset from the output. Possible values are
+"row" or "col" for CA; "var", "ind", "mca.cor" or "quanti.sup" for MCA;
+"var" or "ind" for PCA; and 'quanti.var', 'quali.var', 'quali.sup',
+'group' or 'ind' for FAMD, MFA and HMFA.}
 
 \item{node.level}{a single number indicating the HMFA node level.}
 
@@ -31,7 +31,8 @@ NULL and the group are named group.1, group.2 and so on).}
 \item{result}{the result to be extracted for the element. Possible values are
 the combination of c("cos2", "contrib", "coord")}
 
-\item{axes}{a numeric vector specifying the axes of interest. Default values 
+\item{axes}{a numeric vector specifying the axes of interest. Values must be
+positive integer indices within the available dimensions. Default values
 are 1:2 for axes 1 and 2.}
 
 \item{select}{a selection of variables. Allowed values are NULL or a list 
@@ -48,10 +49,13 @@ A data frame containing the (total) coord, cos2 and the contribution
   for the axes.
 }
 \description{
-Subset and summarize the results of Principal Component Analysis
-  (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis
-  (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor Analysis
-  (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions from several packages.
+Subset and summarize the results of Principal Component
+  Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
+  Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
+  Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions
+  from several packages. Axis indices are validated before extraction, and
+  MCA quantitative supplementary summaries inherit the package-level error
+  raised when that result is unavailable.
 }
 \details{
 If length(axes) > 1, then the columns contrib and cos2 correspond to
@@ -104,6 +108,9 @@ res <- facto_summarize(res.mca, "var", axes = 1:2)
 head(res)
 # Summarize individuals on axes 1:2
 res <- facto_summarize(res.mca, "ind", axes = 1:2)
+head(res)
+# Summarize quantitative supplementary variables on axes 1:2
+res <- facto_summarize(res.mca, "quanti.sup", axes = 1:2)
 head(res)
 
 # Multiple factor Analysis

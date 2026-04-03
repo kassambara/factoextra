@@ -69,10 +69,13 @@ width.}
 "circular", "phylogenic".}
 
 \item{phylo_layout}{the layout to be used for phylogenic trees. Default value
-is "layout.auto". Allowed values include: 
-\code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_with_drl}}, 
-\code{\link[igraph]{layout_as_tree}}, \code{\link[igraph]{layout.gem}},
-\code{\link[igraph]{layout.mds}} and \code{\link[igraph]{layout_with_lgl}}.}
+is "layout.auto", which is kept as a compatibility alias for
+\code{"layout_nicely"}. Allowed values include:
+\code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_nicely}},
+\code{\link[igraph]{layout_with_drl}}, \code{\link[igraph]{layout_as_tree}},
+\code{\link[igraph]{layout.gem}}, \code{\link[igraph]{layout_with_gem}},
+\code{\link[igraph]{layout.mds}}, \code{\link[igraph]{layout_with_mds}} and
+\code{\link[igraph]{layout_with_lgl}}.}
 
 \item{rect}{logical value specifying whether to add a rectangle around 
 groups. Used only when k != NULL.}
@@ -147,6 +150,13 @@ fviz_dend(res.hc, k = 4,
  fviz_dend(res.hc, k = 4, 
    k_colors = c("blue", "green3", "red", "black"),
    label_cols =  km.clust[res.hc$order], cex = 0.6)
+
+ # Phylogenic tree layouts support both compatibility aliases and
+ # current igraph layout names
+ if (requireNamespace("igraph", quietly = TRUE)) {
+   fviz_dend(res.hc, type = "phylogenic", phylo_layout = "layout_nicely",
+             show_labels = FALSE)
+ }
 
 }
 }

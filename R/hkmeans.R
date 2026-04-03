@@ -76,6 +76,8 @@ hkmeans <- function(x, k, hc.metric = "euclidean", hc.method = "ward.D2",
     stop("x must have at least 2 rows and 1 column")
   if(!is.numeric(k) || length(k) != 1L || is.na(k) || k %% 1 != 0 || k < 2)
     stop("k must be a single integer >= 2")
+  if(k > nrow(x))
+    stop("k must not exceed the number of observations (", nrow(x), ").")
   res.hc <- stats::hclust(stats::dist(x, method = hc.metric), method = hc.method)
   grp <- stats::cutree(res.hc, k = k)
   clus.centers <- stats::aggregate(x, list(grp), mean)[, -1]

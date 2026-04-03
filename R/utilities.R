@@ -72,6 +72,19 @@ NULL
   force(expr)
 }
 
+.coerce_integerish <- function(value, arg, lower = 1L, upper = .Machine$integer.max,
+                               value_label = "single positive integer value"){
+  tol <- sqrt(.Machine$double.eps)
+  if(!is.numeric(value) || length(value) != 1L || is.na(value) || !is.finite(value))
+    stop(arg, " must be a ", value_label, " in [", lower, ", ", upper, "].")
+
+  rounded <- round(value)
+  if(abs(value - rounded) > tol || rounded < lower || rounded > upper)
+    stop(arg, " must be a ", value_label, " in [", lower, ", ", upper, "].")
+
+  as.integer(rounded)
+}
+
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
@@ -519,7 +532,7 @@ NULL
   else if(element=="quanti.var")
     title <- paste0(varname, " of quantitive variables to Dim-", paste(axes, collapse="-"))
   else if(element=="quali.var")
-    title <- paste0(varname, " of qualitive variables to Dim-", paste(axes, collapse="-"))
+    title <- paste0(varname, " of qualitative variables to Dim-", paste(axes, collapse="-"))
   else if(element=="group")
     title <- paste0(varname, " of groups to Dim-", paste(axes, collapse="-"))
   else if(element=="partial.axes")
@@ -763,9 +776,25 @@ NULL
   return_val
 }
 
+# Check axis values
+.validate_axis_indices <- function(axes, ndim = NULL){
+  if(!is.numeric(axes) || length(axes) == 0L || anyNA(axes) || any(!is.finite(axes)) ||
+     any(axes %% 1 != 0) || any(axes < 1))
+    stop("The value of the argument axes is incorrect. axes should contain positive integers.")
+
+  axes <- as.integer(axes)
+  if(!is.null(ndim) && max(axes) > ndim)
+    stop("The value of the argument axes is incorrect. ",
+         "The number of axes in the data is: ", ndim,
+         ". Please try again with axes between 1 - ", ndim)
+
+  axes
+}
+
 # Check axis lengths
 .check_axes <- function(axes, .length){
-  if(length(axes) != .length) stop("axes should be of length ", 2)
+  axes <- .validate_axis_indices(axes)
+  if(length(axes) != .length) stop("axes should be of length ", .length)
 }
 
 # Add individual groups column
@@ -1154,7 +1183,7 @@ map_factominer_legacy_names <- function(X, names, element = c("quali.var", "qual
 }
 
 
-# Principal component methods with Fcatominer
+# Principal component methods with FactoMineR
 f_pca <- function(X, graph = FALSE){
   FactoMineR::PCA(X, graph = FALSE)
 }
