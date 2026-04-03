@@ -80,6 +80,34 @@ test_that("fviz_nbclust wss path returns ggplot and forwards FUNcluster args", {
   expect_false(anyNA(p$data$y))
 })
 
+test_that("fviz_nbclust wss handles clustering helpers that reject k = 1", {
+  x <- scale(iris[, 1:4])
+
+  p_hcut <- fviz_nbclust(
+    x, FUNcluster = hcut, method = "wss", k.max = 4,
+    hc_method = "complete"
+  )
+  expect_s3_class(p_hcut, "ggplot")
+  expect_equal(nrow(p_hcut$data), 4)
+  expect_false(anyNA(p_hcut$data$y))
+
+  p_hkmeans <- fviz_nbclust(x, FUNcluster = hkmeans, method = "wss", k.max = 4)
+  expect_s3_class(p_hkmeans, "ggplot")
+  expect_equal(nrow(p_hkmeans$data), 4)
+  expect_false(anyNA(p_hkmeans$data$y))
+})
+
+test_that("fviz_nbclust gap_stat continues to support hcut", {
+  set.seed(123)
+  x <- scale(iris[, 1:4])
+  p <- fviz_nbclust(
+    x, FUNcluster = hcut, method = "gap_stat",
+    k.max = 3, nboot = 2, verbose = FALSE,
+    hc_method = "complete"
+  )
+  expect_s3_class(p, "ggplot")
+})
+
 test_that("fviz_nbclust handles matrix Best.nc and preserves numeric cluster order", {
   best_nc <- rbind(
     Number_clusters = c(2, 10, 3, 10),
@@ -125,6 +153,29 @@ test_that("eclust restores RNG state after execution", {
   eclust(scale(USArrests), FUNcluster = "kmeans", k = 2, graph = FALSE)
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
   expect_identical(seed_after, seed_before)
+})
+
+test_that("eclust hierarchical auto-k handles a one-cluster gap selection", {
+  x <- scale(iris[, 1:4])
+  fake_gap <- structure(
+    list(Tab = cbind(gap = c(0.5, 0.4, 0.3), SE.sim = c(0.05, 0.05, 0.05))),
+    class = "clusGap"
+  )
+  testthat::local_mocked_bindings(
+    .gap_stat = function(...) list(stat = fake_gap, k = 1L),
+    .env = environment(eclust)
+  )
+
+  for(fun in c("hclust", "agnes", "diana")) {
+    res <- eclust(
+      x, FUNcluster = fun, k = NULL, k.max = 3, nboot = 2,
+      verbose = FALSE, graph = FALSE, hc_method = "complete", seed = 1
+    )
+    expect_s3_class(res, "eclust")
+    expect_identical(res$nbclust, 1L)
+    expect_true(all(res$cluster == 1L))
+    expect_identical(res$size, nrow(x))
+  }
 })
 
 test_that("internal jitter and multishape helpers preserve RNG state", {

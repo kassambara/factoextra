@@ -134,7 +134,12 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
         }
       }
       else if(method == "wss"){
-        for(i in 1:k.max){
+        n_obs <- attr(diss, "Size")
+        if(is.null(n_obs) || !is.numeric(n_obs))
+          stop("Unable to determine the number of observations from diss")
+        # Compute the one-cluster baseline internally so callers may reject k = 1.
+        v[1] <- .get_withinSS(diss, rep(1L, n_obs))
+        for(i in 2:k.max){
           clust <- FUNcluster(x, i, ...)
           v[i] <- .get_withinSS(diss, clust$cluster)
         }

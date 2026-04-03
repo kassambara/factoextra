@@ -113,6 +113,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   else if(ncol(data)< 2) graph = FALSE
       
   gap_stat <- NULL
+  auto_k <- is.null(k)
   # Partitioning clustering
   # ++++++++++++++++++++++++++++++
   clust <- list()
@@ -143,15 +144,22 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
     
     res.dist <- get_dist(x, method = hc_metric)
     # Number of cluster
-    if(is.null(k)) {
+    if(auto_k) {
       gap <- .gap_stat(x, fun_clust, k.max = k.max, nboot = nboot,
                        gap_maxSE = gap_maxSE, verbose = verbose, diss = res.dist)
       k <- gap$k
       gap_stat <- gap$stat
     }
-    res.hc <- hcut(res.dist, k, hc_func = FUNcluster, hc_method = hc_method )
+    if(auto_k && k == 1) {
+      res.hc <- .single_cluster_hcut(res.dist, hc_func = FUNcluster, hc_method = hc_method)
+    } else {
+      res.hc <- hcut(res.dist, k, hc_func = FUNcluster, hc_method = hc_method )
+    }
     clust <- res.hc
-    if(graph) fviz_dend(clust, k)
+    if(graph) {
+      if(k > 1) fviz_dend(clust, k)
+      else fviz_dend(clust)
+    }
   }
   
   clust$nbclust <- k
@@ -159,6 +167,33 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   clust$gap_stat <- gap_stat
   class(clust) <- c(class(clust), "eclust")
   clust
+}
+
+
+# Compute the hierarchical tree for the requested backend
+.compute_hc_tree <- function(diss, hc_func, hc_method){
+  if(hc_func == "hclust") stats::hclust(diss, method = hc_method)
+  else if(hc_func == "agnes") {
+    if(hc_method %in% c("ward.D", "ward.D2")) hc_method <- "ward"
+    cluster::agnes(diss, method = hc_method)
+  }
+  else if(hc_func == "diana") cluster::diana(diss)
+  else stop("Don't support the function ", hc_func)
+}
+
+# Build a one-cluster hierarchical result without relaxing direct hcut validation.
+.single_cluster_hcut <- function(diss, hc_func, hc_method){
+  n_obs <- attr(diss, "Size")
+  if(is.null(n_obs) || !is.numeric(n_obs))
+    stop("Unable to determine number of observations from distance data")
+
+  hc <- .compute_hc_tree(diss, hc_func = hc_func, hc_method = hc_method)
+  hc$cluster <- rep(1L, n_obs)
+  hc$nbclust <- 1L
+  hc$size <- as.vector(table(hc$cluster))
+  hc$data <- diss
+  class(hc) <- c(class(hc), "hcut")
+  hc
 }
 
 
@@ -174,5 +209,4 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   k <- .maxSE(gap, se, method = gap_maxSE$method, SE.factor = gap_maxSE$SE.factor)
   list(stat = gap_stat, k = k)
 }
-
 
