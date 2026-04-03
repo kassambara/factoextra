@@ -200,7 +200,11 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   # Choose variables
   if(!is.null(choose.vars))
     data <- data[, choose.vars, drop = FALSE]
-  if(stand) data <- scale(data)
+  if(stand) {
+    data <- scale(data)
+    if(anyNA(data))
+      stop("Scaling produced NA values. Check for constant columns or non-finite values.")
+  }
   cluster <- as.factor(object$cluster)
   
   pca_performed <- FALSE

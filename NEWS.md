@@ -8,6 +8,10 @@
   `quali.sup`, including the related overlay, print, and category-name
   compatibility paths. Regression coverage and examples were expanded
   accordingly. (#202, @erdeyl)
+* `get_dist()`, `hcut()`, `fviz_dist()`, and `fviz_cluster()` now reject
+  invalid standardized data and non-finite distance matrices with package-level
+  validation errors instead of leaking low-level clustering or plotting
+  failures. (@erdeyl)
 
 # factoextra 2.0.0
 
