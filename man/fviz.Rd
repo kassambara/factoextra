@@ -43,12 +43,13 @@ fviz(
 \item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
 and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput [ExPosition].}
 
-\item{element}{the element to subset from the output. Possible values are 
-"row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
-'quanti.var', 'quali.var', 'quali.sup', 'group' or 'ind' for FAMD, MFA
-and HMFA.}
+\item{element}{the element to subset from the output. Possible values are
+"row" or "col" for CA; "var", "ind", "mca.cor" or "quanti.sup" for MCA;
+"var" or "ind" for PCA; and 'quanti.var', 'quali.var', 'quali.sup',
+'group' or 'ind' for FAMD, MFA and HMFA.}
 
-\item{axes}{a numeric vector specifying the axes of interest. Default values 
+\item{axes}{a numeric vector specifying the axes of interest. Values must be
+positive integer indices within the available dimensions. Default values
 are 1:2 for axes 1 and 2.}
 
 \item{geom}{a text specifying the geometry to be used for the graph. Default 

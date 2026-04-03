@@ -10,8 +10,9 @@
 #'  
 #'  These functions support the results of Principal Component Analysis (PCA), 
 #'  Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
-#'  Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis 
-#'  (HMFA) functions.
+#'  Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis
+#'  (HMFA) functions. \code{fviz_eig()} validates \code{ncp},
+#'  \code{parallel.iter}, and \code{parallel.seed} before plotting.
 #'  
 #'  
 #'@param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
@@ -25,7 +26,8 @@
 #'@param barfill fill color for bar plot.
 #'@param barcolor outline color for bar plot.
 #'@param linecolor color for line plot (when geom contains "line").
-#'@param ncp a numeric value specifying the number of dimensions to be shown.
+#'@param ncp a single positive integer specifying the number of dimensions to
+#'  be shown.
 #'@param addlabels logical value. If TRUE, labels are added at the top of bars
 #'  or points showing the information retained by each dimension.
 #'@param hjust horizontal adjustment of the labels.
@@ -36,9 +38,11 @@
 #'  choice = "eigenvalue" and X is a prcomp or princomp object. Default is FALSE.
 #'@param parallel.color color of the parallel analysis threshold line. Default is "red".
 #'@param parallel.lty line type for the parallel analysis line. Default is "dashed".
-#'@param parallel.iter number of iterations for parallel analysis simulation. Default is 100.
-#'@param parallel.seed integer seed for reproducible parallel analysis simulation.
-#'  If NULL (default), the current RNG stream is used.
+#'@param parallel.iter a single positive integer giving the number of
+#'  iterations for parallel analysis simulation. Default is 100.
+#'@param parallel.seed NULL or a single non-negative integer seed for
+#'  reproducible parallel analysis simulation. If NULL (default), the current
+#'  RNG stream is used.
 #' @inheritParams ggpubr::ggpar
 #'@param ... optional arguments to be passed to the function \link[ggpubr]{ggpar}.
 #'  
@@ -72,7 +76,8 @@
 #' # Parallel analysis (Horn's method) to determine number of components
 #' # Components with eigenvalues above the red line are significant
 #' fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
-#'          addlabels = TRUE, parallel.color = "red", parallel.seed = 123)
+#'          addlabels = TRUE, parallel.color = "red",
+#'          parallel.iter = 10, parallel.seed = 123)
 #'
 #' \dontrun{         
 #' # Correspondence Analysis

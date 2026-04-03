@@ -26,18 +26,21 @@ eclust(
 \item{FUNcluster}{a clustering function including "kmeans", "pam", "clara", 
 "fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.}
 
-\item{k}{the number of clusters to be generated. If NULL, the gap statistic 
-is used to estimate the appropriate number of clusters. In the case of 
-kmeans, k can be either the number of clusters, or a set of initial 
-(distinct) cluster centers.}
+\item{k}{the number of clusters to be generated. If NULL, the gap statistic
+is used to estimate the appropriate number of clusters. For hierarchical
+clustering, this automatic selection may return \code{k = 1}. In the case
+of kmeans, \code{k} can be either the number of clusters, or a set of
+initial (distinct) cluster centers.}
 
 \item{k.max}{the maximum number of clusters to consider, must be at least 
 two.}
 
-\item{stand}{logical value; default is FALSE. If TRUE, then the data will be 
-standardized using the function scale(). Measurements are standardized for 
-each variable (column), by subtracting the variable's mean value and 
-dividing by the variable's standard deviation.}
+\item{stand}{logical value; default is FALSE. If TRUE, then the data will be
+standardized using the function \code{scale()}. Measurements are
+standardized for each variable (column), by subtracting the variable's
+mean value and dividing by the variable's standard deviation. If scaling
+produces \code{NA} values, \code{eclust()} stops with a package-level
+error.}
 
 \item{graph}{logical value. If TRUE, cluster plot is displayed.}
 
@@ -69,19 +72,22 @@ for determining the number of clusters using gap statistic.}
 Returns an object of class "eclust" containing the result of the 
   standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.).
   
-  It includes also: \itemize{ \item cluster: the cluster assignement of 
-  observations after cutting the tree \item nbclust: the number of clusters 
-  \item silinfo: the silhouette information of observations, including 
-  $widths (silhouette width values of each observation), $clus.avg.widths 
-  (average silhouette width of each cluster) and $avg.width (average width of
-  all clusters) \item size: the size of clusters \item data: a matrix 
-  containing the original or the standardized data (if stand = TRUE) } The 
-  "eclust" class has method for fviz_silhouette(), fviz_dend(), 
-  fviz_cluster().
+  It includes also: \itemize{ \item cluster: the cluster assignement of
+  observations after cutting the tree \item nbclust: the number of clusters
+  \item silinfo: the silhouette information of observations, when available
+  for solutions with at least two clusters, including $widths (silhouette
+  width values of each observation), $clus.avg.widths (average silhouette
+  width of each cluster) and $avg.width (average width of all clusters)
+  \item size: the size of clusters \item data: a matrix containing the
+  original or the standardized data (if stand = TRUE) } The "eclust" class
+  has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
 }
 \description{
-Provides solution for enhancing the workflow of clustering
-  analyses and ggplot2-based elegant data visualization. Read more: 
+Provides a convenient workflow for clustering analyses and
+  ggplot2-based data visualization. When \code{k = NULL}, the gap statistic
+  selects the number of clusters. Hierarchical backends may validly return
+  \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
+  without silhouette information. Read more:
  \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
 }
 \examples{
@@ -100,10 +106,10 @@ res.km$nbclust
  res.km
  
 \dontrun{
- # Enhanced hierarchical clustering
- res.hc <- eclust(df, "hclust", nboot = 2) # compute hclust
-  fviz_dend(res.hc) # dendrogam
-  fviz_silhouette(res.hc) # silhouette plot
+# Enhanced hierarchical clustering
+res.hc <- eclust(df, "hclust", nboot = 2) # compute hclust
+fviz_dend(res.hc) # dendrogram
+if (res.hc$nbclust > 1) fviz_silhouette(res.hc) # silhouette plot
 }
  
 }

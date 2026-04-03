@@ -24,6 +24,9 @@
   cleanly, `facto_summarize()` and related plotting helpers now validate axis
   indices consistently, and `fviz_eig()` now validates `ncp` before plotting.
   (@erdeyl)
+* Help pages, examples, and package metadata now document the helper-level
+  clustering `k = 1` paths and the stricter validation added across the
+  clustering, MCA, and eigenvalue helpers. (@erdeyl)
 
 # factoextra 2.0.0
 

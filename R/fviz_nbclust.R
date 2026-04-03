@@ -1,6 +1,6 @@
 #' @include  hcut.R
  NULL
-#' Dertermining and Visualizing the Optimal Number of Clusters
+#' Determining and Visualizing the Optimal Number of Clusters
 #' @description Partitioning methods, such as k-means clustering require the 
 #'   users to specify the number of clusters to be generated. \itemize{
 #'   \item fviz_nbclust(): Determines and visualizes the optimal number of
@@ -10,8 +10,12 @@
 #'   function \code{\link[cluster]{clusGap}}() [in cluster package]. The optimal
 #'   number of clusters is specified using the "firstmax" method
 #'   (?cluster::clustGap). }
-#'   
-#'   Read more: 
+#'
+#'   For \code{method = "wss"}, \code{factoextra} computes the \code{k = 1}
+#'   baseline internally so helper functions such as \code{hcut()} and
+#'   \code{hkmeans()} can keep rejecting direct \code{k = 1} inputs.
+#'
+#'   Read more:
 #'   \href{https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/}{Determining
 #'    the optimal number of clusters}
 #'   
@@ -20,13 +24,15 @@
 #' @param method the method to be used for estimating the optimal number of 
 #'   clusters. Possible values are "silhouette" (for average silhouette width), 
 #'   "wss" (for total within sum of square) and "gap_stat" (for gap statistics).
-#' @param FUNcluster a partitioning function which accepts as first argument a 
-#'   (data) matrix like x, second argument, say k, k >= 2, the number of 
-#'   clusters desired, and returns a list with a component named cluster which 
-#'   contains the grouping of observations. Allowed values include: kmeans,
-#'   cluster::pam, cluster::clara, cluster::fanny, hcut, etc. This argument is
-#'   not required when x is an output of the function 
-#'   \code{NbClust::NbClust()}.
+#' @param FUNcluster a partitioning function which accepts as first argument a
+#'   (data) matrix like \code{x}, second argument, say \code{k >= 2}, the
+#'   number of clusters desired, and returns a list with a component named
+#'   \code{cluster} which contains the grouping of observations. Allowed values
+#'   include: \code{kmeans}, \code{cluster::pam}, \code{cluster::clara},
+#'   \code{cluster::fanny}, \code{hcut}, etc. In \code{method = "wss"} mode,
+#'   \code{fviz_nbclust()} computes the \code{k = 1} baseline internally instead
+#'   of calling \code{FUNcluster(x, 1, ...)}. This argument is not required
+#'   when \code{x} is an output of the function \code{NbClust::NbClust()}.
 #' @param diss dist object as produced by dist(), i.e.: diss = dist(x, method = 
 #'   "euclidean"). Used to compute the average silhouette width of clusters, the
 #'   within sum of square and hierarchical clustering. If NULL, dist(x) is 
@@ -70,6 +76,9 @@
 #' # Elbow method for kmeans
 #' fviz_nbclust(iris.scaled, kmeans, method = "wss") +
 #' geom_vline(xintercept = 3, linetype = 2)
+#'
+#' # WSS with hierarchical clustering keeps the internal k = 1 baseline
+#' fviz_nbclust(iris.scaled, hcut, method = "wss", hc_method = "complete")
 #' 
 #' # Average silhouette for kmeans
 #' fviz_nbclust(iris.scaled, kmeans, method = "silhouette")

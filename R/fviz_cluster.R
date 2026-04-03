@@ -6,7 +6,8 @@
 #'  package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR];
 #'  hkmeans [factoextra]. Observations are represented by points in the plot,
 #'  using principal components if ncol(data) > 2. An ellipse is drawn around
-#'  each cluster.
+#'  each cluster. When \code{stand = TRUE}, the plotting data must remain
+#'  finite after scaling.
 #'@param object an object of class "partition" created by the functions pam(),
 #'  clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
 #'  [in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
@@ -17,7 +18,8 @@
 #'@param choose.vars a character vector containing variables to be considered
 #'  for plotting.
 #'@param stand logical value; if TRUE, data is standardized before principal
-#'  component analysis
+#'  component analysis. If scaling produces \code{NA} values,
+#'  \code{fviz_cluster()} stops with a package-level error.
 #'@param axes a numeric vector of length 2 specifying the dimensions to be
 #'  plotted.
 #'@param geom a text specifying the geometry to be used for the graph. Allowed
@@ -52,7 +54,7 @@
 #'@param ... other arguments to be passed to the functions
 #'  \code{\link[ggpubr]{ggscatter}} and \code{\link[ggpubr]{ggpar}}.
 #'
-#'@return return a ggpplot.
+#'@return a ggplot2 object.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}},
 #'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}

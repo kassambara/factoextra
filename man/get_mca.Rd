@@ -15,9 +15,10 @@ get_mca_ind(res.mca)
 \arguments{
 \item{res.mca}{an object of class MCA [FactoMineR], acm [ade4], expoOutput/epMCA [ExPosition].}
 
-\item{element}{the element to subset from the output. Possible values are 
+\item{element}{the element to subset from the output. Possible values are
 "var" for variables, "ind" for individuals, "mca.cor" for correlation
-between variables and principal dimensions, "quanti.sup" for quantitative supplementary variables.}
+between variables and principal dimensions, and "quanti.sup" for
+quantitative supplementary variables in FactoMineR MCA results.}
 }
 \value{
 a list of matrices containing the results for the active 
@@ -28,12 +29,17 @@ a list of matrices containing the results for the active
   individuals/variable categories}
 }
 \description{
-Extract all the results (coordinates, squared cosine and 
-  contributions) for the active individuals/variable categories from Multiple
-  Correspondence Analysis (MCA) outputs.\cr\cr \itemize{ \item get_mca(): 
-  Extract the results for variables and individuals \item get_mca_ind(): 
-  Extract the results for individuals only \item get_mca_var(): Extract the 
-  results for variables only }
+Extract all the results (coordinates, squared cosine and
+  contributions) for the active individuals/variable categories from
+  Multiple Correspondence Analysis (MCA) outputs.\cr\cr \itemize{ \item
+  get_mca(): Extract the results for variables and individuals \item
+  get_mca_ind(): Extract the results for individuals only \item
+  get_mca_var(): Extract the results for variables only }
+
+  For FactoMineR MCA results, \code{get_mca()} and \code{get_mca_var()} also
+  support \code{element = "quanti.sup"} for quantitative supplementary
+  variables and report a clean package-level error when that result is
+  absent.
 }
 \examples{
 \donttest{
@@ -43,9 +49,7 @@ Extract all the results (coordinates, squared cosine and
 # install.packages("FactoMineR")
 library("FactoMineR")
 data(poison)
-poison.active <- poison[1:55, 5:15]
-head(poison.active[, 1:6])
-res.mca <- MCA(poison.active, graph=FALSE)
+res.mca <- MCA(poison, quanti.sup = 1:2, graph = FALSE)
  
  # Extract the results for variable categories
  var <- get_mca_var(res.mca)
@@ -64,6 +68,8 @@ res.mca <- MCA(poison.active, graph=FALSE)
  # You can also use the function get_mca()
  get_mca(res.mca, "ind") # Results for individuals
  get_mca(res.mca, "var") # Results for variable categories
+ quanti.sup <- get_mca(res.mca, "quanti.sup")
+ head(quanti.sup$coord) # coordinates of quantitative supplementary variables
  }
  
 }
