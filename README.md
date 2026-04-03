@@ -175,8 +175,8 @@ fviz_famd_var(res.famd, "quali.sup")
 get_mfa(res.mfa, "quali.sup")
 fviz_mfa_var(res.mfa, "quali.sup")
 
-# New helper: remove stale package lock directories
-clean_lock_files()
+# If installation leaves stale 00LOCK-* directories in your library,
+# remove those directories manually before reinstalling.
 
 # Hopkins statistic uses corrected formula (Wright 2022)
 # Set this option to silence the one-time warning
