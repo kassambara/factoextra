@@ -27,10 +27,12 @@
 #' @param type type of plot. Allowed values are one of "rectangle", "triangle", 
 #'   "circular", "phylogenic".
 #' @param phylo_layout the layout to be used for phylogenic trees. Default value
-#'   is "layout.auto". Allowed values include: 
-#'   \code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_with_drl}}, 
-#'   \code{\link[igraph]{layout_as_tree}}, \code{\link[igraph]{layout.gem}},
-#'   \code{\link[igraph]{layout.mds}} and \code{\link[igraph]{layout_with_lgl}}.
+#'   is "layout.auto", which is kept as a compatibility alias for
+#'   \code{"layout_nicely"}. Allowed values include:
+#'   \code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_nicely}},
+#'   \code{\link[igraph]{layout_with_drl}}, \code{\link[igraph]{layout_as_tree}},
+#'   \code{\link[igraph]{layout.gem}}, \code{\link[igraph]{layout.mds}} and
+#'   \code{\link[igraph]{layout_with_lgl}}.
 #' @param rect logical value specifying whether to add a rectangle around 
 #'   groups. Used only when k != NULL.
 #' @param rect_border,rect_lty border color and line type for rectangles.
@@ -204,14 +206,15 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   }
   
   
-  allowed_layouts <- c("layout.auto", "layout_with_drl", "layout_as_tree", 
+  allowed_layouts <- c("layout.auto", "layout_nicely", "layout_with_drl", "layout_as_tree",
                       "layout.gem", "layout.mds", "layout_with_lgl")
   
   if(!(phylo_layout %in% allowed_layouts)) stop( phylo_layout, " is not supported as layout. ", "Allowed phylogenic layout are: ",
                                                 paste( allowed_layouts, collapse = ", "))
   
   layout_func <- switch(phylo_layout,
-                        layout.auto = igraph::layout.auto,
+                        layout.auto = igraph::layout_nicely,
+                        layout_nicely = igraph::layout_nicely,
                         layout_with_drl = igraph::layout_with_drl,
                         layout_as_tree = igraph::layout_as_tree,
                         layout.gem = igraph::layout.gem,
@@ -225,7 +228,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   graph_edges <- phylo_tree$edge
   
   # get graph from edge list
-  graph_net <- igraph::graph.edgelist(graph_edges)
+  graph_net <- igraph::graph_from_edgelist(graph_edges)
   
   # extract layout (x-y coords)
   graph_layout <- .with_preserved_seed(123, layout_func(graph_net))

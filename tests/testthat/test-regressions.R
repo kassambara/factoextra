@@ -263,7 +263,22 @@ test_that("phylogenic dendrogram layout does not leak RNG state", {
   set.seed(4040)
   seed_before <- get(".Random.seed", envir = .GlobalEnv)
   hc <- hclust(dist(iris[, 1:4]))
-  p <- fviz_dend(hc, k = 3, type = "phylogenic", show_labels = FALSE)
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram accepts layout_nicely compatibility alias", {
+  skip_if_not_installed("igraph")
+  set.seed(5050)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout_nicely", show_labels = FALSE)
+  )
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
   expect_identical(seed_after, seed_before)
   expect_s3_class(p, "ggplot")

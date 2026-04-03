@@ -36,6 +36,9 @@
   placeholder rows, validate `k > n_obs` cleanly in `hcut()` and `hkmeans()`,
   keep `get_pca_ind()` and `fviz_pca_biplot()` finite on degenerate PCA edge
   cases, and repair the phylogenic dendrogram regression coverage. (@erdeyl)
+* `fviz_dend()` now uses current `igraph` phylogenic helpers internally while
+  keeping `phylo_layout = "layout.auto"` as a backward-compatible alias and
+  accepting `phylo_layout = "layout_nicely"` as an additional option. (@erdeyl)
 
 # factoextra 2.0.0
 
