@@ -91,6 +91,13 @@
 #'    k_colors = c("blue", "green3", "red", "black"),
 #'    label_cols =  km.clust[res.hc$order], cex = 0.6)
 #' 
+#'  # Phylogenic tree layouts support both compatibility aliases and
+#'  # current igraph layout names
+#'  if (requireNamespace("igraph", quietly = TRUE)) {
+#'    fviz_dend(res.hc, type = "phylogenic", phylo_layout = "layout_nicely",
+#'              show_labels = FALSE)
+#'  }
+#' 
 #' }
 #' @export
 fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  show_labels = TRUE, color_labels_by_k = TRUE,

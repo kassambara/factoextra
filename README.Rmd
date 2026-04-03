@@ -597,6 +597,15 @@ res <- hcut(USArrests, k = 4, stand = TRUE)
 fviz_dend(res, rect = TRUE, cex = 0.5,
           k_colors = c("#00AFBB","#2E9FDF", "#E7B800", "#FC4E07"))
 ```
+
+```{r hierarchical-clustering-phylogenic, fig.width = 5.4, fig.height=5}
+if (requireNamespace("igraph", quietly = TRUE)) {
+  # The default compatibility alias "layout.auto" still works, and
+  # modern igraph layout names are accepted as well.
+  fviz_dend(res, type = "phylogenic", phylo_layout = "layout_nicely",
+            show_labels = FALSE)
+}
+```
       
       
 <br/>   

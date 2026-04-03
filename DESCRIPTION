@@ -2,7 +2,7 @@ Package: factoextra
 Type: Package
 Title: Extract and Visualize the Results of Multivariate Data Analyses
 Version: 2.0.0.999
-Date: 2026-04-03
+Date: 2026-04-04
 Authors@R: c(
     person("Alboukadel", "Kassambara", role = c("aut", "cre"), email = "alboukadel.kassambara@gmail.com",
            comment = c(ORCID = "0009-0002-9136-0791")),
@@ -19,8 +19,9 @@ Description: Provides easy-to-use functions to extract and visualize the output
     and 'HMFA' (Hierarchical Multiple Factor Analysis) from different R packages.
     It also includes support for supplementary qualitative variables in
     'FactoMineR' 'FAMD' and 'MFA' workflows, hardened validation for clustering
-    and dimension-reduction helper workflows, and 'ggplot2'-based data
-    visualization.
+    and dimension-reduction helper workflows, backward-compatible phylogenic
+    dendrogram layout support for current 'igraph' APIs, and 'ggplot2'-based
+    data visualization.
 License: GPL-2
 LazyData: true
 LazyDataCompression: xz

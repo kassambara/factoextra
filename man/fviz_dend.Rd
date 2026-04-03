@@ -151,5 +151,12 @@ fviz_dend(res.hc, k = 4,
    k_colors = c("blue", "green3", "red", "black"),
    label_cols =  km.clust[res.hc$order], cex = 0.6)
 
+ # Phylogenic tree layouts support both compatibility aliases and
+ # current igraph layout names
+ if (requireNamespace("igraph", quietly = TRUE)) {
+   fviz_dend(res.hc, type = "phylogenic", phylo_layout = "layout_nicely",
+             show_labels = FALSE)
+ }
+
 }
 }

@@ -669,6 +669,17 @@ fviz_dend(res, rect = TRUE, cex = 0.5,
 
 ![](tools/README-hierarchical-clustering-1.png)<!-- -->
 
+``` r
+if (requireNamespace("igraph", quietly = TRUE)) {
+  # The default compatibility alias "layout.auto" still works, and
+  # modern igraph layout names are accepted as well.
+  fviz_dend(res, type = "phylogenic", phylo_layout = "layout_nicely",
+            show_labels = FALSE)
+}
+```
+
+![](tools/README-hierarchical-clustering-phylogenic-1.png)<!-- -->
+
 <br/>\
 
 <div class="success">

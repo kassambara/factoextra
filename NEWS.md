@@ -43,6 +43,9 @@
   `phylo_layout = "layout.mds"` as backward-compatible aliases while accepting
   `phylo_layout = "layout_with_gem"` and `phylo_layout = "layout_with_mds"` as
   additional modern options. (@erdeyl)
+* README examples, `fviz_dend()` examples, and package metadata now document
+  the final backward-compatible phylogenic layout compatibility surface.
+  (@erdeyl)
 
 # factoextra 2.0.0
 
