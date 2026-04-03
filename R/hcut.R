@@ -70,6 +70,8 @@ hcut <- function(x, k = 2, isdiss = inherits(x, "dist"),
     stop("k must be a single integer >= 2")
   if(isdiss && !inherits(x, "dist"))
     stop("When isdiss = TRUE, x must be an object of class dist")
+  if(isdiss)
+    .check_dist_finite(x)
   if(stand && !inherits(x, "dist")) {
     x <- scale(x)
     if(anyNA(x))

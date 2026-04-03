@@ -13,6 +13,11 @@
   `quali.sup`, including the related overlay, print, and category-name
   compatibility paths. Regression coverage and examples were expanded
   accordingly. (#202, @erdeyl)
+<<<<<<< HEAD
+* `get_dist()`, `hcut()`, `fviz_dist()`, and `fviz_cluster()` now reject
+  invalid standardized data and non-finite distance matrices with package-level
+  validation errors instead of leaking low-level clustering or plotting
+  failures. (@erdeyl)
 * `eclust()` now rejects invalid standardized inputs consistently across
   clustering backends, and `fviz_eig()` now validates `parallel.iter` before
   running Horn's parallel analysis simulation. (@erdeyl)

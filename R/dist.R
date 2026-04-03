@@ -34,7 +34,11 @@ NULL
 #' @export
 get_dist <- function(x, method = "euclidean",  stand = FALSE, ...){
   
-  if(stand) x <- scale(x)
+  if(stand) {
+    x <- scale(x)
+    if(anyNA(x))
+      stop("Scaling produced NA values. Check for constant columns or non-finite values.")
+  }
   if(method %in% c("pearson", "spearman", "kendall")){
     res.cor <- stats::cor(t(x),  method = method)
     res.dist <- stats::as.dist(1 - res.cor, ...)
@@ -42,6 +46,11 @@ get_dist <- function(x, method = "euclidean",  stand = FALSE, ...){
   else res.dist <- stats::dist(x, method = method, ...)
   
   res.dist
+}
+
+.check_dist_finite <- function(dist.obj){
+  if(anyNA(dist.obj) || any(!is.finite(unclass(dist.obj))))
+    stop("The distance matrix contains NA/NaN/Inf values. Check for constant columns or non-finite values.")
 }
 
 
@@ -60,6 +69,7 @@ fviz_dist<- function(dist.obj, order = TRUE, show_labels = TRUE, lab_size = NULL
   
   if(!inherits(dist.obj, "dist"))
     stop("An object of class dist is required.")
+  .check_dist_finite(dist.obj)
   
   if(order){
   res.hc <- stats::hclust(dist.obj, method = "ward.D2")
