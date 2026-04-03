@@ -132,10 +132,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     ndim <- ncol(elmt[[1]])
   else
     ndim <- ncol(elmt$coord)
-  if(max(axes) > ndim)
-    stop("The value of the argument axes is incorrect. ",
-         "The number of axes in the data is: ", ncol(elmt$coord), 
-         ". Please try again with axes between 1 - ", ncol(elmt$coord))
+  axes <- .validate_axis_indices(axes, ndim = ndim)
   
   # Summarize the result
   res = NULL

@@ -97,3 +97,69 @@ test_that("fviz_cluster validates scaled plotting data", {
     "Scaling produced NA values"
   )
 })
+
+test_that("MCA quanti.sup workflows error cleanly when absent", {
+  skip_if_not_installed("FactoMineR")
+
+  data(poison, package = "FactoMineR")
+  res.mca <- FactoMineR::MCA(poison[, 5:15], graph = FALSE)
+
+  expect_error(
+    get_mca_var(res.mca, "quanti.sup"),
+    "There are no quantitative supplementary variables in this MCA"
+  )
+  expect_error(
+    facto_summarize(res.mca, "quanti.sup", axes = 1:2),
+    "There are no quantitative supplementary variables in this MCA"
+  )
+  expect_error(
+    fviz(res.mca, "quanti.sup"),
+    "There are no quantitative supplementary variables in this MCA"
+  )
+})
+
+test_that("axes validation rejects invalid axis indices", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  expect_error(
+    facto_summarize(res.pca, "var", axes = c(1, NA)),
+    "The value of the argument axes is incorrect"
+  )
+  expect_error(
+    facto_summarize(res.pca, "var", axes = 0),
+    "The value of the argument axes is incorrect"
+  )
+  expect_error(
+    facto_summarize(res.pca, "var", axes = c(1, 1.5)),
+    "The value of the argument axes is incorrect"
+  )
+  expect_error(
+    fviz_cos2(res.pca, choice = "var", axes = c(1, NA)),
+    "The value of the argument axes is incorrect"
+  )
+  expect_error(
+    fviz_contrib(res.pca, choice = "var", axes = c(1, 0)),
+    "The value of the argument axes is incorrect"
+  )
+  expect_error(
+    fviz_ellipses(res.pca, habillage = iris$Species, axes = c(1, 1.5)),
+    "The value of the argument axes is incorrect"
+  )
+})
+
+test_that("fviz_eig validates ncp", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  expect_error(
+    fviz_eig(res.pca, ncp = NA),
+    "ncp must be a single positive integer value in"
+  )
+  expect_error(
+    fviz_eig(res.pca, ncp = -1),
+    "ncp must be a single positive integer value in"
+  )
+  expect_error(
+    fviz_eig(res.pca, ncp = 1.5),
+    "ncp must be a single positive integer value in"
+  )
+})
