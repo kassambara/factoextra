@@ -179,11 +179,13 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
                           )
       if(method == "silhouette") {
         valid_clusters <- which(!is.na(v[-1])) + 1L
-        if(length(valid_clusters) > 0)
+        if(length(valid_clusters) > 0) {
+          best_k <- valid_clusters[which.max(v[valid_clusters])]
           p <- p + geom_vline(
-            xintercept = valid_clusters[which.max(v[valid_clusters])],
+            xintercept = match(as.character(best_k), levels(df$clusters)),
             linetype=2, color = linecolor
           )
+        }
       }
       
       return(p) 

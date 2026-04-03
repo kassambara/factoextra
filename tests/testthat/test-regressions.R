@@ -143,6 +143,10 @@ test_that("fviz_nbclust silhouette omits the undefined k = 1 point", {
   p <- fviz_nbclust(x, FUNcluster = toy_cluster, method = "silhouette", k.max = 3)
   expect_s3_class(p, "ggplot")
   expect_identical(as.integer(as.character(p$data$clusters)), 2:3)
+
+  built <- ggplot2::ggplot_build(p)
+  vline_data <- built$data[[length(built$data)]]
+  expect_equal(as.numeric(vline_data$xintercept), 1)
 })
 
 test_that(".is_color returns a logical vector type-stably", {

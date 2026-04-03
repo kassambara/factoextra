@@ -72,6 +72,19 @@ NULL
   force(expr)
 }
 
+.coerce_integerish <- function(value, arg, lower = 1L, upper = .Machine$integer.max,
+                               value_label = "single positive integer value"){
+  tol <- sqrt(.Machine$double.eps)
+  if(!is.numeric(value) || length(value) != 1L || is.na(value) || !is.finite(value))
+    stop(arg, " must be a ", value_label, " in [", lower, ", ", upper, "].")
+
+  rounded <- round(value)
+  if(abs(value - rounded) > tol || rounded < lower || rounded > upper)
+    stop(arg, " must be a ", value_label, " in [", lower, ", ", upper, "].")
+
+  as.integer(rounded)
+}
+
 # Check and get the class of the output of a factor analysis
 # ++++++++++++++++++++++++++++
 # X: an output of factor analysis (PCA, CA, MCA, MFA) 
