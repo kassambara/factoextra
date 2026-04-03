@@ -148,7 +148,15 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                   parallel.lty = "dashed", parallel.iter = 100,
                   parallel.seed = NULL, ...)
 {
-  
+  if(!is.numeric(ncp) || length(ncp) != 1L || is.na(ncp) ||
+     !is.finite(ncp) || ncp %% 1 != 0 ||
+     ncp < 1 || ncp > .Machine$integer.max)
+    stop(
+      "ncp must be a single positive integer value in [1, ",
+      .Machine$integer.max, "]."
+    )
+  ncp <- as.integer(ncp)
+
   eig <- get_eigenvalue(X)
   eig <-eig[seq_len(min(ncp, nrow(eig))), , drop=FALSE]
   

@@ -8,6 +8,10 @@
   `quali.sup`, including the related overlay, print, and category-name
   compatibility paths. Regression coverage and examples were expanded
   accordingly. (#202, @erdeyl)
+* `get_mca_var()` now reports missing quantitative supplementary MCA variables
+  cleanly, `facto_summarize()` and related plotting helpers now validate axis
+  indices consistently, and `fviz_eig()` now validates `ncp` before plotting.
+  (@erdeyl)
 
 # factoextra 2.0.0
 

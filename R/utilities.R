@@ -763,9 +763,25 @@ NULL
   return_val
 }
 
+# Check axis values
+.validate_axis_indices <- function(axes, ndim = NULL){
+  if(!is.numeric(axes) || length(axes) == 0L || anyNA(axes) || any(!is.finite(axes)) ||
+     any(axes %% 1 != 0) || any(axes < 1))
+    stop("The value of the argument axes is incorrect. axes should contain positive integers.")
+
+  axes <- as.integer(axes)
+  if(!is.null(ndim) && max(axes) > ndim)
+    stop("The value of the argument axes is incorrect. ",
+         "The number of axes in the data is: ", ndim,
+         ". Please try again with axes between 1 - ", ndim)
+
+  axes
+}
+
 # Check axis lengths
 .check_axes <- function(axes, .length){
-  if(length(axes) != .length) stop("axes should be of length ", 2)
+  axes <- .validate_axis_indices(axes)
+  if(length(axes) != .length) stop("axes should be of length ", .length)
 }
 
 # Add individual groups column

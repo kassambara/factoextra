@@ -69,6 +69,8 @@ get_mca_var <- function(res.mca, element = c( "var", "mca.cor", "quanti.sup")){
   element_desc <- "variables"
   # FactoMineR package
   if(inherits(res.mca, c("MCA"))) {
+    if(choice == "quanti.sup" && is.null(res.mca$quanti.sup))
+      stop("There are no quantitative supplementary variables in this MCA.")
     vars <- switch(choice,
                    var = res.mca$var,
                    mca.cor = list(coord = res.mca$var$eta2),
@@ -173,5 +175,4 @@ get_mca_ind <- function(res.mca){
   attr(ind, "element") <- "individuals"
   return(ind)
 }
-
 
