@@ -308,3 +308,29 @@ test_that("fviz_eig validates parallel.seed range and integer-ness", {
     "single integer value in"
   )
 })
+
+test_that("fviz_eig validates parallel.iter for parallel analysis", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = NA, parallel.seed = 1
+    ),
+    "parallel.iter must be a single positive integer value in"
+  )
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = -1, parallel.seed = 1
+    ),
+    "parallel.iter must be a single positive integer value in"
+  )
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = 1.5, parallel.seed = 1
+    ),
+    "parallel.iter must be a single positive integer value in"
+  )
+})

@@ -199,6 +199,15 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
 
   # Add parallel analysis line (Horn's method) if requested
   if(parallel && choice == "eigenvalue") {
+    if(!is.numeric(parallel.iter) || length(parallel.iter) != 1L || is.na(parallel.iter) ||
+       !is.finite(parallel.iter) || parallel.iter %% 1 != 0 ||
+       parallel.iter < 1 || parallel.iter > .Machine$integer.max)
+      stop(
+        "parallel.iter must be a single positive integer value in [1, ",
+        .Machine$integer.max, "]."
+      )
+    parallel.iter <- as.integer(parallel.iter)
+
     compute_parallel_threshold <- function(n_obs, n_var, fit_fn){
       sim_eigs <- matrix(NA_real_, nrow = parallel.iter, ncol = n_var)
       for(i in seq_len(parallel.iter)) {

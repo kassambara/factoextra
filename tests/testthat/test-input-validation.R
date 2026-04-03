@@ -31,6 +31,19 @@ test_that("hkmeans validates inputs and k bounds", {
   expect_error(hkmeans(1:10, k = 2), "x must be a matrix or data.frame")
 })
 
+test_that("eclust validates scaled inputs consistently across backends", {
+  x_const <- data.frame(a = 1:10, b = rep(1, 10))
+
+  expect_error(
+    eclust(x_const, FUNcluster = "hclust", k = 2, stand = TRUE, graph = FALSE),
+    "Scaling produced NA values"
+  )
+  expect_error(
+    eclust(x_const, FUNcluster = "kmeans", k = 2, stand = TRUE, graph = FALSE),
+    "Scaling produced NA values"
+  )
+})
+
 test_that("get_clust_tendency validates numeric data and n", {
   bad_x <- as.matrix(data.frame(a = letters[1:5], b = letters[1:5]))
   expect_error(get_clust_tendency(bad_x, n = 2, graph = FALSE), "numeric")
