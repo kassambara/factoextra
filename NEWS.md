@@ -13,6 +13,9 @@
   `quali.sup`, including the related overlay, print, and category-name
   compatibility paths. Regression coverage and examples were expanded
   accordingly. (#202, @erdeyl)
+* `eclust()` now rejects invalid standardized inputs consistently across
+  clustering backends, and `fviz_eig()` now validates `parallel.iter` before
+  running Horn's parallel analysis simulation. (@erdeyl)
 
 # factoextra 2.0.0
 

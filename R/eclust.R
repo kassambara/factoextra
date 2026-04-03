@@ -96,7 +96,11 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   }, add = TRUE)
   set.seed(seed)
   data <- x
-  if(stand) x <- scale(x)
+  if(stand) {
+    x <- scale(x)
+    if(anyNA(x))
+      stop("Scaling produced NA values. Check for constant columns or non-finite values.")
+  }
   # Define the type of clustering
   FUNcluster <- match.arg(FUNcluster)
   fun_clust <- switch(FUNcluster,
