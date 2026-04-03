@@ -32,6 +32,10 @@
   silhouette point in `fviz_nbclust()`, keep the silhouette optimum guide
   aligned with the displayed cluster count, and accept near-integer doubles
   for validated `fviz_eig()` integer arguments. (@erdeyl)
+* Final follow-up defect fixes now print HMFA group summaries without blank
+  placeholder rows, validate `k > n_obs` cleanly in `hcut()` and `hkmeans()`,
+  keep `get_pca_ind()` and `fviz_pca_biplot()` finite on degenerate PCA edge
+  cases, and repair the phylogenic dendrogram regression coverage. (@erdeyl)
 
 # factoextra 2.0.0
 

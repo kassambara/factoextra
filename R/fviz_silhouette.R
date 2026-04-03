@@ -98,7 +98,7 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   }
   else if(inherits(sil.obj, "silhouette"))
     df <- as.data.frame(sil.obj[, 1:3])
-  else stop("Don't support an oject of class ", paste(class(sil.obj), collapse = ", "))
+  else stop("Don't support an object of class ", paste(class(sil.obj), collapse = ", "))
   
   # order by cluster and by sil_width
   df <- df[order(df$cluster, -df$sil_width), ]

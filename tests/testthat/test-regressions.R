@@ -263,10 +263,48 @@ test_that("phylogenic dendrogram layout does not leak RNG state", {
   set.seed(4040)
   seed_before <- get(".Random.seed", envir = .GlobalEnv)
   hc <- hclust(dist(iris[, 1:4]))
-  p <- fviz_dend(hc, k = 3, phylogenic = TRUE, labels = FALSE)
+  p <- fviz_dend(hc, k = 3, type = "phylogenic", show_labels = FALSE)
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
   expect_identical(seed_after, seed_before)
   expect_s3_class(p, "ggplot")
+})
+
+test_that("hmfa group printing lists only available result components", {
+  skip_if_not_installed("FactoMineR")
+
+  data(wine, package = "FactoMineR")
+  hierar <- list(c(2, 5, 3, 10, 9, 2), c(4, 2))
+  res.hmfa <- FactoMineR::HMFA(wine, H = hierar, type = c("n", rep("s", 5)), graph = FALSE)
+  grp <- get_hmfa_var(res.hmfa, "group")
+
+  out <- capture.output(print(grp))
+  expect_true(any(grepl("\\$coord", out)))
+  expect_true(any(grepl("\\$canonical", out)))
+  expect_false(any(grepl('""\\s+""', out)))
+})
+
+test_that("get_pca_ind returns finite cos2 for zero-distance rows", {
+  x <- data.frame(a = c(-1, 0, 1), b = c(-2, 0, 2))
+  res <- stats::prcomp(x, center = TRUE, scale. = FALSE)
+
+  ind <- get_pca_ind(res)
+
+  expect_true(all(is.finite(ind$cos2)))
+  expect_equal(unname(ind$cos2[2, ]), c(0, 0))
+})
+
+test_that("fviz_pca_biplot auto scaling keeps plot coordinates finite", {
+  x <- data.frame(a = c(1, 1, 1), b = c(-1, 0, 1), c = c(-2, 0, 2))
+  res <- stats::prcomp(x, center = TRUE, scale. = FALSE)
+
+  p <- fviz_pca_biplot(res, axes = c(2, 3), biplot.type = "auto")
+  built <- ggplot2::ggplot_build(p)
+  coords <- lapply(
+    built$data,
+    function(layer) layer[, intersect(c("x", "y", "xend", "yend"), names(layer)), drop = FALSE]
+  )
+
+  expect_false(any(vapply(coords, function(layer) any(!is.finite(as.matrix(layer))), logical(1))))
 })
 
 test_that("legacy fviz_cluster arguments emit deprecation warnings", {

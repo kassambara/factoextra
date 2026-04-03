@@ -110,7 +110,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
                           barfill="steelblue", barcolor="steelblue", 
                           linecolor = "steelblue", print.summary = TRUE,  ...) 
   {
-  if(k.max < 2) stop("k.max must bet > = 2")
+  if(k.max < 2) stop("k.max must be >= 2")
   method = match.arg(method)
   if(!inherits(x, c("data.frame", "matrix")) && !("Best.nc" %in% names(x)))
     stop("x should be an object of class matrix/data.frame or ",

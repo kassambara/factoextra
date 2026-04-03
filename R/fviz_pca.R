@@ -285,10 +285,11 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   if(biplot.type == "auto") {
     # Default range-based rescaling for visualization
     # Fix for PR #129: correct parenthesis placement for ratio calculation
-    r <- min(
-      ((max(ind[,"x"])-min(ind[,"x"]))/(max(var[,"x"])-min(var[,"x"]))),
-      ((max(ind[,"y"])-min(ind[,"y"]))/(max(var[,"y"])-min(var[,"y"])))
-    )
+    ratio_x <- (max(ind[, "x"]) - min(ind[, "x"])) / (max(var[, "x"]) - min(var[, "x"]))
+    ratio_y <- (max(ind[, "y"]) - min(ind[, "y"])) / (max(var[, "y"]) - min(var[, "y"]))
+    valid_ratios <- c(ratio_x, ratio_y)
+    valid_ratios <- valid_ratios[is.finite(valid_ratios) & valid_ratios > 0]
+    r <- if(length(valid_ratios) > 0) min(valid_ratios) else 1
   }
   
   # When fill.ind = grouping variable & col.var = continuous variable,

@@ -532,7 +532,7 @@ NULL
   else if(element=="quanti.var")
     title <- paste0(varname, " of quantitive variables to Dim-", paste(axes, collapse="-"))
   else if(element=="quali.var")
-    title <- paste0(varname, " of qualitive variables to Dim-", paste(axes, collapse="-"))
+    title <- paste0(varname, " of qualitative variables to Dim-", paste(axes, collapse="-"))
   else if(element=="group")
     title <- paste0(varname, " of groups to Dim-", paste(axes, collapse="-"))
   else if(element=="partial.axes")
@@ -1183,7 +1183,7 @@ map_factominer_legacy_names <- function(X, names, element = c("quali.var", "qual
 }
 
 
-# Principal component methods with Fcatominer
+# Principal component methods with FactoMineR
 f_pca <- function(X, graph = FALSE){
   FactoMineR::PCA(X, graph = FALSE)
 }
