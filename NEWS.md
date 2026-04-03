@@ -27,6 +27,10 @@
 * Help pages, examples, and package metadata now document the helper-level
   clustering `k = 1` paths and the stricter validation added across the
   clustering, MCA, and eigenvalue helpers. (@erdeyl)
+* Follow-up review fixes now preserve observation names on hierarchical
+  auto-selected one-cluster `eclust()` results, omit the undefined `k = 1`
+  silhouette point in `fviz_nbclust()`, and accept near-integer doubles for
+  validated `fviz_eig()` integer arguments. (@erdeyl)
 
 # factoextra 2.0.0
 

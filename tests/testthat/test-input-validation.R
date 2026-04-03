@@ -163,3 +163,16 @@ test_that("fviz_eig validates ncp", {
     "ncp must be a single positive integer value in"
   )
 })
+
+test_that("fviz_eig accepts integerish doubles for validated arguments", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  expect_s3_class(fviz_eig(res.pca, ncp = 2 + 1e-15), "ggplot")
+  expect_s3_class(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      ncp = 2 + 1e-15, parallel.iter = 2 + 1e-15, parallel.seed = 1 + 1e-15
+    ),
+    "ggplot"
+  )
+})

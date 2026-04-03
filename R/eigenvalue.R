@@ -153,14 +153,20 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
                   parallel.lty = "dashed", parallel.iter = 100,
                   parallel.seed = NULL, ...)
 {
-  if(!is.numeric(ncp) || length(ncp) != 1L || is.na(ncp) ||
-     !is.finite(ncp) || ncp %% 1 != 0 ||
-     ncp < 1 || ncp > .Machine$integer.max)
-    stop(
-      "ncp must be a single positive integer value in [1, ",
-      .Machine$integer.max, "]."
-    )
-  ncp <- as.integer(ncp)
+  coerce_integerish <- function(value, arg, lower = 1L, upper = .Machine$integer.max,
+                                value_label = "single positive integer value"){
+    tol <- sqrt(.Machine$double.eps)
+    if(!is.numeric(value) || length(value) != 1L || is.na(value) || !is.finite(value))
+      stop(arg, " must be a ", value_label, " in [", lower, ", ", upper, "].")
+
+    rounded <- round(value)
+    if(abs(value - rounded) > tol || rounded < lower || rounded > upper)
+      stop(arg, " must be a ", value_label, " in [", lower, ", ", upper, "].")
+
+    as.integer(rounded)
+  }
+
+  ncp <- coerce_integerish(ncp, "ncp")
 
   eig <- get_eigenvalue(X)
   eig <-eig[seq_len(min(ncp, nrow(eig))), , drop=FALSE]
@@ -200,26 +206,15 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   if(addlabels) p <- p + geom_text(label = text_labels, vjust=-0.4, hjust = hjust)
 
   if(!is.null(parallel.seed)){
-    if(!is.numeric(parallel.seed) || length(parallel.seed) != 1L || is.na(parallel.seed) ||
-       !is.finite(parallel.seed) || parallel.seed %% 1 != 0 ||
-       parallel.seed < 0 || parallel.seed > .Machine$integer.max)
-      stop(
-        "parallel.seed must be NULL or a single integer value in [0, ",
-        .Machine$integer.max, "]."
-      )
-    parallel.seed <- as.integer(parallel.seed)
+    parallel.seed <- coerce_integerish(
+      parallel.seed, "parallel.seed", lower = 0L, upper = .Machine$integer.max,
+      value_label = "NULL or a single integer value"
+    )
   }
 
   # Add parallel analysis line (Horn's method) if requested
   if(parallel && choice == "eigenvalue") {
-    if(!is.numeric(parallel.iter) || length(parallel.iter) != 1L || is.na(parallel.iter) ||
-       !is.finite(parallel.iter) || parallel.iter %% 1 != 0 ||
-       parallel.iter < 1 || parallel.iter > .Machine$integer.max)
-      stop(
-        "parallel.iter must be a single positive integer value in [1, ",
-        .Machine$integer.max, "]."
-      )
-    parallel.iter <- as.integer(parallel.iter)
+    parallel.iter <- coerce_integerish(parallel.iter, "parallel.iter")
 
     compute_parallel_threshold <- function(n_obs, n_var, fit_fn){
       sim_eigs <- matrix(NA_real_, nrow = parallel.iter, ncol = n_var)

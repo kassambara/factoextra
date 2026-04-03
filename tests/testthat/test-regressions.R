@@ -130,6 +130,21 @@ test_that("fviz_nbclust silhouette handles k >= n without error", {
   expect_true(anyNA(p$data$y))
 })
 
+test_that("fviz_nbclust silhouette omits the undefined k = 1 point", {
+  x <- rbind(
+    matrix(rnorm(20, mean = 0, sd = 0.1), ncol = 2),
+    matrix(rnorm(20, mean = 5, sd = 0.1), ncol = 2)
+  )
+  toy_cluster <- function(x, k, ...) {
+    n <- nrow(as.matrix(x))
+    list(cluster = rep(seq_len(k), length.out = n))
+  }
+
+  p <- fviz_nbclust(x, FUNcluster = toy_cluster, method = "silhouette", k.max = 3)
+  expect_s3_class(p, "ggplot")
+  expect_identical(as.integer(as.character(p$data$clusters)), 2:3)
+})
+
 test_that(".is_color returns a logical vector type-stably", {
   res_empty <- factoextra:::.is_color(character(0))
   expect_type(res_empty, "logical")
@@ -174,6 +189,7 @@ test_that("eclust hierarchical auto-k handles a one-cluster gap selection", {
     expect_s3_class(res, "eclust")
     expect_identical(res$nbclust, 1L)
     expect_true(all(res$cluster == 1L))
+    expect_identical(names(res$cluster), rownames(x))
     expect_identical(res$size, nrow(x))
   }
 })

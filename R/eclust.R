@@ -199,6 +199,9 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
 
   hc <- .compute_hc_tree(diss, hc_func = hc_func, hc_method = hc_method)
   hc$cluster <- rep(1L, n_obs)
+  cluster_labels <- attr(diss, "Labels")
+  if(!is.null(cluster_labels) && length(cluster_labels) == n_obs)
+    names(hc$cluster) <- cluster_labels
   hc$nbclust <- 1L
   hc$size <- as.vector(table(hc$cluster))
   hc$data <- diss
