@@ -29,8 +29,9 @@
   clustering, MCA, and eigenvalue helpers. (@erdeyl)
 * Follow-up review fixes now preserve observation names on hierarchical
   auto-selected one-cluster `eclust()` results, omit the undefined `k = 1`
-  silhouette point in `fviz_nbclust()`, and accept near-integer doubles for
-  validated `fviz_eig()` integer arguments. (@erdeyl)
+  silhouette point in `fviz_nbclust()`, keep the silhouette optimum guide
+  aligned with the displayed cluster count, and accept near-integer doubles
+  for validated `fviz_eig()` integer arguments. (@erdeyl)
 
 # factoextra 2.0.0
 

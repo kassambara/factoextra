@@ -55,7 +55,7 @@ both types.}
 \item{linecolor}{color for line plot (when geom contains "line").}
 
 \item{ncp}{a single positive integer specifying the number of dimensions to
-be shown.}
+be shown. Integer-like numeric values are accepted.}
 
 \item{addlabels}{logical value. If TRUE, labels are added at the top of bars
 or points showing the information retained by each dimension.}
@@ -78,11 +78,12 @@ choice = "eigenvalue" and X is a prcomp or princomp object. Default is FALSE.}
 \item{parallel.lty}{line type for the parallel analysis line. Default is "dashed".}
 
 \item{parallel.iter}{a single positive integer giving the number of
-iterations for parallel analysis simulation. Default is 100.}
+iterations for parallel analysis simulation. Integer-like numeric values
+are accepted. Default is 100.}
 
 \item{parallel.seed}{NULL or a single non-negative integer seed for
 reproducible parallel analysis simulation. If NULL (default), the current
-RNG stream is used.}
+RNG stream is used. Integer-like numeric values are accepted.}
 
 \item{...}{optional arguments to be passed to the function \link[ggpubr]{ggpar}.}
 }
@@ -105,7 +106,8 @@ Eigenvalues correspond to the amount of the variation explained
  Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
  Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis
  (HMFA) functions. \code{fviz_eig()} validates \code{ncp},
- \code{parallel.iter}, and \code{parallel.seed} before plotting.
+ \code{parallel.iter}, and \code{parallel.seed} before plotting, accepting
+ integer-like numeric values while still rejecting fractional inputs.
 }
 \examples{
 # Principal Component Analysis

@@ -141,8 +141,9 @@ library("factoextra")
 The current development version includes:
 
 - helper-level `k = 1` handling for clustering diagnostics such as `fviz_nbclust(..., method = "wss")` and hierarchical `eclust()` auto-selection
+- silhouette diagnostics now omit the undefined `k = 1` point and keep the optimal-k guide aligned with the displayed cluster count
 - stricter validation for scaled clustering data and non-finite distance objects
-- clearer MCA `quanti.sup`, `axes`, `ncp`, and `parallel.iter` validation paths
+- clearer MCA `quanti.sup`, `axes`, `ncp`, and `parallel.iter` validation paths, including integer-like numeric support for `fviz_eig()`
 - refreshed examples and manuals for the updated clustering and validation workflows
 
 ```{r, eval = FALSE}

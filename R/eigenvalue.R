@@ -12,7 +12,8 @@
 #'  Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 #'  Multiple Factor Analysis (MFA) and Hierarchical Multiple Factor Analysis
 #'  (HMFA) functions. \code{fviz_eig()} validates \code{ncp},
-#'  \code{parallel.iter}, and \code{parallel.seed} before plotting.
+#'  \code{parallel.iter}, and \code{parallel.seed} before plotting, accepting
+#'  integer-like numeric values while still rejecting fractional inputs.
 #'  
 #'  
 #'@param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
@@ -27,7 +28,7 @@
 #'@param barcolor outline color for bar plot.
 #'@param linecolor color for line plot (when geom contains "line").
 #'@param ncp a single positive integer specifying the number of dimensions to
-#'  be shown.
+#'  be shown. Integer-like numeric values are accepted.
 #'@param addlabels logical value. If TRUE, labels are added at the top of bars
 #'  or points showing the information retained by each dimension.
 #'@param hjust horizontal adjustment of the labels.
@@ -39,10 +40,11 @@
 #'@param parallel.color color of the parallel analysis threshold line. Default is "red".
 #'@param parallel.lty line type for the parallel analysis line. Default is "dashed".
 #'@param parallel.iter a single positive integer giving the number of
-#'  iterations for parallel analysis simulation. Default is 100.
+#'  iterations for parallel analysis simulation. Integer-like numeric values
+#'  are accepted. Default is 100.
 #'@param parallel.seed NULL or a single non-negative integer seed for
 #'  reproducible parallel analysis simulation. If NULL (default), the current
-#'  RNG stream is used.
+#'  RNG stream is used. Integer-like numeric values are accepted.
 #' @inheritParams ggpubr::ggpar
 #'@param ... optional arguments to be passed to the function \link[ggpubr]{ggpar}.
 #'  
