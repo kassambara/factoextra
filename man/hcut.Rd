@@ -24,7 +24,7 @@ Must be at least 2 and smaller than the number of observations.}
 
 \item{isdiss}{logical value specifying whether \code{x} is already a
 dissimilarity matrix. If TRUE, \code{x} must inherit from class
-\code{"dist"}.}
+\code{"dist"} and contain only finite values.}
 
 \item{hc_func}{the hierarchical clustering function to be used. Default value is "hclust". Possible values 
 is one of "hclust", "agnes", "diana". Abbreviation is allowed.}
@@ -37,8 +37,10 @@ dissimilarities between observations. Allowed values are those accepted by the f
  "canberra", "binary", "minkowski"] and correlation based distance measures ["pearson", "spearman" or "kendall"].}
 
 \item{stand}{logical value; default is FALSE. If TRUE, then the data will be standardized using the function scale(). 
-Measurements are standardized for each variable (column), by subtracting the variable's mean value and 
-dividing by the variable's standard deviation.}
+Measurements are standardized for each variable (column), by subtracting the
+variable's mean value and dividing by the variable's standard deviation. If
+scaling produces \code{NA} values, \code{hcut()} stops with a package-level
+error.}
 
 \item{graph}{logical value. If TRUE, the dendrogram is displayed.}
 
@@ -52,14 +54,18 @@ It includes also:
 \itemize{
 \item cluster: the cluster assignement of observations after cutting the tree
 \item nbclust: the number of clusters
-\item silinfo: the silhouette information of observations (if k > 1)
+\item silinfo: the silhouette information of observations (available when
+  \code{k > 1})
 \item size: the size of clusters
 \item data: a matrix containing the original or  the standardized data (if stand = TRUE)
 }
 }
 \description{
-Computes hierarchical clustering (hclust, agnes, diana) and cut the tree into k clusters. It also accepts 
-correlation based distance measure methods such as "pearson", "spearman" and "kendall".
+Computes hierarchical clustering (hclust, agnes, diana) and cuts the tree
+into \code{k} clusters. It also accepts correlation-based distance measures
+such as "pearson", "spearman" and "kendall". Direct calls require
+\code{k >= 2}; helper-level one-cluster handling is implemented in callers
+such as \code{eclust()} and \code{fviz_nbclust()}.
 }
 \examples{
 \donttest{

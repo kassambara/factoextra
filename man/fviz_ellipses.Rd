@@ -23,7 +23,8 @@ fviz_ellipses(
 \item{habillage}{a numeric vector of indexes of variables or a
 character vector of names of variables. Can be also a data frame containing grouping variables.}
 
-\item{axes}{a numeric vector specifying the axes of interest. Default values 
+\item{axes}{a numeric vector specifying the axes of interest. Values must be
+positive integer indices within the available dimensions. Default values
 are 1:2 for axes 1 and 2.}
 
 \item{addEllipses}{logical value. If TRUE, draws ellipses around the 

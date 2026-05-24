@@ -45,7 +45,8 @@ object is a class of kmeans or dbscan.}
 for plotting.}
 
 \item{stand}{logical value; if TRUE, data is standardized before principal
-component analysis}
+component analysis. If scaling produces \code{NA} values,
+\code{fviz_cluster()} stops with a package-level error.}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be
 plotted.}
@@ -98,7 +99,7 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 \code{\link[ggpubr]{ggscatter}} and \code{\link[ggpubr]{ggpar}}.}
 }
 \value{
-return a ggpplot.
+a ggplot2 object.
 }
 \description{
 Provides ggplot2-based elegant visualization of partitioning
@@ -106,7 +107,8 @@ Provides ggplot2-based elegant visualization of partitioning
  package]; dbscan [fpc package]; Mclust [mclust package]; HCPC [FactoMineR];
  hkmeans [factoextra]. Observations are represented by points in the plot,
  using principal components if ncol(data) > 2. An ellipse is drawn around
- each cluster.
+ each cluster. When \code{stand = TRUE}, the plotting data must remain
+ finite after scaling.
 }
 \examples{
 set.seed(123)

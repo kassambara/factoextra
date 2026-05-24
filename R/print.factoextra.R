@@ -136,10 +136,12 @@ print.factoextra<-function(x, ...){
   else if(inherits(x, "hmfa_group")){
     cat("Hierarchical Multiple Factor Analysis Results for groups\n",
         "===================================================\n")
-    res <- array(data="", dim=c(4,2), dimnames=list(1:4, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for groups")
-    res[4, ] <- c("$canonical", "canonical correlation coefficient")
-    print(res[1:4,], ...)
+    nms <- names(x)
+    nrows <- length(nms)
+    res <- array(data = "", dim = c(nrows, 2), dimnames = list(seq_len(nrows), c("Name", "Description")))
+    res[, 1] <- paste0("$", nms)
+    res[, 2] <- .factoextra_descriptions(nms)
+    print(res[seq_len(nrows),], ...)
   }
   
 }

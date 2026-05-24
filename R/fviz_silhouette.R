@@ -8,7 +8,8 @@
 #'  \code{\link[cluster]{silhouette}}(), \code{\link[cluster]{pam}}(),
 #'  \code{\link[cluster]{clara}}() and \code{\link[cluster]{fanny}}() [in
 #'  cluster package]; ii) \code{\link{eclust}}() and \code{\link{hcut}}() [in
-#'  factoextra].
+#'  factoextra]. Results without silhouette information, such as one-cluster
+#'  \code{eclust}/\code{hcut} objects, are rejected with a package-level error.
 #'  
 #'  Read more: 
 #'  \href{https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/}{Clustering
@@ -20,15 +21,20 @@
 #'  clusters.
 #'  
 #'  - Observations with a negative Si are probably placed in the wrong cluster.
+#'
+#'  - Silhouette plots require at least two clusters and available silhouette
+#'  widths.
 #'  
-#'@param sil.obj an object of class silhouette: pam, clara, fanny [in cluster 
-#'  package]; eclust and hcut [in factoextra].
+#'@param sil.obj an object of class silhouette: pam, clara, fanny [in cluster
+#'  package]; eclust and hcut [in factoextra]. For \code{eclust} and
+#'  \code{hcut}, silhouette information must be available, which requires at
+#'  least two clusters.
 #'@param label logical value. If true, x axis tick labels are shown
 #'@param print.summary logical value. If true a summary of cluster silhouettes 
 #'  are printed in fviz_silhouette().
 #' @param ... other arguments to be passed to the function ggpubr::ggpar().
 #'  
-#'@return return a ggplot
+#'@return a ggplot2 object.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_cluster}}, \code{\link{hcut}}, 
 #'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
@@ -50,7 +56,7 @@
 #' fviz_cluster(km.res, iris[, -5], ellipse.type = "norm")+
 #' theme_minimal()
 #' 
-#' # Visualize silhouhette information
+#' # Visualize silhouette information
 #' requireNamespace("cluster", quietly = TRUE)
 #' sil <- cluster::silhouette(km.res$cluster, dist(iris.scaled))
 #' fviz_silhouette(sil)
@@ -66,7 +72,7 @@
 #' # Visualize pam clustering
 #' fviz_cluster(pam.res, ellipse.type = "norm")+
 #' theme_minimal()
-#' # Visualize silhouhette information
+#' # Visualize silhouette information
 #' fviz_silhouette(pam.res)
 #' 
 #' # Hierarchical clustering
@@ -75,18 +81,24 @@
 #' hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 #' # Visualize dendrogram
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
-#' # Visualize silhouhette information
-#' fviz_silhouette(hc.cut)
+#' # Visualize silhouette information
+#' if (hc.cut$nbclust > 1) fviz_silhouette(hc.cut)
 #' }
 #'@export
 fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   
   if(inherits(sil.obj, c("eclust", "hcut", "pam", "clara", "fanny"))){
+    if(is.null(sil.obj$silinfo) || is.null(sil.obj$silinfo$widths)) {
+      stop(
+        "Silhouette information is unavailable for this clustering result. ",
+        "Silhouette plots require at least 2 clusters."
+      )
+    }
     df <- as.data.frame(sil.obj$silinfo$widths)
   }
   else if(inherits(sil.obj, "silhouette"))
     df <- as.data.frame(sil.obj[, 1:3])
-  else stop("Don't support an oject of class ", paste(class(sil.obj), collapse = ", "))
+  else stop("Don't support an object of class ", paste(class(sil.obj), collapse = ", "))
   
   # order by cluster and by sil_width
   df <- df[order(df$cluster, -df$sil_width), ]
@@ -121,4 +133,3 @@ fviz_silhouette <- function(sil.obj, label = FALSE, print.summary = TRUE, ...){
   
   p
 }
-

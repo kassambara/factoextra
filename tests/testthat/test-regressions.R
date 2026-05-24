@@ -80,6 +80,34 @@ test_that("fviz_nbclust wss path returns ggplot and forwards FUNcluster args", {
   expect_false(anyNA(p$data$y))
 })
 
+test_that("fviz_nbclust wss handles clustering helpers that reject k = 1", {
+  x <- scale(iris[, 1:4])
+
+  p_hcut <- fviz_nbclust(
+    x, FUNcluster = hcut, method = "wss", k.max = 4,
+    hc_method = "complete"
+  )
+  expect_s3_class(p_hcut, "ggplot")
+  expect_equal(nrow(p_hcut$data), 4)
+  expect_false(anyNA(p_hcut$data$y))
+
+  p_hkmeans <- fviz_nbclust(x, FUNcluster = hkmeans, method = "wss", k.max = 4)
+  expect_s3_class(p_hkmeans, "ggplot")
+  expect_equal(nrow(p_hkmeans$data), 4)
+  expect_false(anyNA(p_hkmeans$data$y))
+})
+
+test_that("fviz_nbclust gap_stat continues to support hcut", {
+  set.seed(123)
+  x <- scale(iris[, 1:4])
+  p <- fviz_nbclust(
+    x, FUNcluster = hcut, method = "gap_stat",
+    k.max = 3, nboot = 2, verbose = FALSE,
+    hc_method = "complete"
+  )
+  expect_s3_class(p, "ggplot")
+})
+
 test_that("fviz_nbclust handles matrix Best.nc and preserves numeric cluster order", {
   best_nc <- rbind(
     Number_clusters = c(2, 10, 3, 10),
@@ -100,6 +128,25 @@ test_that("fviz_nbclust silhouette handles k >= n without error", {
   p <- fviz_nbclust(x, FUNcluster = toy_cluster, method = "silhouette", k.max = 5)
   expect_s3_class(p, "ggplot")
   expect_true(anyNA(p$data$y))
+})
+
+test_that("fviz_nbclust silhouette omits the undefined k = 1 point", {
+  x <- rbind(
+    matrix(rnorm(20, mean = 0, sd = 0.1), ncol = 2),
+    matrix(rnorm(20, mean = 5, sd = 0.1), ncol = 2)
+  )
+  toy_cluster <- function(x, k, ...) {
+    n <- nrow(as.matrix(x))
+    list(cluster = rep(seq_len(k), length.out = n))
+  }
+
+  p <- fviz_nbclust(x, FUNcluster = toy_cluster, method = "silhouette", k.max = 3)
+  expect_s3_class(p, "ggplot")
+  expect_identical(as.integer(as.character(p$data$clusters)), 2:3)
+
+  built <- ggplot2::ggplot_build(p)
+  vline_data <- built$data[[length(built$data)]]
+  expect_equal(as.numeric(vline_data$xintercept), 1)
 })
 
 test_that(".is_color returns a logical vector type-stably", {
@@ -125,6 +172,51 @@ test_that("eclust restores RNG state after execution", {
   eclust(scale(USArrests), FUNcluster = "kmeans", k = 2, graph = FALSE)
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
   expect_identical(seed_after, seed_before)
+})
+
+test_that("eclust hierarchical auto-k handles a one-cluster gap selection", {
+  x <- scale(iris[, 1:4])
+  fake_gap <- structure(
+    list(Tab = cbind(gap = c(0.5, 0.4, 0.3), SE.sim = c(0.05, 0.05, 0.05))),
+    class = "clusGap"
+  )
+  testthat::local_mocked_bindings(
+    .gap_stat = function(...) list(stat = fake_gap, k = 1L),
+    .env = environment(eclust)
+  )
+
+  for(fun in c("hclust", "agnes", "diana")) {
+    res <- eclust(
+      x, FUNcluster = fun, k = NULL, k.max = 3, nboot = 2,
+      verbose = FALSE, graph = FALSE, hc_method = "complete", seed = 1
+    )
+    expect_s3_class(res, "eclust")
+    expect_identical(res$nbclust, 1L)
+    expect_true(all(res$cluster == 1L))
+    expect_identical(names(res$cluster), rownames(x))
+    expect_identical(res$size, nrow(x))
+  }
+})
+
+test_that("fviz_silhouette errors cleanly for one-cluster hierarchical results", {
+  x <- scale(iris[, 1:4])
+  fake_gap <- structure(
+    list(Tab = cbind(gap = c(0.5, 0.4, 0.3), SE.sim = c(0.05, 0.05, 0.05))),
+    class = "clusGap"
+  )
+  testthat::local_mocked_bindings(
+    .gap_stat = function(...) list(stat = fake_gap, k = 1L),
+    .env = environment(eclust)
+  )
+
+  res <- eclust(
+    x, FUNcluster = "hclust", k = NULL, k.max = 3, nboot = 2,
+    verbose = FALSE, graph = FALSE, hc_method = "complete", seed = 1
+  )
+  expect_error(
+    fviz_silhouette(res),
+    "Silhouette information is unavailable"
+  )
 })
 
 test_that("internal jitter and multishape helpers preserve RNG state", {
@@ -171,10 +263,115 @@ test_that("phylogenic dendrogram layout does not leak RNG state", {
   set.seed(4040)
   seed_before <- get(".Random.seed", envir = .GlobalEnv)
   hc <- hclust(dist(iris[, 1:4]))
-  p <- fviz_dend(hc, k = 3, phylogenic = TRUE, labels = FALSE)
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", show_labels = FALSE)
+  )
   seed_after <- get(".Random.seed", envir = .GlobalEnv)
   expect_identical(seed_after, seed_before)
   expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram accepts layout_nicely compatibility alias", {
+  skip_if_not_installed("igraph")
+  set.seed(5050)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout_nicely", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram keeps legacy layout.gem warning-free", {
+  skip_if_not_installed("igraph")
+  set.seed(6060)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout.gem", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram accepts layout_with_gem alias", {
+  skip_if_not_installed("igraph")
+  set.seed(7070)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout_with_gem", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram keeps legacy layout.mds warning-free", {
+  skip_if_not_installed("igraph")
+  set.seed(8080)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout.mds", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("phylogenic dendrogram accepts layout_with_mds alias", {
+  skip_if_not_installed("igraph")
+  set.seed(9090)
+  seed_before <- get(".Random.seed", envir = .GlobalEnv)
+  hc <- hclust(dist(iris[, 1:4]))
+  p <- expect_no_warning(
+    fviz_dend(hc, k = 3, type = "phylogenic", phylo_layout = "layout_with_mds", show_labels = FALSE)
+  )
+  seed_after <- get(".Random.seed", envir = .GlobalEnv)
+  expect_identical(seed_after, seed_before)
+  expect_s3_class(p, "ggplot")
+})
+
+test_that("hmfa group printing lists only available result components", {
+  skip_if_not_installed("FactoMineR")
+
+  data(wine, package = "FactoMineR")
+  hierar <- list(c(2, 5, 3, 10, 9, 2), c(4, 2))
+  res.hmfa <- FactoMineR::HMFA(wine, H = hierar, type = c("n", rep("s", 5)), graph = FALSE)
+  grp <- get_hmfa_var(res.hmfa, "group")
+
+  out <- capture.output(print(grp))
+  expect_true(any(grepl("\\$coord", out)))
+  expect_true(any(grepl("\\$canonical", out)))
+  expect_false(any(grepl('""\\s+""', out)))
+})
+
+test_that("get_pca_ind returns finite cos2 for zero-distance rows", {
+  x <- data.frame(a = c(-1, 0, 1), b = c(-2, 0, 2))
+  res <- stats::prcomp(x, center = TRUE, scale. = FALSE)
+
+  ind <- get_pca_ind(res)
+
+  expect_true(all(is.finite(ind$cos2)))
+  expect_equal(unname(ind$cos2[2, ]), c(0, 0))
+})
+
+test_that("fviz_pca_biplot auto scaling keeps plot coordinates finite", {
+  x <- data.frame(a = c(1, 1, 1), b = c(-1, 0, 1), c = c(-2, 0, 2))
+  res <- stats::prcomp(x, center = TRUE, scale. = FALSE)
+
+  p <- fviz_pca_biplot(res, axes = c(2, 3), biplot.type = "auto")
+  built <- ggplot2::ggplot_build(p)
+  coords <- lapply(
+    built$data,
+    function(layer) layer[, intersect(c("x", "y", "xend", "yend"), names(layer)), drop = FALSE]
+  )
+
+  expect_false(any(vapply(coords, function(layer) any(!is.finite(as.matrix(layer))), logical(1))))
 })
 
 test_that("legacy fviz_cluster arguments emit deprecation warnings", {
@@ -234,5 +431,31 @@ test_that("fviz_eig validates parallel.seed range and integer-ness", {
       parallel.iter = 2, parallel.seed = 1.5
     ),
     "single integer value in"
+  )
+})
+
+test_that("fviz_eig validates parallel.iter for parallel analysis", {
+  res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
+
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = NA, parallel.seed = 1
+    ),
+    "parallel.iter must be a single positive integer value in"
+  )
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = -1, parallel.seed = 1
+    ),
+    "parallel.iter must be a single positive integer value in"
+  )
+  expect_error(
+    fviz_eig(
+      res.pca, choice = "eigenvalue", parallel = TRUE,
+      parallel.iter = 1.5, parallel.seed = 1
+    ),
+    "parallel.iter must be a single positive integer value in"
   )
 })

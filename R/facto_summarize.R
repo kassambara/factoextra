@@ -2,22 +2,26 @@
 NULL
 #' Subset and summarize the output of factor analyses
 #' 
-#' @description Subset and summarize the results of Principal Component Analysis
-#'   (PCA), Correspondence Analysis (CA), Multiple Correspondence Analysis
-#'   (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor Analysis
-#'   (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions from several packages.
+#' @description Subset and summarize the results of Principal Component
+#'   Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
+#'   Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
+#'   Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions
+#'   from several packages. Axis indices are validated before extraction, and
+#'   MCA quantitative supplementary summaries inherit the package-level error
+#'   raised when that result is unavailable.
 #' @param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp
 #'   and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput [ExPosition].
-#' @param element the element to subset from the output. Possible values are 
-#'   "row" or "col" for CA; "var" or "ind" for PCA and MCA; "mca.cor" for MCA; 
-#'   'quanti.var', 'quali.var', 'quali.sup', 'group' or 'ind' for FAMD, MFA
-#'   and HMFA.
+#' @param element the element to subset from the output. Possible values are
+#'   "row" or "col" for CA; "var", "ind", "mca.cor" or "quanti.sup" for MCA;
+#'   "var" or "ind" for PCA; and 'quanti.var', 'quali.var', 'quali.sup',
+#'   'group' or 'ind' for FAMD, MFA and HMFA.
 #' @param result the result to be extracted for the element. Possible values are
 #'   the combination of c("cos2", "contrib", "coord")
 #' @param group.names a vector containing the name of the groups (by default, 
 #'   NULL and the group are named group.1, group.2 and so on).
 #' @param node.level a single number indicating the HMFA node level.
-#' @param axes a numeric vector specifying the axes of interest. Default values 
+#' @param axes a numeric vector specifying the axes of interest. Values must be
+#'   positive integer indices within the available dimensions. Default values
 #'   are 1:2 for axes 1 and 2.
 #' @param select a selection of variables. Allowed values are NULL or a list 
 #'   containing the arguments name, cos2 or contrib. Default is list(name = 
@@ -81,6 +85,9 @@ NULL
 #' # Summarize individuals on axes 1:2
 #' res <- facto_summarize(res.mca, "ind", axes = 1:2)
 #' head(res)
+#' # Summarize quantitative supplementary variables on axes 1:2
+#' res <- facto_summarize(res.mca, "quanti.sup", axes = 1:2)
+#' head(res)
 #' 
 #' # Multiple factor Analysis
 #' # +++++++++++++++++++++++++++++++++
@@ -132,10 +139,7 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     ndim <- ncol(elmt[[1]])
   else
     ndim <- ncol(elmt$coord)
-  if(max(axes) > ndim)
-    stop("The value of the argument axes is incorrect. ",
-         "The number of axes in the data is: ", ncol(elmt$coord), 
-         ". Please try again with axes between 1 - ", ncol(elmt$coord))
+  axes <- .validate_axis_indices(axes, ndim = ndim)
   
   # Summarize the result
   res = NULL

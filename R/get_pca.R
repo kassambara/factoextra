@@ -179,7 +179,11 @@ get_pca_var<-function(res.pca){
 
   # cos2[i,j] = coord[i,j]^2 / d2[i]
   ind.coord.sq <- ind.coord^2
-  ind.cos2 <- ind.coord.sq / d2  # Recycling divides each column by d2
+  ind.cos2 <- matrix(0, nrow = n.ind, ncol = n.dim)
+  positive_d2 <- d2 > .Machine$double.eps
+  if(any(positive_d2)) {
+    ind.cos2[positive_d2, ] <- ind.coord.sq[positive_d2, , drop = FALSE] / d2[positive_d2]
+  }
 
   # OPTIMIZED: Compute contributions using vectorized operations
   # contrib[i,j] = 100 * (1/n) * (coord[i,j]^2 / eigenvalue[j])

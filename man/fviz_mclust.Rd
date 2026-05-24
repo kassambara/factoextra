@@ -98,7 +98,7 @@ library("mclust")
 data("diabetes")
 mc <- Mclust(diabetes[, -1])
 
-# Visaulize BIC values
+# Visualize BIC values
 fviz_mclust_bic(mc)
 
 # Visualize classification
