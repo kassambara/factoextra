@@ -17,6 +17,11 @@
 * `get_pca_ind()` returns `cos2 = 0` (not `NaN`) for rows at the PCA centroid;
   `fviz_pca_biplot(biplot.type = "auto")` falls back to a safe scaling ratio
   when variable coordinates are degenerate. (#209, @erdeyl)
+* `get_pca_var()` strips the base R `"loadings"` S3 class from results for
+  `princomp()` objects, so `coord`, `cor`, `cos2`, and `contrib` are returned as
+  plain numeric matrices. Previously they inherited the `"loadings"` class, whose
+  `print()` method hid values with `|x| < 0.1` and broke downstream manipulation.
+  (#212)
 
 ## Input Validation
 

@@ -116,7 +116,10 @@ get_pca_var<-function(res.pca){
     # OPTIMIZED: Correlation of variables with the principal component
     # Using sweep() instead of t(apply()) - much faster for element-wise operations
     # var.cor[i,j] = loadings[i,j] * sdev[j]
-    var.cor <- sweep(as.matrix(res.pca$loadings), 2, res.pca$sdev, "*")
+    # unclass() strips the base R "loadings" S3 class so coord/cos2/contrib are
+    # returned as plain numeric matrices. Otherwise print.loadings() hides values
+    # with |x| < 0.1 (its cutoff) and the result breaks downstream manipulation.
+    var.cor <- sweep(unclass(res.pca$loadings), 2, res.pca$sdev, "*")
     var <- .get_pca_var_results(var.cor)
   }
   else if(inherits(res.pca, 'prcomp')){
