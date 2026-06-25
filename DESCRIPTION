@@ -52,6 +52,10 @@ URL: https://github.com/kassambara/factoextra,
     https://rpkgs.datanovia.com/factoextra/index.html
 BugReports: https://github.com/kassambara/factoextra/issues
 Collate:
+    'fviz_add.R'
+    'eigenvalue.R'
+    'utilities.R'
+    'as_factoextra.R'
     'cluster_utilities.R'
     'decathlon2.R'
     'print.factoextra.R'
@@ -60,9 +64,6 @@ Collate:
     'get_mfa.R'
     'fviz_mfa.R'
     'deprecated.R'
-    'fviz_add.R'
-    'eigenvalue.R'
-    'utilities.R'
     'dist.R'
     'fviz_dend.R'
     'hcut.R'

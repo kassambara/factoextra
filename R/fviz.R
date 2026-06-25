@@ -423,8 +423,9 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 .get_scale_unit <-function(X){
   scale_unit <- FALSE
   if(inherits(X, 'PCA')) scale_unit <- X$call$scale.unit
-  else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale) 
-  else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1 
+  else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale)
+  else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1
+  else if(inherits(X, "factoextra_pca")) scale_unit <- isTRUE(X$scale.unit)
   else if(inherits(X, "expoOutput")) scale_unit <- !all(X$ExPosition.Data$scale==1) 
   else if(inherits(X, "pca") && inherits(X, "dudi")) scale_unit <- length(unique(X$norm)) > 1
   # ade4 between-/within-class PCA: $co holds projections (not variable

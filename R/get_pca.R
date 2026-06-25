@@ -61,7 +61,10 @@ get_pca_ind<-function(res.pca, ...){
   
   # FactoMineR package
   if(inherits(res.pca, c('PCA'))) ind <- res.pca$ind
-  
+
+  # user-supplied coordinates wrapped by as_factoextra_pca()
+  else if(inherits(res.pca, "factoextra_pca")) ind <- res.pca$ind
+
   # ade4 package
   else if(inherits(res.pca, "pca") && inherits(res.pca, "dudi")){
     ind.coord <- res.pca$li
@@ -114,6 +117,14 @@ get_pca_ind<-function(res.pca, ...){
 get_pca_var<-function(res.pca){
   # FactoMineR package
   if(inherits(res.pca, c('PCA'))) var <- res.pca$var
+  # user-supplied coordinates wrapped by as_factoextra_pca()
+  else if(inherits(res.pca, "factoextra_pca")){
+    if(is.null(res.pca$var))
+      stop("This object has no variable coordinates; supply `var.coord` to ",
+           "as_factoextra_pca() to use fviz_pca_var()/fviz_pca_biplot().",
+           call. = FALSE)
+    var <- res.pca$var
+  }
   # ade4 package (incl. between-class/within-class PCA: bca/wca). Variable/column
   # coordinates live in $co for all dudi flavours.
   else if(inherits(res.pca, "dudi") &&

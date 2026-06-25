@@ -93,6 +93,9 @@ NULL
   
   if(inherits(X, c('PCA', 'princomp', 'prcomp')))
     facto_class ="PCA"
+  # User-supplied coordinates wrapped by as_factoextra_pca().
+  else if(inherits(X, "factoextra_pca"))
+    facto_class ="PCA"
   else if(inherits(X, "pca") && inherits(X, "dudi"))
     facto_class ="PCA"
   # ade4 between-class / within-class PCA (bca/wca): treated as a PCA. These
