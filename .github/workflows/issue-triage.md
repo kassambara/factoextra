@@ -1,16 +1,18 @@
 ---
 description: |
-  Scheduled daily triage that labels untriaged factoextra issues into one of
+  Scheduled weekly triage that labels untriaged factoextra issues into one of
   five maintenance buckets. Label-only pilot: it never closes, comments, or
   sets issue type. Mirrors the manual triage buckets in
   .claude/skills/issue-fixing/ISSUE_TRIAGE.md.
 
-name: Daily Issue Triage (label-only)
+name: Weekly Issue Triage (label-only)
 
-engine: claude
+engine:
+  id: claude
+  model: claude-haiku-4-5-20251001
 
 on:
-  schedule: daily
+  schedule: weekly
   workflow_dispatch:
 
 permissions: read-all
