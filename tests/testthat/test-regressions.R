@@ -673,6 +673,9 @@ test_that("alpha.var/alpha.ind fade text labels too; default unchanged (#130)", 
 
 test_that("fviz_mclust_bic optimal-cluster line uses factor position (#116)", {
   skip_if_not_installed("mclust")
+  # mclust::Mclust() calls mclustBIC() by name, which requires mclust to be
+  # ATTACHED (not just namespaced); attach it for this test only.
+  withr::local_package("mclust")
   vline_x <- function(p) {
     L <- Filter(function(l) inherits(l$geom, "GeomVline"), p$layers)
     if (!length(L)) return(NA_real_)
@@ -682,7 +685,7 @@ test_that("fviz_mclust_bic optimal-cluster line uses factor position (#116)", {
   # restricted G range: cluster levels start at 3, so the line must sit at the
   # *position* of the optimal G, landing on the correctly-labelled tick.
   set.seed(1)
-  m_restr <- mclust::Mclust(iris[, -5], G = 3:9, verbose = FALSE)
+  m_restr <- Mclust(iris[, -5], G = 3:9, verbose = FALSE)
   p_restr <- fviz_mclust_bic(m_restr)
   lv <- levels(p_restr$data$cluster)
   expect_equal(vline_x(p_restr), match(as.character(m_restr$G), lv))
@@ -690,6 +693,6 @@ test_that("fviz_mclust_bic optimal-cluster line uses factor position (#116)", {
 
   # NO-REGRESSION: standard G = 1:9 -> levels start at 1, position == G
   set.seed(1)
-  m_std <- mclust::Mclust(iris[, -5], verbose = FALSE)
+  m_std <- Mclust(iris[, -5], verbose = FALSE)
   expect_equal(vline_x(fviz_mclust_bic(m_std)), m_std$G)
 })
