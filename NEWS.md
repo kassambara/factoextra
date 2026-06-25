@@ -22,6 +22,11 @@
   plain numeric matrices. Previously they inherited the `"loadings"` class, whose
   `print()` method hid values with `|x| < 0.1` and broke downstream manipulation.
   (#212)
+* FAMD/MFA plots (`fviz_contrib()`, `fviz_famd_ind()`, `fviz_famd_var()`) no
+  longer error with `duplicate 'row.names' are not allowed` when qualitative
+  variables share factor-level names (e.g. several variables with `Low`/`High`).
+  Colliding categories are relabelled `variable_level` (e.g. `Acidity_Low`);
+  non-colliding labels are unchanged. (#184, #140)
 
 ## Input Validation
 

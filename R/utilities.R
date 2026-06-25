@@ -1108,6 +1108,42 @@ factominer_category_map <- function(X, element = c("quali.var", "quali.sup", "va
   map
 }
 
+# Disambiguate duplicated category names (e.g. FAMD/MFA qualitative variables
+# that share factor-level names such as "Low"/"High"). FactoMineR returns the
+# raw level names as row names, which are not necessarily unique across
+# variables; setting them as data.frame row names then errors with
+# "duplicate 'row.names' are not allowed" (see issues #184, #140).
+#
+# When duplicates exist, colliding categories are relabelled as
+# "variable_level" (only the levels actually involved in a collision are
+# prefixed; unique levels keep their plain label). If the original data or the
+# variable mapping is unavailable, falls back to make.unique() so the call
+# never crashes. When there are no duplicates this is a no-op and the names are
+# returned unchanged.
+.disambiguate_category_names <- function(X, name, element, facto_class){
+  if(length(name) == 0 || !any(duplicated(name))) return(name)
+  if(!is.null(facto_class) && facto_class %in% c("FAMD", "MFA", "MCA", "HMFA") &&
+     element %in% c("quali.var", "quali.sup")){
+    data <- tryCatch(as.data.frame(X$call$X), error = function(e) NULL)
+    if(!is.null(data)){
+      is.quali <- which(!vapply(data, is.numeric, logical(1)))
+      if(length(is.quali) > 0){
+        data.quali <- droplevels(as.data.frame(lapply(data[, is.quali, drop = FALSE], as.factor)))
+        level.pos <- unlist(lapply(data.quali, levels), use.names = FALSE)
+        var.pos   <- rep(names(data.quali), vapply(data.quali, nlevels, integer(1)))
+        # Only trust the positional variable mapping when it lines up exactly
+        # with the supplied names (same length and order).
+        if(length(level.pos) == length(name) && all(level.pos == name)){
+          dup.level <- level.pos %in% level.pos[duplicated(level.pos)]
+          new <- ifelse(dup.level, paste(var.pos, level.pos, sep = "_"), level.pos)
+          if(!any(duplicated(new))) return(new)
+        }
+      }
+    }
+  }
+  make.unique(name)
+}
+
 #' Map legacy FactoMineR category names to current labels
 #'
 #' @param X a FactoMineR object (MCA, MFA, FAMD, HMFA).
