@@ -27,6 +27,10 @@
   variables share factor-level names (e.g. several variables with `Low`/`High`).
   Colliding categories are relabelled `variable_level` (e.g. `Acidity_Low`);
   non-colliding labels are unchanged. (#184, #140)
+* `fviz_dend(rect = TRUE)`: the default `lower_rect` (rectangle depth) now scales
+  with tree height for short trees (max height < 1, e.g. correlation/gower distances),
+  where the previous fixed -0.5 offset pushed rectangles far below the labels. Taller
+  trees keep the previous default. (#55)
 * `fviz_dend(rect = TRUE)` no longer errors ("Aesthetics must be either length 1
   or the same as the data") for dendrograms with tied merge heights; the cluster
   rectangles now always match `k`, and `rect_border`/`rect_fill` colour vectors are

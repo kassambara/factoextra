@@ -588,3 +588,21 @@ test_that("fviz_dend rectangles match k even with tied heights (#154, #168)", {
   hc2 <- hclust(dist(scale(USArrests)), method = "ward.D2")
   for (k in 2:5) expect_equal(nrects(fviz_dend(hc2, k = k, rect = TRUE)), k)
 })
+
+test_that("fviz_dend lower_rect scales for short trees; tall trees unchanged (#55)", {
+  rect_ymin <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomRect"), logical(1)))[1]
+    min(ggplot2::ggplot_build(p)$data[[i]]$ymin)
+  }
+
+  # short tree (max height < 1): default lower_rect is now height-relative
+  set.seed(7)
+  m <- matrix(rnorm(18 * 3, sd = 0.04), ncol = 3); rownames(m) <- paste0("s", 1:18)
+  hc <- hclust(dist(m), "ward.D2"); mh <- max(hc$height)
+  expect_lt(mh, 1)
+  expect_equal(rect_ymin(fviz_dend(hc, k = 3, rect = TRUE)), -mh / 4)
+
+  # tall tree (max height >= 1): previous default preserved (no regression)
+  hc2 <- hclust(dist(scale(USArrests)), "ward.D2"); mh2 <- max(hc2$height)
+  expect_equal(rect_ymin(fviz_dend(hc2, k = 4, rect = TRUE)), -(mh2 / 8 + 0.5))
+})
