@@ -12,6 +12,7 @@ fviz_dend(
   palette = NULL,
   show_labels = TRUE,
   color_labels_by_k = TRUE,
+  match_coord_colors = FALSE,
   label_cols = NULL,
   labels_track_height = NULL,
   repel = FALSE,
@@ -51,8 +52,13 @@ scientific journal palettes from ggsci R package, e.g.: "npg", "aaas",
 \item{show_labels}{a logical value. If TRUE, leaf labels are shown. Default 
 value is TRUE.}
 
-\item{color_labels_by_k}{logical value. If TRUE, labels are colored 
+\item{color_labels_by_k}{logical value. If TRUE, labels are colored
 automatically by group when k != NULL.}
+
+\item{match_coord_colors}{logical value. Default is FALSE, where dendrogram
+colors follow the left-to-right leaf order. If TRUE, cluster colors are
+remapped to cluster-label order so they match \code{\link{fviz_cluster}()}
+and \code{\link{fviz_silhouette}()} for the same clustering.}
 
 \item{label_cols}{a vector containing the colors for labels.}
 
