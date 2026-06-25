@@ -47,6 +47,12 @@
 
 ## New Features
 
+* `eclust()` now accepts a precomputed dissimilarity matrix (an object of class
+  `"dist"`) as `x` for hierarchical clustering (`"hclust"`, `"agnes"`,
+  `"diana"`), so custom distances such as Bray-Curtis
+  (e.g. `vegan::vegdist(df, "bray")`) can be used. In that case `hc_metric` is
+  ignored and `k` must be supplied. Previously a `"dist"` input was silently
+  recomputed as a Euclidean distance. (#182)
 * `get_famd()`, `get_mfa()`, `facto_summarize()`, `fviz_famd_*()`, and
   `fviz_mfa_*()` now support supplementary qualitative variable categories
   via `quali.sup`, including overlay, print, and category-name compatibility

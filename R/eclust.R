@@ -8,7 +8,12 @@ NULL
 #'   \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
 #'   without silhouette information. Read more:
 #'  \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
-#' @param x numeric vector, data matrix or data frame
+#' @param x numeric vector, data matrix or data frame. For hierarchical
+#'   clustering (\code{FUNcluster} = "hclust", "agnes" or "diana"), a
+#'   precomputed dissimilarity matrix (an object of class \code{"dist"}) may be
+#'   supplied directly; in that case \code{hc_metric} is ignored and \code{k}
+#'   must be specified. This allows custom distances such as Bray-Curtis
+#'   (e.g. \code{vegan::vegdist(df, "bray")}).
 #' @param FUNcluster a clustering function including "kmeans", "pam", "clara", 
 #'   "fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.
 #' @param k the number of clusters to be generated. If NULL, the gap statistic
@@ -29,9 +34,9 @@ NULL
 #'   calculating dissimilarities between observations. Allowed values are those 
 #'   accepted by the function dist() [including "euclidean", "manhattan", 
 #'   "maximum", "canberra", "binary", "minkowski"] and correlation based 
-#'   distance measures ["pearson", "spearman" or "kendall"]. Used only when 
-#'   FUNcluster is a hierarchical clustering function such as one of "hclust", 
-#'   "agnes" or "diana".
+#'   distance measures ["pearson", "spearman" or "kendall"]. Used only when
+#'   FUNcluster is a hierarchical clustering function such as one of "hclust",
+#'   "agnes" or "diana". Ignored when \code{x} is already a \code{"dist"} object.
 #' @param hc_method the agglomeration method to be used (?hclust): "ward.D", 
 #'   "ward.D2", "single", "complete", "average", ...
 #' @param gap_maxSE a list containing the parameters (method and SE.factor) for 
@@ -102,13 +107,22 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   }, add = TRUE)
   set.seed(seed)
   data <- x
+  # A precomputed distance matrix (class "dist") may be passed as x for
+  # hierarchical clustering (mirrors hcut()); hc_metric is then ignored (#182).
+  is_dist <- inherits(x, "dist")
   if(stand) {
+    if(is_dist)
+      stop("'stand = TRUE' is not supported when 'x' is a distance matrix (class 'dist').")
     x <- scale(x)
     if(anyNA(x))
       stop("Scaling produced NA values. Check for constant columns or non-finite values.")
   }
   # Define the type of clustering
   FUNcluster <- match.arg(FUNcluster)
+  if(is_dist && FUNcluster %in% c("kmeans", "pam", "clara", "fanny"))
+    stop("A distance matrix (class 'dist') is supported only for hierarchical clustering ",
+         "(FUNcluster = 'hclust', 'agnes', or 'diana'). For '", FUNcluster,
+         "', supply the raw data, or use hcut() for precomputed distances.")
   fun_clust <- switch(FUNcluster,
                  kmeans = stats::kmeans,
                  pam = cluster::pam,
@@ -151,8 +165,12 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   # Hierarchical clustering
   # ++++++++++++++++++++++++++++++++
   else if(FUNcluster %in% c("hclust", "agnes", "diana")){
-    
-    res.dist <- get_dist(x, method = hc_metric)
+
+    # Use a precomputed distance directly; otherwise compute it from the data.
+    res.dist <- if(is_dist) x else get_dist(x, method = hc_metric)
+    if(auto_k && is_dist)
+      stop("When 'x' is a distance matrix, the number of clusters 'k' must be specified: ",
+           "the gap statistic requires the original data and cannot be computed from a 'dist'.")
     # Number of cluster
     if(auto_k) {
       gap <- .gap_stat(x, fun_clust, k.max = k.max, nboot = nboot,
