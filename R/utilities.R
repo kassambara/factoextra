@@ -95,6 +95,10 @@ NULL
     facto_class ="PCA"
   else if(inherits(X, "pca") && inherits(X, "dudi"))
     facto_class ="PCA"
+  # ade4 between-class / within-class PCA (bca/wca): treated as a PCA. These
+  # objects are class c("between"/"within", "dudi") and drop the "pca" class.
+  else if(inherits(X, c("between", "within")) && inherits(X, "dudi"))
+    facto_class ="PCA"
   else if(inherits(X, c("CA", "ca", "coa", "correspondence"))) facto_class="CA"
   else if(inherits(X, c("MCA", "acm"))) facto_class = "MCA"
   else if(inherits(X, c("MFA","mfa"))) facto_class = "MFA"

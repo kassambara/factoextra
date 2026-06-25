@@ -795,3 +795,57 @@ test_that("fviz_mca_biplot forwards `map` to ind and var (#142)", {
   def <- co(fviz_mca_biplot(res.mca, geom = "point"))
   expect_equal(def, sym)
 })
+
+test_that("get_pca_ind works for ade4 dudi.pca (data.frame $li) (#126)", {
+  skip_if_not_installed("ade4")
+  pca <- ade4::dudi.pca(iris[, -5], scannf = FALSE, nf = 3)
+
+  ind <- get_pca_ind(pca)
+  # The bug: a data.frame $li turned the cos2 matrix into a list (lost dims).
+  expect_s3_class(ind, "factoextra")
+  expect_true(all(c("coord", "cos2", "contrib") %in% names(ind)))
+  expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
+  expect_equal(nrow(ind$coord), nrow(iris))
+  expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+  expect_true(all(abs(colSums(ind$contrib) - 100) < 1e-6))
+  expect_s3_class(fviz_pca_ind(pca), "ggplot")
+})
+
+test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regression)", {
+  pc <- prcomp(iris[, -5], scale. = TRUE)
+  pr <- princomp(iris[, -5], cor = TRUE)
+  for (ind in list(get_pca_ind(pc), get_pca_ind(pr))) {
+    expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
+    expect_equal(nrow(ind$coord), nrow(iris))
+    expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+  }
+})
+
+test_that("ade4 between-/within-class PCA (bca/wca) are supported (#126)", {
+  skip_if_not_installed("ade4")
+  data(meaudret, package = "ade4")
+  pca <- ade4::dudi.pca(meaudret$env, scannf = FALSE, nf = 3)
+  fac <- meaudret$design$season
+  bet <- ade4::bca(pca, fac, scannf = FALSE, nf = 2)
+  wit <- ade4::wca(pca, fac, scannf = FALSE, nf = 2)
+
+  for (obj in list(bet, wit)) {
+    expect_equal(factoextra:::.get_facto_class(obj), "PCA")
+    expect_s3_class(get_eig(obj), "data.frame")
+    ind <- get_pca_ind(obj)
+    var <- get_pca_var(obj)
+    expect_true(all(c("coord", "cos2", "contrib") %in% names(ind)))
+    expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+    expect_true(all(c("coord", "cos2", "contrib") %in% names(var)))
+    expect_s3_class(fviz_pca_ind(obj), "ggplot")
+    expect_s3_class(fviz_pca_var(obj), "ggplot")
+    expect_s3_class(fviz_pca_biplot(obj), "ggplot")
+    expect_s3_class(fviz_eig(obj), "ggplot")
+
+    # contributions must match ade4's own inertia.dudi (row.abs, in %)
+    inr <- ade4::inertia.dudi(obj, row.inertia = TRUE)
+    ade_contrib <- as.matrix(inr$row.abs[, seq_len(ncol(ind$contrib))])
+    expect_equal(unname(as.matrix(ind$contrib)), unname(ade_contrib),
+                 tolerance = 1e-4)
+  }
+})

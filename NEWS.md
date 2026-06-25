@@ -7,8 +7,19 @@
   edit and the standardized return structure), with ExPosition as a worked
   example and a vegan (RDA/CCA) template. (#23)
 
+## New Features
+
+* PCA extractors and `fviz_pca_*()` now support **ade4 between-class and
+  within-class PCA** (`ade4::bca()` / `ade4::wca()`). Individual contributions
+  match `ade4::inertia.dudi()`. (#126)
+
 ## Bug Fixes
 
+* `get_pca_ind()` now works for **ade4 `dudi.pca`** objects. Their `$li`/`$tab`
+  are data frames, which previously collapsed the internal `cos2` matrix into a
+  list and raised "attempt to set 'colnames' on an object with less than two
+  dimensions"; `fviz_pca_ind()` on a `dudi.pca` failed as a result. `prcomp`/
+  `princomp` output is unchanged. (#126)
 * `fviz_mca_biplot()` now forwards the `map` argument to the individuals and
   variable categories, so asymmetric maps (e.g. `"rowprincipal"`,
   `"colprincipal"`, `"symbiplot"`) take effect instead of always drawing the
