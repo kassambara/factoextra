@@ -44,6 +44,11 @@
 * `alpha.var`/`alpha.ind` (and `alpha`) now also fade the variable/individual text
   labels, not just the points and arrows, in `fviz_pca_*()` and the other biplots.
   Only a numeric `alpha < 1` is affected; the default (`alpha = 1`) is unchanged. (#130)
+* `fviz_cluster()` now plots `pam()`/`fanny()` results fitted on a dissimilarity
+  matrix (`diss = TRUE`) when the original data is passed via `data=` (previously the
+  user's `data=` was overwritten by the object's empty data slot, erroring with "'data'
+  must be of vector type, was NULL"). The clusters come from the object; `data=` is used
+  only for the 2-D layout. A clear message is shown if no data is available. (#128)
 * Point/individual labels no longer add a stray `a` glyph to the colour/fill
   legend (e.g. `fviz_pca_ind(..., habillage = )`). Text layers are now excluded
   from the legend keys; labels still appear on the plot. (#14)
