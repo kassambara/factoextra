@@ -252,8 +252,12 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   
   label <- NULL
   if(lab[[element]] && "text" %in% geom && !hide[[element]]) label <- "name"
-  
-  p <- ggplot() 
+
+  # Layers already present (when chaining via ggp, e.g. biplots) so we only
+  # restyle the text labels added for THIS element below (#130).
+  n_layers_before <- if(is.null(ggp)) 0L else length(ggp$layers)
+
+  p <- ggplot()
   if(hide[[element]]) {
     # FIX: ggplot2 3.0.0+ deprecation - aes_string() replaced with aes() + .data pronoun
     # See: https://github.com/kassambara/factoextra/issues/190
@@ -269,7 +273,21 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                          main = title, ggtheme = ggtheme, ggp = ggp, font.family = font.family, ...)
   if(alpha %in% c("cos2","contrib", "coord", "x", "y"))
     p <- p + scale_alpha(limits = range(df.all[, alpha]))
-  
+
+  # Apply a numeric alpha to this element's text labels too, not just its
+  # points/arrows, so e.g. alpha.var fades the variable names as well (#130).
+  # Gated on a numeric alpha < 1, so the default (alpha = 1) and metric-mapped
+  # alpha ("cos2"/"contrib"/...) paths are byte-identical. Only restyles labels
+  # added for this element (index > n_layers_before), preserving other layers
+  # when chaining via ggp (e.g. biplots).
+  if(is.numeric(alpha) && length(alpha) == 1 && !is.na(alpha) && alpha < 1){
+    .text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+    for(i in seq_along(p$layers)){
+      if(i > n_layers_before && inherits(p$layers[[i]]$geom, .text_geoms))
+        p$layers[[i]]$aes_params$alpha <- alpha
+    }
+  }
+
   if(!is.null(gradient.cols))
     p <- p + ggpubr::gradient_color(gradient.cols)
     
