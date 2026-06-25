@@ -2,6 +2,7 @@
 
 S3method(print,factoextra)
 S3method(print,hkmeans)
+export(as_factoextra_pca)
 export(eclust)
 export(facto_summarize)
 export(factominer_category_map)

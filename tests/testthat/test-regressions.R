@@ -981,3 +981,55 @@ test_that("unknown label/invisible tokens warn instead of silently doing nothing
   }, logical(1)))
   expect_true(has_ind_text)
 })
+
+test_that("as_factoextra_pca() builds a fviz-ready object from coordinates (constructor bridge)", {
+  # coords only (e.g. an MDS / UMAP embedding)
+  mds <- stats::cmdscale(dist(scale(mtcars)), k = 3)
+  o1 <- as_factoextra_pca(ind.coord = mds)
+  expect_s3_class(o1, "factoextra_pca")
+  expect_equal(factoextra:::.get_facto_class(o1), "PCA")
+
+  ind <- get_pca_ind(o1)
+  expect_true(all(c("coord", "cos2", "contrib") %in% names(ind)))
+  expect_true(all(ind$cos2 >= 0 & ind$cos2 <= 1))
+  expect_true(all(abs(colSums(ind$contrib) - 100) < 1e-6))
+  expect_equal(nrow(get_eig(o1)), 3L)
+
+  expect_s3_class(fviz_pca_ind(o1, geom = "point"), "ggplot")
+  expect_s3_class(fviz_eig(o1), "ggplot")
+  expect_s3_class(fviz_contrib(o1, choice = "ind"), "ggplot")
+  expect_s3_class(fviz_cos2(o1, choice = "ind"), "ggplot")
+
+  # with variable coordinates + eigenvalues (prcomp round-trip)
+  pca <- prcomp(iris[, -5], scale. = TRUE)
+  o2 <- as_factoextra_pca(ind.coord = pca$x, var.coord = pca$rotation, eig = pca$sdev^2)
+  expect_s3_class(fviz_pca_var(o2), "ggplot")
+  expect_s3_class(fviz_pca_biplot(o2), "ggplot")
+
+  # round-trip: individual coordinates match the native prcomp plot
+  co_native <- ggplot2::ggplot_build(fviz_pca_ind(pca, geom = "point"))$data[[1]][, c("x", "y")]
+  co_constr <- ggplot2::ggplot_build(fviz_pca_ind(o2, geom = "point"))$data[[1]][, c("x", "y")]
+  expect_equal(co_native, co_constr, tolerance = 1e-8)
+})
+
+test_that("as_factoextra_pca() validates inputs and errors clearly", {
+  mds <- stats::cmdscale(dist(scale(mtcars)), k = 2)
+  o <- as_factoextra_pca(ind.coord = mds)               # no var.coord
+  expect_error(fviz_pca_var(o), "no variable coordinates")
+  expect_error(as_factoextra_pca(data.frame(a = letters[1:3])), "must be numeric")
+  expect_error(as_factoextra_pca(mds, var.coord = matrix(1, 2, 3)),
+               "same number of dimensions")
+  expect_error(as_factoextra_pca(mds, eig = 1),         # too few eigenvalues
+               "at least 2")
+})
+
+test_that("as_factoextra_pca() does not change existing prcomp/PCA paths (no-regression)", {
+  # the new class branches are gated on inherits(x, 'factoextra_pca'); ordinary
+  # objects must hit the unchanged paths.
+  pca <- prcomp(iris[, -5], scale. = TRUE)
+  ind <- get_pca_ind(pca)
+  expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
+  expect_equal(nrow(ind$coord), nrow(iris))
+  expect_false(inherits(pca, "factoextra_pca"))
+  expect_s3_class(fviz_pca_biplot(pca), "ggplot")
+})

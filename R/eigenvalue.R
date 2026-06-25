@@ -113,6 +113,8 @@ get_eig<-function(X){
   else{
     # stats package
     if(inherits(X, "prcomp") || inherits(X, "princomp")) eig <- (X$sdev)^2
+    # user-supplied coordinates wrapped by as_factoextra_pca()
+    else if(inherits(X, "factoextra_pca")) eig <- X$eig.values
     # ade4 package (incl. between-class/within-class analyses: bca/wca)
     else if(inherits(X, c("pca", "coa", "acm", "between", "within")) && inherits(X, "dudi")) eig <- X$eig
     # ca package

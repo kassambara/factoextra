@@ -9,6 +9,13 @@
 
 ## New Features
 
+* New `as_factoextra_pca()` constructor builds a fviz-ready object from
+  pre-computed coordinates, so the `fviz_pca_*()` family, `fviz_eig()`,
+  `fviz_contrib()` and `fviz_cos2()` can visualize the output of **any**
+  dimension-reduction method (e.g. `stats::cmdscale()`, `ape::pcoa()`, UMAP/t-SNE,
+  `vegan::rda()`/`cca()`, or a custom analysis) without writing a backend. Supply
+  `ind.coord` (and optionally `var.coord`, `eig`); `cos2`/`contrib` are derived
+  from the coordinates when not provided.
 * New `shape.ind` argument in `fviz_pca_ind()` and `fviz_pca_biplot()` maps point
   **shape** to a grouping factor independently of colour, so individuals can be
   coloured by one variable and shaped by another (e.g.
