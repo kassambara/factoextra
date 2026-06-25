@@ -849,3 +849,24 @@ test_that("ade4 between-/within-class PCA (bca/wca) are supported (#126)", {
                  tolerance = 1e-4)
   }
 })
+
+test_that("fviz_dend honors an explicit k for HCPC, defaults to HCPC count (#81)", {
+  skip_if_not_installed("FactoMineR")
+  data(wine, package = "FactoMineR")
+  set.seed(1)
+  fa <- FactoMineR::FAMD(wine[, 1:10], graph = FALSE, ncp = 5)
+  hc <- FactoMineR::HCPC(fa, nb.clust = 7, graph = FALSE)
+
+  n_branch_cols <- function(p) {
+    b <- ggplot2::ggplot_build(p)$data
+    cols <- unique(unlist(lapply(b, function(d)
+      if ("colour" %in% names(d)) unique(d$colour))))
+    length(setdiff(cols, c("black", "#000000", "grey50", "gray50")))
+  }
+
+  # default: unchanged -> HCPC cluster count (7)
+  expect_equal(n_branch_cols(fviz_dend(hc)), 7)
+  # explicit k now honored (previously ignored)
+  expect_equal(n_branch_cols(fviz_dend(hc, k = 5)), 5)
+  expect_equal(n_branch_cols(fviz_dend(hc, k = 3)), 3)
+})

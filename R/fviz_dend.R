@@ -129,8 +129,11 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   rectangle <- type == "rectangle"
   
   if(inherits(x, "HCPC")){
-    k <- length(unique(x$data.clust$clust))
-    #k <- x$call$t$nb.clust
+    # Honor an explicit k; default to the number of HCPC clusters when k is
+    # NULL. The previous code always overwrote k, so a user-supplied k (e.g.
+    # fviz_dend(hcpc, k = 5)) was silently ignored and colored at the HCPC
+    # cluster count instead. (#81)
+    if(is.null(k)) k <- length(unique(x$data.clust$clust))
     x <- x$call$t$tree #hclust
   }
     

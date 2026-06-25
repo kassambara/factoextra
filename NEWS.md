@@ -20,6 +20,10 @@
   list and raised "attempt to set 'colnames' on an object with less than two
   dimensions"; `fviz_pca_ind()` on a `dudi.pca` failed as a result. `prcomp`/
   `princomp` output is unchanged. (#126)
+* `fviz_dend()` now honors an explicit `k` for `HCPC` objects (e.g.
+  `fviz_dend(res.hcpc, k = 5)`); previously the user-supplied `k` was silently
+  overwritten by the HCPC cluster count. With `k = NULL` (default) the behavior
+  is unchanged. (#81)
 * `fviz_mca_biplot()` now forwards the `map` argument to the individuals and
   variable categories, so asymmetric maps (e.g. `"rowprincipal"`,
   `"colprincipal"`, `"symbiplot"`) take effect instead of always drawing the
