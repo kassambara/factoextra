@@ -60,6 +60,13 @@
 #'   "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
 #'   cos2, contrib, ....), make sure that habillage ="none".
 #' @param fill.ind,fill.var same as col.ind and col.var but for the fill color.
+#' @param shape.ind optional factor variable to map the point \strong{shape} of
+#'   individuals, independently of their color. This allows colouring
+#'   individuals by one grouping variable (\code{col.ind}/\code{habillage}) and
+#'   shaping them by another (e.g. \code{fviz_pca_ind(res, col.ind = group1,
+#'   shape.ind = group2)}). Default \code{NULL} keeps the previous behaviour
+#'   (shape follows the colour grouping). Use \code{+ labs(shape = , colour = )}
+#'   to rename the legends.
 #' @param col.ind.sup color for supplementary individuals
 #' @param alpha.ind,alpha.var controls the transparency of individual and 
 #'   variable colors, respectively. The value can variate from 0 (total 
@@ -188,17 +195,23 @@ fviz_pca <- function(X, ...){
 #' @export 
 fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"),
                          geom.ind = geom, repel = FALSE,
-                         habillage="none", palette = NULL, addEllipses=FALSE, 
+                         habillage="none", palette = NULL, addEllipses=FALSE,
                          col.ind = "black", fill.ind = "white", col.ind.sup = "blue", alpha.ind =1,
+                         shape.ind = NULL,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
                          ...)
 {
- 
-  fviz (X, element = "ind", axes = axes, geom = geom.ind,
-                 habillage = habillage, palette = palette, addEllipses = addEllipses, 
-                 color = col.ind, fill = fill.ind, alpha = alpha.ind, col.row.sup = col.ind.sup,
-                select = select.ind, repel = repel,  ...)
-  
+
+  .args <- list(X = X, element = "ind", axes = axes, geom = geom.ind,
+                habillage = habillage, palette = palette, addEllipses = addEllipses,
+                color = col.ind, fill = fill.ind, alpha = alpha.ind, col.row.sup = col.ind.sup,
+                select = select.ind, repel = repel, ...)
+  # shape.ind = a factor maps point shape to a (possibly different) grouping than
+  # col.ind, e.g. colour by one variable and shape by another. NULL (default)
+  # keeps the previous behavior (shape follows habillage/colour). (#36, #51)
+  if(!is.null(shape.ind)) .args$pointshape <- shape.ind
+  do.call(fviz, .args)
+
 }
 
 
@@ -228,6 +241,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             col.var = "steelblue", fill.var = "white", gradient.cols = NULL,
                             label = "all", invisible="none", repel = FALSE,
                             habillage = "none", palette = NULL, addEllipses=FALSE,
+                            shape.ind = NULL,
                             title = "PCA - Biplot",
                             biplot.type = c("auto", "form", "covariance"), ...)
 {
@@ -305,9 +319,9 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   # Individuals
   p <- fviz_pca_ind(X,  axes = axes, geom = geom.ind, repel = repel,
-                    col.ind = col.ind, fill.ind = fill.ind,
+                    col.ind = col.ind, fill.ind = fill.ind, shape.ind = shape.ind,
                     label = label, invisible=invisible, habillage = habillage,
-                    addEllipses = addEllipses, # palette = palette, 
+                    addEllipses = addEllipses, # palette = palette,
                     ellipse.border.remove = ellipse.border.remove,
                     ...)
   # Add variables

@@ -234,6 +234,21 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     df[[.col.name]] <- fill
     fill <- .col.name
   }
+  # Augment the data if pointshape is a grouping (factor/character) variable,
+  # so points can be shaped by a DIFFERENT factor than `color`/habillage (e.g.
+  # colour individuals by one variable and set their shape by another). Gated on
+  # pointshape being a grouping var; the default numeric pointshape (e.g. 19) is
+  # untouched, so existing plots are byte-identical. The `if(missing(pointshape))`
+  # guards above already prevent colour/habillage from overwriting it. (#36, #51)
+  if(.is_grouping_var(pointshape)){
+    if(nrow(df) != length(pointshape)) stop(
+      "The length of the `shape`/`shape.ind` variable must equal the number of ",
+      "elements being plotted (individuals for fviz_*_ind()), or be a single ",
+      "value.", call. = FALSE)
+    .shape.name <- "Shape."
+    df[[.shape.name]] <- as.factor(pointshape)
+    pointshape <- .shape.name
+  }
   # Augment the data, if pointsize is a continuous variable
   if(length(pointsize) > 1){
     if(nrow(df) != length(pointsize)) pointsize <- 1.5

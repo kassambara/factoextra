@@ -22,6 +22,7 @@ fviz_pca_ind(
   fill.ind = "white",
   col.ind.sup = "blue",
   alpha.ind = 1,
+  shape.ind = NULL,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
   ...
 )
@@ -58,6 +59,7 @@ fviz_pca_biplot(
   habillage = "none",
   palette = NULL,
   addEllipses = FALSE,
+  shape.ind = NULL,
   title = "PCA - Biplot",
   biplot.type = c("auto", "form", "covariance"),
   ...
@@ -128,6 +130,14 @@ transparency for the individual/variable colors are automatically
 controlled by their qualities ("cos2"), contributions ("contrib"), 
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
 this, make sure that habillage ="none".}
+
+\item{shape.ind}{optional factor variable to map the point \strong{shape} of
+individuals, independently of their color. This allows colouring
+individuals by one grouping variable (\code{col.ind}/\code{habillage}) and
+shaping them by another (e.g. \code{fviz_pca_ind(res, col.ind = group1,
+shape.ind = group2)}). Default \code{NULL} keeps the previous behaviour
+(shape follows the colour grouping). Use \code{+ labs(shape = , colour = )}
+to rename the legends.}
 
 \item{select.ind, select.var}{a selection of individuals/variables to be
 drawn. Allowed values are NULL or a list containing the arguments name,
