@@ -682,8 +682,23 @@ NULL
     geom_hline(yintercept = 0, color = "black", linetype=linetype) +
     geom_vline(xintercept = 0, color = "black", linetype=linetype) +
     labs(title = title, x = xlab, y = ylab)
-  
+
+  p <- .hide_text_legend(p)
+
   return(p)
+}
+
+# Stop text/label layers from injecting a stray glyph (e.g. "a") into the
+# colour/fill legend (#14). Labels are still drawn on the plot; they are only
+# removed from the legend keys. The colour/shape guides come from the point
+# layers, so this never drops a legend that should exist.
+.hide_text_legend <- function(p){
+  text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  for(i in seq_along(p$layers)){
+    if(inherits(p$layers[[i]]$geom, text_geoms))
+      p$layers[[i]]$show.legend <- FALSE
+  }
+  p
 }
 
 # Check the element to be labelled
