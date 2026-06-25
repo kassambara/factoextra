@@ -93,8 +93,9 @@ around clusters. Ignored when rect = FALSE.}
 
 \item{main, xlab, ylab}{main and axis titles}
 
-\item{sub}{Plot subtitle. If NULL, the method used hierarchical clustering is
-shown. To remove the subtitle use sub = "".}
+\item{sub}{Plot subtitle. Default is NULL (no subtitle). Set to a character
+string to display a subtitle below the title, e.g.
+\code{sub = paste0("Method: ", "ward.D2")}.}
 
 \item{ggtheme}{function, ggplot2 theme name. Default value is 
 theme_classic(). Allowed values include ggplot2 official themes: 

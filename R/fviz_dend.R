@@ -43,8 +43,9 @@
 #' @param horiz a logical value. If TRUE, an horizontal dendrogram is drawn.
 #' @param cex size of labels
 #' @param main,xlab,ylab main and axis titles
-#' @param sub Plot subtitle. If NULL, the method used hierarchical clustering is
-#'   shown. To remove the subtitle use sub = "".
+#' @param sub Plot subtitle. Default is NULL (no subtitle). Set to a character
+#'   string to display a subtitle below the title, e.g.
+#'   \code{sub = paste0("Method: ", "ward.D2")}.
 #' @param ggtheme function, ggplot2 theme name. Default value is 
 #'   theme_classic(). Allowed values include ggplot2 official themes: 
 #'   theme_gray(), theme_bw(), theme_minimal(), theme_classic(), theme_void(), 
@@ -146,7 +147,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   else stop("Can't handle an object of class ", paste(class(x), collapse =", ") )
   if(is.null(method)) method <- ""
   else if(is.na(method)) method <- ""
-  if(is.null(sub) && method != "") sub = paste0("Method: ", method)
+  # `sub` defaults to NULL (no subtitle), preserving the previous appearance.
+  # When set, it is rendered via labs(subtitle=) below (#54).
   
   if(!is.null(dendextend::labels_cex(dend))) cex <- dendextend::labels_cex(dend)
   dend <- dendextend::set(dend, "labels_cex", cex) 
@@ -180,7 +182,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                       ggtheme = ggtheme, horiz = horiz, circular = circular, palette = palette,
                       labels = show_labels, label_cols = label_cols, 
                       labels_track_height = labels_track_height, ...)
-    if(!circular) p <- p + labs(title = main, x = xlab, y = ylab)
+    if(!circular) p <- p + labs(title = main, subtitle = sub, x = xlab, y = ylab)
   }
   else if(phylogenic){
     p <- .phylogenic_tree(dend, labels = show_labels, label_cols = label_cols,
