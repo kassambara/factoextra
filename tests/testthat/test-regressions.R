@@ -716,3 +716,37 @@ test_that("fviz_pca add.circle forces/suppresses the correlation circle (#88)", 
   expect_false(has_circle(fviz_pca_var(sc, add.circle = FALSE)))
   expect_true(has_circle(fviz_pca_biplot(un, add.circle = TRUE)))
 })
+
+test_that("fviz_cluster plots diss-based pam/fanny when data is supplied (#128)", {
+  skip_if_not_installed("cluster")
+  df <- scale(USArrests)
+  d  <- get_dist(df, method = "euclidean")
+
+  pr <- cluster::pam(d, k = 4, diss = TRUE)
+  p  <- fviz_cluster(pr, data = df, geom = "point")
+  expect_s3_class(p, "ggplot")
+  # cluster assignments come from the (dissimilarity-based) object, aligned per
+  # observation by name (not recomputed from data=)
+  pt_cluster <- function(p) {
+    setNames(as.integer(as.character(p$data$cluster)), rownames(p$data))
+  }
+  expect_equal(pt_cluster(p)[names(pr$clustering)], pr$clustering)
+
+  fa <- cluster::fanny(d, k = 3, diss = TRUE)
+  expect_s3_class(fviz_cluster(fa, data = df, geom = "point"), "ggplot")
+
+  # data= in a DIFFERENT row order than the dissimilarity must still colour each
+  # point with its own cluster (aligned by row name), not silently mis-mapped
+  dfs <- df[sample(nrow(df)), ]
+  ps  <- fviz_cluster(pr, data = dfs, geom = "point")
+  expect_equal(pt_cluster(ps)[names(pr$clustering)], pr$clustering)
+
+  # data= for different observations (row names don't match) -> clear error
+  expect_error(fviz_cluster(pr, data = scale(mtcars[, 1:4])), "do not match")
+
+  # no data available -> clear, actionable error (not the cryptic NULL one)
+  expect_error(fviz_cluster(pr), "dissimilarity matrix")
+
+  # NO-REGRESSION: pam fitted on raw data (object$data present) is unchanged
+  expect_s3_class(fviz_cluster(cluster::pam(df, k = 4), geom = "point"), "ggplot")
+})

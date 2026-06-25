@@ -168,7 +168,31 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   
   
   # object from cluster package
-  if(inherits(object, c("partition", "hkmeans", "eclust"))) data <- object$data
+  if(inherits(object, c("partition", "hkmeans", "eclust"))){
+    # Use the object's own data when present; otherwise keep the user-supplied
+    # `data=`. pam()/fanny() fitted on a dissimilarity matrix store no
+    # coordinates (object$data is NULL), so the original data is needed for the
+    # 2-D layout; the cluster assignments still come from the object (#128).
+    if(!is.null(object$data)) data <- object$data
+    else if(!is.null(data)){
+      # Align the object's clustering to the supplied data's rows by name, so
+      # points are not silently mis-coloured if `data` is ordered differently
+      # from the dissimilarity. Error on a genuine set mismatch.
+      cl <- object$clustering
+      if(!is.null(cl) && !is.null(names(cl)) && !is.null(rownames(data))){
+        if(!setequal(names(cl), rownames(data)))
+          stop("The row names of `data` do not match the observations used to ",
+               "build the clustering. Pass the same data used for the ",
+               "dissimilarity matrix.", call. = FALSE)
+        object$clustering <- cl[rownames(data)]
+      }
+    }
+    if(is.null(data))
+      stop("This clustering has no stored data (e.g. pam()/fanny() on a ",
+           "dissimilarity matrix). Supply the original data via 'data=' - it is ",
+           "used only for the 2-D layout; the cluster assignments come from the object.",
+           call. = FALSE)
+  }
   # Object from kmeans (stats package)
   else if((inherits(object, "kmeans") && !inherits(object, "eclust")) || inherits(object, "dbscan")){
     if(is.null(data)) stop("data is required for plotting kmeans/dbscan clusters")
