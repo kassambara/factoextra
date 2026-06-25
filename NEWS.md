@@ -69,6 +69,10 @@
 
 * `fviz_dend()` now renders the `sub` argument as a plot subtitle. `sub`
   defaults to `NULL` (no subtitle, as before); set it to a string to add one. (#54)
+* `fviz_pca_var()`/`fviz_pca_biplot()` (via `fviz()`) gain an `add.circle` argument to
+  force (`TRUE`) or suppress (`FALSE`) the variable correlation circle. Default `NULL`
+  keeps the previous automatic behavior (shown only for unit-variance PCA). Useful when
+  scaling manually and fitting `prcomp(scale = FALSE)`. (#88)
 * `fviz_pca_var()` / `fviz_pca_biplot()` (and other arrow plots) gain an
   `arrow.linetype` argument to set the variable-arrow line type (e.g. `"dashed"`).
   Default `"solid"` reproduces the previous appearance. (#73)
