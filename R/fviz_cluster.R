@@ -337,6 +337,9 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
                   outlier.pointsize, outlier.labelsize/3, geom, repel = repel)
 
+  # Keep the point labels out of the legend (no stray "a" glyph); the cluster
+  # colour/shape legend comes from the point layer. Mirrors .fviz_finish() (#14).
+  p <- .hide_text_legend(p)
   p
 }
 
@@ -364,6 +367,6 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          aes(x = .data[["x"]], y = .data[["y"]], label = .data[["name"]]),
                          size = labelsize, vjust = -0.7, color = outlier.color)
   }
-    
+
   return(p)
 }
