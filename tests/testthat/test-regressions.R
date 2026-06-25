@@ -852,10 +852,12 @@ test_that("ade4 between-/within-class PCA (bca/wca) are supported (#126)", {
 
 test_that("fviz_dend honors an explicit k for HCPC, defaults to HCPC count (#81)", {
   skip_if_not_installed("FactoMineR")
-  data(wine, package = "FactoMineR")
-  set.seed(1)
-  fa <- FactoMineR::FAMD(wine[, 1:10], graph = FALSE, ncp = 5)
-  hc <- FactoMineR::HCPC(fa, nb.clust = 7, graph = FALSE)
+  # PCA -> HCPC is the canonical, version-robust path (the FAMD+HCPC combo errors
+  # internally in some FactoMineR versions). Default k is read from the result
+  # rather than hard-coded, so the test is robust to the auto cluster count.
+  res.pca <- FactoMineR::PCA(iris[, -5], ncp = 3, graph = FALSE)
+  hc <- FactoMineR::HCPC(res.pca, nb.clust = 3, graph = FALSE)
+  default_k <- length(unique(hc$data.clust$clust))
 
   n_branch_cols <- function(p) {
     b <- ggplot2::ggplot_build(p)$data
@@ -864,9 +866,9 @@ test_that("fviz_dend honors an explicit k for HCPC, defaults to HCPC count (#81)
     length(setdiff(cols, c("black", "#000000", "grey50", "gray50")))
   }
 
-  # default: unchanged -> HCPC cluster count (7)
-  expect_equal(n_branch_cols(fviz_dend(hc)), 7)
+  # default: unchanged -> HCPC cluster count
+  expect_equal(n_branch_cols(fviz_dend(hc)), default_k)
   # explicit k now honored (previously ignored)
-  expect_equal(n_branch_cols(fviz_dend(hc, k = 5)), 5)
-  expect_equal(n_branch_cols(fviz_dend(hc, k = 3)), 3)
+  expect_equal(n_branch_cols(fviz_dend(hc, k = 2)), 2)
+  expect_equal(n_branch_cols(fviz_dend(hc, k = 4)), 4)
 })
