@@ -765,3 +765,16 @@ test_that("fviz colour/fill length-mismatch gives a clear message; valid usage w
   expect_s3_class(fviz_pca_var(res, col.var = factor(c("a", "a", "b", "b"))), "ggplot")
   expect_s3_class(fviz_pca_ind(res, col.ind = iris$Species), "ggplot")
 })
+
+test_that("fviz_cluster keeps point labels out of the legend (#14 sibling)", {
+  set.seed(1)
+  dat <- scale(matrix(rnorm(30 * 4), nrow = 30)); rownames(dat) <- paste0("s", 1:30)
+  km <- kmeans(dat, centers = 8)
+  text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  for (p in list(fviz_cluster(list(data = dat, cluster = km$cluster)),
+                 fviz_cluster(km, data = dat))) {
+    txt <- Filter(function(l) inherits(l$geom, text_geoms), p$layers)
+    expect_gt(length(txt), 0)
+    expect_true(all(vapply(txt, function(l) isFALSE(l$show.legend), logical(1))))
+  }
+})
