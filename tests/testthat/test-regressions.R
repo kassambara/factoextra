@@ -750,3 +750,18 @@ test_that("fviz_cluster plots diss-based pam/fanny when data is supplied (#128)"
   # NO-REGRESSION: pam fitted on raw data (object$data present) is unchanged
   expect_s3_class(fviz_cluster(cluster::pam(df, k = 4), geom = "point"), "ggplot")
 })
+
+test_that("fviz colour/fill length-mismatch gives a clear message; valid usage works (#139)", {
+  res <- prcomp(iris[, -5], scale. = TRUE)   # 150 individuals, 4 variables
+
+  # colouring VARIABLES by an observation-level group (length 150 != 4 variables)
+  expect_error(fviz_pca_var(res, col.var = iris$Species),
+               "number of elements being plotted")
+  expect_error(fviz_pca_ind(res, fill.ind = c("a", "b")),
+               "number of elements being plotted")
+
+  # valid usages still work (no behavior change)
+  expect_s3_class(fviz_pca_var(res, col.var = "contrib"), "ggplot")
+  expect_s3_class(fviz_pca_var(res, col.var = factor(c("a", "a", "b", "b"))), "ggplot")
+  expect_s3_class(fviz_pca_ind(res, col.ind = iris$Species), "ggplot")
+})
