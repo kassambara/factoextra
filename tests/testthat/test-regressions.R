@@ -778,3 +778,20 @@ test_that("fviz_cluster keeps point labels out of the legend (#14 sibling)", {
     expect_true(all(vapply(txt, function(l) isFALSE(l$show.legend), logical(1))))
   }
 })
+
+test_that("fviz_mca_biplot forwards `map` to ind and var (#142)", {
+  skip_if_not_installed("FactoMineR")
+  data(poison, package = "factoextra")
+  res.mca <- FactoMineR::MCA(poison[, 5:15], graph = FALSE)
+  co <- function(p) ggplot2::ggplot_build(p)$data[[1]][, c("x", "y")]
+
+  sym <- co(fviz_mca_biplot(res.mca, map = "symmetric", geom = "point"))
+  col <- co(fviz_mca_biplot(res.mca, map = "colprincipal", geom = "point"))
+
+  # The bug: `map` was dropped, so every map produced identical coordinates.
+  expect_false(isTRUE(all.equal(sym, col)))
+
+  # No behavior change for the default symmetric map.
+  def <- co(fviz_mca_biplot(res.mca, geom = "point"))
+  expect_equal(def, sym)
+})
