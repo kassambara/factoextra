@@ -21,7 +21,12 @@ eclust(
 )
 }
 \arguments{
-\item{x}{numeric vector, data matrix or data frame}
+\item{x}{numeric vector, data matrix or data frame. For hierarchical
+clustering (\code{FUNcluster} = "hclust", "agnes" or "diana"), a
+precomputed dissimilarity matrix (an object of class \code{"dist"}) may be
+supplied directly; in that case \code{hc_metric} is ignored and \code{k}
+must be specified. This allows custom distances such as Bray-Curtis
+(e.g. \code{vegan::vegdist(df, "bray")}).}
 
 \item{FUNcluster}{a clustering function including "kmeans", "pam", "clara", 
 "fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.}
@@ -48,9 +53,9 @@ error.}
 calculating dissimilarities between observations. Allowed values are those 
 accepted by the function dist() [including "euclidean", "manhattan", 
 "maximum", "canberra", "binary", "minkowski"] and correlation based 
-distance measures ["pearson", "spearman" or "kendall"]. Used only when 
-FUNcluster is a hierarchical clustering function such as one of "hclust", 
-"agnes" or "diana".}
+distance measures ["pearson", "spearman" or "kendall"]. Used only when
+FUNcluster is a hierarchical clustering function such as one of "hclust",
+"agnes" or "diana". Ignored when \code{x} is already a \code{"dist"} object.}
 
 \item{hc_method}{the agglomeration method to be used (?hclust): "ward.D", 
 "ward.D2", "single", "complete", "average", ...}
