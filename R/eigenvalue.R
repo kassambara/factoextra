@@ -113,8 +113,8 @@ get_eig<-function(X){
   else{
     # stats package
     if(inherits(X, "prcomp") || inherits(X, "princomp")) eig <- (X$sdev)^2
-    # ade4 package
-    else if(inherits(X, c("pca", "coa", "acm")) && inherits(X, "dudi")) eig <- X$eig
+    # ade4 package (incl. between-class/within-class analyses: bca/wca)
+    else if(inherits(X, c("pca", "coa", "acm", "between", "within")) && inherits(X, "dudi")) eig <- X$eig
     # ca package
     else if(inherits(X, 'ca'))  eig <- X$sv^2
     else if(inherits(X, 'mjca')) eig <- X$inertia.e

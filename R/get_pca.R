@@ -73,9 +73,16 @@ get_pca_ind<-function(res.pca, ...){
     ind <- .get_pca_ind_results(ind.coord, data, res.pca$eig,
                                 res.pca$cent, res.pca$norm)
   }
-  
+
+  # ade4 between-class / within-class PCA (bca/wca). These dudi objects carry
+  # row coordinates ($li), the transformed table ($tab) and row/column weights
+  # ($lw/$cw) but not $cent/$norm, so cos2/contrib use the weighted-dudi formula.
+  else if(inherits(res.pca, c("between", "within")) && inherits(res.pca, "dudi")){
+    ind <- .get_dudi_class_ind_results(res.pca)
+  }
+
   # stats package
-  else if(inherits(res.pca, 'princomp')){  
+  else if(inherits(res.pca, 'princomp')){
     ind.coord <- res.pca$scores
     data <- .prcomp_reconst(res.pca)
     ind <- .get_pca_ind_results(ind.coord, data, res.pca$sdev^2,
@@ -107,8 +114,10 @@ get_pca_ind<-function(res.pca, ...){
 get_pca_var<-function(res.pca){
   # FactoMineR package
   if(inherits(res.pca, c('PCA'))) var <- res.pca$var
-  # ade4 package
-  else if(inherits(res.pca, "pca") && inherits(res.pca, "dudi")){
+  # ade4 package (incl. between-class/within-class PCA: bca/wca). Variable/column
+  # coordinates live in $co for all dudi flavours.
+  else if(inherits(res.pca, "dudi") &&
+          inherits(res.pca, c("pca", "between", "within"))){
     var <- .get_pca_var_results(res.pca$co)
   }
   # stats package
@@ -162,6 +171,13 @@ get_pca_var<-function(res.pca){
 # - Avoids repeated function calls and memory allocations
 # - Maintains full econometric precision (identical numerical results)
 .get_pca_ind_results <- function(ind.coord, data, eigenvalues, pca.center, pca.scale){
+
+  # Coerce to plain matrices: ade4 dudi objects store $li/$tab as data.frames,
+  # and assigning a data.frame into a matrix slice below (ind.cos2[pos, ] <- ...)
+  # silently turns the matrix into a list, losing its dimensions. stats prcomp/
+  # princomp already pass matrices, so this is a no-op for them.
+  ind.coord <- as.matrix(ind.coord)
+  data <- as.matrix(data)
 
   eigenvalues <- eigenvalues[seq_len(ncol(ind.coord))]
   n.ind <- nrow(ind.coord)
@@ -243,4 +259,41 @@ get_pca_var<-function(res.pca){
 
   # Variable coord, cor, cos2 and contrib
   list(coord = var.coord, cor = var.cor, cos2 = var.cos2, contrib = var.contrib)
+}
+
+# Individual results for ade4 between-class / within-class PCA (bca/wca).
+# These dudi objects expose row coordinates ($li), the transformed table ($tab)
+# and row/column weights ($lw/$cw) but no $cent/$norm, so we use the general
+# weighted-dudi definitions:
+#   d2[i]        = sum_j cw[j] * tab[i, j]^2      (squared distance, column metric)
+#   cos2[i, k]   = li[i, k]^2 / d2[i]
+#   contrib[i,k] = 100 * lw[i] * li[i, k]^2 / eig[k]
+# For ordinary dudi.pca (uniform lw = 1/n, cw = 1) these reduce exactly to the
+# values produced by .get_pca_ind_results(); contrib matches ade4::inertia.dudi.
+.get_dudi_class_ind_results <- function(res.pca){
+  ind.coord <- as.matrix(res.pca$li)
+  tab <- as.matrix(res.pca$tab)
+  cw  <- res.pca$cw
+  lw  <- res.pca$lw
+  n.dim <- ncol(ind.coord)
+  eigenvalues <- res.pca$eig[seq_len(n.dim)]
+
+  d2 <- rowSums(sweep(tab^2, 2, cw, "*"))
+  coord.sq <- ind.coord^2
+
+  ind.cos2 <- matrix(0, nrow = nrow(ind.coord), ncol = n.dim)
+  positive_d2 <- d2 > .Machine$double.eps
+  if(any(positive_d2))
+    ind.cos2[positive_d2, ] <- coord.sq[positive_d2, , drop = FALSE] / d2[positive_d2]
+
+  ind.contrib <- sweep(coord.sq, 2, eigenvalues, "/")
+  ind.contrib <- sweep(ind.contrib, 1, lw, "*") * 100
+
+  dim.names <- paste0("Dim.", seq_len(n.dim))
+  colnames(ind.coord) <- colnames(ind.cos2) <- colnames(ind.contrib) <- dim.names
+  rnames <- rownames(ind.coord)
+  if(is.null(rnames)) rnames <- as.character(seq_len(nrow(ind.coord)))
+  rownames(ind.coord) <- rownames(ind.cos2) <- rownames(ind.contrib) <- rnames
+
+  list(coord = ind.coord, cos2 = ind.cos2, contrib = ind.contrib)
 }

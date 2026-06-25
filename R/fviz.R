@@ -395,7 +395,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   else if(inherits(X, "prcomp" )) scale_unit <- is.numeric(X$scale) 
   else if(inherits(X, "princomp")) scale_unit <- length(unique(X$scale))>1 
   else if(inherits(X, "expoOutput")) scale_unit <- !all(X$ExPosition.Data$scale==1) 
-  else if(inherits(X, "pca") && inherits(X, "dudi")) scale_unit <- length(unique(X$norm)) > 1 
+  else if(inherits(X, "pca") && inherits(X, "dudi")) scale_unit <- length(unique(X$norm)) > 1
+  # ade4 between-/within-class PCA: $co holds projections (not variable
+  # correlations bounded by 1), so the correlation circle does not apply.
+  else if(inherits(X, c("between", "within")) && inherits(X, "dudi")) scale_unit <- FALSE
   else {
     warning(".get_scale_unit function: can't handle an object of class ",
             paste(class(X), collapse = ", "))
