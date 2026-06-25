@@ -9,6 +9,10 @@
 
 ## New Features
 
+* New `rotate.labels` argument in `fviz()` (and thus `fviz_pca_var()`,
+  `fviz_pca_biplot()`, etc.): when `TRUE`, variable text labels are rotated to
+  the angle of their arrows (ggbiplot style). Defaults to `FALSE` (unchanged);
+  use with `repel = FALSE`. (#98)
 * PCA extractors and `fviz_pca_*()` now support **ade4 between-class and
   within-class PCA** (`ade4::bca()` / `ade4::wca()`). Individual contributions
   match `ade4::inertia.dudi()`. (#126)
