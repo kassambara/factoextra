@@ -50,6 +50,9 @@
 
 ## New Features
 
+* `eclust()` gains `"hkmeans"` as a `FUNcluster` option, so hierarchical k-means
+  can be run through the same enhanced-clustering interface (with gap-statistic
+  `k` selection, silhouette info, and plotting). (#78)
 * `eclust()` now accepts a precomputed dissimilarity matrix (an object of class
   `"dist"`) as `x` for hierarchical clustering (`"hclust"`, `"agnes"`,
   `"diana"`), so custom distances such as Bray-Curtis

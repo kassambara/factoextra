@@ -52,3 +52,21 @@ test_that("eclust() hierarchical clustering on raw data is unchanged (#182 no-re
   ref <- stats::hclust(get_dist(iris[, 1:4], method = "manhattan"), method = "ward.D2")
   expect_equal(res$height, ref$height)
 })
+
+test_that("eclust() supports hkmeans as a FUNcluster (#78)", {
+  df <- scale(iris[, 1:4])
+
+  set.seed(1)
+  res <- eclust(df, "hkmeans", k = 3, graph = FALSE)
+  expect_s3_class(res, "eclust")
+  expect_s3_class(res, "hkmeans")
+  expect_length(res$cluster, nrow(df))
+  expect_false(is.null(res$silinfo))
+  # delegates to hkmeans() unchanged
+  set.seed(1)
+  expect_equal(unname(res$cluster), unname(hkmeans(df, 3)$cluster))
+
+  # a distance matrix is rejected for hkmeans (needs raw data), like kmeans
+  expect_error(eclust(get_dist(df), "hkmeans", k = 3, graph = FALSE),
+               "hierarchical clustering")
+})

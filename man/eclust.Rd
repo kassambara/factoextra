@@ -6,7 +6,8 @@
 \usage{
 eclust(
   x,
-  FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes", "diana"),
+  FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes", "diana",
+    "hkmeans"),
   k = NULL,
   k.max = 10,
   stand = FALSE,
@@ -28,8 +29,8 @@ supplied directly; in that case \code{hc_metric} is ignored and \code{k}
 must be specified. This allows custom distances such as Bray-Curtis
 (e.g. \code{vegan::vegdist(df, "bray")}).}
 
-\item{FUNcluster}{a clustering function including "kmeans", "pam", "clara", 
-"fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.}
+\item{FUNcluster}{a clustering function including "kmeans", "pam", "clara",
+"fanny", "hkmeans", "hclust", "agnes" and "diana". Abbreviation is allowed.}
 
 \item{k}{the number of clusters to be generated. If NULL, the gap statistic
 is used to estimate the appropriate number of clusters. For hierarchical

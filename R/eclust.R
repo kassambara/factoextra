@@ -14,8 +14,8 @@ NULL
 #'   supplied directly; in that case \code{hc_metric} is ignored and \code{k}
 #'   must be specified. This allows custom distances such as Bray-Curtis
 #'   (e.g. \code{vegan::vegdist(df, "bray")}).
-#' @param FUNcluster a clustering function including "kmeans", "pam", "clara", 
-#'   "fanny", "hclust", "agnes" and "diana". Abbreviation is allowed.
+#' @param FUNcluster a clustering function including "kmeans", "pam", "clara",
+#'   "fanny", "hkmeans", "hclust", "agnes" and "diana". Abbreviation is allowed.
 #' @param k the number of clusters to be generated. If NULL, the gap statistic
 #'   is used to estimate the appropriate number of clusters. For hierarchical
 #'   clustering, this automatic selection may return \code{k = 1}. In the case
@@ -88,7 +88,7 @@ NULL
 #' @name eclust
 #' @rdname eclust
 #' @export
-eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes", "diana"),
+eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust", "agnes", "diana", "hkmeans"),
                    k = NULL, k.max = 10, stand = FALSE,
                    graph = TRUE,
                    hc_metric = "euclidean", hc_method = "ward.D2",
@@ -119,7 +119,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   }
   # Define the type of clustering
   FUNcluster <- match.arg(FUNcluster)
-  if(is_dist && FUNcluster %in% c("kmeans", "pam", "clara", "fanny"))
+  if(is_dist && FUNcluster %in% c("kmeans", "pam", "clara", "fanny", "hkmeans"))
     stop("A distance matrix (class 'dist') is supported only for hierarchical clustering ",
          "(FUNcluster = 'hclust', 'agnes', or 'diana'). For '", FUNcluster,
          "', supply the raw data, or use hcut() for precomputed distances.")
@@ -128,6 +128,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
                  pam = cluster::pam,
                  clara = cluster::clara,
                  fanny = cluster::fanny,
+                 hkmeans = hkmeans,
                  diana = hcut,
                  agnes = hcut,
                  hclust = hcut
@@ -141,7 +142,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
   # Partitioning clustering
   # ++++++++++++++++++++++++++++++
   clust <- list()
-  if(FUNcluster %in% c("kmeans", "pam", "clara", "fanny")){
+  if(FUNcluster %in% c("kmeans", "pam", "clara", "fanny", "hkmeans")){
     # Number of cluster
     if(is.null(k)) {
       gap <- .gap_stat(x, fun_clust, k.max = k.max, nboot = nboot,
