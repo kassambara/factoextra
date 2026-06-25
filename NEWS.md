@@ -9,6 +9,11 @@
 
 ## New Features
 
+* New `shape.ind` argument in `fviz_pca_ind()` and `fviz_pca_biplot()` maps point
+  **shape** to a grouping factor independently of colour, so individuals can be
+  coloured by one variable and shaped by another (e.g.
+  `fviz_pca_ind(res, col.ind = group1, shape.ind = group2)`). `fviz()` likewise
+  now accepts a factor for `pointshape`. Default behaviour is unchanged. (#36, #51)
 * New `rotate.labels` argument in `fviz()` (and thus `fviz_pca_var()`,
   `fviz_pca_biplot()`, etc.): when `TRUE`, variable text labels are rotated to
   the angle of their arrows (ggbiplot style). Defaults to `FALSE` (unchanged);

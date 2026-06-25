@@ -912,3 +912,44 @@ test_that("rotate.labels rotates variable labels, default off (#98)", {
   expect_true(all(n_rows[angled] == ncol(iris[, -5])))
   expect_s3_class(fviz_pca_biplot(res.pca), "ggplot")
 })
+
+test_that("shape.ind maps point shape to a second factor, default unchanged (#36, #51)", {
+  res.pca <- prcomp(iris[, -5], scale. = TRUE)
+  set.seed(1)
+  g2 <- factor(sample(c("a", "b"), nrow(iris), TRUE))
+
+  scales_of <- function(p) {
+    b <- ggplot2::ggplot_build(p)
+    unlist(lapply(b$plot$scales$scales, function(s) s$aesthetics))
+  }
+
+  # default (no shape.ind): unchanged, builds fine
+  expect_s3_class(fviz_pca_ind(res.pca, habillage = iris$Species, geom = "point"), "ggplot")
+
+  # two groupings: colour by Species, shape by g2 -> both a colour and a shape scale
+  p <- fviz_pca_ind(res.pca, col.ind = iris$Species, shape.ind = g2, geom = "point")
+  sc <- scales_of(p)
+  expect_true("colour" %in% sc)
+  expect_true("shape" %in% sc)
+
+  # a length-mismatched shape factor errors clearly
+  expect_error(fviz_pca_ind(res.pca, shape.ind = factor(c("a", "b"))),
+               "number of elements being plotted")
+
+  # biplot forwards shape.ind to individuals only and still builds
+  expect_s3_class(
+    fviz_pca_biplot(res.pca, col.ind = iris$Species, shape.ind = g2, geom.ind = "point"),
+    "ggplot")
+})
+
+test_that("numeric pointshape path is unchanged by the shape.ind feature (#36 no-regression)", {
+  res.pca <- prcomp(iris[, -5], scale. = TRUE)
+  # default fviz_pca_ind with a habillage still maps shape to the habillage group
+  # (no Shape. column injected; pointshape stays the auto-mapped grouping)
+  p <- fviz_pca_ind(res.pca, habillage = iris$Species, geom = "point")
+  has_shape_col <- any(vapply(p$layers, function(l) {
+    d <- tryCatch(as.data.frame(l$data), error = function(e) data.frame())
+    "Shape." %in% names(d)
+  }, logical(1)))
+  expect_false(has_shape_col)
+})
