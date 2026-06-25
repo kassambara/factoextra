@@ -50,6 +50,9 @@
 
 ## New Features
 
+* `fviz_pca_var()` / `fviz_pca_biplot()` (and other arrow plots) gain an
+  `arrow.linetype` argument to set the variable-arrow line type (e.g. `"dashed"`).
+  Default `"solid"` reproduces the previous appearance. (#73)
 * `eclust()` gains `"hkmeans"` as a `FUNcluster` option, so hierarchical k-means
   can be run through the same enhanced-clustering interface (with gap-statistic
   `k` selection, silhouette info, and plotting). (#78)

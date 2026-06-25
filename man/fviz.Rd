@@ -15,6 +15,7 @@ fviz(
   pointsize = 1.5,
   pointshape = 19,
   arrowsize = 0.5,
+  arrow.linetype = "solid",
   habillage = "none",
   addEllipses = FALSE,
   ellipse.level = 0.95,
@@ -75,6 +76,9 @@ Default value is "none". Allowed values are the combination of c("ind",
 \item{pointshape}{the shape of points}
 
 \item{arrowsize}{the size of arrows. Controls the thickness of arrows.}
+
+\item{arrow.linetype}{linetype of the variable arrows (e.g. "solid",
+"dashed", "dotted"). Default is "solid".}
 
 \item{habillage}{an optional factor variable for coloring the observations by 
 groups. Default value is "none". If X is a PCA object from FactoMineR 
