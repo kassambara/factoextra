@@ -35,6 +35,10 @@
   or the same as the data") for dendrograms with tied merge heights; the cluster
   rectangles now always match `k`, and `rect_border`/`rect_fill` colour vectors are
   recycled to `k`. (#154, #168)
+* `fviz_mclust_bic()`: the red "optimal clusters" line now lands on the correct cluster
+  when the model's cluster counts don't start at 1 (e.g. a restricted `G` range or a
+  noise/outlier model). It previously used the numeric `G` as a position on the discrete
+  x-axis; standard `G = 1:k` models are unaffected. (#116)
 * `fviz_dend()` no longer leaks its leaf-label text layer into the legend
   (the stray `a`/`cex` key), matching the scatter-plot cleanup. (#14)
 * `alpha.var`/`alpha.ind` (and `alpha`) now also fade the variable/individual text
