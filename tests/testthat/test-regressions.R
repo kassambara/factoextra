@@ -553,3 +553,12 @@ test_that("fviz_nbclust accepts a precomputed dist for diss-capable methods (#90
   expect_s3_class(fviz_nbclust(df, stats::kmeans, method = "silhouette"), "ggplot")
   expect_s3_class(fviz_nbclust(df, cluster::pam, method = "silhouette", diss = d), "ggplot")
 })
+
+test_that("fviz_dend keeps leaf labels out of the legend (#14 sibling)", {
+  hc <- hclust(dist(scale(USArrests[1:20, ])), method = "ward.D2")
+  text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  for (p in list(fviz_dend(hc), fviz_dend(hc, k = 3, cex = 0.5))) {
+    txt <- Filter(function(L) inherits(L$geom, text_geoms), p$layers)
+    expect_true(all(vapply(txt, function(L) isFALSE(L$show.legend), logical(1))))
+  }
+})

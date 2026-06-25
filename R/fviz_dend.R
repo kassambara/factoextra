@@ -199,6 +199,10 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                               lower_rect = lower_rect)
   }
   
+  # Keep the leaf-label text layer out of the legend (no stray "a" glyph),
+  # mirroring the scatter-plot cleanup in .fviz_finish() (#14).
+  p <- .hide_text_legend(p)
+
   attr(p, "dendrogram") <- dend
   structure(p, class = c(class(p), "fviz_dend"))
   return(p)

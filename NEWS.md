@@ -27,6 +27,8 @@
   variables share factor-level names (e.g. several variables with `Low`/`High`).
   Colliding categories are relabelled `variable_level` (e.g. `Acidity_Low`);
   non-colliding labels are unchanged. (#184, #140)
+* `fviz_dend()` no longer leaks its leaf-label text layer into the legend
+  (the stray `a`/`cex` key), matching the scatter-plot cleanup. (#14)
 * Point/individual labels no longer add a stray `a` glyph to the colour/fill
   legend (e.g. `fviz_pca_ind(..., habillage = )`). Text layers are now excluded
   from the legend keys; labels still appear on the plot. (#14)
