@@ -24,6 +24,9 @@
 
 ## Bug Fixes
 
+* `fviz_*()` now **warn** when `label` or `invisible` contain an unrecognized
+  value (e.g. `label = "id"` instead of `"ind"`) and list the valid values,
+  instead of silently drawing nothing. Recognized values are unchanged. (#165)
 * `get_pca_ind()` now works for **ade4 `dudi.pca`** objects. Their `$li`/`$tab`
   are data frames, which previously collapsed the internal `cos2` matrix into a
   list and raised "attempt to set 'colnames' on an object with less than two

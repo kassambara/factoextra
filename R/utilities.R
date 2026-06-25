@@ -711,6 +711,22 @@ NULL
 # possible values are "all", "none" or the combination of 
 # c("row", "row.sup", "col", "col.sup", "ind", "ind.sup", "quali", "var", "quanti.sup")
 ## Returns a list 
+# Warn when a label/invisible vector contains tokens that are not recognized, so
+# a typo such as label = "id" (instead of "ind") no longer silently draws nothing
+# but tells the user which values are valid. Only warns for genuinely unknown
+# tokens; recognized values keep their exact previous behavior. (#165)
+.warn_unknown_elements <- function(values, valid, arg){
+  if(is.null(values)) return(invisible(NULL))
+  unknown <- setdiff(as.character(values), valid)
+  if(length(unknown))
+    warning("Unknown ", arg, " value(s): ",
+            paste0('"', unknown, '"', collapse = ", "),
+            ". Valid values are \"all\", \"none\" or any of: ",
+            paste0('"', setdiff(valid, c("all", "none")), '"', collapse = ", "),
+            ".", call. = FALSE)
+  invisible(NULL)
+}
+
 .label <- function(label){
   lab  <- list()
   element <- c("var", "quanti.sup", "quali.sup", "quanti.sup","quanti", # var - PCA, MCA, MFA
@@ -721,6 +737,7 @@ NULL
                "row", "row.sup", # row - ca
                "col", "col.sup" # col - ca
                )
+  .warn_unknown_elements(label, c("all", "none", element), "label")
   for(el in element){
     if(label[1] == "all" || el %in% label) lab[[el]] <- TRUE
     else lab[[el]] <- FALSE
@@ -745,6 +762,7 @@ NULL
                "row", "row.sup", # row - ca
                "col", "col.sup" # col - ca
   )
+  .warn_unknown_elements(invisible, c("all", "none", element), "invisible")
   for(el in element){
     if(el %in% invisible) hide[[el]] <- TRUE
     else hide[[el]] <- FALSE

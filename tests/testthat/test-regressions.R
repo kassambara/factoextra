@@ -953,3 +953,31 @@ test_that("numeric pointshape path is unchanged by the shape.ind feature (#36 no
   }, logical(1)))
   expect_false(has_shape_col)
 })
+
+test_that("unknown label/invisible tokens warn instead of silently doing nothing (#165)", {
+  res <- prcomp(iris[, -5], scale. = TRUE)
+
+  # the reported case: label = "id" (typo for "ind") now warns and names valids.
+  # (A biplot calls fviz() for ind and var, so it warns once per pass; capture
+  # all warnings to assert the message without leaking the second one.)
+  w <- testthat::capture_warnings(fviz_pca_biplot(res, label = c("var", "id")))
+  expect_true(any(grepl("Unknown label value", w)))
+  expect_warning(fviz_pca_ind(res, invisible = "ids"),
+                 "Unknown invisible value")
+
+  # valid tokens stay silent (no behavior change)
+  expect_silent(fviz_pca_ind(res, label = "all"))
+  expect_silent(fviz_pca_ind(res, label = c("var", "ind")))
+  expect_silent(fviz_pca_ind(res, label = "none"))
+  expect_silent(fviz_pca_ind(res, invisible = "none"))
+  expect_silent(fviz_pca_biplot(res, label = "all"))
+
+  # rendering for the correct keyword is unaffected: "ind" still draws labels
+  text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  p <- suppressWarnings(fviz_pca_ind(res, label = "ind", geom = c("point", "text")))
+  has_ind_text <- any(vapply(p$layers, function(l) {
+    inherits(l$geom, text_geoms) &&
+      nrow(as.data.frame(l$data)) == nrow(iris)
+  }, logical(1)))
+  expect_true(has_ind_text)
+})
