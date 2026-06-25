@@ -1,5 +1,12 @@
 # factoextra 2.0.0.999
 
+## Documentation
+
+* New vignette **"Extending factoextra to support new analysis backends"**
+  documenting the `get_*()` / `fviz_*()` extension contract (which functions to
+  edit and the standardized return structure), with ExPosition as a worked
+  example and a vegan (RDA/CCA) template. (#23)
+
 ## Bug Fixes
 
 * `fviz_mca_biplot()` now forwards the `map` argument to the individuals and

@@ -45,7 +45,9 @@ Suggests:
     MASS,
     knitr,
     mclust,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 URL: https://github.com/kassambara/factoextra,
     https://rpkgs.datanovia.com/factoextra/index.html
 BugReports: https://github.com/kassambara/factoextra/issues
