@@ -23,8 +23,12 @@
 #'   \href{https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/}{Determining
 #'    the optimal number of clusters}
 #'   
-#' @param x numeric matrix or data frame. In the function fviz_nbclust(), x can 
-#'   be the results of the function NbClust().
+#' @param x numeric matrix or data frame. In the function fviz_nbclust(), x can
+#'   be the results of the function NbClust(). For \code{method = "silhouette"}
+#'   or \code{"wss"}, x may also be a precomputed dissimilarity (an object of
+#'   class \code{"dist"}); it is then passed directly to \code{FUNcluster},
+#'   which must be a dissimilarity-capable method (e.g. \code{cluster::pam} or
+#'   \code{factoextra::hcut}). \code{method = "gap_stat"} still needs the raw data.
 #' @param method the method to be used for estimating the optimal number of 
 #'   clusters. Possible values are "silhouette" (for average silhouette width), 
 #'   "wss" (for total within sum of square) and "gap_stat" (for gap statistics).
@@ -112,8 +116,10 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   {
   if(k.max < 2) stop("k.max must be >= 2")
   method = match.arg(method)
-  if(!inherits(x, c("data.frame", "matrix")) && !("Best.nc" %in% names(x)))
-    stop("x should be an object of class matrix/data.frame or ",
+  # x may also be a precomputed dissimilarity ("dist") for diss-capable methods (#90).
+  is_dist <- inherits(x, "dist")
+  if(!inherits(x, c("data.frame", "matrix", "dist")) && !("Best.nc" %in% names(x)))
+    stop("x should be an object of class matrix/data.frame/dist or ",
          "an object created by the function NbClust() [NbClust package].")
   
   # x is an object created by the function NbClust() [NbClust package]
@@ -137,12 +143,25 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   else if(method %in% c("silhouette", "wss")) {
 
       if (is.data.frame(x)) x <- as.matrix(x)
-      if(is.null(diss)) diss <- stats::dist(x)
-      
+      # When x is a dissimilarity, use it directly (don't recompute) and pass it
+      # to FUNcluster, which must be a dissimilarity-capable method (#90).
+      # Detect capability via a 'diss'/'isdiss' formal (pam/fanny/hcut have one;
+      # kmeans/clara do not and would silently mis-cluster a coerced dist).
+      if(is_dist){
+        fmls <- tryCatch(names(formals(FUNcluster)), error = function(e) character(0))
+        if(!any(c("diss", "isdiss") %in% fmls))
+          stop("FUNcluster does not accept a distance matrix (it has no 'diss'/'isdiss' ",
+               "argument). Use a dissimilarity-capable method such as cluster::pam, ",
+               "cluster::fanny, or factoextra::hcut, or pass the raw data instead of a 'dist'.",
+               call. = FALSE)
+      }
+      if(is.null(diss)) diss <- if(is_dist) x else stats::dist(x)
+      .cluster_at <- function(i) FUNcluster(x, i, ...)
+
       v <- rep(0, k.max)
       if(method == "silhouette"){
         for(i in 2:k.max){
-          clust <- FUNcluster(x, i, ...)
+          clust <- .cluster_at(i)
           v[i] <- .get_ave_sil_width(diss, clust$cluster)
         }
       }
@@ -153,7 +172,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
         # Compute the one-cluster baseline internally so callers may reject k = 1.
         v[1] <- .get_withinSS(diss, rep(1L, n_obs))
         for(i in 2:k.max){
-          clust <- FUNcluster(x, i, ...)
+          clust <- .cluster_at(i)
           v[i] <- .get_withinSS(diss, clust$cluster)
         }
         
@@ -194,6 +213,10 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
   }
   
   else if(method == "gap_stat"){
+    if(is_dist)
+      stop("method = 'gap_stat' requires the original data, not a distance matrix ",
+           "(the gap statistic simulates reference datasets). Use method = 'silhouette' or ",
+           "'wss' with a 'dist', or pass the raw data.", call. = FALSE)
     extra_args <- list(...)
     if(!is.null(extra_args$maxSE)) {
       maxSE <- extra_args$maxSE

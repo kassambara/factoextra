@@ -27,8 +27,12 @@ fviz_gap_stat(
 )
 }
 \arguments{
-\item{x}{numeric matrix or data frame. In the function fviz_nbclust(), x can 
-be the results of the function NbClust().}
+\item{x}{numeric matrix or data frame. In the function fviz_nbclust(), x can
+be the results of the function NbClust(). For \code{method = "silhouette"}
+or \code{"wss"}, x may also be a precomputed dissimilarity (an object of
+class \code{"dist"}); it is then passed directly to \code{FUNcluster},
+which must be a dissimilarity-capable method (e.g. \code{cluster::pam} or
+\code{factoextra::hcut}). \code{method = "gap_stat"} still needs the raw data.}
 
 \item{FUNcluster}{a partitioning function which accepts as first argument a
 (data) matrix like \code{x}, second argument, say \code{k >= 2}, the

@@ -55,6 +55,10 @@
 * `fviz_pca_var()` / `fviz_pca_biplot()` (and other arrow plots) gain an
   `arrow.linetype` argument to set the variable-arrow line type (e.g. `"dashed"`).
   Default `"solid"` reproduces the previous appearance. (#73)
+* `fviz_nbclust()` now accepts a precomputed dissimilarity (`"dist"`) as `x` for
+  `method = "silhouette"`/`"wss"`, passing it to dissimilarity-capable `FUNcluster`s
+  (e.g. `cluster::pam`, `factoextra::hcut`). Non-diss methods (kmeans/clara) and
+  `method = "gap_stat"` raise a clear error instead of mis-clustering. (#90)
 * `eclust()` gains `"hkmeans"` as a `FUNcluster` option, so hierarchical k-means
   can be run through the same enhanced-clustering interface (with gap-statistic
   `k` selection, silhouette info, and plotting). (#78)
