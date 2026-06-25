@@ -562,3 +562,29 @@ test_that("fviz_dend keeps leaf labels out of the legend (#14 sibling)", {
     expect_true(all(vapply(txt, function(L) isFALSE(L$show.legend), logical(1))))
   }
 })
+
+test_that("fviz_dend rectangles match k even with tied heights (#154, #168)", {
+  nrects <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomRect"), logical(1)))[1]
+    nrow(ggplot2::ggplot_build(p)$data[[i]])
+  }
+
+  # seed 234: binary/ward.D2 dendrogram whose heights_per_k has duplicate names
+  # (k = 2 matches >1 height) -> used to make the rect data frame longer than k,
+  # erroring with "Aesthetics must be either length 1 or the same as the data".
+  set.seed(234)
+  m <- matrix(sample(0:1, 16 * 4, replace = TRUE), ncol = 4)
+  rownames(m) <- paste0("o", seq_len(nrow(m)))
+  hc <- hclust(dist(m), method = "ward.D2")
+
+  expect_equal(nrects(fviz_dend(hc, k = 2, rect = TRUE, rect_fill = TRUE,
+                                rect_border = c("red", "blue"))), 2)
+  expect_equal(nrects(fviz_dend(hc, k = 4, rect = TRUE,
+                                rect_border = ggpubr::get_palette("jco", 4))), 4)
+  # more colours than rectangles are recycled/trimmed, not errored
+  expect_equal(nrects(fviz_dend(hc, k = 3, rect = TRUE, rect_border = rainbow(6))), 3)
+
+  # NO-REGRESSION: well-behaved dendrogram still yields exactly k rectangles
+  hc2 <- hclust(dist(scale(USArrests)), method = "ward.D2")
+  for (k in 2:5) expect_equal(nrects(fviz_dend(hc2, k = k, rect = TRUE)), k)
+})
