@@ -360,6 +360,17 @@ test_that("get_pca_ind returns finite cos2 for zero-distance rows", {
   expect_equal(unname(ind$cos2[2, ]), c(0, 0))
 })
 
+test_that("fviz text labels do not leak a glyph into the legend (#14)", {
+  res <- stats::prcomp(mtcars[, 1:7], scale. = TRUE)
+  p <- fviz_pca_ind(res, habillage = factor(mtcars$carb))
+
+  text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  text_layers <- Filter(function(L) inherits(L$geom, text_geoms), p$layers)
+
+  expect_gt(length(text_layers), 0)
+  expect_true(all(vapply(text_layers, function(L) isFALSE(L$show.legend), logical(1))))
+})
+
 test_that("FAMD plots handle qualitative variables with shared factor levels (#184, #140)", {
   skip_if_not_installed("FactoMineR")
 
