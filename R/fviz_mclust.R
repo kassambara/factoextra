@@ -98,11 +98,18 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
   ggline.opts <- list(data = x, x ="cluster", y = "BIC", group = "model",
                       color = color, shape = shape, palette = palette,
                       main = main, xlab = xlab, ylab = ylab,...)
+  # The x-axis is a discrete factor, so the optimal-cluster line must use the
+  # position of `number_of_cluster` among the cluster levels, not its numeric
+  # value (those differ when the cluster counts don't start at 1, e.g. a
+  # restricted G range or a noise/outlier model). For the standard G = 1:k case
+  # the position equals the value, so this is unchanged. (#116)
+  opt_x <- match(as.character(number_of_cluster), levels(x$cluster))
   p <- do.call(ggpubr::ggline, ggline.opts)+
-    labs(subtitle = paste0("Best model: ", best_model, 
+    labs(subtitle = paste0("Best model: ", best_model,
                            " | Optimal clusters: n = ",  number_of_cluster))+
-    geom_vline(xintercept = number_of_cluster, linetype = 2, color = "red")+
     theme(legend.title = element_blank())
+  if(!is.na(opt_x))
+    p <- p + geom_vline(xintercept = opt_x, linetype = 2, color = "red")
 
   
   if(missing(legend)) p + theme(legend.position = c(0.7, 0.2), legend.direction = "horizontal",
