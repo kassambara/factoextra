@@ -606,3 +606,27 @@ test_that("fviz_dend lower_rect scales for short trees; tall trees unchanged (#5
   hc2 <- hclust(dist(scale(USArrests)), "ward.D2"); mh2 <- max(hc2$height)
   expect_equal(rect_ymin(fviz_dend(hc2, k = 4, rect = TRUE)), -(mh2 / 8 + 0.5))
 })
+
+test_that("fviz_dend match_coord_colors aligns colours to cluster labels (#103)", {
+  skip_if_not_installed("dendextend")
+  hc <- hclust(dist(scale(USArrests)), "ward.D2"); k <- 4
+  pal <- ggpubr::get_palette("default", k)
+
+  label_colors <- function(match) {
+    dd <- attr(fviz_dend(hc, k = k, match_coord_colors = match), "dendrogram")
+    gd <- dendextend::cutree(dd, k = k, order_clusters_as_data = TRUE)
+    lc <- dendextend::get_leaves_branches_col(dd)
+    as.vector(tapply(lc, gd[order.dendrogram(dd)], function(x) x[1])[as.character(seq_len(k))])
+  }
+
+  # opt-in: cluster label i -> palette[i], matching fviz_cluster()/fviz_silhouette()
+  expect_equal(label_colors(TRUE), as.vector(pal))
+  # this dataset is a known mismatch case, so the default differs from palette order
+  expect_false(identical(label_colors(FALSE), as.vector(pal)))
+
+  # NO-REGRESSION: default (FALSE) is byte-identical to omitting the argument
+  expect_identical(
+    dendextend::get_leaves_branches_col(attr(fviz_dend(hc, k = k), "dendrogram")),
+    dendextend::get_leaves_branches_col(attr(fviz_dend(hc, k = k, match_coord_colors = FALSE), "dendrogram"))
+  )
+})

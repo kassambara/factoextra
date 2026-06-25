@@ -15,8 +15,12 @@
 #'   "lancet", "jco", "ucscgb", "uchicago", "simpsons" and "rickandmorty".
 #' @param show_labels a logical value. If TRUE, leaf labels are shown. Default 
 #'   value is TRUE.
-#' @param color_labels_by_k logical value. If TRUE, labels are colored 
+#' @param color_labels_by_k logical value. If TRUE, labels are colored
 #'   automatically by group when k != NULL.
+#' @param match_coord_colors logical value. Default is FALSE, where dendrogram
+#'   colors follow the left-to-right leaf order. If TRUE, cluster colors are
+#'   remapped to cluster-label order so they match \code{\link{fviz_cluster}()}
+#'   and \code{\link{fviz_silhouette}()} for the same clustering.
 #' @param label_cols a vector containing the colors for labels.
 #' @param labels_track_height a positive numeric value for adjusting the room for the 
 #'   labels. Used only when type = "rectangle".
@@ -102,6 +106,7 @@
 #' }
 #' @export
 fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  show_labels = TRUE, color_labels_by_k = TRUE,
+                      match_coord_colors = FALSE,
                       label_cols = NULL,  labels_track_height = NULL, repel = FALSE, lwd = 0.7,
                       type = c("rectangle",  "circular", "phylogenic"),
                       phylo_layout = "layout.auto",
@@ -158,8 +163,16 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if(!is.null(k)) {
     if(.is_color_palette(k_colors)) k_colors <- ggpubr::get_palette(k_colors, k = k)
     else if(is.null(k_colors)) k_colors <- ggpubr::get_palette("default", k = k)
-    dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = k_colors)
-    if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = k_colors)
+    # By default colours follow the left-to-right leaf order (dendextend). With
+    # match_coord_colors = TRUE, remap them to cluster-label order so they match
+    # fviz_cluster()/fviz_silhouette() for the same clustering (#103).
+    branch_colors <- k_colors
+    if(match_coord_colors){
+      ord <- .coord_color_order(dend, k)
+      if(!is.null(ord)) branch_colors <- k_colors[ord]
+    }
+    dend <- dendextend::set(dend, what = "branches_k_color", k = k, value = branch_colors)
+    if(color_labels_by_k) dend <- dendextend::set(dend, "labels_col",  k = k, value = branch_colors)
   }
   
   if(!is.null(label_cols)){
@@ -202,8 +215,8 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   }
   if(rect){
     p <- p + .rect_dendrogram(dend, k = k, palette = rect_border, rect_fill = rect_fill,
-                              rect_lty = rect_lty, linewidth = lwd, 
-                              lower_rect = lower_rect)
+                              rect_lty = rect_lty, linewidth = lwd,
+                              lower_rect = lower_rect, match_coord_colors = match_coord_colors)
   }
   
   # Keep the leaf-label text layer out of the legend (no stray "a" glyph),
@@ -481,14 +494,34 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
 }
 
 
+# Left-to-right cluster-label order of a dendrogram cut into k groups.
+# dendextend colours branches in leaf (left-to-right) order, whereas
+# fviz_cluster()/fviz_silhouette() colour by cluster label. Remapping a length-k
+# colour vector by this order makes the colours match across the three plots
+# (#103). Returns NULL when the cut is not a clean permutation of seq_len(k).
+.coord_color_order <- function(dend, k){
+  # dendextend colours the g-th cluster in LEAF (left-to-right) order with
+  # value[g]. fviz_cluster()/fviz_silhouette() colour by the DATA-order cluster
+  # label (cutree's labelling). So value[g] should be k_colors[ data-label of the
+  # g-th leaf cluster ]. That permutation is the data-order labels read in leaf
+  # order: unique(cutree(.., as_data = TRUE)[order.dendrogram(dend)]).
+  cl  <- tryCatch(dendextend::cutree(dend, k = k, order_clusters_as_data = TRUE),
+                  error = function(e) NULL)
+  ord <- tryCatch(stats::order.dendrogram(dend), error = function(e) NULL)
+  if(is.null(cl) || is.null(ord) || length(cl) != length(ord)) return(NULL)
+  lr <- unique(cl[ord])
+  lr <- lr[!is.na(lr)]
+  if(length(lr) == k && setequal(lr, seq_len(k))) as.integer(lr) else NULL
+}
+
 # Add rectangle to a dendrogram
 # lower_rect: a (scalar) value of how low should the lower part of the rect be.
-.rect_dendrogram <- function (dend, k = NULL,  h = NULL, 
-                             k_colors = NULL, palette = NULL, rect_fill = FALSE, rect_lty = 2, 
-                             lower_rect=-1.5, 
-          ...) 
+.rect_dendrogram <- function (dend, k = NULL,  h = NULL,
+                             k_colors = NULL, palette = NULL, rect_fill = FALSE, rect_lty = 2,
+                             lower_rect=-1.5, match_coord_colors = FALSE,
+          ...)
 {
-  
+
   if(missing(k_colors) && !is.null(palette)) k_colors <- palette
   # value (should be between 0 to 1): proportion of the height 
   # our rect will be between the height needed for k and k+1 clustering.
@@ -543,6 +576,12 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   else if(length(color) > 1 && length(color) != k){
     # recycle/trim a multi-colour vector to exactly k (one per rectangle)
     color <- rep_len(color, k)
+  }
+  # Align rectangle colours to cluster-label order (matches branch/label colours
+  # and fviz_cluster()/fviz_silhouette()) when requested (#103).
+  if(match_coord_colors && length(color) == k){
+    ord <- .coord_color_order(dend, k)
+    if(!is.null(ord)) color <- color[ord]
   }
   if(rect_fill){
     fill <- color

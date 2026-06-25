@@ -69,6 +69,10 @@
   `method = "silhouette"`/`"wss"`, passing it to dissimilarity-capable `FUNcluster`s
   (e.g. `cluster::pam`, `factoextra::hcut`). Non-diss methods (kmeans/clara) and
   `method = "gap_stat"` raise a clear error instead of mis-clustering. (#90)
+* `fviz_dend()` gains a `match_coord_colors` argument (default `FALSE`). When `TRUE`,
+  cluster colours are remapped from left-to-right leaf order to cluster-label order,
+  so a dendrogram's colours match `fviz_cluster()`/`fviz_silhouette()` for the same
+  clustering. Default `FALSE` keeps the previous colouring unchanged. (#103)
 * `eclust()` gains `"hkmeans"` as a `FUNcluster` option, so hierarchical k-means
   can be run through the same enhanced-clustering interface (with gap-statistic
   `k` selection, silhouette info, and plotting). (#78)
