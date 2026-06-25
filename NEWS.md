@@ -2,6 +2,10 @@
 
 ## Bug Fixes
 
+* `fviz_mca_biplot()` now forwards the `map` argument to the individuals and
+  variable categories, so asymmetric maps (e.g. `"rowprincipal"`,
+  `"colprincipal"`, `"symbiplot"`) take effect instead of always drawing the
+  symmetric map. (#142)
 * `fviz_dend()`: `lwd` now controls ggplot branch thickness correctly and no
   longer triggers a spurious linewidth legend. (#200, @erdeyl)
 * `fviz_nbclust()` computes the `k = 1` WSS baseline internally, so helpers

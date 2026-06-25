@@ -266,14 +266,14 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   p <- fviz_mca_ind(X,  axes = axes, geom = geom2, repel = repel,
                     label = label, invisible=invisible, habillage = habillage,
-                    addEllipses = addEllipses, palette = palette,  ...)
-    
+                    addEllipses = addEllipses, palette = palette, map = map, ...)
+
   # Variable
   geom2 <- geom.var
   if(arrows[2]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
   # Add variables
-  p <- fviz_mca_var(X, axes = axes, geom =  geom2, repel = repel, 
-                    label = label, invisible = invisible, ggp = p, ...)
+  p <- fviz_mca_var(X, axes = axes, geom =  geom2, repel = repel,
+                    label = label, invisible = invisible, ggp = p, map = map, ...)
   
   p+labs(title=title)
 }
