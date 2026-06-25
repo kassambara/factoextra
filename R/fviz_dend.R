@@ -192,7 +192,14 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   # Add rectangle around clusters
   if(circular || phylogenic || is.null(k)) rect <- FALSE
   if(rect_fill && missing(rect_lty)) rect_lty = "blank"
-  if(missing(lower_rect)) lower_rect = -(labels_track_height+0.5)
+  if(missing(lower_rect)) {
+    # The absolute -0.5 offset overwhelms short trees (e.g. correlation/gower
+    # distances with max height < 1), pushing the rectangles far below the
+    # labels. For those, scale the offset to the tree height instead; taller
+    # trees (>= 1) keep the previous default unchanged (#55).
+    lower_rect <- if(max_height < 1) -(labels_track_height + max_height/8)
+                  else -(labels_track_height + 0.5)
+  }
   if(rect){
     p <- p + .rect_dendrogram(dend, k = k, palette = rect_border, rect_fill = rect_fill,
                               rect_lty = rect_lty, linewidth = lwd, 
