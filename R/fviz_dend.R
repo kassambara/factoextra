@@ -505,19 +505,24 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   m <- c(0, cumsum(clustab))
   which <- 1L:k
   
+  # Collapse height lookups to a single value: tied merge heights can make
+  # `names(tree_heights) == k` match more than one entry, which would make
+  # ytop (and thus the rectangle data frame) longer than k rows and break the
+  # geom_rect aesthetics. Well-behaved dendrograms match exactly one (#154, #168).
+  k_height <- tree_heights[names(tree_heights) == k]
+  k_height <- if (length(k_height) == 0) 0 else max(k_height)
+  next_k_height <- tree_heights[names(tree_heights) == k + 1]
+  if (length(next_k_height) == 0) {
+    next_k_height <- 0
+    prop_k_height <- 1
+  } else next_k_height <- max(next_k_height)
+
   xleft <- ybottom <- xright <- ytop <- list()
   for (n in seq_along(which)) {
-    next_k_height <- tree_heights[names(tree_heights) == k + 1]
-    if (length(next_k_height) == 0) {
-      next_k_height <- 0
-      prop_k_height <- 1
-    }
-    
     xleft[[n]] = m[which[n]] + 0.66
     ybottom[[n]] = lower_rect
     xright[[n]] = m[which[n] + 1] + 0.33
-    ytop[[n]] <- tree_heights[names(tree_heights) == k] * 
-      prop_k_height + next_k_height * (1 - prop_k_height)
+    ytop[[n]] <- k_height * prop_k_height + next_k_height * (1 - prop_k_height)
   }
   
   df <- data.frame(xmin = unlist(xleft), ymin = unlist(ybottom), xmax = unlist(xright), ymax = unlist(ytop))
@@ -528,8 +533,9 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   # See: https://github.com/kassambara/factoextra/issues/163, #180
   if(length(color) == 1 && color == "cluster") color <- "default"
   if(.is_color_palette(color)) color <- ggpubr::get_palette(color, k = k)
-  else if(length(color) > 1 && length(color) < k){
-    color <- rep(color, k)[1:k]
+  else if(length(color) > 1 && length(color) != k){
+    # recycle/trim a multi-colour vector to exactly k (one per rectangle)
+    color <- rep_len(color, k)
   }
   if(rect_fill){
     fill <- color
