@@ -533,3 +533,23 @@ test_that("fviz_dend renders sub only when set; default has no subtitle (#54)", 
   expect_equal(fviz_dend(hc, sub = "Method: ward.D2")$labels$subtitle, "Method: ward.D2")
   expect_s3_class(fviz_dend(hc, k = 3), "ggplot")
 })
+
+test_that("fviz_nbclust accepts a precomputed dist for diss-capable methods (#90)", {
+  skip_if_not_installed("cluster")
+  df <- scale(USArrests)
+  d  <- get_dist(df, method = "euclidean")
+
+  # diss-capable methods cluster on the dissimilarity
+  expect_s3_class(fviz_nbclust(d, cluster::pam, method = "silhouette"), "ggplot")
+  expect_s3_class(fviz_nbclust(d, hcut, method = "wss"), "ggplot")
+
+  # non-diss methods are rejected with a clear error (no silent mis-clustering)
+  expect_error(fviz_nbclust(d, stats::kmeans, method = "wss"), "distance matrix")
+  expect_error(fviz_nbclust(d, cluster::clara, method = "silhouette"), "distance matrix")
+  # gap_stat needs raw data
+  expect_error(fviz_nbclust(d, cluster::pam, method = "gap_stat"), "gap_stat")
+
+  # NO-REGRESSION: data input still works for all methods
+  expect_s3_class(fviz_nbclust(df, stats::kmeans, method = "silhouette"), "ggplot")
+  expect_s3_class(fviz_nbclust(df, cluster::pam, method = "silhouette", diss = d), "ggplot")
+})
