@@ -21,6 +21,8 @@ NULL
 #'@param pointsize the size of points
 #'@param pointshape the shape of points
 #'@param arrowsize the size of arrows. Controls the thickness of arrows.
+#'@param arrow.linetype linetype of the variable arrows (e.g. "solid",
+#'  "dashed", "dotted"). Default is "solid".
 #'@param title the title of the graph
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
@@ -126,9 +128,10 @@ NULL
 #'  }
 #'@export
 fviz <- function(X, element, axes = c(1, 2), geom = "auto",
-                          label = "all", invisible="none", labelsize=4, 
+                          label = "all", invisible="none", labelsize=4,
                           pointsize = 1.5, pointshape = 19, arrowsize = 0.5,
-                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95, 
+                          arrow.linetype = "solid",
+                          habillage="none", addEllipses=FALSE, ellipse.level = 0.95,
                           ellipse.type = "norm", ellipse.alpha = 0.1, mean.point = TRUE,
                           color = "black", fill = "white", alpha = 1, gradient.cols = NULL,
                           col.row.sup = "darkblue", col.col.sup="darkred",
@@ -274,7 +277,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
   if("arrow" %in% geom && !hide[[element]])
-    p <- p + .arrows(data = df, color = color, alpha = alpha, linewidth = arrowsize)
+    p <- p + .arrows(data = df, color = color, alpha = alpha, linewidth = arrowsize,
+                     linetype = arrow.linetype)
   # Add correlation circle if PCA & element = "var" & scale = TRUE
   if(facto.class == "PCA" && element == "var"){
     if(.get_scale_unit(X) && is.null(extra_args$scale.)) 
@@ -381,13 +385,14 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 # Add arrow to the plot
 # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for geom_segment
 .arrows <- function(data, color = "black", alpha = 1, linewidth = 0.5,
-                    origin = 0, xend = "x", yend = "y"){
+                    linetype = "solid", origin = 0, xend = "x", yend = "y"){
   origin <- rep(origin, nrow(data))
   dd <- cbind.data.frame(data, xstart = origin, ystart = origin)
   ggpubr::geom_exec(geom_segment, data = dd,
                     x = "xstart", y = "ystart", xend = xend, yend = yend,
                     arrow = grid::arrow(length = grid::unit(0.2, 'cm')),
-                    color = color, alpha = alpha, linewidth = linewidth)
+                    color = color, alpha = alpha, linewidth = linewidth,
+                    linetype = linetype)
 }
 
 

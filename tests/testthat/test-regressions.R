@@ -506,3 +506,20 @@ test_that("fviz_eig validates parallel.iter for parallel analysis", {
     "parallel.iter must be a single positive integer value in"
   )
 })
+
+test_that("arrow.linetype controls variable-arrow linetype; default unchanged (#73)", {
+  skip_if_not_installed("FactoMineR")
+  res <- FactoMineR::PCA(decathlon2[1:23, 1:10], graph = FALSE)
+
+  arrow_lt <- function(p) {
+    seg <- Filter(function(l) inherits(l$geom, "GeomSegment") &&
+                    !is.null(l$geom_params$arrow), p$layers)
+    if (!length(seg)) return(NA_character_)
+    lt <- seg[[1]]$aes_params$linetype
+    if (is.null(lt)) "solid" else as.character(lt)
+  }
+
+  expect_equal(arrow_lt(fviz_pca_var(res)), "solid")                       # default
+  expect_equal(arrow_lt(fviz_pca_var(res, arrow.linetype = "dashed")), "dashed")
+  expect_equal(arrow_lt(fviz_pca_biplot(res, arrow.linetype = "dotted")), "dotted")
+})
