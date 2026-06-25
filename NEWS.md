@@ -69,6 +69,9 @@
   `method = "silhouette"`/`"wss"`, passing it to dissimilarity-capable `FUNcluster`s
   (e.g. `cluster::pam`, `factoextra::hcut`). Non-diss methods (kmeans/clara) and
   `method = "gap_stat"` raise a clear error instead of mis-clustering. (#90)
+* `fviz_dend()` gains a `labels_font` argument ("plain"/"bold"/"italic"/"bold.italic")
+  to set the leaf-label font face, e.g. italic species names. Default "plain" leaves
+  labels unchanged. (#121)
 * `fviz_dend()` gains a `match_coord_colors` argument (default `FALSE`). When `TRUE`,
   cluster colours are remapped from left-to-right leaf order to cluster-label order,
   so a dendrogram's colours match `fviz_cluster()`/`fviz_silhouette()` for the same

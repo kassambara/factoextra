@@ -630,3 +630,21 @@ test_that("fviz_dend match_coord_colors aligns colours to cluster labels (#103)"
     dendextend::get_leaves_branches_col(attr(fviz_dend(hc, k = k, match_coord_colors = FALSE), "dendrogram"))
   )
 })
+
+test_that("fviz_dend labels_font sets leaf-label font face; default unchanged (#121)", {
+  hc <- hclust(dist(scale(USArrests[1:20, ])), "ward.D2")
+  text_layer <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1)))[1]
+    p$layers[[i]]
+  }
+
+  # opt-in font face applies to the leaf-label layer
+  expect_equal(text_layer(fviz_dend(hc, k = 3, labels_font = "italic"))$aes_params$fontface, "italic")
+  expect_equal(text_layer(fviz_dend(hc, k = 3, labels_font = "bold.italic"))$aes_params$fontface, "bold.italic")
+
+  # NO-REGRESSION: default (and explicit "plain") leave the layer untouched
+  expect_null(text_layer(fviz_dend(hc, k = 3))$aes_params$fontface)
+  expect_null(text_layer(fviz_dend(hc, k = 3, labels_font = "plain"))$aes_params$fontface)
+
+  expect_s3_class(fviz_dend(hc, k = 3, rect = TRUE, labels_font = "italic"), "ggplot")
+})

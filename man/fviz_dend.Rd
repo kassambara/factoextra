@@ -14,6 +14,7 @@ fviz_dend(
   color_labels_by_k = TRUE,
   match_coord_colors = FALSE,
   label_cols = NULL,
+  labels_font = "plain",
   labels_track_height = NULL,
   repel = FALSE,
   lwd = 0.7,
@@ -61,6 +62,10 @@ remapped to cluster-label order so they match \code{\link{fviz_cluster}()}
 and \code{\link{fviz_silhouette}()} for the same clustering.}
 
 \item{label_cols}{a vector containing the colors for labels.}
+
+\item{labels_font}{font face for the leaf labels of "rectangle"/"circular"
+dendrograms. One of "plain" (default), "bold", "italic" or "bold.italic".
+Default "plain" leaves labels unchanged.}
 
 \item{labels_track_height}{a positive numeric value for adjusting the room for the 
 labels. Used only when type = "rectangle".}
