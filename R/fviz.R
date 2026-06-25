@@ -208,8 +208,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Augment data if color is a continuous variable or a factor variable
   if(length(color) > 1){
-    if(nrow(df) != length(color)) stop("The length of color variable",
-                                    "should be the same as the number of rows in the data.")
+    if(nrow(df) != length(color)) stop(
+      "The length of the `color` variable must equal the number of elements being ",
+      "plotted (individuals for fviz_*_ind(), variables for fviz_*_var()), or be a ",
+      "single value or a metric such as \"cos2\"/\"contrib\".", call. = FALSE)
     .col.name <- "Col."
     df[[.col.name]] <- color
     if(missing(pointshape) && .is_grouping_var(color)) pointshape <- .col.name
@@ -217,8 +219,10 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Augment data if fill is a continuous variable or a factor variable
   if(length(fill) > 1){
-    if(nrow(df) != length(fill)) stop("The length of fill variable",
-                                       "should be the same as the number of rows in the data.")
+    if(nrow(df) != length(fill)) stop(
+      "The length of the `fill` variable must equal the number of elements being ",
+      "plotted (individuals for fviz_*_ind(), variables for fviz_*_var()), or be a ",
+      "single value or a metric such as \"cos2\"/\"contrib\".", call. = FALSE)
     .col.name <- "Fill."
     df[[.col.name]] <- fill
     fill <- .col.name

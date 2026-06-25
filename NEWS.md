@@ -49,6 +49,10 @@
   user's `data=` was overwritten by the object's empty data slot, erroring with "'data'
   must be of vector type, was NULL"). The clusters come from the object; `data=` is used
   only for the 2-D layout. A clear message is shown if no data is available. (#128)
+* Clearer error when a `col`/`fill` vector passed to a `fviz_*` plot has the wrong length
+  (e.g. colouring variables in `fviz_pca_var()` by an observation-level group): the message
+  now explains the length must match the elements plotted (individuals for `fviz_*_ind()`,
+  variables for `fviz_*_var()`) or be a metric. (#139)
 * Point/individual labels no longer add a stray `a` glyph to the colour/fill
   legend (e.g. `fviz_pca_ind(..., habillage = )`). Text layers are now excluded
   from the legend keys; labels still appear on the plot. (#14)
