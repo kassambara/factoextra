@@ -58,6 +58,12 @@ NULL
 #'@param col.circle a color for the correlation circle. Used only when X is a 
 #'  PCA output.
 #'@param circlesize the size of the variable correlation circle.
+#'@param add.circle logical or NULL controlling the variable correlation circle.
+#'  Default NULL shows it only when meaningful: for PCA variables on
+#'  unit-variance (scaled) data, and for quantitative variables of
+#'  MCA/MFA/HMFA/FAMD. Use \code{add.circle = TRUE} to force the circle (e.g. a
+#'  \code{prcomp(scale = FALSE)} fit on data you scaled manually) or
+#'  \code{add.circle = FALSE} to suppress it.
 #'@param axes.linetype linetype of x and y axes.
 #'@param color color to be used for the specified geometries (point, text). Can 
 #'  be a continuous variable or a factor variable. Possible values include also 
@@ -137,7 +143,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           col.row.sup = "darkblue", col.col.sup="darkred",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
                           title = NULL, axes.linetype = "dashed",
-                          repel = FALSE, col.circle ="grey70", circlesize = 0.5, ggtheme = theme_minimal(),
+                          repel = FALSE, col.circle ="grey70", circlesize = 0.5, add.circle = NULL,
+                          ggtheme = theme_minimal(),
                           ggp = NULL, font.family = "",
                            ...)
   {
@@ -297,13 +304,19 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if("arrow" %in% geom && !hide[[element]])
     p <- p + .arrows(data = df, color = color, alpha = alpha, linewidth = arrowsize,
                      linetype = arrow.linetype)
-  # Add correlation circle if PCA & element = "var" & scale = TRUE
+  # Add correlation circle. By default (add.circle = NULL) the circle is shown
+  # only when it is meaningful: for PCA variables on unit-variance (scaled) data,
+  # and for quanti variables of MCA/MFA/HMFA/FAMD. add.circle = TRUE/FALSE forces
+  # or suppresses it (e.g. force it for a prcomp(scale = FALSE) on data the user
+  # scaled manually). (#88)
+  .want_circle <- function(default) if(is.null(add.circle)) isTRUE(default) else isTRUE(add.circle)
   if(facto.class == "PCA" && element == "var"){
-    if(.get_scale_unit(X) && is.null(extra_args$scale.)) 
+    if(.want_circle(.get_scale_unit(X) && is.null(extra_args$scale.)))
       p <- .add_corr_circle(p, color = col.circle, size = circlesize)
   }
   else if(facto.class %in% c("MCA", "MFA", "HMFA", "FAMD") && element %in% c("quanti.sup", "quanti.var", "partial.axes")){
-      p <- .add_corr_circle(p, color = col.circle, size = circlesize)
+      if(.want_circle(TRUE))
+        p <- .add_corr_circle(p, color = col.circle, size = circlesize)
   }
   # Faceting when multiple variables are used to color individuals
   # (e.g., habillage = 1:2, or data.frame)

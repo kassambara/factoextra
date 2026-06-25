@@ -698,3 +698,21 @@ test_that("fviz_mclust_bic optimal-cluster line uses factor position (#116)", {
   m_std <- Mclust(iris[, -5], verbose = FALSE)
   expect_equal(vline_x(fviz_mclust_bic(m_std)), m_std$G)
 })
+
+test_that("fviz_pca add.circle forces/suppresses the correlation circle (#88)", {
+  has_circle <- function(p) {
+    any(vapply(p$layers, function(l) inherits(l$geom, c("GeomPath", "GeomCircle")),
+               logical(1)))
+  }
+  sc <- prcomp(iris[, -5], scale. = TRUE)
+  un <- prcomp(iris[, -5], scale. = FALSE)
+
+  # NO-REGRESSION: default (NULL) keeps the auto behavior
+  expect_true(has_circle(fviz_pca_var(sc)))   # scaled -> circle
+  expect_false(has_circle(fviz_pca_var(un)))  # unscaled -> no circle
+
+  # opt-in: force on a manually-scaled (scale = FALSE) fit, or suppress
+  expect_true(has_circle(fviz_pca_var(un, add.circle = TRUE)))
+  expect_false(has_circle(fviz_pca_var(sc, add.circle = FALSE)))
+  expect_true(has_circle(fviz_pca_biplot(un, add.circle = TRUE)))
+})

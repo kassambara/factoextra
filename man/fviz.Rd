@@ -34,6 +34,7 @@ fviz(
   repel = FALSE,
   col.circle = "grey70",
   circlesize = 0.5,
+  add.circle = NULL,
   ggtheme = theme_minimal(),
   ggp = NULL,
   font.family = "",
@@ -158,6 +159,13 @@ compatibility and is converted to \code{repel = TRUE} with a deprecation warning
 PCA output.}
 
 \item{circlesize}{the size of the variable correlation circle.}
+
+\item{add.circle}{logical or NULL controlling the variable correlation circle.
+Default NULL shows it only when meaningful: for PCA variables on
+unit-variance (scaled) data, and for quantitative variables of
+MCA/MFA/HMFA/FAMD. Use \code{add.circle = TRUE} to force the circle (e.g. a
+\code{prcomp(scale = FALSE)} fit on data you scaled manually) or
+\code{add.circle = FALSE} to suppress it.}
 
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
