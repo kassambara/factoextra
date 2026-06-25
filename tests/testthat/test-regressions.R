@@ -674,8 +674,10 @@ test_that("alpha.var/alpha.ind fade text labels too; default unchanged (#130)", 
 test_that("fviz_mclust_bic optimal-cluster line uses factor position (#116)", {
   skip_if_not_installed("mclust")
   # mclust::Mclust() calls mclustBIC() by name, which requires mclust to be
-  # ATTACHED (not just namespaced); attach it for this test only.
-  withr::local_package("mclust")
+  # ATTACHED (not just namespaced). Attach it (mclust is in Suggests) and detach
+  # on exit to keep the search path clean.
+  suppressPackageStartupMessages(library(mclust))
+  on.exit(detach("package:mclust", unload = FALSE), add = TRUE)
   vline_x <- function(p) {
     L <- Filter(function(l) inherits(l$geom, "GeomVline"), p$layers)
     if (!length(L)) return(NA_real_)
