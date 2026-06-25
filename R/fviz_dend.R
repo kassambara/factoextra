@@ -22,6 +22,9 @@
 #'   remapped to cluster-label order so they match \code{\link{fviz_cluster}()}
 #'   and \code{\link{fviz_silhouette}()} for the same clustering.
 #' @param label_cols a vector containing the colors for labels.
+#' @param labels_font font face for the leaf labels of "rectangle"/"circular"
+#'   dendrograms. One of "plain" (default), "bold", "italic" or "bold.italic".
+#'   Default "plain" leaves labels unchanged.
 #' @param labels_track_height a positive numeric value for adjusting the room for the 
 #'   labels. Used only when type = "rectangle".
 #' @param repel logical value. Use repel = TRUE to avoid label overplotting when
@@ -107,7 +110,7 @@
 #' @export
 fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  show_labels = TRUE, color_labels_by_k = TRUE,
                       match_coord_colors = FALSE,
-                      label_cols = NULL,  labels_track_height = NULL, repel = FALSE, lwd = 0.7,
+                      label_cols = NULL, labels_font = "plain", labels_track_height = NULL, repel = FALSE, lwd = 0.7,
                       type = c("rectangle",  "circular", "phylogenic"),
                       phylo_layout = "layout.auto",
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_fill = FALSE, lower_rect,
@@ -193,7 +196,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if(rectangle || circular){
     p <- .ggplot_dend(dend, type = "rectangle", offset_labels = offset_labels, nodes = FALSE,
                       ggtheme = ggtheme, horiz = horiz, circular = circular, palette = palette,
-                      labels = show_labels, label_cols = label_cols, 
+                      labels = show_labels, label_cols = label_cols, labels_font = labels_font,
                       labels_track_height = labels_track_height, ...)
     if(!circular) p <- p + labs(title = main, subtitle = sub, x = xlab, y = ylab)
   }
@@ -328,7 +331,7 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
 .ggplot_dend <- function (dend, segments = TRUE, labels = TRUE, nodes = TRUE, 
                         horiz = FALSE, ggtheme = theme_classic(), 
                         offset_labels = 0, circular = FALSE, type = "rectangle",
-                        palette = NULL, label_cols = NULL, labels_track_height = 1,
+                        palette = NULL, label_cols = NULL, labels_font = "plain", labels_track_height = 1,
                         ...) {
   
   gdend <- dendextend::as.ggdend(dend, type = type)
@@ -386,6 +389,10 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
     p <- p + ggpubr::geom_exec(geom_text, data = data$labels,
                                x = "x", y = "y", label = "label", color = label_cols, size = "cex",
                                 angle = "angle", hjust = "hjust", vjust = "vjust")
+    # Apply a single font face to all leaf labels (e.g. "italic") as a fixed
+    # layer parameter. Only when non-default, so the "plain" path is untouched (#121).
+    if(!identical(labels_font, "plain"))
+      p$layers[[length(p$layers)]]$aes_params$fontface <- labels_font
   }
   p <- ggpubr::ggpar(p, ggtheme = ggtheme, palette = palette, ...) + theme(axis.line = element_blank())
   if (horiz && !circular) {
