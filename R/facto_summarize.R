@@ -239,6 +239,10 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     name <- rownames(elmt$coord)
     if(is.null(name)) name <- as.character(seq_len(nrow(elmt$coord)))
     name <- as.character(name)
+    # Disambiguate duplicated category names (e.g. FAMD/MFA qualitative
+    # variables sharing factor-level names) so they can be used as row names
+    # (#184, #140). No-op when names are already unique.
+    name <- .disambiguate_category_names(X, name, element, facto_class)
     res <- cbind.data.frame(name = name, res)
     rownames(res) <- name
     if(!is.null(select) && !is.null(select$name) && .factominer_needs_category_map(facto_class, element)){

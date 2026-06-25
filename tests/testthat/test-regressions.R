@@ -360,6 +360,42 @@ test_that("get_pca_ind returns finite cos2 for zero-distance rows", {
   expect_equal(unname(ind$cos2[2, ]), c(0, 0))
 })
 
+test_that("FAMD plots handle qualitative variables with shared factor levels (#184, #140)", {
+  skip_if_not_installed("FactoMineR")
+
+  set.seed(1)
+  n <- 60
+  df <- data.frame(
+    x1 = rnorm(n), x2 = rnorm(n), x3 = rnorm(n),
+    f1 = factor(sample(c("Low", "Medium", "High"), n, replace = TRUE)),
+    f2 = factor(sample(c("Low", "High"), n, replace = TRUE)) # shares Low/High with f1
+  )
+  res <- FactoMineR::FAMD(df, graph = FALSE)
+
+  # Previously errored with "duplicate 'row.names' are not allowed"
+  expect_s3_class(fviz_contrib(res, choice = "quali.var"), "ggplot")
+  expect_s3_class(fviz_contrib(res, choice = "quanti.var"), "ggplot")
+  expect_s3_class(fviz_famd_ind(res), "ggplot")
+  expect_s3_class(fviz_famd_var(res, "quali.var"), "ggplot")
+
+  # Colliding categories are disambiguated as variable_level; unique ones stay plain
+  fc <- facto_summarize(res, element = "quali.var", result = "contrib", axes = 1)
+  expect_false(any(duplicated(fc$name)))
+  expect_true(all(c("f1_Low", "f1_High", "f2_Low", "f2_High") %in% fc$name))
+  expect_true("Medium" %in% fc$name) # Medium only in f1 -> not prefixed
+})
+
+test_that("FAMD without shared factor levels keeps plain category labels (#184)", {
+  skip_if_not_installed("FactoMineR")
+
+  data(wine, package = "FactoMineR")
+  res <- FactoMineR::FAMD(wine, graph = FALSE)
+  fc <- facto_summarize(res, element = "quali.var", result = "contrib", axes = 1)
+
+  expect_true(all(c("Saumur", "Env1") %in% fc$name))
+  expect_false(any(grepl("_", fc$name))) # no disambiguation when names are unique
+})
+
 test_that("fviz_pca_biplot auto scaling keeps plot coordinates finite", {
   x <- data.frame(a = c(1, 1, 1), b = c(-1, 0, 1), c = c(-2, 0, 2))
   res <- stats::prcomp(x, center = TRUE, scale. = FALSE)
