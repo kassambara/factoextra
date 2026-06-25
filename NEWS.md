@@ -37,6 +37,9 @@
   recycled to `k`. (#154, #168)
 * `fviz_dend()` no longer leaks its leaf-label text layer into the legend
   (the stray `a`/`cex` key), matching the scatter-plot cleanup. (#14)
+* `alpha.var`/`alpha.ind` (and `alpha`) now also fade the variable/individual text
+  labels, not just the points and arrows, in `fviz_pca_*()` and the other biplots.
+  Only a numeric `alpha < 1` is affected; the default (`alpha = 1`) is unchanged. (#130)
 * Point/individual labels no longer add a stray `a` glyph to the colour/fill
   legend (e.g. `fviz_pca_ind(..., habillage = )`). Text layers are now excluded
   from the legend keys; labels still appear on the plot. (#14)

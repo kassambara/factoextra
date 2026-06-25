@@ -648,3 +648,25 @@ test_that("fviz_dend labels_font sets leaf-label font face; default unchanged (#
 
   expect_s3_class(fviz_dend(hc, k = 3, rect = TRUE, labels_font = "italic"), "ggplot")
 })
+
+test_that("alpha.var/alpha.ind fade text labels too; default unchanged (#130)", {
+  res <- prcomp(iris[1:20, -5], scale. = TRUE)
+  text_alpha <- function(p) {
+    L <- Filter(function(l) inherits(l$geom, c("GeomText", "GeomTextRepel")), p$layers)
+    vapply(L, function(l) { a <- l$aes_params$alpha; if (is.null(a)) NA_real_ else a }, numeric(1))
+  }
+
+  # labels now fade together with arrows/points
+  expect_true(all(text_alpha(fviz_pca_var(res, alpha.var = 0.3)) == 0.3))
+  expect_true(all(text_alpha(fviz_pca_ind(res, alpha.ind = 0.3)) == 0.3))
+
+  # NO-REGRESSION: default (alpha = 1) keeps labels opaque
+  expect_true(all(text_alpha(fviz_pca_var(res)) == 1))
+  expect_true(all(text_alpha(fviz_pca_ind(res)) == 1))
+  # metric-mapped alpha does not fade labels to a constant
+  expect_true(all(text_alpha(fviz_pca_var(res, alpha.var = "contrib")) == 1))
+
+  # biplot: alpha.var fades variable labels but leaves individual labels opaque
+  ta <- text_alpha(fviz_pca_biplot(res, alpha.var = 0.3, label = "all"))
+  expect_true(0.3 %in% ta && 1 %in% ta)
+})
