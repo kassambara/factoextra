@@ -523,3 +523,13 @@ test_that("arrow.linetype controls variable-arrow linetype; default unchanged (#
   expect_equal(arrow_lt(fviz_pca_var(res, arrow.linetype = "dashed")), "dashed")
   expect_equal(arrow_lt(fviz_pca_biplot(res, arrow.linetype = "dotted")), "dotted")
 })
+
+test_that("fviz_dend renders sub only when set; default has no subtitle (#54)", {
+  hc <- hclust(dist(USArrests[1:15, ]), method = "ward.D2")
+
+  # default: no subtitle (unchanged behavior)
+  expect_null(fviz_dend(hc)$labels$subtitle)
+  # explicit subtitle is rendered
+  expect_equal(fviz_dend(hc, sub = "Method: ward.D2")$labels$subtitle, "Method: ward.D2")
+  expect_s3_class(fviz_dend(hc, k = 3), "ggplot")
+})
