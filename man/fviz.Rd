@@ -35,6 +35,7 @@ fviz(
   col.circle = "grey70",
   circlesize = 0.5,
   add.circle = NULL,
+  rotate.labels = FALSE,
   ggtheme = theme_minimal(),
   ggp = NULL,
   font.family = "",
@@ -166,6 +167,13 @@ unit-variance (scaled) data, and for quantitative variables of
 MCA/MFA/HMFA/FAMD. Use \code{add.circle = TRUE} to force the circle (e.g. a
 \code{prcomp(scale = FALSE)} fit on data you scaled manually) or
 \code{add.circle = FALSE} to suppress it.}
+
+\item{rotate.labels}{logical. If \code{TRUE}, the text labels of the plotted
+element are rotated to the angle of their arrows (ggbiplot style); labels in
+the left half-plane are flipped to stay upright. Default is \code{FALSE}
+(no rotation). Use together with \code{repel = FALSE}, as ggrepel ignores the
+label angle. Most useful for variable plots/biplots (e.g.
+\code{fviz_pca_var}, \code{fviz_pca_biplot}).}
 
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),

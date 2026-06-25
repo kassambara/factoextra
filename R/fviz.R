@@ -64,6 +64,12 @@ NULL
 #'  MCA/MFA/HMFA/FAMD. Use \code{add.circle = TRUE} to force the circle (e.g. a
 #'  \code{prcomp(scale = FALSE)} fit on data you scaled manually) or
 #'  \code{add.circle = FALSE} to suppress it.
+#'@param rotate.labels logical. If \code{TRUE}, the text labels of the plotted
+#'  element are rotated to the angle of their arrows (ggbiplot style); labels in
+#'  the left half-plane are flipped to stay upright. Default is \code{FALSE}
+#'  (no rotation). Use together with \code{repel = FALSE}, as ggrepel ignores the
+#'  label angle. Most useful for variable plots/biplots (e.g.
+#'  \code{fviz_pca_var}, \code{fviz_pca_biplot}).
 #'@param axes.linetype linetype of x and y axes.
 #'@param color color to be used for the specified geometries (point, text). Can 
 #'  be a continuous variable or a factor variable. Possible values include also 
@@ -144,6 +150,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           select = list(name = NULL, cos2 = NULL, contrib = NULL),
                           title = NULL, axes.linetype = "dashed",
                           repel = FALSE, col.circle ="grey70", circlesize = 0.5, add.circle = NULL,
+                          rotate.labels = FALSE,
                           ggtheme = theme_minimal(),
                           ggp = NULL, font.family = "",
                            ...)
@@ -299,6 +306,15 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     }
   }
 
+  # Optionally rotate this element's text labels to the angle of their arrows
+  # (ggbiplot style). Gated on rotate.labels = TRUE, so the default is
+  # byte-identical. Restricted to elements that actually draw arrows ("arrow" in
+  # geom), i.e. variable plots: this keeps biplots from rotating the individual
+  # labels (whose angle would be meaningless). Works with plain geom_text (use
+  # repel = FALSE); ggrepel ignores the angle aesthetic. (#98)
+  if(isTRUE(rotate.labels) && "arrow" %in% geom)
+    p <- .rotate_text_labels(p, n_layers_before)
+
   if(!is.null(gradient.cols))
     p <- p + ggpubr::gradient_color(gradient.cols)
     
@@ -404,6 +420,30 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
             paste(class(X), collapse = ", "))
   }
   scale_unit
+}
+
+# Rotate the text labels of the layers added for the current element so each
+# label is aligned with its arrow direction (ggbiplot style). Labels in the
+# left half-plane are flipped by 180 degrees so they stay upright/readable.
+# Only layers with index > n_layers_before are touched, preserving any layers
+# carried in via ggp (e.g. the individuals layer of a biplot). (#98)
+.rotate_text_labels <- function(p, n_layers_before = 0L){
+  .text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  for(i in seq_along(p$layers)){
+    if(i <= n_layers_before) next
+    layer <- p$layers[[i]]
+    if(!inherits(layer$geom, .text_geoms)) next
+    ld <- as.data.frame(layer$data)
+    if(is.null(ld) || !all(c("x", "y") %in% names(ld)) || nrow(ld) == 0) next
+    ang <- atan2(ld$y, ld$x) * 180 / pi
+    flip <- ang > 90 | ang < -90
+    ang[flip] <- ang[flip] + 180
+    ld[[".fviz_angle"]] <- ang
+    p$layers[[i]]$data <- ld
+    p$layers[[i]]$mapping <- utils::modifyList(
+      layer$mapping, ggplot2::aes(angle = .data[[".fviz_angle"]]))
+  }
+  p
 }
 
 # Add correlation circle to variables plot

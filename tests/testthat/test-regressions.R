@@ -872,3 +872,43 @@ test_that("fviz_dend honors an explicit k for HCPC, defaults to HCPC count (#81)
   expect_equal(n_branch_cols(fviz_dend(hc, k = 2)), 2)
   expect_equal(n_branch_cols(fviz_dend(hc, k = 4)), 4)
 })
+
+test_that("rotate.labels rotates variable labels, default off (#98)", {
+  res.pca <- prcomp(iris[, -5], scale. = TRUE)
+  text_geoms <- c("GeomText", "GeomTextRepel", "GeomLabel", "GeomLabelRepel")
+  text_layer <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, text_geoms), logical(1)))[1]
+    p$layers[[i]]
+  }
+
+  # default: no angle aesthetic (unchanged behavior)
+  lay0 <- text_layer(fviz_pca_var(res.pca, repel = FALSE))
+  expect_false("angle" %in% names(lay0$mapping))
+  expect_false(".fviz_angle" %in% names(as.data.frame(lay0$data)))
+
+  # rotate.labels = TRUE: angle aesthetic + per-label angle column
+  lay1 <- text_layer(fviz_pca_var(res.pca, repel = FALSE, rotate.labels = TRUE))
+  expect_true("angle" %in% names(lay1$mapping))
+  d <- as.data.frame(lay1$data)
+  expect_true(".fviz_angle" %in% names(d))
+  # angles match arrow directions (flipped into the readable [-90, 90] range)
+  expect_true(all(d$.fviz_angle >= -90 - 1e-6 & d$.fviz_angle <= 90 + 1e-6))
+
+  # rotation is restricted to arrow-bearing (variable) labels: fviz_pca_ind has
+  # no arrows, so rotate.labels must be a no-op there.
+  lay_ind <- text_layer(fviz_pca_ind(res.pca, repel = FALSE, rotate.labels = TRUE))
+  expect_false("angle" %in% names(lay_ind$mapping))
+
+  # biplot: only the variable labels are rotated, NOT the individual labels.
+  pb <- fviz_pca_biplot(res.pca, repel = FALSE, rotate.labels = TRUE)
+  angled <- vapply(pb$layers, function(l)
+    inherits(l$geom, text_geoms) &&
+      ".fviz_angle" %in% names(as.data.frame(l$data)), logical(1))
+  n_rows <- vapply(pb$layers, function(l)
+    if (inherits(l$geom, text_geoms)) nrow(as.data.frame(l$data)) else NA_integer_,
+    integer(1))
+  expect_true(any(angled))
+  # angled layer holds the variables (ncol), not the individuals (nrow of data)
+  expect_true(all(n_rows[angled] == ncol(iris[, -5])))
+  expect_s3_class(fviz_pca_biplot(res.pca), "ggplot")
+})
