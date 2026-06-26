@@ -5,14 +5,18 @@ changes (new behavior is gated, existing inputs are unchanged).
 
 ## Test environments
 
-* macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
-* Additional Windows/Linux checks should be filled in after CI completes.
+* Local: macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
+* win-builder: R release — OK
+* GitHub Actions: macOS (release), Windows (release), Ubuntu 22.04
+  (release, devel, oldrel-1) — all pass
 
 ## R CMD check results
 
-Local macOS result:
-
 0 errors | 0 warnings | 0 notes
+
+(A local "unable to verify current time" / future-file-timestamps NOTE seen on a
+sandboxed machine without network is environment-specific and does not occur on
+win-builder or the CI machines.)
 
 ## Additional local pre-submission checks (June 26, 2026)
 
