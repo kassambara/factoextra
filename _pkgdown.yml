@@ -19,6 +19,7 @@ reference:
   - title: Extracting Data from Dimension Reduction Analysis Outputs
     desc: Extracting data from the output of PCA, CA, MCA, FAMD, MFA and HMFA.
     contents:
+      - as_factoextra_pca
       - facto_summarize
       - get_pca
       - get_ca
