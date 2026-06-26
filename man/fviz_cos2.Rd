@@ -97,7 +97,7 @@ res.mca <- MCA(poison, quanti.sup = 1:2,
               
 # Visualize individual cos2 on axes 1
 fviz_cos2(res.mca, choice ="ind", axes = 1, top = 20)
-# Visualize variable categorie cos2 on axes 1
+# Visualize variable category cos2 on axes 1
 fviz_cos2(res.mca, choice ="var", axes = 1)
 
 # Multiple Factor Analysis
@@ -110,7 +110,7 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 # Visualize individual cos2 on axes 1
 # Select the top 20
 fviz_cos2(res.mfa, choice ="ind", axes = 1, top = 20)
-# Visualize catecorical variable categorie cos2 on axes 1
+# Visualize categorical variable category cos2 on axes 1
 fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
 }
                

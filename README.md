@@ -15,19 +15,19 @@ Issues](https://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](ht
 # factoextra : Extract and Visualize the Results of Multivariate Data Analyses
 
 [**factoextra**](https://rpkgs.datanovia.com/factoextra/index.html) is
-an R package making easy to *extract* and *visualize* the output of
-exploratory **multivariate data analyses**, including:
+an R package that makes it easy to *extract* and *visualize* the output
+of exploratory **multivariate data analyses**, including:
 
 1.  [Principal Component Analysis
     (PCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/),
-    which is used to summarize the information contained in a continuous
-    (i.e, quantitative) multivariate data by reducing the dimensionality
-    of the data without loosing important information.
+    which is used to summarize the information contained in continuous
+    (i.e., quantitative) multivariate data by reducing the
+    dimensionality of the data without losing important information.
 
 2.  [Correspondence Analysis
     (CA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/),
-    which is an extension of the principal component analysis suited to
-    analyse a large contingency table formed by two *qualitative
+    which is an extension of principal component analysis suited to
+    analyzing a large contingency table formed by two *qualitative
     variables* (or categorical data).
 
 3.  [Multiple Correspondence Analysis
@@ -65,16 +65,16 @@ reduction analysis - we developed an easy-to-use R package named
     analysis results from the different packages mentioned above.  
   - It produces a **ggplot2**-based **elegant data visualization** with
     less typing.
-  - It contains also many functions facilitating clustering analysis and
+  - It also contains many functions that facilitate clustering analysis
     visualization.
 
 > We’ll use i) the FactoMineR package (Sebastien Le, et al., 2008) to
 > compute PCA, (M)CA, FAMD, MFA and HCPC; ii) and the factoextra package
 > for extracting and visualizing the results.
 
-The figure below shows methods, which outputs can be visualized using
-the factoextra package. The official online documentation is available
-at: <https://rpkgs.datanovia.com/factoextra/index.html>.
+The figure below shows methods whose outputs can be visualized using the
+factoextra package. The official online documentation is available at:
+<https://rpkgs.datanovia.com/factoextra/index.html>.
 
 ![factoextra R package](tools/factoextra-r-package.png)
 
@@ -565,7 +565,7 @@ get_mca_ind(res.mca)
 <!-- end list -->
 
 ``` r
-# Visualize variable categorie contributions on axes 1
+# Visualize variable category contributions on axes 1
 fviz_contrib(res.mca, choice ="var", axes = 1)
 
 # Visualize individual contributions on axes 1
@@ -735,7 +735,7 @@ fviz_nbclust(my_data, kmeans, method = "gap_stat")
 
 ![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)<!-- -->
 
-## Acknoweledgment
+## Acknowledgment
 
 Original package authors:
 
