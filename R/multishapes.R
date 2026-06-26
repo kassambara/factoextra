@@ -10,7 +10,7 @@
 #'  \describe{
 #' \item{\code{x}}{a numeric vector containing the x coordinates of observations}
 #' \item{\code{y}}{a numeric vector containing the y coordinates of observations}
-#' \item{\code{shape}}{a numeric vector corresponding to the cluster number of each observations.}
+#' \item{\code{shape}}{a numeric vector corresponding to the cluster number of each observation.}
 #' }
 #' @details 
 #' The dataset contains 5 clusters and some outliers/noises.

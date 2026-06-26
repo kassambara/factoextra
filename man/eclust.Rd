@@ -78,7 +78,7 @@ for determining the number of clusters using gap statistic.}
 Returns an object of class "eclust" containing the result of the 
   standard function used (e.g., kmeans, pam, hclust, agnes, diana, etc.).
   
-  It includes also: \itemize{ \item cluster: the cluster assignement of
+  It also includes: \itemize{ \item cluster: the cluster assignment of
   observations after cutting the tree \item nbclust: the number of clusters
   \item silinfo: the silhouette information of observations, when available
   for solutions with at least two clusters, including $widths (silhouette

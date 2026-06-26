@@ -5,21 +5,21 @@ changes (new behavior is gated, existing inputs are unchanged).
 
 ## Test environments
 
-* macOS (latest) — R release
-* Windows (latest) — R release
-* Ubuntu 22.04 — R release, R devel, R oldrel-1
-
-All checks run via GitHub Actions.
+* macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
+* Additional Windows/Linux checks should be filled in after CI completes.
 
 ## R CMD check results
+
+Local macOS result:
 
 0 errors | 0 warnings | 0 notes
 
 ## Additional local pre-submission checks (June 26, 2026)
 
-* macOS — R 4.5.x
+* macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
 * `R CMD check --as-cran factoextra_2.1.0.tar.gz`: 0 errors | 0 warnings | 0 notes
-* `devtools::test()`: all tests pass
+* `devtools::test()`: 404 passed, 0 failed, 0 warnings, 0 skipped
+* `tools::checkRd()`: no Rd issues
 * `urlchecker::url_check()`: no problems
 
 ## Changes in this version (2.1.0)
@@ -41,10 +41,9 @@ modernization documented in NEWS.md.)
 
 ## Notes
 
-* Some `datanovia.com` URLs (in DESCRIPTION, README, and man pages) return
-  HTTP 503 to automated crawlers but are valid and accessible in a browser.
+* No local notes.
 
 ## Downstream dependencies
 
-Reverse dependencies checked; all packages that could be installed passed
-R CMD check (no new problems introduced by this release).
+Current CRAN metadata lists 32 direct reverse dependencies. Reverse-dependency
+checks were not rerun in this local pass.

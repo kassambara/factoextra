@@ -71,7 +71,7 @@ and Multiple Factor Analysis (MFA) functions.
 \details{
 The function fviz_contrib() creates a barplot of row/column contributions.
 A reference dashed line is also shown on the barplot. This reference line
-corresponds to the expected value if the contribution where uniform.\cr\cr
+corresponds to the expected value if the contribution were uniform.\cr\cr
 For a given dimension, any row/column with a contribution above the reference line could be
 considered as important in contributing to the dimension.
 }
@@ -128,7 +128,7 @@ res.mca <- MCA(poison, quanti.sup = 1:2,
 
 # Visualize individual contributions on axes 1
 fviz_contrib(res.mca, choice ="ind", axes = 1)
-# Visualize variable categorie contributions on axes 1
+# Visualize variable category contributions on axes 1
 fviz_contrib(res.mca, choice ="var", axes = 1)
 
 # Multiple Factor Analysis
@@ -141,7 +141,7 @@ res.mfa <- MFA(poison, group=c(2,2,5,6), type=c("s","n","n","n"),
 
 # Visualize individual contributions on axes 1
 fviz_contrib(res.mfa, choice ="ind", axes = 1, top = 20)
-# Visualize catecorical variable categorie contributions on axes 1
+# Visualize categorical variable category contributions on axes 1
 fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
 }
 
