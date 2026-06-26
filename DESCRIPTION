@@ -19,7 +19,7 @@ Description: Provides easy-to-use functions to extract and visualize the output
     and 'HMFA' (Hierarchical Multiple Factor Analysis) from different R packages.
     It also includes support for supplementary qualitative variables in
     'FactoMineR' 'FAMD' and 'MFA' workflows, hardened validation for clustering
-    and dimension-reduction helper workflows, backward-compatible phylogenic
+    and dimension-reduction helper workflows, backward-compatible phylogenetic
     dendrogram layout support for current 'igraph' APIs, and 'ggplot2'-based
     data visualization.
 License: GPL-2

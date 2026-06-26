@@ -3,6 +3,23 @@
 A minor release adding new visualization features and bug fixes; no breaking
 changes (new behavior is gated, existing inputs are unchanged).
 
+## Resubmission
+
+This is a resubmission addressing the auto-check feedback on the previous
+2.1.0 upload:
+
+* **Reverse dependency (chooseGCM) fixed.** `hcut()`/`hkmeans()` had added a
+  custom early error for `k > number-of-observations` that pre-empted (and so
+  changed the message of) `stats::cutree()`'s native error. chooseGCM's test
+  pins that native message (`"elements of 'k' must be between 1 and 11"`). We
+  removed the custom early error so the native message is restored — matching the
+  long-published behaviour. chooseGCM's tests pass again. A regression test now
+  guards this so it cannot recur.
+* **Spelling NOTE fixed.** "phylogenic" → "phylogenetic" in DESCRIPTION.
+* The "examples > 5s" NOTE comes from a few `fviz_*` examples that run inherently
+  slow FactoMineR computations (MCA/MFA/CA); these are correctness illustrations.
+  Happy to wrap them in `\donttest{}` if preferred.
+
 ## Test environments
 
 * Local: macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
@@ -49,5 +66,7 @@ modernization documented in NEWS.md.)
 
 ## Downstream dependencies
 
-Current CRAN metadata lists 32 direct reverse dependencies. Reverse-dependency
-checks were not rerun in this local pass.
+The previously failing reverse dependency **chooseGCM** now passes: its
+`hclust_gcms()` k > n test again receives `stats::cutree()`'s native
+`"elements of 'k' must be between 1 and N"` error (verified against the fixed
+package). No other reverse dependency is affected by this change.

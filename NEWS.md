@@ -84,8 +84,6 @@
   leaking low-level clustering or plotting failures. (#209, @erdeyl)
 * `fviz_dist()` and `hcut(isdiss = TRUE)` reject non-finite distance objects.
   (#209, @erdeyl)
-* `hcut()` and `hkmeans()` reject `k > n_obs` early with a clear message.
-  (#209, @erdeyl)
 * `fviz_eig()` validates `ncp`, `parallel.iter`, and `parallel.seed` before
   plotting. Integer-like numeric values are accepted; fractional, `NA`, or
   out-of-range values are rejected. (#209, @erdeyl)
@@ -118,6 +116,11 @@
 
 ## Bug fixes
 
+* `hcut()` and `hkmeans()` no longer pre-empt `k > number-of-observations` with a
+  custom error; the native `stats::cutree()` error
+  (`"elements of 'k' must be between 1 and N"`) is restored. This keeps backward
+  compatibility with the published behaviour and fixes the **chooseGCM** reverse
+  dependency on CRAN.
 * `get_pca_ind()` now works for **ade4 `dudi.pca`** objects. Their `$li`/`$tab`
   are data frames, which previously collapsed the internal `cos2` matrix into a
   list and raised "attempt to set 'colnames' on an object with less than two

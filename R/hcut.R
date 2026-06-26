@@ -74,9 +74,11 @@ hcut <- function(x, k = 2, isdiss = inherits(x, "dist"),
     stop("The data must be of class matrix, data.frame, or dist")
   if(!is.numeric(k) || length(k) != 1L || is.na(k) || k %% 1 != 0 || k < 2)
     stop("k must be a single integer >= 2")
-  n_obs <- if(inherits(x, "dist")) attr(x, "Size") else nrow(x)
-  if(k > n_obs)
-    stop("k must not exceed the number of observations (", n_obs, ").")
+  # NOTE: do NOT pre-empt k > n_obs with a custom stop() here. stats::cutree()
+  # below already errors ("elements of 'k' must be between 1 and N") for k > n,
+  # and the reverse dependency chooseGCM pins that exact native message. A custom
+  # early error broke chooseGCM on CRAN (factoextra 2.0.0/2.1.0). Keep the native
+  # error. See tests/testthat/test-regressions.R (chooseGCM revdep guard).
   if(isdiss && !inherits(x, "dist"))
     stop("When isdiss = TRUE, x must be an object of class dist")
   if(isdiss)
