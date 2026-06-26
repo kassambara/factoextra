@@ -247,10 +247,10 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 {
   biplot.type <- match.arg(biplot.type)
   
-  # Check if individials or variables are colored by variables
+  # Check if individuals or variables are colored by variables
   is.individuals.colored.by.variable <- .is_grouping_var(fill.ind) | .is_grouping_var(col.ind)
   is.variables.colored.by.variable <-  .is_continuous_var(col.var) | .is_grouping_var(col.var)
-  # If coloring variable are continuous, then gradient coloring shoulld be applied
+  # If coloring variables are continuous, then gradient coloring should be applied
   is.gradient.color <- .is_continuous_var(col.ind) | .is_continuous_var(col.var) 
   is.gradient.fill <- .is_continuous_var(fill.ind) | .is_continuous_var(fill.var)
   # If coloring variables are qualitative, then discrete coloring should be applied

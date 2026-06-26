@@ -1033,3 +1033,17 @@ test_that("as_factoextra_pca() does not change existing prcomp/PCA paths (no-reg
   expect_false(inherits(pca, "factoextra_pca"))
   expect_s3_class(fviz_pca_biplot(pca), "ggplot")
 })
+
+test_that("hcut()/hkmeans() let the NATIVE k > n error surface (chooseGCM revdep guard, CRAN)", {
+  # The reverse dependency chooseGCM pins stats::cutree()'s native message:
+  #   expect_error(hclust_gcms(..., k = 100), "elements of 'k' must be between 1 and 11")
+  # A custom early stop ("k must not exceed the number of observations"), introduced during the
+  # 2.1.0 cycle (#209), pre-empted cutree and CHANGED that message, breaking chooseGCM on CRAN
+  # (a "change to worse in reverse dependencies"). hcut()/hkmeans() must NOT pre-empt cutree -
+  # keep the native error verbatim. Do not re-introduce a custom k > n_obs stop().
+  x <- matrix(stats::rnorm(11 * 5), nrow = 11)            # 11 "GCMs", like chooseGCM's case
+  expect_error(hcut(x, k = 100), "elements of 'k' must be between 1 and 11")
+  expect_error(hcut(stats::dist(x), k = 100, isdiss = TRUE),
+               "elements of 'k' must be between 1 and 11")
+  expect_error(hkmeans(x, k = 100), "elements of 'k' must be between 1 and 11")
+})

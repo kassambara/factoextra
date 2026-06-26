@@ -267,7 +267,7 @@ Edit `get_mca_ind()` and `get_mca_var()` in `R/get_mca.R`, returning `$coord`,
 ExPosition is the most recent multi-family backend (PCA + CA + MCA) and is the
 best template to study. Every place it is wired in:
 
-| Extension point | File:line |
+| Extension point | Location (file / line) |
 |-----------------|-----------|
 | Class dispatch (wrapper) | `R/utilities.R:103-107` |
 | Eigenvalues | `R/eigenvalue.R:123-124` |

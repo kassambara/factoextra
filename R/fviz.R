@@ -1,7 +1,7 @@
 #' @include utilities.R
 NULL
-#'Visualizing Multivariate Analyse Outputs
-#'@description Generic function to create a scatter plot of multivariate analyse
+#'Visualizing Multivariate Analysis Outputs
+#'@description Generic function to create a scatter plot of multivariate analysis
 #'  outputs, including PCA, CA, MCA and MFA.
 #'@inheritParams facto_summarize
 #'@param geom a text specifying the geometry to be used for the graph. Default 

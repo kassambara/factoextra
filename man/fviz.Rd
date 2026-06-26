@@ -2,7 +2,7 @@
 % Please edit documentation in R/fviz.R
 \name{fviz}
 \alias{fviz}
-\title{Visualizing Multivariate Analyse Outputs}
+\title{Visualizing Multivariate Analysis Outputs}
 \usage{
 fviz(
   X,
@@ -190,7 +190,7 @@ ggpubr::ggpar().}
 a ggplot
 }
 \description{
-Generic function to create a scatter plot of multivariate analyse
+Generic function to create a scatter plot of multivariate analysis
  outputs, including PCA, CA, MCA and MFA.
 }
 \examples{

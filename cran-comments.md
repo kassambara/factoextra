@@ -1,46 +1,72 @@
-## Test environments
+## Submission — factoextra 2.1.0
 
-* macOS (latest) — R release
-* Windows (latest) — R release
-* Ubuntu 22.04 — R release, R devel, R oldrel-1
-
-All checks run via GitHub Actions.
-
-## R CMD check results
-
-0 errors | 0 warnings | 1 note
-
-## Additional local pre-submission checks (March 13, 2026)
-
-* macOS Tahoe 26.3.1 — R 4.5.3
-* `devtools::run_examples(run_donttest = TRUE)`: clean after refreshing examples and manuals
-* `R CMD check factoextra_2.0.0.999.tar.gz`: 0 errors | 0 warnings | 0 notes
-* `R CMD check --as-cran factoextra_2.0.0.999.tar.gz`: 0 errors | 0 warnings | 1 note
-
-The remaining `--as-cran` note is environment-specific:
-
-* `unable to verify current time`
-
-## Major version bump
-
-This is a major update (1.0.7 → 2.0.0). The last CRAN release was in April 2020. Key changes include:
-
-* Replaced deprecated tidyr internals with base R (`stats::reshape()`)
-* Updated Hopkins statistic to use corrected formula (Wright 2022)
-* Added parallel analysis support in `fviz_eig()`
-* Replaced deprecated ggplot2 functions (`aes_string()`, `stat()`, `guide_legend(override.aes)`)
-* Added comprehensive test suite (113 tests via testthat)
-* Fixed documentation issues (lost braces, bare URLs, missing `\value` tags)
+A minor release adding new visualization features and bug fixes; no breaking
+changes (new behavior is gated, existing inputs are unchanged).
 
 ## Resubmission
 
-This is a resubmission. In this version I have:
+This is a resubmission addressing the auto-check feedback on the previous
+2.1.0 upload:
 
-* Added a note about `datanovia.com` URLs returning HTTP 503 to automated
-  crawlers. The URLs are valid and accessible in a browser; the server
-  returns 503 to automated crawlers. This affects URLs in DESCRIPTION,
-  README.md, and man/*.Rd files.
+* **Reverse dependency (chooseGCM) fixed.** `hcut()`/`hkmeans()` had added a
+  custom early error for `k > number-of-observations` that pre-empted (and so
+  changed the message of) `stats::cutree()`'s native error. chooseGCM's test
+  pins that native message (`"elements of 'k' must be between 1 and 11"`). We
+  removed the custom early error so the native message is restored — matching the
+  long-published behaviour. chooseGCM's tests pass again. A regression test now
+  guards this so it cannot recur.
+* **Spelling NOTE fixed.** "phylogenic" → "phylogenetic" in DESCRIPTION.
+* The "examples > 5s" NOTE comes from a few `fviz_*` examples that run inherently
+  slow FactoMineR computations (MCA/MFA/CA); these are correctness illustrations.
+  Happy to wrap them in `\donttest{}` if preferred.
+
+## Test environments
+
+* Local: macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
+* win-builder: R release — OK
+* GitHub Actions: macOS (release), Windows (release), Ubuntu 22.04
+  (release, devel, oldrel-1) — all pass
+
+## R CMD check results
+
+0 errors | 0 warnings | 0 notes
+
+(A local "unable to verify current time" / future-file-timestamps NOTE seen on a
+sandboxed machine without network is environment-specific and does not occur on
+win-builder or the CI machines.)
+
+## Additional local pre-submission checks (June 26, 2026)
+
+* macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
+* `R CMD check --as-cran factoextra_2.1.0.tar.gz`: 0 errors | 0 warnings | 0 notes
+* `devtools::test()`: 404 passed, 0 failed, 0 warnings, 0 skipped
+* `tools::checkRd()`: no Rd issues
+* `urlchecker::url_check()`: no problems
+
+## Changes in this version (2.1.0)
+
+Minor update from 2.0.0. Highlights (see NEWS.md for the full list):
+
+* New `as_factoextra_pca()` constructor to visualize coordinates from any
+  dimension-reduction method with the `fviz_pca_*()` family.
+* New arguments: `shape.ind` (shape individuals by a second factor),
+  `rotate.labels` (ggbiplot-style variable-label rotation).
+* Support for ade4 between-class / within-class PCA (`bca()`/`wca()`).
+* New vignette "Extending factoextra to support new analysis backends".
+* Bug fixes: `fviz_mca_biplot()` `map` argument, `get_pca_ind()` for ade4
+  `dudi.pca`, `fviz_dend()` honoring `k` for HCPC, and clearer warnings for
+  unrecognized `label`/`invisible` values.
+
+(The last CRAN release was 1.0.7; version 2.0.0 introduced the larger
+modernization documented in NEWS.md.)
+
+## Notes
+
+* No local notes.
 
 ## Downstream dependencies
 
-Checked reverse dependencies. All packages that could be installed passed R CMD check.
+The previously failing reverse dependency **chooseGCM** now passes: its
+`hclust_gcms()` k > n test again receives `stats::cutree()`'s native
+`"elements of 'k' must be between 1 and N"` error (verified against the fixed
+package). No other reverse dependency is affected by this change.

@@ -1,6 +1,6 @@
 
 # Ge the silhouette information
-# cluster: the cluster assignement of observation
+# cluster: the cluster assignment of observation
 # diss the dissimilarity matrix
 .get_silinfo <- function(cluster, diss){
   

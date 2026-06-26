@@ -52,7 +52,7 @@ of the standard function used (read the documentation of hclust, agnes, diana).
       
 It includes also:
 \itemize{
-\item cluster: the cluster assignement of observations after cutting the tree
+\item cluster: the cluster assignment of observations after cutting the tree
 \item nbclust: the number of clusters
 \item silinfo: the silhouette information of observations (available when
   \code{k > 1})
@@ -74,7 +74,7 @@ data(USArrests)
 # Compute hierarchical clustering and cut into 4 clusters
 res <- hcut(USArrests, k = 4, stand = TRUE)
 
-# Cluster assignements of observations
+# Cluster assignments of observations
 res$cluster
 # Size of clusters
 res$size
