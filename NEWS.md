@@ -1,13 +1,8 @@
-# factoextra 2.0.0.999
+# factoextra 2.1.0
 
-## Documentation
+## New features
 
-* New vignette **"Extending factoextra to support new analysis backends"**
-  documenting the `get_*()` / `fviz_*()` extension contract (which functions to
-  edit and the standardized return structure), with ExPosition as a worked
-  example and a vegan (RDA/CCA) template. (#23)
-
-## New Features
+### New functions
 
 * New `as_factoextra_pca()` constructor builds a fviz-ready object from
   pre-computed coordinates, so the `fviz_pca_*()` family, `fviz_eig()`,
@@ -15,7 +10,10 @@
   dimension-reduction method (e.g. `stats::cmdscale()`, `ape::pcoa()`, UMAP/t-SNE,
   `vegan::rda()`/`cca()`, or a custom analysis) without writing a backend. Supply
   `ind.coord` (and optionally `var.coord`, `eig`); `cos2`/`contrib` are derived
-  from the coordinates when not provided.
+  from the coordinates when not provided. (#57, #75, #136)
+
+### New arguments
+
 * New `shape.ind` argument in `fviz_pca_ind()` and `fviz_pca_biplot()` maps point
   **shape** to a grouping factor independently of colour, so individuals can be
   coloured by one variable and shaped by another (e.g.
@@ -25,15 +23,101 @@
   `fviz_pca_biplot()`, etc.): when `TRUE`, variable text labels are rotated to
   the angle of their arrows (ggbiplot style). Defaults to `FALSE` (unchanged);
   use with `repel = FALSE`. (#98)
+* `fviz_pca_var()`/`fviz_pca_biplot()` (via `fviz()`) gain an `add.circle` argument to
+  force (`TRUE`) or suppress (`FALSE`) the variable correlation circle. Default `NULL`
+  keeps the previous automatic behavior (shown only for unit-variance PCA). Useful when
+  scaling manually and fitting `prcomp(scale = FALSE)`. (#88)
+* `fviz_pca_var()` / `fviz_pca_biplot()` (and other arrow plots) gain an
+  `arrow.linetype` argument to set the variable-arrow line type (e.g. `"dashed"`).
+  Default `"solid"` reproduces the previous appearance. (#73)
+* `fviz_dend()` gains a `labels_font` argument ("plain"/"bold"/"italic"/"bold.italic")
+  to set the leaf-label font face, e.g. italic species names. Default "plain" leaves
+  labels unchanged. (#121)
+* `fviz_dend()` gains a `match_coord_colors` argument (default `FALSE`). When `TRUE`,
+  cluster colours are remapped from left-to-right leaf order to cluster-label order,
+  so a dendrogram's colours match `fviz_cluster()`/`fviz_silhouette()` for the same
+  clustering. Default `FALSE` keeps the previous colouring unchanged. (#103)
+* `fviz_dend()` now renders the `sub` argument as a plot subtitle. `sub`
+  defaults to `NULL` (no subtitle, as before); set it to a string to add one. (#54)
+
+### New backend and input support
+
 * PCA extractors and `fviz_pca_*()` now support **ade4 between-class and
   within-class PCA** (`ade4::bca()` / `ade4::wca()`). Individual contributions
   match `ade4::inertia.dudi()`. (#126)
+* `fviz_nbclust()` now accepts a precomputed dissimilarity (`"dist"`) as `x` for
+  `method = "silhouette"`/`"wss"`, passing it to dissimilarity-capable `FUNcluster`s
+  (e.g. `cluster::pam`, `factoextra::hcut`). Non-diss methods (kmeans/clara) and
+  `method = "gap_stat"` raise a clear error instead of mis-clustering. (#90)
+* `eclust()` gains `"hkmeans"` as a `FUNcluster` option, so hierarchical k-means
+  can be run through the same enhanced-clustering interface (with gap-statistic
+  `k` selection, silhouette info, and plotting). (#78)
+* `eclust()` now accepts a precomputed dissimilarity matrix (an object of class
+  `"dist"`) as `x` for hierarchical clustering (`"hclust"`, `"agnes"`,
+  `"diana"`), so custom distances such as Bray-Curtis
+  (e.g. `vegan::vegdist(df, "bray")`) can be used. In that case `hc_metric` is
+  ignored and `k` must be supplied. Previously a `"dist"` input was silently
+  recomputed as a Euclidean distance. (#182)
+* `get_famd()`, `get_mfa()`, `facto_summarize()`, `fviz_famd_*()`, and
+  `fviz_mfa_*()` now support supplementary qualitative variable categories
+  via `quali.sup`, including overlay, print, and category-name compatibility
+  paths. Regression coverage and examples expanded accordingly. (#202,
+  @erdeyl)
 
-## Bug Fixes
+## Main changes
+
+### Documentation
+
+* New vignette **"Extending factoextra to support new analysis backends"**
+  documenting the `get_*()` / `fviz_*()` extension contract (which functions to
+  edit and the standardized return structure), with ExPosition as a worked
+  example and a vegan (RDA/CCA) template, plus a "Quick start: bring your own
+  coordinates" section for `as_factoextra_pca()`. (#23)
+
+### Validation and messaging
 
 * `fviz_*()` now **warn** when `label` or `invisible` contain an unrecognized
   value (e.g. `label = "id"` instead of `"ind"`) and list the valid values,
   instead of silently drawing nothing. Recognized values are unchanged. (#165)
+* `get_dist()`, `eclust()`, `hcut()`, and `fviz_cluster()` reject `stand = TRUE`
+  scaling that produces `NA` values with a package-level error instead of
+  leaking low-level clustering or plotting failures. (#209, @erdeyl)
+* `fviz_dist()` and `hcut(isdiss = TRUE)` reject non-finite distance objects.
+  (#209, @erdeyl)
+* `hcut()` and `hkmeans()` reject `k > n_obs` early with a clear message.
+  (#209, @erdeyl)
+* `fviz_eig()` validates `ncp`, `parallel.iter`, and `parallel.seed` before
+  plotting. Integer-like numeric values are accepted; fractional, `NA`, or
+  out-of-range values are rejected. (#209, @erdeyl)
+* `facto_summarize()` and the `fviz_*` axis helpers reject `NA`, zero,
+  negative, or fractional axis indices consistently. (#209, @erdeyl)
+* `get_mca_var()` reports missing quantitative supplementary MCA variables
+  with a package-level error. (#209, @erdeyl)
+
+### Compatibility
+
+* `fviz_dend()` uses current `igraph` phylogenic helpers internally while
+  keeping `phylo_layout = "layout.auto"`, `"layout.gem"`, and `"layout.mds"`
+  as backward-compatible aliases. Modern names `"layout_nicely"`,
+  `"layout_with_gem"`, and `"layout_with_mds"` are also accepted. (#209,
+  @erdeyl)
+
+## Minor changes
+
+* `alpha.var`/`alpha.ind` (and `alpha`) now also fade the variable/individual text
+  labels, not just the points and arrows, in `fviz_pca_*()` and the other biplots.
+  Only a numeric `alpha < 1` is affected; the default (`alpha = 1`) is unchanged. (#130)
+* Clearer error when a `col`/`fill` vector passed to a `fviz_*` plot has the wrong length
+  (e.g. colouring variables in `fviz_pca_var()` by an observation-level group): the message
+  now explains the length must match the elements plotted (individuals for `fviz_*_ind()`,
+  variables for `fviz_*_var()`) or be a metric. (#139)
+* Help pages, examples, README, and package metadata refreshed to document
+  the new helper-level `k = 1` paths, the stricter validation surface across
+  the clustering, MCA, and eigenvalue helpers, and the phylogenic layout
+  compatibility surface. (#209, @erdeyl)
+
+## Bug fixes
+
 * `get_pca_ind()` now works for **ade4 `dudi.pca`** objects. Their `$li`/`$tab`
   are data frames, which previously collapsed the internal `cos2` matrix into a
   list and raised "attempt to set 'colnames' on an object with less than two
@@ -88,90 +172,14 @@
   `a` key), matching the scatter and dendrogram plots. (#14)
 * `fviz_dend()` no longer leaks its leaf-label text layer into the legend
   (the stray `a`/`cex` key), matching the scatter-plot cleanup. (#14)
-* `alpha.var`/`alpha.ind` (and `alpha`) now also fade the variable/individual text
-  labels, not just the points and arrows, in `fviz_pca_*()` and the other biplots.
-  Only a numeric `alpha < 1` is affected; the default (`alpha = 1`) is unchanged. (#130)
 * `fviz_cluster()` now plots `pam()`/`fanny()` results fitted on a dissimilarity
   matrix (`diss = TRUE`) when the original data is passed via `data=` (previously the
   user's `data=` was overwritten by the object's empty data slot, erroring with "'data'
   must be of vector type, was NULL"). The clusters come from the object; `data=` is used
   only for the 2-D layout. A clear message is shown if no data is available. (#128)
-* Clearer error when a `col`/`fill` vector passed to a `fviz_*` plot has the wrong length
-  (e.g. colouring variables in `fviz_pca_var()` by an observation-level group): the message
-  now explains the length must match the elements plotted (individuals for `fviz_*_ind()`,
-  variables for `fviz_*_var()`) or be a metric. (#139)
 * Point/individual labels no longer add a stray `a` glyph to the colour/fill
   legend (e.g. `fviz_pca_ind(..., habillage = )`). Text layers are now excluded
   from the legend keys; labels still appear on the plot. (#14)
-
-## Input Validation
-
-* `get_dist()`, `eclust()`, `hcut()`, and `fviz_cluster()` reject `stand = TRUE`
-  scaling that produces `NA` values with a package-level error instead of
-  leaking low-level clustering or plotting failures. (#209, @erdeyl)
-* `fviz_dist()` and `hcut(isdiss = TRUE)` reject non-finite distance objects.
-  (#209, @erdeyl)
-* `hcut()` and `hkmeans()` reject `k > n_obs` early with a clear message.
-  (#209, @erdeyl)
-* `fviz_eig()` validates `ncp`, `parallel.iter`, and `parallel.seed` before
-  plotting. Integer-like numeric values are accepted; fractional, `NA`, or
-  out-of-range values are rejected. (#209, @erdeyl)
-* `facto_summarize()` and the `fviz_*` axis helpers reject `NA`, zero,
-  negative, or fractional axis indices consistently. (#209, @erdeyl)
-* `get_mca_var()` reports missing quantitative supplementary MCA variables
-  with a package-level error. (#209, @erdeyl)
-
-## New Features
-
-* `fviz_dend()` now renders the `sub` argument as a plot subtitle. `sub`
-  defaults to `NULL` (no subtitle, as before); set it to a string to add one. (#54)
-* `fviz_pca_var()`/`fviz_pca_biplot()` (via `fviz()`) gain an `add.circle` argument to
-  force (`TRUE`) or suppress (`FALSE`) the variable correlation circle. Default `NULL`
-  keeps the previous automatic behavior (shown only for unit-variance PCA). Useful when
-  scaling manually and fitting `prcomp(scale = FALSE)`. (#88)
-* `fviz_pca_var()` / `fviz_pca_biplot()` (and other arrow plots) gain an
-  `arrow.linetype` argument to set the variable-arrow line type (e.g. `"dashed"`).
-  Default `"solid"` reproduces the previous appearance. (#73)
-* `fviz_nbclust()` now accepts a precomputed dissimilarity (`"dist"`) as `x` for
-  `method = "silhouette"`/`"wss"`, passing it to dissimilarity-capable `FUNcluster`s
-  (e.g. `cluster::pam`, `factoextra::hcut`). Non-diss methods (kmeans/clara) and
-  `method = "gap_stat"` raise a clear error instead of mis-clustering. (#90)
-* `fviz_dend()` gains a `labels_font` argument ("plain"/"bold"/"italic"/"bold.italic")
-  to set the leaf-label font face, e.g. italic species names. Default "plain" leaves
-  labels unchanged. (#121)
-* `fviz_dend()` gains a `match_coord_colors` argument (default `FALSE`). When `TRUE`,
-  cluster colours are remapped from left-to-right leaf order to cluster-label order,
-  so a dendrogram's colours match `fviz_cluster()`/`fviz_silhouette()` for the same
-  clustering. Default `FALSE` keeps the previous colouring unchanged. (#103)
-* `eclust()` gains `"hkmeans"` as a `FUNcluster` option, so hierarchical k-means
-  can be run through the same enhanced-clustering interface (with gap-statistic
-  `k` selection, silhouette info, and plotting). (#78)
-* `eclust()` now accepts a precomputed dissimilarity matrix (an object of class
-  `"dist"`) as `x` for hierarchical clustering (`"hclust"`, `"agnes"`,
-  `"diana"`), so custom distances such as Bray-Curtis
-  (e.g. `vegan::vegdist(df, "bray")`) can be used. In that case `hc_metric` is
-  ignored and `k` must be supplied. Previously a `"dist"` input was silently
-  recomputed as a Euclidean distance. (#182)
-* `get_famd()`, `get_mfa()`, `facto_summarize()`, `fviz_famd_*()`, and
-  `fviz_mfa_*()` now support supplementary qualitative variable categories
-  via `quali.sup`, including overlay, print, and category-name compatibility
-  paths. Regression coverage and examples expanded accordingly. (#202,
-  @erdeyl)
-
-## Compatibility
-
-* `fviz_dend()` uses current `igraph` phylogenic helpers internally while
-  keeping `phylo_layout = "layout.auto"`, `"layout.gem"`, and `"layout.mds"`
-  as backward-compatible aliases. Modern names `"layout_nicely"`,
-  `"layout_with_gem"`, and `"layout_with_mds"` are also accepted. (#209,
-  @erdeyl)
-
-## Internal
-
-* Help pages, examples, README, and package metadata refreshed to document
-  the new helper-level `k = 1` paths, the stricter validation surface across
-  the clustering, MCA, and eigenvalue helpers, and the phylogenic layout
-  compatibility surface. (#209, @erdeyl)
 
 # factoextra 2.0.0
 
