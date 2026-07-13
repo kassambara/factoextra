@@ -12,7 +12,7 @@ Pull-Requests](https://githubbadges.herokuapp.com/kassambara/factoextra/pulls.sv
 [![Github
 Issues](https://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](https://github.com/kassambara/factoextra/issues)
 
-# factoextra : Extract and Visualize the Results of Multivariate Data Analyses
+# factoextra : Extract and Visualize the Results of Multivariate Data Analyses <img src="man/figures/logo.png" align="right" height="139" alt="factoextra hex logo" />
 
 [**factoextra**](https://rpkgs.datanovia.com/factoextra/index.html) is
 an R package that makes it easy to *extract* and *visualize* the output
