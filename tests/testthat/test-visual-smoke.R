@@ -42,6 +42,21 @@ test_that("fviz_dend supports rectangular dendrogram layout", {
   expect_s3_class(p, "ggplot")
 })
 
+test_that("fviz_dend supports circular and horizontal dendrogram layouts", {
+  # Exercises the coord_polar (circular) and coord_flip (horizontal) branches of
+  # .ggplot_dend. These layout+theme paths were otherwise untested, leaving the
+  # ggplot2-dev CI leg blind to a break isolated there.
+  hc <- hclust(dist(scale(USArrests)))
+  p_circular <- fviz_dend(hc, k = 3, type = "circular")
+  p_horiz <- fviz_dend(hc, k = 3, horiz = TRUE)
+
+  expect_s3_class(p_circular, "ggplot")
+  expect_s3_class(p_horiz, "ggplot")
+  # Force the layout transforms to run (coord_polar / coord_flip fire at build).
+  expect_no_error(ggplot2::ggplot_build(p_circular))
+  expect_no_error(ggplot2::ggplot_build(p_horiz))
+})
+
 test_that("fviz_dend applies lwd to branch segments without adding a linewidth guide", {
   hc <- hclust(dist(scale(USArrests)))
 
