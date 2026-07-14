@@ -12,7 +12,12 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}${{ matrix.config.ggplot2 && ', ggplot2-dev' || '' }})
+
+    # The ggplot2-dev leg is an early-warning radar for the next ggplot2 break;
+    # it must never block the gate, so it is allowed to fail. All other legs keep
+    # allow_failure unset -> continue-on-error resolves to false (gate unchanged).
+    continue-on-error: ${{ matrix.config.allow_failure || false }}
 
     strategy:
       fail-fast: false
@@ -23,6 +28,10 @@ jobs:
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
+          # Early-warning leg: run the checks against the development ggplot2 to
+          # catch the next 3.5/4.0-style break before it reaches CRAN. Non-blocking
+          # (allow_failure) so an upstream ggplot2 break never reddens the gate.
+          - {os: ubuntu-latest,   r: 'release', ggplot2: 'devel', allow_failure: true}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -62,6 +71,13 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+
+      - name: Install development ggplot2 (early-warning leg only)
+        if: ${{ matrix.config.ggplot2 == 'devel' }}
+        run: |
+          if (!requireNamespace("pak", quietly = TRUE)) install.packages("pak")
+          pak::pak("tidyverse/ggplot2")
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
