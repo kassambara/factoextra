@@ -9,6 +9,12 @@
   The default (`NULL`) keeps each method's existing behavior: the guide line is
   shown for `"silhouette"` and `"gap_stat"` and omitted for `"wss"`.
 
+## Minor changes
+
+* `fviz_dend()`: corrected the documentation of the `type` argument, which listed
+  a `"triangle"` value that the function does not accept (the valid values are
+  `"rectangle"`, `"circular"` and `"phylogenic"`). Thanks to @Nelson-Gon (#144).
+
 # factoextra 2.1.0
 
 ## New features
