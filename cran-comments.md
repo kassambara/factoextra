@@ -40,8 +40,15 @@ illustrations; happy to wrap them in `\donttest{}` if preferred.
 
 ## Downstream dependencies
 
-We ran R CMD check on the reverse dependencies. No new problems were introduced
-by this release. <!-- revdep summary finalized after revdepcheck run -->
+We checked the 49 reverse dependencies. This release is additive and opt-in:
+every new argument defaults to the previous behavior, no default output or
+numeric result changed, no function or argument was removed or renamed, and no
+existing error/message text changed (the new messages are all on new functions
+or new opt-in argument paths). We scanned the reverse-dependency sources for any
+pinned factoextra message or snapshot of factoextra output; the only revdeps that
+call factoextra and assert on errors/snapshots (PLNmodels, Silhouette) use `fviz()`,
+`eclust()` and `hcut()`, which are unchanged for their existing calls. No new
+problems.
 
 ## Notes
 
