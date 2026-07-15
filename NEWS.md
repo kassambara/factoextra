@@ -22,7 +22,10 @@
   points are thinned: any ellipse (`addEllipses` / the cluster frame) and the
   group/cluster centres are still computed on the full data, so a convex hull or
   confidence ellipse is not distorted by dropping the extreme points a random
-  draw tends to lose. The draw does not disturb the caller's random stream.
+  draw tends to lose. A continuous colour, fill or size mapping (e.g. `col.ind =
+  "cos2"`) and its legend are likewise pinned to the full-data range, so a
+  point's colour, fill and size do not depend on how many points are drawn. The
+  draw does not disturb the caller's random stream.
   `max.points = NULL` (default) draws every point, and `sample.seed` controls
   which subset is chosen.
 * `fviz_mca_ind()` and `fviz_mca_biplot()` gain a `quanti.sup` argument. Set

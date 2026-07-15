@@ -586,3 +586,49 @@ test_that("fviz_pca_ind max.points keeps addEllipses frames faithful (convex/con
     expect_equal(npts(ps), 200)                        # points thinned
   }
 })
+
+test_that("max.points pins a continuous colour/fill gradient to the full-data range", {
+  # A subset would otherwise retrain the gradient (and legend) on its own range,
+  # so a point's colour would depend on max.points. The scale is pinned to the
+  # full data instead. Only fires on the sampling path and for continuous mapping.
+  set.seed(42)
+  X <- matrix(rnorm(4000 * 4), 4000, 4); rownames(X) <- paste0("o", seq_len(4000))
+  res <- prcomp(X, scale. = TRUE)
+  crange <- function(p, aes = "colour") {
+    sc <- ggplot2::ggplot_build(p)$plot$scales$get_scales(aes)
+    if (is.null(sc)) return(NA_real_)
+    range(sc$range$range, na.rm = TRUE)
+  }
+  # colour: sampled range == full range (pinned)
+  cf <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", col.ind = "cos2")))
+  cs <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", col.ind = "cos2", max.points = 400)))
+  expect_equal(cs, cf)
+  # holds with a custom gradient.cols palette too
+  csg <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", col.ind = "cos2",
+                                              max.points = 400, gradient.cols = c("blue", "red"))))
+  expect_equal(csg, cf)
+  # fill: sampled range == full range (pinned)
+  ff <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", fill.ind = "contrib",
+                                             pointshape = 21)), "fill")
+  fs <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", fill.ind = "contrib",
+                                             pointshape = 21, max.points = 400)), "fill")
+  expect_equal(fs, ff)
+  # size mapped to a metric: sampled range == full range (pinned)
+  sf <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", pointsize = "cos2")), "size")
+  ss <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", pointsize = "cos2",
+                                             max.points = 400)), "size")
+  expect_equal(ss, sf)
+  # discrete colouring is untouched: still a discrete scale, points thinned, no error
+  grp <- factor(rep(letters[1:4], 1000))
+  pg <- suppressMessages(fviz_pca_ind(res, geom = "point", habillage = grp, max.points = 400))
+  sc <- ggplot2::ggplot_build(pg)$plot$scales$get_scales("colour")
+  expect_true(sc$is_discrete())
+
+  # select.ind: the pin matches the NON-sampled selected plot (the selected range),
+  # not the pre-select full range -- so a selected point's colour is stable.
+  ref  <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", col.ind = "cos2",
+                                               select.ind = list(cos2 = 0.5))))
+  samp <- crange(suppressMessages(fviz_pca_ind(res, geom = "point", col.ind = "cos2",
+                                               select.ind = list(cos2 = 0.5), max.points = 400)))
+  expect_equal(samp, ref)
+})
