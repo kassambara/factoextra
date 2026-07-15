@@ -44,6 +44,9 @@ NULL
 #' # Variable contributions on axes 1 + 2
 #' fviz_contrib(res.pca, choice="var", axes = 1:2)
 #'
+#' # Heat-grid of contributions across several dimensions
+#' fviz_contrib(res.pca, choice = "var", axes = 1:3, display = "heatmap")
+#'
 #' # Contributions of individuals on axis 1
 #' fviz_contrib(res.pca, choice="ind", axes = 1)
 #'
@@ -90,15 +93,27 @@ NULL
 #'  }
 #' @export
 fviz_contrib <- function(X, choice = c("row", "col", "var", "ind", "quanti.var", "quali.var", "group", "partial.axes"),
-                         axes=1, fill="steelblue", color = "steelblue", 
+                         axes=1, fill="steelblue", color = "steelblue",
                          sort.val = c("desc", "asc", "none"), top = Inf,
-                         xtickslab.rt = 45, ggtheme = theme_minimal(), ...)
+                         xtickslab.rt = 45, ggtheme = theme_minimal(),
+                         display = c("bar", "heatmap"), ...)
 {
 
   sort.val <- match.arg(sort.val)
   choice = match.arg(choice)
-  
+  display <- match.arg(display)
+
   title <- .build_title(choice[1], "Contribution", axes)
+
+  # display = "heatmap": one tile per (element, dimension) of the per-axis
+  # contribution, instead of a bar of the axis-averaged contribution. The
+  # barplot path (with its reference line) below is unchanged.
+  if(display == "heatmap")
+    return(.fviz_result_heatmap(X, choice = choice[1], result = "contrib",
+                                axes = axes, top = top, fill = fill,
+                                ggtheme = ggtheme,
+                                title = sub(" to Dim-.*$", " per dimension", title),
+                                legend.title = "contrib"))
 
   dd <- facto_summarize(X, element = choice, result = "contrib", axes = axes)
   contrib <- dd$contrib

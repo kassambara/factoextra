@@ -253,6 +253,84 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
     res = list(res = res, res.partial = res.partial)
     }
   }
-  
+
   res
+}
+
+
+# Per-axis result matrix (element x selected dimensions).
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Reuses the same extractor dispatch as facto_summarize() but returns the raw
+# per-dimension cos2/contrib matrix WITHOUT summing across axes (facto_summarize
+# collapses the axes into one value per element). Used by the fviz_cos2()/
+# fviz_contrib() heat-grid display.
+.facto_element_matrix <- function(X, element, result, axes){
+  element <- element[1]
+  facto_class <- .get_facto_class(X)
+  elmt <- switch(facto_class,
+                 CA   = get_ca(X, element),
+                 PCA  = get_pca(X, element),
+                 MCA  = get_mca(X, element),
+                 FAMD = get_famd(X, element),
+                 MFA  = get_mfa(X, element),
+                 HMFA = get_hmfa(X, element))
+  m <- elmt[[result]]
+  if(is.null(m))
+    stop("'", result, "' is not available for element = '", element, "'.", call. = FALSE)
+  axes <- .validate_axis_indices(axes, ndim = ncol(elmt$coord))
+  m <- m[, axes, drop = FALSE]
+  colnames(m) <- paste0("Dim", axes)
+  nm <- rownames(elmt$coord)
+  if(is.null(nm)) nm <- as.character(seq_len(nrow(m)))
+  rownames(m) <- as.character(nm)
+  m
+}
+
+
+# Heat-grid (element x dimension) of cos2/contrib values.
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Shared by fviz_cos2()/fviz_contrib() when display = "heatmap". Shows one tile
+# per (element, dimension) filled by the cos2/contrib value, with the value
+# printed in the tile. Elements are ordered by their total over the shown axes,
+# and `top` keeps the leading ones (matching the barplot's top-elements idea).
+.fviz_result_heatmap <- function(X, choice, result, axes, top = Inf,
+                                 fill = "steelblue", ggtheme = theme_minimal(),
+                                 title = NULL, legend.title = result){
+  m <- .facto_element_matrix(X, choice, result, axes)
+  # order elements by total across the shown axes; keep the top ones
+  ord <- order(rowSums(m, na.rm = TRUE), decreasing = TRUE)
+  m <- m[ord, , drop = FALSE]
+  if(is.finite(top) && top < nrow(m)) m <- m[seq_len(top), , drop = FALSE]
+
+  elements <- rownames(m)
+  dims <- colnames(m)
+  df <- data.frame(
+    name  = factor(rep(elements, times = ncol(m)), levels = rev(elements)),
+    dim   = factor(rep(dims, each = nrow(m)), levels = dims),
+    value = as.vector(m),
+    stringsAsFactors = TRUE
+  )
+  # cos2 in [0,1] reads better with 2 decimals; contrib (%) with 1.
+  digits <- if(identical(result, "cos2")) 2 else 1
+  df$label <- ifelse(is.na(df$value), "",
+                     formatC(df$value, format = "f", digits = digits))
+  # Adaptive label colour: white text on dark tiles so the value stays legible
+  # for any `fill` (e.g. "navy"), not just the light default. The tile colour is
+  # the white->fill gradient at the value's position; pick white when it's dark.
+  rng <- range(df$value, na.rm = TRUE)
+  tpos <- if(diff(rng) > 0) (df$value - rng[1]) / diff(rng) else rep(0, nrow(df))
+  tpos[is.na(tpos)] <- 0
+  tile_rgb <- grDevices::colorRamp(c("white", fill), space = "Lab")(tpos)
+  lum <- (0.2126 * tile_rgb[, 1] + 0.7152 * tile_rgb[, 2] + 0.0722 * tile_rgb[, 3]) / 255
+  df$txt_col <- ifelse(lum < 0.4, "white", "black")
+  p <- ggplot(df, aes(x = .data[["dim"]], y = .data[["name"]], fill = .data[["value"]])) +
+    geom_tile(color = "white", linewidth = 0.5) +
+    geom_text(aes(label = .data[["label"]], color = .data[["txt_col"]]), size = 3) +
+    scale_color_identity() +
+    scale_fill_gradient(low = "white", high = fill, name = legend.title,
+                        na.value = "white") +
+    labs(title = title, x = "", y = "") +
+    ggtheme +
+    theme(panel.grid = element_blank())
+  p
 }

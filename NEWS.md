@@ -8,6 +8,10 @@
   `mark_optimal = FALSE` omits the optimal-cluster guide line for every method.
   The default (`NULL`) keeps each method's existing behavior: the guide line is
   shown for `"silhouette"` and `"gap_stat"` and omitted for `"wss"`.
+* `fviz_cos2()` and `fviz_contrib()` gain a `display` argument. `display = "heatmap"`
+  draws a grid with one tile per element and dimension, filled and labelled by the
+  per-dimension cos2/contribution, so the quality/contribution across several
+  dimensions can be read at once. The default (`display = "bar"`) is unchanged.
 
 ## Minor changes
 
