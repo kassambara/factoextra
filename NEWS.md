@@ -2,6 +2,16 @@
 
 ## New features
 
+* New `fviz_umap()` and `fviz_tsne()` to visualize a 2-D UMAP or t-SNE embedding
+  (from `uwot`, `Rtsne`, `umap`, or a plain coordinate matrix) with factoextra's
+  grouping, ellipse and palette styling, including colouring points by a
+  continuous feature value. An embedding has no eigenvalues, so the axes are
+  labelled `UMAP1`/`UMAP2` (`tSNE1`/`tSNE2`) without a percentage and there is no
+  scree plot, loadings or correlation circle; when requested, the group outline
+  defaults to a convex hull rather than a normal confidence ellipse (which would
+  assume a metric the embedding does not preserve). `uwot` and `Rtsne` are
+  Suggests.
+
 * `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a PCA fitted
   inside a tidymodels `recipe` (`recipes::step_pca()`) or a fitted `workflow`
   plots directly with the `fviz_pca_*`/`fviz_eig`/`fviz_contrib`/`fviz_cos2`
