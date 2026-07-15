@@ -635,7 +635,7 @@ visualization of advanced methods such:
     Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html)
   - Hierarchical Multiple Factor Analysis (HMFA): [HMFA
     Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html)
-  - [Hierachical Clustering on Principal Components
+  - [Hierarchical Clustering on Principal Components
     (HCPC)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/117-hcpc-hierarchical-clustering-on-principal-components-essentials/)
 
 ## Cluster analysis and factoextra

@@ -598,7 +598,7 @@ NULL
   else if(element=="ind")
     title <- paste0(varname, " of individuals to Dim-", paste(axes, collapse="-"))
   else if(element=="quanti.var")
-    title <- paste0(varname, " of quantitive variables to Dim-", paste(axes, collapse="-"))
+    title <- paste0(varname, " of quantitative variables to Dim-", paste(axes, collapse="-"))
   else if(element=="quali.var")
     title <- paste0(varname, " of qualitative variables to Dim-", paste(axes, collapse="-"))
   else if(element=="group")

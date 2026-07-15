@@ -87,6 +87,8 @@
 * `?fviz_dend` now documents how to compare two dendrograms (a tanglegram) with
   `dendextend::tanglegram()` / `untangle()` / `entanglement()`, which factoextra
   already depends on.
+* Fixed a typo in the default title of `fviz_cos2()` / `fviz_contrib()` for
+  quantitative variables ("quantitive" -> "quantitative").
 
 # factoextra 2.1.0
 
