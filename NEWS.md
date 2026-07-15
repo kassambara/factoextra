@@ -75,6 +75,9 @@
 * `fviz_dend()`: corrected the documentation of the `type` argument, which listed
   a `"triangle"` value that the function does not accept (the valid values are
   `"rectangle"`, `"circular"` and `"phylogenic"`). Thanks to @Nelson-Gon (#144).
+* `?fviz_dend` now documents how to compare two dendrograms (a tanglegram) with
+  `dendextend::tanglegram()` / `untangle()` / `entanglement()`, which factoextra
+  already depends on.
 
 # factoextra 2.1.0
 
