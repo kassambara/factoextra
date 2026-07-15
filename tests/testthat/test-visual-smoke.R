@@ -386,3 +386,39 @@ test_that("fviz_cos2/fviz_contrib heatmap works across methods (CA)", {
   expect_s3_class(fviz_cos2(res.ca, choice = "row", axes = 1:2, display = "heatmap"), "ggplot")
   expect_s3_class(fviz_contrib(res.ca, choice = "col", axes = 1:2, display = "heatmap"), "ggplot")
 })
+
+test_that("fviz_mca quanti.sup overlays scaled correlation arrows; default off", {
+  skip_if_not_installed("FactoMineR")
+  data(poison, package = "FactoMineR")
+  res <- FactoMineR::MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
+  has_seg <- function(p) any(vapply(p$layers, function(l) inherits(l$geom, "GeomSegment"), logical(1)))
+  seg_ends <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomSegment"), logical(1)))[1]
+    ggplot2::layer_data(p, i)[, c("xend", "yend")]
+  }
+
+  # Default off: no arrow overlay for ind or biplot.
+  expect_false(has_seg(fviz_mca_ind(res)))
+  expect_false(has_seg(fviz_mca_biplot(res)))
+
+  # quanti.sup = TRUE overlays arrows whose endpoints equal the signed
+  # supplementary correlations times a single positive scale factor (arrow
+  # length proportional to |correlation|, sign/direction preserved).
+  p <- fviz_mca_ind(res, quanti.sup = TRUE)
+  expect_true(has_seg(p))
+  qs   <- res$quanti.sup$coord[, 1:2]
+  ends <- seg_ends(p)
+  ends <- ends[order(ends$xend), ]
+  qso  <- qs[order(qs[, 1]), ]
+  k <- ends$xend[1] / qso[1, 1]           # implied scale factor
+  expect_gt(k, 0)                          # arrows not flipped
+  expect_equal(unname(as.matrix(ends)), unname(as.matrix(qso * k)), tolerance = 1e-6)
+  # Sign preserved: a variable negatively correlated with Dim1 points left.
+  expect_true(any(ends$xend < 0))
+  expect_true(has_seg(fviz_mca_biplot(res, quanti.sup = TRUE)))
+
+  # No supplementary quantitative variables -> warn and no arrows (no error).
+  res2 <- FactoMineR::MCA(poison[, 5:15], graph = FALSE)
+  expect_warning(p2 <- fviz_mca_ind(res2, quanti.sup = TRUE), "supplementary quantitative")
+  expect_false(has_seg(p2))
+})

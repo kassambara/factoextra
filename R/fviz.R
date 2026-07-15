@@ -476,6 +476,64 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   
 }
 
+# Overlay the supplementary quantitative variables of an MCA as scaled
+# correlation arrows on an individual / category map.
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# MCA supplementary quantitative variables are summarized by their correlation
+# with each dimension (X$quanti.sup$coord, signed, in [-1, 1]). factoextra's
+# standalone quanti.sup plot lives in the squared-correlation [0, 1] space, so it
+# is NOT reused here: for a biplot overlay we draw the RAW signed correlations as
+# arrows from the origin, scaled with the same convention as fviz_pca_biplot()
+# (longest arrow ~ 80% of the individual-cloud extent) so directions read against
+# the cloud. Arrow lengths are therefore relative.
+.add_mca_quanti_sup <- function(p, X, axes = c(1, 2), col = "#D55E00",
+                                geom = c("arrow", "text"), labelsize = 4,
+                                arrowsize = 0.5, repel = TRUE){
+  if(!inherits(X, "MCA") || is.null(X$quanti.sup)){
+    warning("quanti.sup = TRUE: no supplementary quantitative variables found ",
+            "(needs a FactoMineR MCA fitted with quanti.sup). Skipping the overlay.",
+            call. = FALSE)
+    return(p)
+  }
+  qs <- X$quanti.sup$coord[, axes, drop = FALSE]   # signed correlations in [-1, 1]
+  if(all(is.na(qs)) || suppressWarnings(max(abs(qs), na.rm = TRUE)) == 0) return(p)
+  # Cloud extent from the built plot, so scaling is correct for every `map` mode
+  # (e.g. colprincipal rescales the individuals). Arrow length is proportional to
+  # the |correlation|: a correlation of 1 reaches ~80% of the cloud extent, so a
+  # weak covariate draws a short arrow (length is honest, not normalised to 1).
+  rng <- tryCatch({
+    b <- ggplot2::ggplot_build(p)
+    max(abs(c(b$layout$panel_params[[1]]$x.range,
+              b$layout$panel_params[[1]]$y.range)), na.rm = TRUE)
+  }, error = function(e) max(abs(X$ind$coord[, axes]), na.rm = TRUE))
+  sf <- 0.8 * rng
+  df <- data.frame(name = rownames(qs),
+                   x = qs[, 1] * sf, y = qs[, 2] * sf,
+                   stringsAsFactors = TRUE)
+  if("arrow" %in% geom)
+    p <- p + .arrows(data = df, color = col, linewidth = arrowsize)
+  if("text" %in% geom){
+    # Place each label just BEYOND its arrow tip (a small fixed nudge along the
+    # arrow direction), so the arrow/head does not run through the text. A tiny
+    # arrow at the origin keeps its label in place (unit direction is ~0).
+    len <- sqrt(df$x^2 + df$y^2)
+    gap <- 0.06 * rng
+    df$lx <- df$x + ifelse(len > 0, df$x / len, 0) * gap
+    df$ly <- df$y + ifelse(len > 0, df$y / len, 0) * gap
+    # Repel the overlay labels by default: an MCA usually has a dominant first
+    # axis, so several arrows align and their tip labels would otherwise overprint.
+    if(isTRUE(repel) && requireNamespace("ggrepel", quietly = TRUE))
+      p <- p + ggpubr::geom_exec(ggrepel::geom_text_repel, data = df,
+                                 x = "lx", y = "ly", label = "name",
+                                 color = col, fontface = "italic", size = labelsize)
+    else
+      p <- p + ggpubr::geom_exec(geom_text, data = df, x = "lx", y = "ly",
+                                 label = "name", color = col,
+                                 fontface = "italic", size = labelsize)
+  }
+  p + labs(caption = "Arrows: supplementary quantitative variables (relative lengths)")
+}
+
 # Add arrow to the plot
 # FIX: ggplot2 3.4.0+ deprecation - size replaced with linewidth for geom_segment
 .arrows <- function(data, color = "black", alpha = 1, linewidth = 0.5,

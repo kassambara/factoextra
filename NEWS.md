@@ -12,6 +12,13 @@
   draws a grid with one tile per element and dimension, filled and labelled by the
   per-dimension cos2/contribution, so the quality/contribution across several
   dimensions can be read at once. The default (`display = "bar"`) is unchanged.
+* `fviz_mca_ind()` and `fviz_mca_biplot()` gain a `quanti.sup` argument. Set
+  `quanti.sup = TRUE` to overlay the supplementary quantitative variables of a
+  FactoMineR MCA on the map as correlation arrows, so a continuous covariate's
+  direction can be read against the category/individual cloud. Each arrow's length
+  is proportional to the variable's absolute correlation with the dimensions
+  (relative to the cloud extent). The default (`quanti.sup = FALSE`) leaves the map
+  unchanged.
 
 ## Minor changes
 

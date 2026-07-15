@@ -49,8 +49,13 @@ NULL
 #'  , "coord"), x values("x") or y values("y"). To use this, make sure that 
 #'  habillage ="none".
 #'@param shape.ind,shape.var point shapes of individuals and variables.
-#'@param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative 
+#'@param col.quanti.sup,col.quali.sup a color for the quantitative/qualitative
 #'  supplementary variables.
+#'@param quanti.sup logical. If \code{TRUE}, the supplementary quantitative
+#'  variables of a FactoMineR \code{\link[FactoMineR]{MCA}} are overlaid on the
+#'  individuals / biplot map as correlation arrows (see the Details section).
+#'  Default \code{FALSE} leaves the map unchanged. Used by \code{fviz_mca_ind()}
+#'  and \code{fviz_mca_biplot()}.
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
@@ -84,9 +89,20 @@ NULL
 #'  columns are in principal coordinates. In this situation, it's not possible 
 #'  to interpret the distance between row points and column points. To overcome 
 #'  this problem, the simplest way is to make an asymmetric plot. The argument 
-#'  "map" can be used to change the plot type. For more explanation, read the 
+#'  "map" can be used to change the plot type. For more explanation, read the
 #'  details section of fviz_ca documentation.
-#'  
+#'
+#'  \code{quanti.sup = TRUE} overlays the supplementary quantitative variables on
+#'  the individuals / biplot map. Each such variable is drawn as an arrow from the
+#'  origin in the direction of its correlations with the shown dimensions
+#'  (\code{X$quanti.sup$coord}), so the arrow points toward the region of the
+#'  cloud where the variable takes larger values. Each arrow's length is
+#'  proportional to the variable's absolute correlation with the shown dimensions
+#'  (a correlation of 1 reaches about 80\% of the individual-cloud extent), so a
+#'  weak covariate draws a short arrow. The overlay labels are repelled by default
+#'  (needs the \code{ggrepel} package). \strong{Arrow lengths are relative} to the
+#'  cloud, so compare directions and relative lengths rather than absolute sizes.
+#'
 #'@return a ggplot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{get_mca}}, \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
@@ -129,8 +145,14 @@ NULL
 #' p <- fviz_mca_ind(res.mca, label="none", habillage=grp,
 #'        addEllipses=TRUE, ellipse.level=0.95)
 #' print(p)
-#'       
-#'     
+#'
+#' # Overlay supplementary quantitative variables as correlation arrows.
+#' # Fit the MCA with quanti.sup, then set quanti.sup = TRUE when plotting.
+#' res.mca2 <- MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
+#' fviz_mca_ind(res.mca2, label = "none", habillage = poison$Vomiting,
+#'              addEllipses = TRUE, quanti.sup = TRUE)
+#'
+#'
 #' # Change group colors using RColorBrewer color palettes
 #' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 #' p + scale_color_brewer(palette="Dark2") +
@@ -200,20 +222,26 @@ NULL
 #'@rdname fviz_mca
 #'@export
 fviz_mca_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), geom.ind = geom, repel = FALSE,
-                         habillage = "none", palette = NULL, addEllipses = FALSE, 
+                         habillage = "none", palette = NULL, addEllipses = FALSE,
                          col.ind = "blue", col.ind.sup = "darkblue", alpha.ind = 1,
-                         shape.ind = 19, map ="symmetric", 
+                         shape.ind = 19, map ="symmetric",
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         quanti.sup = FALSE, col.quanti.sup = "#D55E00",
                          ...)
 {
-  
-  fviz (X, element = "ind", axes = axes, geom = geom.ind, habillage = habillage, 
+
+  p <- fviz (X, element = "ind", axes = axes, geom = geom.ind, habillage = habillage,
         addEllipses = addEllipses, palette = palette, pointshape = shape.ind,
         color = col.ind, alpha = alpha.ind,
         shape.sup = shape.ind, col.row.sup = col.ind.sup,
         select = select.ind,  map = map, repel = repel, ...)
 
-  
+  # Overlay supplementary quantitative variables as scaled correlation arrows.
+  # Default quanti.sup = FALSE leaves the map unchanged.
+  if(isTRUE(quanti.sup))
+    p <- .add_mca_quanti_sup(p, X, axes = axes, col = col.quanti.sup)
+
+  p
 }
 
 
@@ -257,16 +285,20 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
                             geom.ind = geom, geom.var = geom,
                             repel = FALSE, label = "all", invisible="none",
                             habillage="none", addEllipses=FALSE, palette = NULL,
-                            arrows = c(FALSE, FALSE), map ="symmetric", 
-                            title = "MCA - Biplot", ...)
+                            arrows = c(FALSE, FALSE), map ="symmetric",
+                            title = "MCA - Biplot",
+                            quanti.sup = FALSE, col.quanti.sup = "#D55E00", ...)
 {
-  
+
   # Individuals
   geom2 <- geom.ind
   if(arrows[1]==TRUE) geom2 <- setdiff(unique(c(geom2, "arrow")), "point")
+  # quanti.sup/col.quanti.sup are forwarded explicitly (not via ...) so they do
+  # not leak into fviz_mca_var() below.
   p <- fviz_mca_ind(X,  axes = axes, geom = geom2, repel = repel,
                     label = label, invisible=invisible, habillage = habillage,
-                    addEllipses = addEllipses, palette = palette, map = map, ...)
+                    addEllipses = addEllipses, palette = palette, map = map,
+                    quanti.sup = quanti.sup, col.quanti.sup = col.quanti.sup, ...)
 
   # Variable
   geom2 <- geom.var
