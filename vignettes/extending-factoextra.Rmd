@@ -72,12 +72,12 @@ fviz_eig(res)
 fviz_contrib(res, choice = "var", axes = 1)
 ```
 
-The same pattern turns the output of methods factoextra doesn't natively know
-about into elegant biplots — e.g. classical MDS or a UMAP/t-SNE embedding
+The same pattern turns the output of any **eigenvalue-based** method factoextra
+doesn't natively know about into elegant biplots — e.g. classical MDS / PCoA
 (coordinates only; supply `var.coord` only if your method has variable loadings):
 
 ```{r quick-start-mds}
-mds <- stats::cmdscale(dist(scale(mtcars)), k = 3)   # classical MDS
+mds <- stats::cmdscale(dist(scale(mtcars)), k = 3)   # classical MDS (eigen-based)
 fviz_pca_ind(as_factoextra_pca(ind.coord = mds), repel = TRUE)
 ```
 
@@ -85,6 +85,28 @@ When you don't pass `eig`, it defaults to the variance of each coordinate column
 (the natural eigenvalue), so the scree plot and axis percentages still work. When
 you don't pass `cos2`/`contrib`, they are computed from the coordinates
 (`cos2` is then the quality of representation *within the supplied dimensions*).
+
+### Non-linear embeddings (UMAP, t-SNE): use the dedicated faces
+
+A UMAP or t-SNE embedding has **no eigenvalues**, so it must *not* go through
+`as_factoextra_pca()` — a scree plot, variable loadings or a correlation circle
+would be meaningless for it. Plot it with `fviz_umap()` / `fviz_tsne()` instead,
+which label the axes `UMAP1`/`UMAP2` (`tSNE1`/`tSNE2`) with no percentage, omit
+the eigen surface entirely, and default the group outline to a convex hull rather
+than a confidence ellipse (which would assume a metric the embedding does not
+preserve):
+
+```{r umap-face}
+um <- uwot::umap(iris[, 1:4])
+fviz_umap(um, habillage = iris$Species, addEllipses = TRUE)
+fviz_umap(um, col.ind = iris$Petal.Length)   # colour by a continuous feature value
+```
+
+In an embedding, tight local neighbourhoods are trustworthy, but the size of a
+cluster, the distance between well-separated clusters and the empty space between
+them are not quantitatively meaningful and change with the method's `perplexity` /
+`n_neighbors` settings (Wattenberg, Viégas & Johnson, 2016) — read groupings, not
+geometry.
 
 Use the constructor when you have results in hand. Read on if instead you want
 factoextra to recognise a **class** of analysis objects directly (so users of

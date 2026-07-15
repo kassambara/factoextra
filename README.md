@@ -168,45 +168,52 @@ The current maintenance baseline targets:
 library("factoextra")
 ```
 
-## Recent maintenance highlights
+## What’s new in the development version
 
-The current development version includes:
-
-  - helper-level `k = 1` handling for clustering diagnostics such as
-    `fviz_nbclust(..., method = "wss")` and hierarchical `eclust()`
-    auto-selection
-  - silhouette diagnostics now omit the undefined `k = 1` point and keep
-    the optimal-k guide aligned with the displayed cluster count
-  - stricter validation for scaled clustering data and non-finite
-    distance objects
-  - clearer MCA `quanti.sup`, `axes`, `ncp`, and `parallel.iter`
-    validation paths, including integer-like numeric support for
-    `fviz_eig()`
-  - refreshed examples and manuals for the updated clustering and
-    validation workflows
+  - **tidymodels on-ramp**: a PCA fitted in a `recipes` recipe
+    (`step_pca()`) or a fitted `workflow` plots directly with the
+    `fviz_pca_*` family via `as_factoextra_pca()` (honest scree, real
+    variable-component correlations)
+  - **UMAP / t-SNE**: `fviz_umap()` and `fviz_tsne()` visualize a 2-D
+    embedding (from `uwot`, `Rtsne`, `umap`, or a coordinate matrix),
+    including colouring by a continuous feature value; axes carry no
+    percentage and there is no scree/loadings surface (embeddings have no
+    eigenvalues)
+  - **Themes and palettes**: `theme_factoextra()` (a clean publication
+    theme) and `factoextra_palette("okabe")` (the Okabe-Ito
+    colorblind-safe palette), both explicit and stateless
+  - **Large datasets**: a `max.points` argument on the individual/cluster
+    plots draws a readable subset while keeping ellipses/centres on the
+    full data
+  - **`display = "heatmap"`** for `fviz_cos2()` / `fviz_contrib()` reads
+    the quality/contribution across several dimensions at once
+  - **`fviz_dend(highlight = ...)`** emphasizes the branches leading to
+    specific leaves
+  - **`fviz_mca_ind(..., quanti.sup = TRUE)`** overlays supplementary
+    quantitative variables on an MCA map
 
 <!-- end list -->
 
 ``` r
-data(iris)
-iris.scaled <- scale(iris[, -5])
-res.pca <- prcomp(iris[, -5], scale = TRUE)
+# tidymodels PCA -> factoextra
+library(recipes)
+rec <- recipe(~ ., data = iris[, 1:4]) |>
+  step_normalize(all_numeric_predictors()) |>
+  step_pca(all_numeric_predictors(), num_comp = 4)
+prep(rec) |> as_factoextra_pca() |> fviz_pca_biplot(habillage = iris$Species)
 
-# WSS now computes the k = 1 baseline internally
-fviz_nbclust(iris.scaled, hcut, method = "wss", hc_method = "complete")
+# UMAP embedding, coloured by a feature value, with the house theme + palette
+um <- uwot::umap(iris[, 1:4])
+fviz_umap(um, habillage = iris$Species, addEllipses = TRUE,
+          palette = factoextra_palette("okabe"), ggtheme = theme_factoextra())
+fviz_umap(um, col.ind = iris$Petal.Length)   # colour by a continuous feature
 
-# Parallel analysis validation is explicit and reproducible
-fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
-         parallel.iter = 10, parallel.seed = 123)
-
-# FactoMineR MCA quantitative supplementary variables are supported directly
-library(FactoMineR)
-data(poison)
-res.mca <- MCA(poison, quanti.sup = 1:2, graph = FALSE)
-get_mca(res.mca, "quanti.sup")
-
-# If installation leaves stale 00LOCK-* directories in your library,
-# remove those directories manually before reinstalling.
+# cos2 across several dimensions as a heatmap; large-n scatter; branch highlight
+res.pca <- prcomp(iris[, -5], scale. = TRUE)
+fviz_cos2(res.pca, choice = "var", axes = 1:3, display = "heatmap")
+fviz_pca_ind(res.pca, geom = "point", max.points = 200)
+fviz_dend(hclust(dist(scale(USArrests))), k = 4,
+          highlight = c("California", "Texas", "New York"))
 ```
 
 ## Main functions in the factoextra package
@@ -229,6 +236,7 @@ list.</span>
 | *fviz\_ellipses*                  | Draw confidence ellipses around the categories.                                                                                           |
 | *fviz\_cos2*                      | Visualize the quality of representation of the row/column variable from the results of PCA, CA, MCA functions.                            |
 | *fviz\_contrib*                   | Visualize the contributions of row/column elements from the results of PCA, CA, MCA functions.                                            |
+| *fviz\_umap*(fviz\_tsne)          | Visualize a 2-D UMAP / t-SNE embedding (no eigenvalues; from *uwot*, *Rtsne*, *umap* or a coordinate matrix).                             |
 
 ### Extracting data from dimension reduction analysis outputs
 
@@ -242,6 +250,7 @@ list.</span>
 | *get\_famd*        | Extract results from *Factor Analysis of Mixed Data* outputs, including supplementary qualitative categories.                                                |
 | *get\_hmfa*        | Extract results from *Hierarchical Multiple Factor Analysis* outputs.                                                                                        |
 | *facto\_summarize* | Subset and summarize the output of factor analyses.                                                                                                          |
+| *as\_factoextra\_pca* | Build a fviz-ready object from pre-computed coordinates, a tidymodels `recipe`/`workflow` (`step_pca()`), or any eigenvalue-based dimension reduction.       |
 
 ### Clustering analysis and visualization
 
@@ -257,6 +266,13 @@ list.</span>
 | *hcut*                                   | Computes Hierarchical Clustering and Cut the Tree           |
 | *hkmeans* (hkmeans\_tree, print.hkmeans) | Hierarchical k-means clustering.                            |
 | *eclust*                                 | Visual enhancement of clustering analysis                   |
+
+### Themes and color palettes
+
+| Functions            | Description                                                             |
+| -------------------- | ---------------------------------------------------------------------- |
+| *theme\_factoextra*  | A clean publication theme for factoextra plots (via `ggtheme` or `+`). |
+| *factoextra\_palette* | Colorblind-safe categorical colors (Okabe-Ito) for the `palette` argument. |
 
 ## Dimension reduction and factoextra
 

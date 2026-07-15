@@ -1,3 +1,4 @@
+url: https://rpkgs.datanovia.com/factoextra/
 templates:
   params:
     bootswatch: lumen
@@ -16,6 +17,10 @@ reference:
       - fviz_ellipses
       - fviz_cos2
       - fviz_contrib
+  - title: Visualizing Embeddings (UMAP / t-SNE)
+    desc: Scatter plots of UMAP / t-SNE embeddings (no eigenvalues; see the two-track note in ?fviz_umap).
+    contents:
+      - fviz_umap
   - title: Extracting Data from Dimension Reduction Analysis Outputs
     desc: Extracting data from the output of PCA, CA, MCA, FAMD, MFA and HMFA.
     contents:
@@ -47,6 +52,11 @@ reference:
       - housetasks
       - poison
       - multishapes
+  - title: Themes and Color Palettes
+    desc: Stateless, explicit helpers for publication-grade appearance.
+    contents:
+      - theme_factoextra
+      - factoextra_palette
   - title: Others
     contents:
       - fviz_add
