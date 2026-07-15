@@ -22,6 +22,8 @@ fviz_mca_ind(
   shape.ind = 19,
   map = "symmetric",
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  quanti.sup = FALSE,
+  col.quanti.sup = "#D55E00",
   ...
 )
 
@@ -57,6 +59,8 @@ fviz_mca_biplot(
   arrows = c(FALSE, FALSE),
   map = "symmetric",
   title = "MCA - Biplot",
+  quanti.sup = FALSE,
+  col.quanti.sup = "#D55E00",
   ...
 )
 
@@ -135,6 +139,15 @@ then the top 5 individuals/variables with the highest cos2 are drawn. \item
 contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
 the highest contrib are drawn }}
 
+\item{quanti.sup}{logical. If \code{TRUE}, the supplementary quantitative
+variables of a FactoMineR \code{\link[FactoMineR]{MCA}} are overlaid on the
+individuals / biplot map as correlation arrows (see the Details section).
+Default \code{FALSE} leaves the map unchanged. Used by \code{fviz_mca_ind()}
+and \code{fviz_mca_biplot()}.}
+
+\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative
+supplementary variables.}
+
 \item{...}{Additional arguments. \itemize{ \item in fviz_mca_ind(), 
 fviz_mca_var() and fviz_mca_cor(): Additional arguments are passed to the 
 functions fviz() and ggpubr::ggpar(). \item in fviz_mca_biplot() and 
@@ -145,9 +158,6 @@ fviz_mca_var().}}
 "mca.cor" for plotting the correlation between variables and principal 
 dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for
 the supplementary quantitative variables.}
-
-\item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative 
-supplementary variables.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
 "all". Allowed values are "none" or the combination of c("ind", 
@@ -188,8 +198,19 @@ The default plot of MCA is a "symmetric" plot in which both rows and
  columns are in principal coordinates. In this situation, it's not possible 
  to interpret the distance between row points and column points. To overcome 
  this problem, the simplest way is to make an asymmetric plot. The argument 
- "map" can be used to change the plot type. For more explanation, read the 
+ "map" can be used to change the plot type. For more explanation, read the
  details section of fviz_ca documentation.
+
+ \code{quanti.sup = TRUE} overlays the supplementary quantitative variables on
+ the individuals / biplot map. Each such variable is drawn as an arrow from the
+ origin in the direction of its correlations with the shown dimensions
+ (\code{X$quanti.sup$coord}), so the arrow points toward the region of the
+ cloud where the variable takes larger values. Each arrow's length is
+ proportional to the variable's absolute correlation with the shown dimensions
+ (a correlation of 1 reaches about 80\% of the individual-cloud extent), so a
+ weak covariate draws a short arrow. The overlay labels are repelled by default
+ (needs the \code{ggrepel} package). \strong{Arrow lengths are relative} to the
+ cloud, so compare directions and relative lengths rather than absolute sizes.
 }
 \examples{
 # Multiple Correspondence Analysis
@@ -229,8 +250,14 @@ grp <- as.factor(poison.active[, "Vomiting"])
 p <- fviz_mca_ind(res.mca, label="none", habillage=grp,
        addEllipses=TRUE, ellipse.level=0.95)
 print(p)
-      
-    
+
+# Overlay supplementary quantitative variables as correlation arrows.
+# Fit the MCA with quanti.sup, then set quanti.sup = TRUE when plotting.
+res.mca2 <- MCA(poison, quanti.sup = 1:2, quali.sup = 3:4, graph = FALSE)
+fviz_mca_ind(res.mca2, label = "none", habillage = poison$Vomiting,
+             addEllipses = TRUE, quanti.sup = TRUE)
+
+
 # Change group colors using RColorBrewer color palettes
 # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
 p + scale_color_brewer(palette="Dark2") +
