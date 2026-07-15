@@ -90,6 +90,7 @@ Collate:
     'housetasks.R'
     'multishapes.R'
     'poison.R'
+    'theme_palette.R'
     'zzz.R'
 RoxygenNote: 7.3.3
 Config/testthat/edition: 3

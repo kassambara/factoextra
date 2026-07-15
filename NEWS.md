@@ -2,6 +2,14 @@
 
 ## New features
 
+* New `factoextra_palette()` and `theme_factoextra()`. `factoextra_palette("okabe")`
+  returns the Okabe-Ito colorblind-safe categorical colors as a vector to pass to
+  the existing `palette` argument (e.g. `fviz_cluster(res, palette =
+  factoextra_palette("okabe"))`); `theme_factoextra()` is a clean publication theme
+  with a light coordinate grid, passed via `ggtheme` or added with `+`. Both are
+  explicit and stateless (no global option). The Okabe-Ito colors are those of
+  `grDevices::palette.colors("Okabe-Ito")`.
+
 * `fviz_nbclust()` and `fviz_gap_stat()` gain a `mark_optimal` argument. Set
   `mark_optimal = TRUE` to mark the elbow of the `"wss"` plot with a dashed guide
   line (a deterministic maximum-distance heuristic; see `?fviz_nbclust`);
