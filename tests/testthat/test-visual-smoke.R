@@ -347,3 +347,42 @@ test_that("quali.sup plots reject contrib-based selection cleanly", {
     "There are no supplementary qualitative variables"
   )
 })
+
+test_that("fviz_cos2/fviz_contrib heatmap shows per-dimension values; bar default unchanged", {
+  data(decathlon2)
+  res <- prcomp(decathlon2[1:23, 1:10], scale. = TRUE)
+  has_geom <- function(p, g) any(vapply(p$layers, function(l) inherits(l$geom, g), logical(1)))
+
+  # Default is the barplot (no tiles) -- unchanged.
+  expect_false(has_geom(fviz_cos2(res, choice = "var", axes = 1:2), "GeomTile"))
+  expect_false(has_geom(fviz_contrib(res, choice = "var", axes = 1:2), "GeomTile"))
+
+  # display = "heatmap" draws a tile grid.
+  p_heat <- fviz_cos2(res, choice = "var", axes = 1:3, display = "heatmap")
+  expect_s3_class(p_heat, "ggplot")
+  expect_true(has_geom(p_heat, "GeomTile"))
+  expect_true(has_geom(fviz_contrib(res, choice = "var", axes = 1:2, display = "heatmap"), "GeomTile"))
+
+  # The tile values equal get_pca_var()$cos2 / $contrib for the shown axes, cell-for-cell.
+  ref <- get_pca_var(res)$cos2[, 1:3]
+  m <- factoextra:::.facto_element_matrix(res, "var", "cos2", 1:3)
+  colnames(m) <- colnames(ref)
+  expect_equal(m[rownames(ref), ], ref)
+
+  refc <- get_pca_var(res)$contrib[, 1:2]
+  mc <- factoextra:::.facto_element_matrix(res, "var", "contrib", 1:2)
+  colnames(mc) <- colnames(refc)
+  expect_equal(mc[rownames(refc), ], refc)
+
+  # `top` keeps the leading elements.
+  p_top <- fviz_cos2(res, choice = "var", axes = 1:2, top = 4, display = "heatmap")
+  expect_equal(length(unique(ggplot2::ggplot_build(p_top)$data[[1]]$y)), 4)
+})
+
+test_that("fviz_cos2/fviz_contrib heatmap works across methods (CA)", {
+  skip_if_not_installed("FactoMineR")
+  data(housetasks)
+  res.ca <- FactoMineR::CA(housetasks, graph = FALSE)
+  expect_s3_class(fviz_cos2(res.ca, choice = "row", axes = 1:2, display = "heatmap"), "ggplot")
+  expect_s3_class(fviz_contrib(res.ca, choice = "col", axes = 1:2, display = "heatmap"), "ggplot")
+})

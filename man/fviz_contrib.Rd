@@ -16,6 +16,7 @@ fviz_contrib(
   top = Inf,
   xtickslab.rt = 45,
   ggtheme = theme_minimal(),
+  display = c("bar", "heatmap"),
   ...
 )
 
@@ -54,6 +55,16 @@ Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for des
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{display}{how to display the values. \code{"bar"} (default) draws the
+usual barplot of the cos2/contribution summed over \code{axes}.
+\code{"heatmap"} draws a grid with one tile per element and dimension,
+filled by the per-dimension cos2/contribution and labelled with its value,
+so several dimensions can be read at once. With \code{"heatmap"}, elements
+are ordered by their (unweighted) total over the requested \code{axes} and
+\code{top} keeps the leading ones; the bar-specific \code{sort.val} and
+\code{color} arguments are ignored, and \code{fill} sets the high end of the
+white-to-colour gradient.}
 
 \item{...}{other arguments to be passed to the function \link[ggpubr]{ggpar}.}
 
@@ -101,6 +112,9 @@ fviz_contrib(res.pca, choice="var", axes = 1,
 fviz_contrib(res.pca, choice="var", axes = 2)
 # Variable contributions on axes 1 + 2
 fviz_contrib(res.pca, choice="var", axes = 1:2)
+
+# Heat-grid of contributions across several dimensions
+fviz_contrib(res.pca, choice = "var", axes = 1:3, display = "heatmap")
 
 # Contributions of individuals on axis 1
 fviz_contrib(res.pca, choice="ind", axes = 1)
