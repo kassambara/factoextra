@@ -76,7 +76,7 @@ The figure below shows methods whose outputs can be visualized using the
 factoextra package. The official online documentation is available at:
 <https://rpkgs.datanovia.com/factoextra/index.html>.
 
-![factoextra R package](tools/factoextra-r-package.png)
+![factoextra R package](man/figures/factoextra-r-package.png)
 
 ## Why using factoextra?
 
@@ -280,7 +280,7 @@ As depicted in the figure below, the type of analysis to be performed
 depends on the data set formats and structures.
 
 ![dimension reduction and
-factoextra](tools/multivariate-analysis-factoextra.png)
+factoextra](man/figures/multivariate-analysis-factoextra.png)
 
 In this section we start by illustrating classical methods - such as
 PCA, CA and MCA - for analyzing a data set containing continuous
@@ -349,7 +349,7 @@ get_eig(res.pca)
 fviz_screeplot(res.pca, addlabels = TRUE, ylim = c(0, 50))
 ```
 
-![](tools/README-pca-eigenvalue-1.png)<!-- -->
+![](man/figures/README-pca-eigenvalue-1.png)<!-- -->
 
 4\.**Extract and visualize results for variables**:
 
@@ -386,7 +386,7 @@ head(var$contrib)
 fviz_pca_var(res.pca, col.var = "black")
 ```
 
-![](tools/README-pca-variables-1.png)<!-- -->
+![](man/figures/README-pca-variables-1.png)<!-- -->
 
 It’s possible to control variable colors using their contributions
 (“contrib”) to the principal axes:
@@ -399,7 +399,7 @@ fviz_pca_var(res.pca, col.var="contrib",
              )
 ```
 
-![](tools/README-pca-variable-colors-by-contributions-1.png)<!-- -->
+![](man/figures/README-pca-variable-colors-by-contributions-1.png)<!-- -->
 
 5.  **Variable contributions to the principal axes**:
 
@@ -413,7 +413,7 @@ fviz_contrib(res.pca, choice = "var", axes = 1, top = 10)
 fviz_contrib(res.pca, choice = "var", axes = 2, top = 10)
 ```
 
-![](tools/README-pca-variable-contributions-1.png)![](tools/README-pca-variable-contributions-2.png)
+![](man/figures/README-pca-variable-contributions-1.png)![](man/figures/README-pca-variable-contributions-2.png)
 
 6.  **Extract and visualize results for individuals**:
 
@@ -450,14 +450,14 @@ fviz_pca_ind(res.pca, col.ind = "cos2",
              )
 ```
 
-![](tools/README-principal-component-analysis-data-mining-1.png)<!-- -->
+![](man/figures/README-principal-component-analysis-data-mining-1.png)<!-- -->
 
 ``` r
 # Biplot of individuals and variables
 fviz_pca_biplot(res.pca, repel = TRUE)
 ```
 
-![](tools/README-principal-component-analysis-data-mining-2.png)<!-- -->
+![](man/figures/README-principal-component-analysis-data-mining-2.png)<!-- -->
 
 7.  **Color individuals by groups**:
 
@@ -479,7 +479,7 @@ fviz_pca_ind(iris.pca,
              )
 ```
 
-![](tools/README-individuals-factor-map-color-by-groups-1.png)<!-- -->
+![](man/figures/README-individuals-factor-map-color-by-groups-1.png)<!-- -->
 
 ### Correspondence analysis
 
@@ -524,7 +524,7 @@ get_ca_col(res.ca)
 fviz_ca_biplot(res.ca, repel = TRUE)
 ```
 
-![](tools/README-correspondence-analysis-biplot-1.png)<!-- -->
+![](man/figures/README-correspondence-analysis-biplot-1.png)<!-- -->
 
 To visualize only row points or column points, type this:
 
@@ -602,7 +602,7 @@ fviz_mca_ind(res.mca,  habillage = grp,
              addEllipses = TRUE, repel = TRUE)
 ```
 
-![](tools/README-mca-graph-of-individuals-1.png)<!-- -->
+![](man/figures/README-mca-graph-of-individuals-1.png)<!-- -->
 
 5.  **Graph of variable categories**:
 
@@ -612,7 +612,7 @@ fviz_mca_ind(res.mca,  habillage = grp,
 fviz_mca_var(res.mca, repel = TRUE)
 ```
 
-![](tools/README-mca-graph-variables-1.png)<!-- -->
+![](man/figures/README-mca-graph-variables-1.png)<!-- -->
 
 6.  **Biplot of individuals and variables**:
 
@@ -622,7 +622,7 @@ fviz_mca_var(res.mca, repel = TRUE)
 fviz_mca_biplot(res.mca, repel = TRUE)
 ```
 
-![](tools/README-mca-biplot-1.png)<!-- -->
+![](man/figures/README-mca-biplot-1.png)<!-- -->
 
 ### Advanced methods
 
@@ -644,7 +644,7 @@ To learn more about cluster analysis, you can refer to the book
 available at: [Practical Guide to Cluster Analysis in
 R](https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/)
 
-<a href = "https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/"><img src = "tools/clustering-e1-cover.png" alt = "clustering book cover"/></a>
+<a href = "https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/"><img src = "man/figures/clustering-e1-cover.png" alt = "clustering book cover"/></a>
 
 The main parts of the book include:
 
@@ -661,7 +661,7 @@ researchers.
 
 ### Partitioning clustering
 
-![Partitioning cluster analysis](tools/partitioning-clustering.png)
+![Partitioning cluster analysis](man/figures/partitioning-clustering.png)
 
 ``` r
 # 1. Loading and preparing data
@@ -681,7 +681,7 @@ fviz_cluster(km.res, data = df,
              )
 ```
 
-![](tools/README-partitioning-clustering-1.png)<!-- -->
+![](man/figures/README-partitioning-clustering-1.png)<!-- -->
 
 <br/>  
 
@@ -711,7 +711,7 @@ fviz_dend(res, rect = TRUE, cex = 0.5,
           k_colors = c("#00AFBB","#2E9FDF", "#E7B800", "#FC4E07"))
 ```
 
-![](tools/README-hierarchical-clustering-1.png)<!-- -->
+![](man/figures/README-hierarchical-clustering-1.png)<!-- -->
 
 ``` r
 if (requireNamespace("igraph", quietly = TRUE)) {
@@ -722,7 +722,7 @@ if (requireNamespace("igraph", quietly = TRUE)) {
 }
 ```
 
-![](tools/README-hierarchical-clustering-phylogenic-1.png)<!-- -->
+![](man/figures/README-hierarchical-clustering-phylogenic-1.png)<!-- -->
 
 <br/>  
 
@@ -749,7 +749,7 @@ my_data <- scale(USArrests)
 fviz_nbclust(my_data, kmeans, method = "gap_stat")
 ```
 
-![](tools/README-determine-the-number-of-clusters-gap-statistics-1.png)<!-- -->
+![](man/figures/README-determine-the-number-of-clusters-gap-statistics-1.png)<!-- -->
 
 ## Acknowledgment
 

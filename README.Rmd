@@ -8,7 +8,7 @@ output:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "tools/README-",
+  fig.path = "man/figures/README-",
   warning = FALSE
 )
 ```
@@ -64,7 +64,7 @@ However, the result is presented differently according to the used packages. To 
 The figure below shows methods whose outputs can be visualized using the factoextra package. The official online documentation is available at: https://rpkgs.datanovia.com/factoextra/index.html.
      
      
-![factoextra R package](tools/factoextra-r-package.png)
+![factoextra R package](man/figures/factoextra-r-package.png)
      
      
 ## Why using factoextra?
@@ -246,7 +246,7 @@ Functions | Description
       
 As depicted in the figure below, the type of analysis to be performed depends on the data set formats and structures.  
       
-![dimension reduction and factoextra](tools/multivariate-analysis-factoextra.png)
+![dimension reduction and factoextra](man/figures/multivariate-analysis-factoextra.png)
         
     
 In this section we start by illustrating classical methods - such as PCA, CA and MCA - for analyzing a data set containing continuous variables, contingency table and qualitative variables, respectively.
@@ -540,7 +540,7 @@ The factoextra R package has also functions that support the visualization of ad
 To learn more about cluster analysis, you can refer to the book available at: [Practical Guide to Cluster Analysis in R](https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/)
               
               
-<a href = "https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/"><img src = "tools/clustering-e1-cover.png" alt = "clustering book cover"/></a>
+<a href = "https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/"><img src = "man/figures/clustering-e1-cover.png" alt = "clustering book cover"/></a>
      
      
 The main parts of the book include:   
@@ -559,7 +559,7 @@ The book presents the basic principles of these tasks and provide many examples 
 ### Partitioning clustering
     
     
-![Partitioning cluster analysis](tools/partitioning-clustering.png)
+![Partitioning cluster analysis](man/figures/partitioning-clustering.png)
      
 
 ```{r partitioning-clustering, fig.width = 5.4, fig.height=5}
