@@ -148,7 +148,11 @@ individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex:
 0.6, then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1,
 ex: 5, then the top 5 individuals/variables with the highest cos2 are
 drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5
-individuals/variables with the highest contrib are drawn }}
+individuals/variables with the highest contrib are drawn \item union:
+logical. When several of name/cos2/contrib are given, FALSE (default)
+combines them with AND (each condition further narrows the selection);
+TRUE combines them with OR (an element is kept if it matches any
+condition), e.g. named items \emph{plus} the top-cos2 ones. }}
 
 \item{max.points}{integer or NULL. When the individual / row / column cloud has
 more than \code{max.points} points, a random subset of that many \emph{points}
@@ -270,6 +274,11 @@ fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
  
  # Example: Select the top 40 according to the cos2
 fviz_pca_ind(res.pca, select.ind = list(cos2 = 40))
+
+ # By default several conditions combine with AND (intersection).
+ # Use union = TRUE for OR: keep named individuals PLUS the top-contrib ones.
+fviz_pca_ind(res.pca,
+             select.ind = list(name = c("23", "42"), contrib = 20, union = TRUE))
 
  
 # Graph of variables

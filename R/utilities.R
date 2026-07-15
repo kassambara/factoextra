@@ -232,7 +232,11 @@ NULL
     
     # selection of variables
     if(!is.null(select)){
-      if(!is.null(select$contrib)) res <- NULL # supp points don't have contrib
+      # Supplementary points have no contribution. Under the default AND selection a
+      # contrib condition therefore excludes them all. Under union (OR) they can still
+      # match by name/cos2, so route through .select (which treats the missing contrib
+      # column as matching nothing) instead of dropping them.
+      if(!is.null(select$contrib) && !isTRUE(select$union)) res <- NULL
       else res <- .select(res, select, check = FALSE)
     }
   }
@@ -614,11 +618,58 @@ NULL
 # - cos2: if cos2 is in [0, 1], ex: 0.6, then rows with a cos2 > 0.6 are extracted.
 #   if cos2 > 1, ex: 5, then the top 5 rows with the highest cos2 are extracted
 # - contrib: if contrib > 1, ex: 5,  then the top 5 rows with the highest cos2 are extracted
+# - union: logical. When several of name/cos2/contrib are supplied, FALSE (default) combines
+#   them with AND (each condition narrows the survivors of the previous one - the historical
+#   behavior); TRUE combines them with OR (an element is kept if it matches ANY condition).
+#   union has an effect only when >= 2 conditions are present; with 0 or 1 condition the AND
+#   path below runs unchanged, so a single-condition selection is byte-identical to before.
 # check: if TRUE, check the data after filtering
 .select <- function(d, filter = NULL, check= TRUE){
-  
+
   if(!is.null(filter)){
-    
+
+    # Number of active selection conditions (union is a modifier, not a condition)
+    n_cond <- sum(!is.null(filter$name), !is.null(filter$cos2), !is.null(filter$contrib))
+
+    # -- UNION (OR) mode: only when the user opts in AND >= 2 conditions are present.
+    # Each condition's selected rows are computed independently on the original d, then
+    # unioned (kept in d's original row order). With < 2 conditions this branch is skipped
+    # and the historical AND path runs verbatim.
+    if(isTRUE(filter$union) && n_cond >= 2L){
+      n <- nrow(d)
+      idx <- integer(0)
+      # name: rows whose name is in the requested vector
+      if(!is.null(filter$name))
+        idx <- c(idx, which(d$name %in% filter$name))
+      # cos2: threshold (in [0,1]) or top-N (> 1). A missing cos2 column contributes nothing.
+      if(!is.null(filter$cos2) && "cos2" %in% names(d) && n >= 1){
+        if(0 <= filter$cos2 && filter$cos2 <= 1)
+          idx <- c(idx, which(d$cos2 >= filter$cos2))
+        else if(filter$cos2 > 1){
+          ord <- order(d$cos2, decreasing = TRUE)
+          idx <- c(idx, ord[seq_len(min(filter$cos2, n))])
+        }
+      }
+      # contrib: top-N. A missing contrib column (e.g. supplementary points) contributes nothing.
+      if(!is.null(filter$contrib) && "contrib" %in% names(d) && n >= 1){
+        contrib <- round(filter$contrib)
+        if(contrib < 1) stop("The value of the argument contrib >", 1)
+        ord <- order(d$contrib, decreasing = TRUE)
+        idx <- c(idx, ord[seq_len(min(contrib, n))])
+      }
+      idx <- sort(unique(idx))
+      d <- d[idx, , drop = FALSE]
+      if(check && nrow(d) == 0)
+        stop("There are no observations matching the union (OR) selection. ",
+             "Please, relax the selection and try again.")
+      # Report the (variable-size) union count once, from the user-facing active
+      # selection (check = TRUE); the internal supplementary-point pass (check =
+      # FALSE) reuses the same selection and stays silent to avoid a duplicate.
+      if(check && nrow(d) >= 1)
+        message("Selection (union / OR): ", nrow(d), " element(s) kept.")
+      return(d)
+    }
+
     # Filter by name
     if(!is.null(filter$name)){
       name <- filter$name
@@ -626,7 +677,7 @@ NULL
       diff <- setdiff(name, d$name)
       d <- d[common, , drop = FALSE]
     }
-    
+
     # Filter by cos2
     if(!is.null(filter$cos2) && nrow(d) >= 1){
       # case 1 cos2 is in [0, 1]
@@ -634,27 +685,27 @@ NULL
       if(0 <= filter$cos2 && filter$cos2 <= 1){
         d <- d[which(d$cos2 >= filter$cos2), , drop = FALSE]
         if(check && nrow(d)==0)
-          stop("There are no observations with cos2 >=", filter$cos2, 
+          stop("There are no observations with cos2 >=", filter$cos2,
                ". Please, change the value of cos2 and try again.")
       }
-      # case 2 - cos2 > 1 : the top rows are selected 
+      # case 2 - cos2 > 1 : the top rows are selected
       else if(filter$cos2 > 1){
         cos2 <- round(filter$cos2)
         d <- d[order(d$cos2, decreasing = TRUE), , drop = FALSE]
         d <- d[seq_len(min(filter$cos2, nrow(d))),, drop = FALSE]
       }
     }
-    
-    # Filter by contrib: the top rows are selected 
+
+    # Filter by contrib: the top rows are selected
     if(!is.null(filter$contrib) && nrow(d) >= 1){
       contrib <- round(filter$contrib)
       if(contrib < 1) stop("The value of the argument contrib >", 1)
       d <- d[order(d$contrib, decreasing = TRUE), , drop = FALSE]
       d <- d[seq_len(min(contrib, nrow(d))), , drop = FALSE]
     }
-    
+
   }
-  
+
   return (d)
 }
 

@@ -147,12 +147,14 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
     
     colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
     ind.partial <- merge(ind, ind.partial, by = "name")
-    # Selection
+    # Selection (re-applied here only to filter the partial-point overlay; the
+    # user-facing selection + any union message already happened in fviz() above,
+    # so use check = FALSE to stay silent and avoid a duplicate message).
     ind.all <- ind
-    if(!is.null(select.ind)) ind <- .select(ind, select.ind)
+    if(!is.null(select.ind)) ind <- .select(ind, select.ind, check = FALSE)
     if(!is.null(select.partial)) {
       if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
-      ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial)$name, , drop = FALSE]
+      ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial, check = FALSE)$name, , drop = FALSE]
     }
     # elements to be hidden
     hide <- .hide(invisible)

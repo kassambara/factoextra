@@ -69,6 +69,15 @@
   is proportional to the variable's absolute correlation with the dimensions
   (relative to the cloud extent). The default (`quanti.sup = FALSE`) leaves the map
   unchanged.
+* The `select.ind` / `select.var` (and `select.row` / `select.col`) lists gain a
+  `union` element. When several of `name` / `cos2` / `contrib` are supplied they
+  are combined with AND by default (each condition further narrows the selection,
+  as before); `union = TRUE` combines them with OR instead, so named elements are
+  kept *together with* the top-`cos2` or top-`contrib` ones, e.g. `select.var =
+  list(name = c("V1", "V2"), contrib = 10, union = TRUE)`. The same result can
+  still be obtained by precomputing the set and passing it as `name`; `union` is a
+  convenience for building it inline. The default (no `union`, or `union = FALSE`)
+  is unchanged. Thanks to @qfazille (#53).
 
 ## Minor changes
 
