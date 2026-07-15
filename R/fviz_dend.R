@@ -31,6 +31,15 @@
 #'   type = "phylogenic".
 #' @param lwd a numeric value specifying dendrogram branch and rectangle line
 #'   width.
+#' @param highlight an optional character vector of leaf labels; the branches
+#'   leading to those leaves are emphasized (thicker, and coloured
+#'   \code{highlight.col}) while every other branch keeps its colour and width.
+#'   \code{NULL} (default) highlights nothing. Has no effect for
+#'   \code{type = "phylogenic"} (that layout does not colour branch segments).
+#' @param highlight.col colour (name or hex) for the highlighted branches.
+#' @param highlight.lwd line width for the highlighted branches. \code{NULL}
+#'   (default) uses \code{2 * lwd} so the emphasis stands out by thickness
+#'   regardless of colour; set \code{highlight.lwd = lwd} for colour-only emphasis.
 #' @param type type of plot. Allowed values are one of "rectangle",
 #'   "circular", "phylogenic".
 #' @param phylo_layout the layout to be used for phylogenic trees. Default value
@@ -58,10 +67,19 @@
 #'   theme_gray(), theme_bw(), theme_minimal(), theme_classic(), theme_void(), 
 #'   ....
 #' @param ... other arguments to be passed to the function plot.dendrogram()
-#' @return an object of class fviz_dend which is a ggplot with the attributes 
-#'   "dendrogram" accessible using attr(x, "dendrogram"), where x is the result 
+#' @return an object of class fviz_dend which is a ggplot with the attributes
+#'   "dendrogram" accessible using attr(x, "dendrogram"), where x is the result
 #'   of fviz_dend().
-#' @examples 
+#' @details For branch styling beyond \code{highlight} - for example dashed
+#'   branches or per-branch colours - pre-style a \code{dendextend} dendrogram and
+#'   pass it to \code{fviz_dend()}, which honours its \code{set()} aesthetics:
+#'   \preformatted{
+#'   library(dendextend)
+#'   dend <- as.dendrogram(hclust(dist(scale(USArrests))))
+#'   dend <- set(dend, "branches_lty", 2)   # dashed branches
+#'   fviz_dend(dend)
+#'   }
+#' @examples
 #' \donttest{
 #' # Load and scale the data
 #' data(USArrests)
@@ -111,6 +129,7 @@
 fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  show_labels = TRUE, color_labels_by_k = TRUE,
                       match_coord_colors = FALSE,
                       label_cols = NULL, labels_font = "plain", labels_track_height = NULL, repel = FALSE, lwd = 0.7,
+                      highlight = NULL, highlight.col = "red", highlight.lwd = NULL,
                       type = c("rectangle",  "circular", "phylogenic"),
                       phylo_layout = "layout.auto",
                       rect = FALSE, rect_border = "gray", rect_lty = 2, rect_fill = FALSE, lower_rect,
@@ -182,9 +201,32 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   }
   
   if(!is.null(label_cols)){
-    dend <- dendextend::set(dend, "labels_col", label_cols) 
+    dend <- dendextend::set(dend, "labels_col", label_cols)
   }
-  
+
+  # Emphasize the branches leading to specific leaves. Applied AFTER the k /
+  # label colouring so it layers on top: highlighted branches take
+  # `highlight.col` (and optionally `highlight.lwd`), every other branch keeps
+  # its existing colour/width (the Inf sentinel). highlight = NULL (default)
+  # leaves the dendrogram untouched, so existing plots are unchanged. (#P2.3)
+  if(!is.null(highlight)){
+    bad <- setdiff(highlight, labels(dend))
+    if(length(bad))
+      stop("`highlight` contains labels not in the dendrogram: ",
+           paste(bad, collapse = ", "), ".", call. = FALSE)
+    if(phylogenic)
+      warning("`highlight` has no effect for type = \"phylogenic\": that layout ",
+              "does not colour branch segments.", call. = FALSE)
+    dend <- dendextend::set(dend, "by_labels_branches_col", value = highlight,
+                            TF_values = c(highlight.col, Inf))
+    # Emphasize by THICKNESS by default (2x lwd): thickness always stands out,
+    # even when highlight.col happens to match a nearby cluster colour. Pass
+    # highlight.lwd = lwd for colour-only emphasis.
+    h_lwd <- if(is.null(highlight.lwd)) 2 * lwd else highlight.lwd
+    dend <- dendextend::set(dend, "by_labels_branches_lwd", value = highlight,
+                            TF_values = c(h_lwd, Inf))
+  }
+
   leaflab <- ifelse(show_labels, "perpendicular", "none")
   
   if(xlab =="") xlab <- NULL
