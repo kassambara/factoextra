@@ -10,15 +10,26 @@ NULL
 #' \code{\link{fviz_eig}}, \code{\link{fviz_contrib}} and \code{\link{fviz_cos2}}
 #' can plot directly.
 #'
-#' It lets you apply factoextra's visualizations to the output of \emph{any}
-#' dimension-reduction method - for example \code{stats::cmdscale()},
-#' \code{ape::pcoa()}, UMAP/t-SNE embeddings, \code{vegan::rda()}/\code{cca()},
-#' or a custom analysis - without having to write a dedicated backend. You bring
-#' the coordinates; factoextra draws the biplot, scree plot, contributions and
-#' cos2.
+#' It lets you apply factoextra's visualizations to the output of an
+#' \emph{eigenvalue-based} dimension reduction - for example
+#' \code{stats::cmdscale()}, \code{ape::pcoa()}, \code{vegan::rda()}/\code{cca()},
+#' a tidymodels \code{recipe}/\code{workflow} with \code{step_pca()} (see the
+#' methods below), or a custom analysis - without having to write a dedicated
+#' backend. You bring the coordinates; factoextra draws the biplot, scree plot,
+#' contributions and cos2.
 #'
-#' @param ind.coord individual (observation) coordinates: a numeric matrix or
-#'   data frame with one column per dimension (the "scores"). Required.
+#' The scree plot, contributions and cos2 assume real eigenvalues, so this
+#' constructor is for PCA-family results. Non-linear embeddings (UMAP, t-SNE) have
+#' no eigenvalues; plot their coordinates directly (a scree/loadings display would
+#' be meaningless for them).
+#'
+#' @param ind.coord the object to convert. For the default method, individual
+#'   (observation) coordinates: a numeric matrix or data frame with one column per
+#'   dimension (the "scores"). For the \code{recipe} / \code{workflow} methods, a
+#'   prepped \code{recipe} or a fitted \code{workflow} whose PCA is done with
+#'   \code{recipes::step_pca()} (the scores, loadings and eigenvalues are then
+#'   extracted for you). Required.
+#' @param ... passed to methods (unused by the default method).
 #' @param var.coord optional variable coordinates / loadings: a numeric matrix or
 #'   data frame with one column per dimension. Supplying it enables
 #'   \code{fviz_pca_var()} and \code{fviz_pca_biplot()}.
@@ -70,12 +81,27 @@ NULL
 #' )
 #' fviz_pca_biplot(obj2, label = "var", col.ind = "steelblue")
 #'
+#' # 3. A tidymodels recipe PCA (step_pca) -> factoextra biplot + honest scree
+#' if (requireNamespace("recipes", quietly = TRUE)) {
+#'   library(recipes)
+#'   rec <- recipe(~ ., data = iris[, 1:4]) |>
+#'     step_normalize(all_numeric_predictors()) |>
+#'     step_pca(all_numeric_predictors(), num_comp = 4)
+#'   obj3 <- as_factoextra_pca(prep(rec))
+#'   fviz_pca_biplot(obj3, label = "var")
+#'   fviz_eig(obj3, addlabels = TRUE)
+#' }
+#'
 #' @rdname as_factoextra
 #' @export
-as_factoextra_pca <- function(ind.coord, var.coord = NULL, eig = NULL,
+as_factoextra_pca <- function(ind.coord, ...) UseMethod("as_factoextra_pca")
+
+#' @rdname as_factoextra
+#' @export
+as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
                               ind.cos2 = NULL, ind.contrib = NULL,
                               var.cos2 = NULL, var.contrib = NULL, var.cor = NULL,
-                              scale.unit = FALSE){
+                              scale.unit = FALSE, ...){
 
   if(missing(ind.coord) || is.null(ind.coord))
     stop("`ind.coord` is required.", call. = FALSE)
@@ -116,7 +142,158 @@ as_factoextra_pca <- function(ind.coord, var.coord = NULL, eig = NULL,
   )
 }
 
+#' @details
+#' \strong{tidymodels (recipe / workflow).} The \code{recipe} and \code{workflow}
+#' methods extract a PCA fitted with \code{recipes::step_pca()} through the public
+#' recipes/workflows API: the scores from the baked training data (or, for a fitted
+#' workflow, \code{workflows::extract_mold()}), the loadings from
+#' \code{tidy(step, type = "coef")}, and the \emph{full} set of eigenvalues from
+#' \code{tidy(step, type = "variance")} (so the scree plot and axis percentages are
+#' honest even when \code{num_comp} keeps only a few components). Variable
+#' coordinates are the true variable-component correlations (loading times the
+#' square root of the eigenvalue), and \code{scale.unit} is set to \code{TRUE} when
+#' a \code{step_normalize()}/\code{step_scale()} precedes the PCA, so the
+#' correlation circle is drawn only when it is meaningful. Variable coordinates,
+#' cos2 and contributions, and the eigenvalue percentages, match a full
+#' \code{FactoMineR::PCA()} of the same (scaled) data regardless of how many
+#' components \code{step_pca()} keeps; the \emph{individual} cos2 is computed over
+#' the retained components (it equals the full-space cos2 only when all components
+#' are kept). The two-dimensional plots (\code{fviz_pca_ind()},
+#' \code{fviz_pca_var()}, \code{fviz_pca_biplot()}) need \code{num_comp >= 2}. The
+#' recipe must be prepped and its PCA step must be \code{step_pca()} (non-linear
+#' embedding steps such as \code{step_umap()} have no eigenvalues and are rejected
+#' with a message). For the loadings display of a recipe PCA see also
+#' \code{learntidymodels::plot_top_loadings()}.
+#'
+#' @rdname as_factoextra
+#' @export
+as_factoextra_pca.recipe <- function(ind.coord, ...){
+  .fe_need("recipes")
+  ex <- .fe_extract_recipe_pca(ind.coord, scores = NULL)
+  as_factoextra_pca.default(ind.coord = ex$scores, var.coord = ex$var.coord,
+                            var.cos2 = ex$var.cos2, eig = ex$eig,
+                            scale.unit = ex$scale.unit)
+}
+
+#' @rdname as_factoextra
+#' @export
+as_factoextra_pca.workflow <- function(ind.coord, ...){
+  .fe_need("workflows"); .fe_need("recipes")
+  wf <- ind.coord
+  # A workflow may use a formula/variables preprocessor rather than a recipe;
+  # check that first so the error names the real cause (not "fit it first").
+  pp <- tryCatch(workflows::extract_preprocessor(wf), error = function(e) NULL)
+  if(!is.null(pp) && !inherits(pp, "recipe"))
+    stop("This workflow uses a ", class(pp)[1], " preprocessor. as_factoextra_pca() ",
+         "needs a workflow whose recipe contains step_pca().", call. = FALSE)
+  rec <- tryCatch(workflows::extract_recipe(wf),
+                  error = function(e)
+                    stop("`as_factoextra_pca()` needs a fitted workflow. Fit it ",
+                         "first with fit(). (", conditionMessage(e), ")",
+                         call. = FALSE))
+  # Workflows do not retain the recipe's training set, so bake(new_data = NULL)
+  # fails; take the scores from the fitted mold instead.
+  mold <- workflows::extract_mold(wf)
+  ex <- .fe_extract_recipe_pca(rec, scores = as.matrix(mold$predictors))
+  as_factoextra_pca.default(ind.coord = ex$scores, var.coord = ex$var.coord,
+                            var.cos2 = ex$var.cos2, eig = ex$eig,
+                            scale.unit = ex$scale.unit)
+}
+
 # ---- internal helpers -------------------------------------------------------
+
+# Soft-dependency guard for the tidymodels methods.
+.fe_need <- function(pkg){
+  if(!requireNamespace(pkg, quietly = TRUE))
+    stop("Package '", pkg, "' is required for this method. Install it with ",
+         "install.packages('", pkg, "').", call. = FALSE)
+}
+
+# Extract scores / loadings / eigenvalues from a prepped recipe whose dimension
+# reduction is step_pca(). `scores` may be supplied (fitted-workflow path, from the
+# mold) to avoid bake(new_data = NULL), which fails when the training set was not
+# retained. Returns a list(scores, var.coord, eig, scale.unit).
+.fe_extract_recipe_pca <- function(rec, scores = NULL){
+  if(!isTRUE(recipes::fully_trained(rec)))
+    stop("The recipe is not prepped. Call prep() on it first.", call. = FALSE)
+
+  is_pca <- vapply(rec$steps, inherits, logical(1), "step_pca")
+  if(!any(is_pca)){
+    dr <- c("step_umap", "step_ica", "step_pls", "step_kpca", "step_nnmf")
+    hit <- dr[vapply(dr, function(s) any(vapply(rec$steps, inherits, logical(1), s)), logical(1))]
+    if(length(hit))
+      stop("This recipe's dimension-reduction step is ", hit[1], "(), not ",
+           "step_pca(). ", if(hit[1] == "step_umap")
+             "UMAP is a non-linear embedding with no eigenvalues, so a scree / "
+           else "That step has no eigenvalues, so a scree / ",
+           "loadings display would be meaningless. Plot its baked coordinates ",
+           "directly instead.", call. = FALSE)
+    stop("No step_pca() found in this recipe.", call. = FALSE)
+  }
+  if(sum(is_pca) > 1L){
+    ids <- vapply(rec$steps[is_pca], function(s) s$id, character(1))
+    stop("This recipe has more than one step_pca() (", paste(ids, collapse = ", "),
+         "). as_factoextra_pca() supports a single PCA step.", call. = FALSE)
+  }
+  st  <- rec$steps[[which(is_pca)]]
+  k   <- st$num_comp
+  # The baked/mold SCORE columns carry the step's prefix and are zero-padded to the
+  # digit width of the component count (PC01.. at >=10 comps). Reuse recipes' own
+  # name generator so we match those columns exactly for any prefix and any k.
+  score_comp <- recipes::names0(k, st$prefix)
+
+  # Loadings (rotation) via the tidier. Its `component` labels are fixed (PC1..PCp)
+  # and independent of the step's `prefix`, so keep them separate from the score
+  # column names; order by the trailing index and take the first k retained ones.
+  load_long <- recipes::tidy(rec, id = st$id, type = "coef")
+  all_comp  <- unique(load_long$component)
+  all_comp  <- all_comp[order(suppressWarnings(as.integer(gsub("\\D", "", all_comp))))]
+  load_comp <- all_comp[seq_len(k)]
+  terms <- unique(load_long$terms)
+  loadings <- matrix(NA_real_, nrow = length(terms), ncol = k,
+                     dimnames = list(terms, score_comp))
+  for(j in seq_len(k)){
+    cj <- load_long[load_long$component == load_comp[j], ]
+    loadings[cj$terms, j] <- cj$value
+  }
+
+  # Eigenvalues: the FULL set (all components) for an honest scree / percentages.
+  var_long <- recipes::tidy(rec, id = st$id, type = "variance")
+  vv  <- var_long[var_long$terms == "variance", , drop = FALSE]
+  eig <- vv$value[order(vv$component)]
+
+  # Variable coordinates = variable-component correlations = loading * sqrt(eig)
+  # (matches FactoMineR's var$coord); valid as a correlation circle only when the
+  # predictors were scaled before PCA.
+  var.coord <- sweep(loadings, 2, sqrt(eig[seq_len(k)]), "*")
+
+  # Scores: from the mold (workflow) or the baked training data (recipe).
+  if(is.null(scores)){
+    baked <- recipes::bake(rec, new_data = NULL)
+    miss <- setdiff(score_comp, names(baked))
+    if(length(miss))
+      stop("Could not find the PCA score columns (", paste(miss, collapse = ", "),
+           ") in the baked data. Was the recipe prepped with retain = TRUE?",
+           call. = FALSE)
+    scores <- as.matrix(baked[, score_comp, drop = FALSE])
+  } else {
+    scores <- scores[, score_comp, drop = FALSE]
+  }
+
+  # Correlation circle only when a scaling step precedes the PCA.
+  pca_pos <- which(is_pca)
+  scaled  <- any(vapply(rec$steps[seq_len(pca_pos - 1L)], inherits, logical(1),
+                        c("step_normalize", "step_scale")))
+
+  # On scaled data a variable is fully represented (its total squared correlation
+  # is 1), so its cos2 on each axis is exactly the squared correlation. Supplying
+  # it makes fviz_pca_var()'s cos2 match FactoMineR at any num_comp, instead of the
+  # default within-retained-subspace normalization.
+  var.cos2 <- if(scaled) var.coord^2 else NULL
+
+  list(scores = scores, var.coord = var.coord, var.cos2 = var.cos2,
+       eig = eig, scale.unit = scaled)
+}
 
 # Coerce coordinates to a numeric matrix with Dim.1..k colnames and row names.
 .fe_as_dim_matrix <- function(x, argname){

@@ -2,6 +2,15 @@
 
 ## New features
 
+* `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a PCA fitted
+  inside a tidymodels `recipe` (`recipes::step_pca()`) or a fitted `workflow`
+  plots directly with the `fviz_pca_*`/`fviz_eig`/`fviz_contrib`/`fviz_cos2`
+  family: `prep(rec) |> as_factoextra_pca() |> fviz_pca_biplot()`. Scores,
+  loadings and the full set of eigenvalues are extracted through the public
+  recipes/workflows API, so the scree plot and axis percentages are honest even
+  when only a few components are kept, and the variable arrows are the true
+  variable-component correlations. `recipes` and `workflows` are Suggests.
+
 * New `factoextra_palette()` and `theme_factoextra()`. `factoextra_palette("okabe")`
   returns the Okabe-Ito colorblind-safe categorical colors as a vector to pass to
   the existing `palette` argument (e.g. `fviz_cluster(res, palette =
