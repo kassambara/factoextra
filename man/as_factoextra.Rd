@@ -143,6 +143,10 @@ if (requireNamespace("recipes", quietly = TRUE)) {
 }
 
 }
+\seealso{
+For UMAP / t-SNE embeddings, which have no eigenvalues, use
+  \code{\link{fviz_umap}} / \code{\link{fviz_tsne}} instead.
+}
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
 }

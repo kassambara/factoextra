@@ -48,7 +48,9 @@ Suggests:
     parsnip,
     recipes,
     rmarkdown,
+    Rtsne,
     testthat (>= 3.0.0),
+    uwot,
     workflows
 VignetteBuilder: knitr
 URL: https://github.com/kassambara/factoextra,
@@ -86,6 +88,7 @@ Collate:
     'fviz_nbclust.R'
     'fviz_pca.R'
     'fviz_silhouette.R'
+    'fviz_umap.R'
     'get_ca.R'
     'get_clust_tendency.R'
     'get_famd.R'

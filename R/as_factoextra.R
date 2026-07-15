@@ -64,6 +64,9 @@ NULL
 #'
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'
+#' @seealso For UMAP / t-SNE embeddings, which have no eigenvalues, use
+#'   \code{\link{fviz_umap}} / \code{\link{fviz_tsne}} instead.
+#'
 #' @examples
 #' # 1. Bring your own coordinates: classical MDS (cmdscale) -> factoextra
 #' d <- dist(scale(mtcars))
@@ -226,8 +229,9 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
            "step_pca(). ", if(hit[1] == "step_umap")
              "UMAP is a non-linear embedding with no eigenvalues, so a scree / "
            else "That step has no eigenvalues, so a scree / ",
-           "loadings display would be meaningless. Plot its baked coordinates ",
-           "directly instead.", call. = FALSE)
+           "loadings display would be meaningless. ",
+           if(hit[1] == "step_umap") "Plot the baked coordinates with fviz_umap()."
+           else "Plot its baked coordinates directly instead.", call. = FALSE)
     stop("No step_pca() found in this recipe.", call. = FALSE)
   }
   if(sum(is_pca) > 1L){
