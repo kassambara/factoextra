@@ -422,3 +422,167 @@ test_that("fviz_mca quanti.sup overlays scaled correlation arrows; default off",
   expect_warning(p2 <- fviz_mca_ind(res2, quanti.sup = TRUE), "supplementary quantitative")
   expect_false(has_seg(p2))
 })
+
+test_that("max.points downsamples large clouds; default draws every point (no-regression)", {
+  set.seed(1)
+  X <- matrix(rnorm(600 * 4), 600, 4); rownames(X) <- paste0("o", seq_len(600))
+  res <- prcomp(X, scale. = TRUE)
+  ptdata <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))[1]
+    ggplot2::layer_data(p, i)
+  }
+  npts <- function(p) nrow(ptdata(p))
+
+  # Default draws every point and is byte-identical to an explicit max.points = NULL.
+  p_def  <- fviz_pca_ind(res, geom = "point")
+  p_null <- fviz_pca_ind(res, geom = "point", max.points = NULL)
+  expect_equal(npts(p_def), 600)
+  expect_identical(ggplot2::ggplot_build(p_def)$data, ggplot2::ggplot_build(p_null)$data)
+
+  # max.points caps the drawn points (and announces it); a value >= n is a no-op.
+  expect_message(
+    expect_equal(npts(fviz_pca_ind(res, geom = "point", max.points = 100)), 100),
+    "random 100 of 600"
+  )
+  expect_equal(npts(suppressMessages(fviz_pca_ind(res, geom = "point", max.points = 10000))), 600)
+
+  # Reproducible subset and the caller's RNG stream is left untouched.
+  set.seed(99); before <- get(".Random.seed", envir = .GlobalEnv)
+  d1 <- ptdata(suppressMessages(fviz_pca_ind(res, geom = "point", max.points = 50)))
+  d2 <- ptdata(suppressMessages(fviz_pca_ind(res, geom = "point", max.points = 50)))
+  expect_equal(sort(d1$x), sort(d2$x))
+  expect_identical(get(".Random.seed", envir = .GlobalEnv), before)
+
+  # fviz_cluster gains the same argument, default unchanged.
+  set.seed(1); km <- stats::kmeans(scale(X), 3, nstart = 1)
+  expect_equal(npts(fviz_cluster(km, data = X, geom = "point", ellipse = FALSE)), 600)
+  expect_equal(npts(suppressMessages(
+    fviz_cluster(km, data = X, geom = "point", ellipse = FALSE, max.points = 120))), 120)
+})
+
+test_that("max.points sampling is stratified: small groups are preserved, not decimated", {
+  # A heavily unbalanced grouping: 3000 common + 30 rare individuals. Uniform
+  # sampling would leave the rare group with ~3 points (a meaningless ellipse);
+  # stratified sampling keeps a per-group floor so it stays representative.
+  set.seed(1)
+  X <- rbind(matrix(rnorm(3000 * 4), 3000, 4), matrix(rnorm(30 * 4, 6), 30, 4))
+  rownames(X) <- paste0("o", seq_len(nrow(X)))
+  grp <- factor(rep(c("Common", "Rare"), c(3000, 30)))
+  res <- prcomp(X, scale. = TRUE)
+
+  p <- suppressMessages(
+    fviz_pca_ind(res, geom = "point", habillage = grp, max.points = 300))
+  i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomPoint"), logical(1)))[1]
+  d <- ggplot2::layer_data(p, i)
+  per_group <- as.integer(table(d$colour))          # two colours == two groups
+
+  expect_equal(sum(per_group), 300)                 # total lands exactly on max.points
+  expect_gte(min(per_group), 20)                    # rare group kept its floor, not ~3
+
+  # The internal sampler itself: exact total, rare group protected, reproducible.
+  g <- rep(c("A", "B"), c(3000, 30))
+  idx <- factoextra:::.sample_indices(3030, 300, groups = g)
+  expect_equal(length(idx), 300)
+  expect_gte(sum(idx > 3000), 20)
+  expect_identical(idx, factoextra:::.sample_indices(3030, 300, groups = g))
+  # ungrouped draw stays exact too
+  expect_equal(length(factoextra:::.sample_indices(600, 100)), 100)
+  # NA-group rows stay eligible (not silently dropped) and empty factor levels
+  # do not shrink the floor.
+  gna <- c(rep("A", 500), rep("B", 500), rep(NA, 40))
+  ina <- factoextra:::.sample_indices(1040, 200, groups = gna)
+  expect_equal(length(ina), 200)
+  expect_gt(sum(ina > 1000), 0)                      # NA-group rows drawn
+  gf <- factor(c(rep("A", 500), rep("B", 500), rep("C", 40)),
+               levels = c("A", "B", "C", "Dunused"))
+  expect_equal(length(factoextra:::.sample_indices(1040, 200, groups = gf)), 200)
+})
+
+test_that("max.points stratifies for every grouping form (habillage, col.ind, FactoMineR)", {
+  # Regression: stratification must fire whatever the grouping column is named
+  # (vector habillage -> 'Groups', FactoMineR named habillage -> the quali name,
+  # col.ind = factor -> 'Col.'), not only when a literal 'Groups' column exists.
+  set.seed(1)
+  X <- rbind(matrix(rnorm(900 * 4), 900, 4), matrix(rnorm(20 * 4, 6), 20, 4))
+  rownames(X) <- paste0("o", seq_len(920))
+  grp <- factor(rep(c("Common", "Rare"), c(900, 20)))
+  res <- prcomp(X, scale. = TRUE)
+  rare_kept <- function(p) {
+    i <- which(vapply(p$layers, function(l)
+      inherits(l$geom, "GeomPoint") && inherits(l$stat, "StatIdentity"), logical(1)))[1]
+    min(as.integer(table(ggplot2::layer_data(p, i)$colour)))
+  }
+  # vector habillage and col.ind = factor
+  expect_gte(rare_kept(suppressMessages(
+    fviz_pca_ind(res, habillage = grp, geom = "point", max.points = 200))), 20)
+  expect_gte(rare_kept(suppressMessages(
+    fviz_pca_ind(res, col.ind = grp, geom = "point", max.points = 200))), 20)
+
+  # FactoMineR named-column habillage
+  skip_if_not_installed("FactoMineR")
+  pc <- FactoMineR::PCA(cbind.data.frame(X, Grp = grp), quali.sup = 5, graph = FALSE)
+  expect_gte(rare_kept(suppressMessages(
+    fviz_pca_ind(pc, habillage = "Grp", geom = "point", max.points = 200))), 20)
+})
+
+test_that("fviz_cluster max.points keeps the cluster frame faithful (hull not shrunk)", {
+  set.seed(1)
+  X <- matrix(rnorm(1500 * 4), 1500, 4)
+  km <- stats::kmeans(scale(X), 4, nstart = 5)
+  hull_areas <- function(p) {
+    b <- ggplot2::ggplot_build(p)
+    li <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomPolygon"), logical(1)))[1]
+    d <- b$data[[li]]
+    sort(round(as.numeric(tapply(seq_len(nrow(d)), d$group, function(ix) {
+      x <- d$x[ix]; y <- d$y[ix]
+      abs(sum(x * c(y[-1], y[1]) - c(x[-1], x[1]) * y)) / 2
+    })), 3))
+  }
+  npts <- function(p) {
+    b <- ggplot2::ggplot_build(p)
+    li <- which(vapply(p$layers, function(l)
+      inherits(l$geom, "GeomPoint") && inherits(l$stat, "StatIdentity"), logical(1)))[1]
+    nrow(b$data[[li]])
+  }
+  p_full <- suppressMessages(fviz_cluster(km, data = X, geom = "point", ellipse.type = "convex"))
+  p_samp <- suppressMessages(fviz_cluster(km, data = X, geom = "point",
+                                          ellipse.type = "convex", max.points = 200))
+  # Convex hull is computed on the full data -> byte-identical to the un-sampled
+  # frame, even though only 200 points are drawn (a naive subset would shrink it).
+  expect_identical(hull_areas(p_samp), hull_areas(p_full))
+  expect_equal(npts(p_samp), 200)
+})
+
+test_that("fviz_pca_ind max.points keeps addEllipses frames faithful (convex/confidence)", {
+  # The fviz() scatter path also draws ellipses; a naive subset would shrink a
+  # convex hull (~ -40%) and inflate a confidence ellipse (~ +900%, it scales
+  # 1/sqrt(n)). Only the drawn points are thinned; the frame stays on full data.
+  set.seed(1)
+  X <- rbind(matrix(rnorm(1500 * 4), 1500, 4), matrix(rnorm(30 * 4, 6), 30, 4))
+  rownames(X) <- paste0("o", seq_len(1530))
+  grp <- factor(rep(c("A", "B"), c(1500, 30)))
+  res <- prcomp(X, scale. = TRUE)
+  poly_areas <- function(p) {
+    b <- ggplot2::ggplot_build(p)
+    li <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomPolygon"), logical(1)))[1]
+    d <- b$data[[li]]
+    sort(round(as.numeric(tapply(seq_len(nrow(d)), d$group, function(ix) {
+      x <- d$x[ix]; y <- d$y[ix]
+      abs(sum(x * c(y[-1], y[1]) - c(x[-1], x[1]) * y)) / 2
+    })), 3))
+  }
+  npts <- function(p) {
+    b <- ggplot2::ggplot_build(p)
+    li <- which(vapply(p$layers, function(l)
+      inherits(l$geom, "GeomPoint") && inherits(l$stat, "StatIdentity"), logical(1)))[1]
+    nrow(b$data[[li]])
+  }
+  for (et in c("convex", "confidence", "norm", "t")) {
+    pf <- suppressMessages(fviz_pca_ind(res, habillage = grp, addEllipses = TRUE,
+                                        ellipse.type = et, geom = "point"))
+    ps <- suppressMessages(fviz_pca_ind(res, habillage = grp, addEllipses = TRUE,
+                                        ellipse.type = et, geom = "point", max.points = 200))
+    expect_identical(poly_areas(ps), poly_areas(pf))   # frame on full data
+    expect_equal(npts(ps), 200)                        # points thinned
+  }
+})

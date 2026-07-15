@@ -72,6 +72,63 @@ NULL
   force(expr)
 }
 
+# Pick row indices for a downsampled plot (used by max.points).
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# n          : total number of rows
+# max.points : draw at most this many; if n <= max.points, keep all rows
+# groups     : optional grouping (habillage / cluster). When present, sampling is
+#              STRATIFIED with a per-group floor so a small group is not decimated
+#              (a group reduced to a few points would give a misleading ellipse).
+#              Every group keeps at least min(group size, floor) points, and the
+#              remaining budget is spread proportionally to the larger groups.
+# seed       : fixed seed for a reproducible subset; RNG-safe via .with_preserved_seed.
+.sample_indices <- function(n, max.points, groups = NULL, seed = 123, min.per.group = 20L){
+  if(n <= max.points) return(seq_len(n))
+  .with_preserved_seed(seed, {
+    stratify <- !is.null(groups) && length(unique(groups)) >= 2
+    if(!stratify){
+      sort(sample.int(n, max.points))
+    } else {
+      # Coerce to character so NA-group rows stay eligible (folded into an explicit
+      # stratum) and empty/unused factor levels drop out on their own - a leftover
+      # level must not shrink the per-group floor.
+      g <- as.character(groups)
+      g[is.na(g)] <- ".__NA__."
+      idx <- split(seq_len(n), g)
+      sizes <- lengths(idx)
+      ng <- length(idx)
+      # cap the floor so the guaranteed minimums never exceed the total budget
+      eff_floor <- min(min.per.group, max.points %/% ng)
+      keep <- pmin(sizes, eff_floor)
+      remaining <- max(max.points - sum(keep), 0L)
+      leftover <- pmax(sizes - keep, 0L)
+      # Spread the remaining budget proportionally to the larger groups, then hand
+      # out the rounding shortfall by largest fractional remainder (Hamilton
+      # apportionment) so the total lands on max.points exactly. Each group is
+      # capped at its leftover, and total leftover always covers `remaining`
+      # (n >= max.points), so the shortfall is always placeable.
+      extra <- rep(0L, ng)
+      if(remaining > 0 && sum(leftover) > 0){
+        quota <- remaining * leftover / sum(leftover)
+        extra <- pmin(as.integer(quota), leftover)
+        short <- remaining - sum(extra)
+        while(short > 0){
+          frac <- quota - extra               # remainder; negative once a +1 lands
+          frac[extra >= leftover] <- -Inf     # group at capacity: skip
+          if(all(!is.finite(frac))) break
+          j <- which.max(frac)
+          extra[j] <- extra[j] + 1L
+          short <- short - 1L
+        }
+      }
+      target <- pmin(keep + extra, sizes)
+      out <- unlist(Map(function(ix, t) if(t >= length(ix)) ix else sample(ix, t),
+                        idx, target), use.names = FALSE)
+      sort(as.integer(out))
+    }
+  })
+}
+
 .coerce_integerish <- function(value, arg, lower = 1L, upper = .Machine$integer.max,
                                value_label = "single positive integer value"){
   tol <- sqrt(.Machine$double.eps)

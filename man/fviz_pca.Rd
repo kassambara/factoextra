@@ -24,6 +24,8 @@ fviz_pca_ind(
   alpha.ind = 1,
   shape.ind = NULL,
   select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+  max.points = NULL,
+  sample.seed = 123,
   ...
 )
 
@@ -147,6 +149,21 @@ individuals/variables to be drawn \item cos2: if cos2 is in [0, 1], ex:
 ex: 5, then the top 5 individuals/variables with the highest cos2 are
 drawn. \item contrib: if contrib > 1, ex: 5,  then the top 5
 individuals/variables with the highest contrib are drawn }}
+
+\item{max.points}{integer or NULL. When the individual / row / column cloud has
+more than \code{max.points} points, a random subset of that many \emph{points}
+is drawn so the plot stays readable (usable labels instead of an over-plotted
+cloud). Only the drawn points/labels are thinned: any ellipse
+(\code{addEllipses}) and the group mean point are still computed on the
+\strong{full} data, so a convex / confidence frame is not shrunk or inflated by
+the draw. When points are coloured/split by a group (e.g. \code{habillage}),
+the draw is \strong{stratified} so every group keeps at least a minimum number
+of points and none is decimated. A message reports how many points are shown.
+The subset is reproducible (see \code{sample.seed}) and does not change the
+caller's random stream. \code{NULL} (default) draws every point.}
+
+\item{sample.seed}{the random seed used to pick the \code{max.points} subset,
+for a reproducible figure. Ignored when \code{max.points} is \code{NULL}.}
 
 \item{col.quanti.sup}{a color for the quantitative supplementary variables.}
 

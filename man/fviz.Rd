@@ -39,6 +39,8 @@ fviz(
   ggtheme = theme_minimal(),
   ggp = NULL,
   font.family = "",
+  max.points = NULL,
+  sample.seed = 123,
   ...
 )
 }
@@ -182,6 +184,21 @@ theme_minimal(), theme_classic(), theme_void(), ....}
 \item{ggp}{a ggplot. If not NULL, points are added to an existing plot.}
 
 \item{font.family}{character vector specifying font family.}
+
+\item{max.points}{integer or NULL. When the individual / row / column cloud has
+more than \code{max.points} points, a random subset of that many \emph{points}
+is drawn so the plot stays readable (usable labels instead of an over-plotted
+cloud). Only the drawn points/labels are thinned: any ellipse
+(\code{addEllipses}) and the group mean point are still computed on the
+\strong{full} data, so a convex / confidence frame is not shrunk or inflated by
+the draw. When points are coloured/split by a group (e.g. \code{habillage}),
+the draw is \strong{stratified} so every group keeps at least a minimum number
+of points and none is decimated. A message reports how many points are shown.
+The subset is reproducible (see \code{sample.seed}) and does not change the
+caller's random stream. \code{NULL} (default) draws every point.}
+
+\item{sample.seed}{the random seed used to pick the \code{max.points} subset,
+for a reproducible figure. Ignored when \code{max.points} is \code{NULL}.}
 
 \item{...}{Arguments to be passed to the functions ggpubr::ggscatter() & 
 ggpubr::ggpar().}
