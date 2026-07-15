@@ -98,6 +98,19 @@ NULL
 #'  contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest 
 #'  contrib are drawn }
 #'@param ggp a ggplot. If not NULL, points are added to an existing plot.
+#'@param max.points integer or NULL. When the individual / row / column cloud has
+#'  more than \code{max.points} points, a random subset of that many \emph{points}
+#'  is drawn so the plot stays readable (usable labels instead of an over-plotted
+#'  cloud). Only the drawn points/labels are thinned: any ellipse
+#'  (\code{addEllipses}) and the group mean point are still computed on the
+#'  \strong{full} data, so a convex / confidence frame is not shrunk or inflated by
+#'  the draw. When points are coloured/split by a group (e.g. \code{habillage}),
+#'  the draw is \strong{stratified} so every group keeps at least a minimum number
+#'  of points and none is decimated. A message reports how many points are shown.
+#'  The subset is reproducible (see \code{sample.seed}) and does not change the
+#'  caller's random stream. \code{NULL} (default) draws every point.
+#'@param sample.seed the random seed used to pick the \code{max.points} subset,
+#'  for a reproducible figure. Ignored when \code{max.points} is \code{NULL}.
 #'@inheritParams ggpubr::ggpar
 #'@param font.family character vector specifying font family.
 #'@param ... Arguments to be passed to the functions ggpubr::ggscatter() & 
@@ -153,6 +166,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
                           rotate.labels = FALSE,
                           ggtheme = theme_minimal(),
                           ggp = NULL, font.family = "",
+                          max.points = NULL, sample.seed = 123,
                            ...)
   {
   
@@ -272,8 +286,35 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     df[, c("x", "y")] <- df[, c("x", "y")]*extra_args$scale.
   # (M)CA: scale coords according to the type of map
   if(facto.class %in% c("CA", "MCA") && !(element %in% c("mca.cor", "quanti.sup"))){
-  if(!is.null(extra_args$map)) df <- .scale_ca(df, res.ca = X,  element = element, 
+  if(!is.null(extra_args$map)) df <- .scale_ca(df, res.ca = X,  element = element,
                                                type = extra_args$map, axes = axes)
+  }
+  # Downsample a very large point cloud so the plot stays readable (usable labels
+  # and ellipses instead of an over-plotted blob). max.points = NULL (default)
+  # keeps every point, so existing calls are byte-identical. Only the individual /
+  # row / column clouds are subsettable, and the draw is seeded + RNG-safe so the
+  # subset is reproducible without perturbing the caller's random stream.
+  # `df` is kept at full size here; when sampling is requested we record the
+  # subset in `sampled_idx` and thin only the drawn point/text layers AFTER the
+  # plot is built (below). The ellipse and group mean point are then computed by
+  # ggscatter on the full data, so a convex / confidence frame is not shrunk or
+  # inflated by dropping the extreme points (or the count) a random draw perturbs.
+  sampled_idx <- NULL
+  if(!is.null(max.points) && element %in% c("ind", "row", "col")){
+    max.points <- .coerce_integerish(max.points, "max.points", lower = 1L)
+    if(nrow(df) > max.points){
+      # When points are coloured by a group (habillage / col.ind factor), that
+      # grouping column now lives in `color` (e.g. the quali var name, "Col." or
+      # "Groups"). Stratify on it so a small group keeps its floor and its ellipse
+      # stays meaningful; continuous colouring (cos2/contrib) is not a grouping.
+      grp_col <- if(is.character(color) && length(color) == 1L && color %in% names(df) &&
+                    .is_grouping_var(df[[color]])) color
+                 else if("Groups" %in% names(df)) "Groups" else NULL
+      grps <- if(!is.null(grp_col)) df[[grp_col]] else NULL
+      sampled_idx <- .sample_indices(nrow(df), max.points, groups = grps, seed = sample.seed)
+      message("Showing a random ", length(sampled_idx), " of ", nrow(df),
+              " points (max.points); set max.points = NULL to show all.")
+    }
   }
   # Main plot
   #%%%%%%%%%%%%%%%%%%%
@@ -329,6 +370,22 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # repel = FALSE); ggrepel ignores the angle aesthetic. (#98)
   if(isTRUE(rotate.labels) && "arrow" %in% geom)
     p <- .rotate_text_labels(p, n_layers_before)
+
+  # Thin only the drawn scatter/labels to the sampled subset; the group mean point
+  # (StatMean) and ellipse (StatEllipse / StatChull polygon) added by the ggscatter
+  # call above keep their full-data layers, so the frame stays faithful. Only this
+  # element's layers (index > n_layers_before) are touched, so chained biplot
+  # layers and supplementary points (added later) are left intact.
+  if(!is.null(sampled_idx)){
+    sub <- df[sampled_idx, , drop = FALSE]
+    for(i in seq_along(p$layers)){
+      if(i <= n_layers_before) next
+      g <- p$layers[[i]]$geom; s <- p$layers[[i]]$stat
+      is_point <- inherits(g, "GeomPoint") && inherits(s, "StatIdentity")
+      is_text  <- inherits(g, c("GeomText", "GeomLabel", "GeomTextRepel", "GeomLabelRepel"))
+      if(is_point || is_text) p$layers[[i]]$data <- sub
+    }
+  }
 
   if(!is.null(gradient.cols))
     p <- p + ggpubr::gradient_color(gradient.cols)

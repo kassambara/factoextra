@@ -12,6 +12,19 @@
   draws a grid with one tile per element and dimension, filled and labelled by the
   per-dimension cos2/contribution, so the quality/contribution across several
   dimensions can be read at once. The default (`display = "bar"`) is unchanged.
+* `fviz_pca_ind()`, `fviz_cluster()` (and the other individual / row / column
+  plots) gain a `max.points` argument for large datasets. When there are more
+  than `max.points` points, a reproducible random subset of that many is drawn so
+  labels, colours and ellipses stay readable instead of over-plotting. When points
+  are grouped (e.g. `habillage`, or clusters in `fviz_cluster()`) the draw is
+  stratified so every group keeps a minimum number of points and none is
+  decimated, and a message reports how many points are shown. Only the drawn
+  points are thinned: any ellipse (`addEllipses` / the cluster frame) and the
+  group/cluster centres are still computed on the full data, so a convex hull or
+  confidence ellipse is not distorted by dropping the extreme points a random
+  draw tends to lose. The draw does not disturb the caller's random stream.
+  `max.points = NULL` (default) draws every point, and `sample.seed` controls
+  which subset is chosen.
 * `fviz_mca_ind()` and `fviz_mca_biplot()` gain a `quanti.sup` argument. Set
   `quanti.sup = TRUE` to overlay the supplementary quantitative variables of a
   FactoMineR MCA on the map as correlation arrows, so a continuous covariate's

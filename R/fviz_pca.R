@@ -199,13 +199,15 @@ fviz_pca_ind <- function(X,  axes = c(1,2), geom = c("point", "text"),
                          col.ind = "black", fill.ind = "white", col.ind.sup = "blue", alpha.ind =1,
                          shape.ind = NULL,
                          select.ind = list(name = NULL, cos2 = NULL, contrib = NULL),
+                         max.points = NULL, sample.seed = 123,
                          ...)
 {
 
   .args <- list(X = X, element = "ind", axes = axes, geom = geom.ind,
                 habillage = habillage, palette = palette, addEllipses = addEllipses,
                 color = col.ind, fill = fill.ind, alpha = alpha.ind, col.row.sup = col.ind.sup,
-                select = select.ind, repel = repel, ...)
+                select = select.ind, repel = repel,
+                max.points = max.points, sample.seed = sample.seed, ...)
   # shape.ind = a factor maps point shape to a (possibly different) grouping than
   # col.ind, e.g. colour by one variable and shape by another. NULL (default)
   # keeps the previous behavior (shape follows habillage/colour). (#36, #51)

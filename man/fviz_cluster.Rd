@@ -28,6 +28,8 @@ fviz_cluster(
   outlier.pointsize = pointsize,
   outlier.labelsize = labelsize,
   ggtheme = theme_grey(),
+  max.points = NULL,
+  sample.seed = 123,
   ...
 )
 }
@@ -94,6 +96,21 @@ clustering.}
 \item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
+
+\item{max.points}{integer or NULL. When the data has more than
+\code{max.points} observations, a random subset of that many \emph{points} is
+drawn so the cluster plot stays readable instead of over-plotting. Only the
+drawn scatter/labels are thinned: the cluster frame (convex hull / ellipse)
+and centres are still computed on the \strong{full} data, so a convex hull is
+not shrunk by dropping the extreme points a random draw tends to lose. The
+draw is \strong{stratified by cluster} so every cluster keeps at least a
+minimum number of points, and a message reports how many are shown. Any
+DBSCAN/Mclust outliers are always drawn. The subset is reproducible (see
+\code{sample.seed}) and does not change the caller's random stream. \code{NULL}
+(default) draws every observation.}
+
+\item{sample.seed}{the random seed used to pick the \code{max.points} subset,
+for a reproducible figure. Ignored when \code{max.points} is \code{NULL}.}
 
 \item{...}{other arguments to be passed to the functions
 \code{\link[ggpubr]{ggscatter}} and \code{\link[ggpubr]{ggpar}}.}

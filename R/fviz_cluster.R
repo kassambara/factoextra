@@ -50,6 +50,19 @@
 #'@param xlab,ylab character vector specifying x and y axis labels,
 #'  respectively. Use xlab = FALSE and ylab = FALSE to hide xlab and ylab,
 #'  respectively.
+#'@param max.points integer or NULL. When the data has more than
+#'  \code{max.points} observations, a random subset of that many \emph{points} is
+#'  drawn so the cluster plot stays readable instead of over-plotting. Only the
+#'  drawn scatter/labels are thinned: the cluster frame (convex hull / ellipse)
+#'  and centres are still computed on the \strong{full} data, so a convex hull is
+#'  not shrunk by dropping the extreme points a random draw tends to lose. The
+#'  draw is \strong{stratified by cluster} so every cluster keeps at least a
+#'  minimum number of points, and a message reports how many are shown. Any
+#'  DBSCAN/Mclust outliers are always drawn. The subset is reproducible (see
+#'  \code{sample.seed}) and does not change the caller's random stream. \code{NULL}
+#'  (default) draws every observation.
+#'@param sample.seed the random seed used to pick the \code{max.points} subset,
+#'  for a reproducible figure. Ignored when \code{max.points} is \code{NULL}.
 #'@inheritParams ggpubr::ggpar
 #'@param ... other arguments to be passed to the functions
 #'  \code{\link[ggpubr]{ggscatter}} and \code{\link[ggpubr]{ggpar}}.
@@ -120,7 +133,8 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                          main = "Cluster plot",  xlab = NULL, ylab = NULL,
                          outlier.color = "black", outlier.shape = 19,
                          outlier.pointsize = pointsize, outlier.labelsize = labelsize,
-                         ggtheme = theme_grey(), ...){
+                         ggtheme = theme_grey(),
+                         max.points = NULL, sample.seed = 123, ...){
   
   # Backward compatibility: deprecated arguments converted with warning
   extra_args <- list(...)
@@ -305,7 +319,31 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
       label_coord <- label_coord[-outliers, , drop = FALSE]
     }
   }
-  
+
+  # Downsample a very large cluster plot so points/labels stay readable. The draw
+  # is deferred until AFTER the plot is built (below): the cluster frame (convex
+  # hull / ellipse) and centres are computed on the FULL data and only the drawn
+  # scatter/labels are thinned. A convex hull is defined by its extreme points -
+  # exactly the ones a random draw is most likely to drop - so thinning the hull's
+  # input would shrink it and understate the cluster; keeping the frame on the full
+  # data avoids that. max.points = NULL (default) keeps every observation, so
+  # existing calls are byte-identical. Any dbscan/Mclust outliers were split off
+  # above and are always drawn; the draw is seeded + RNG-safe (reproducible without
+  # perturbing the caller's random stream) and stratified by cluster.
+  sampled <- NULL
+  if(!is.null(max.points)){
+    max.points <- .coerce_integerish(max.points, "max.points", lower = 1L)
+    if(nrow(plot.data) > max.points){
+      sampled <- .sample_indices(nrow(plot.data), max.points, groups = cluster,
+                                 seed = sample.seed)
+      n_out <- if(is_outliers) nrow(outliers_data) else 0L
+      message("fviz_cluster(): showing a random ", length(sampled), " of ",
+              nrow(plot.data), " clustered points",
+              if(n_out > 0) paste0(" (+ ", n_out, " outliers, always shown)") else "",
+              "; set max.points = NULL to show all.")
+    }
+  }
+
   # Plot
   # ++++++++++++++++++++++++
   lab <- NULL
@@ -331,7 +369,21 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     extra_args
   )
   p <- do.call(ggpubr::ggscatter, ggscatter_args)
-  
+
+  # Thin only the drawn scatter/labels to the sampled subset; the frame (convex
+  # hull / ellipse, a StatChull/StatEllipse polygon) and the cluster centres (a
+  # StatMean point) keep their full-data layers, so boundaries and centres stay
+  # faithful. Matched by geom/stat class (not layer index) for version-robustness.
+  if(!is.null(sampled)){
+    sub <- plot.data[sampled, , drop = FALSE]
+    for(i in seq_along(p$layers)){
+      g <- p$layers[[i]]$geom; s <- p$layers[[i]]$stat
+      is_point <- inherits(g, "GeomPoint") && inherits(s, "StatIdentity")
+      is_text  <- inherits(g, c("GeomText", "GeomLabel", "GeomTextRepel", "GeomLabelRepel"))
+      if(is_point || is_text) p$layers[[i]]$data <- sub
+    }
+  }
+
   # Add outliers (can exist only in dbscan)
   if(is_outliers)
     p <- .add_outliers(p, outliers_data, outliers_labs, outlier.color, outlier.shape,
