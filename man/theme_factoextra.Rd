@@ -22,6 +22,15 @@ axis lines. Pass it through the \code{ggtheme} argument, e.g.
 \code{fviz_pca_ind(res, ggtheme = theme_factoextra())}, or add it to any
 returned plot with \code{+ theme_factoextra()}.
 }
+\details{
+The \code{fviz_*} functions have different default themes
+  (\code{fviz_pca_*} use \code{theme_minimal()}, \code{fviz_cluster()} uses
+  \code{theme_grey()}, \code{fviz_dend()} uses \code{theme_classic()}, ...).
+  For one consistent look across several plots in the same document, pass
+  \code{ggtheme = theme_factoextra()} to each call (see the last example) rather
+  than relying on \code{ggplot2::theme_set()}, which the \code{fviz_*} functions
+  override with their explicit \code{ggtheme} default.
+}
 \examples{
 \donttest{
 data(iris)
@@ -32,6 +41,11 @@ fviz_pca_ind(res.pca, habillage = iris$Species,
 
 # or add it to an existing plot
 fviz_pca_var(res.pca) + theme_factoextra()
+
+# a consistent look across the family: pass the same ggtheme to each call
+km <- kmeans(scale(iris[, 1:4]), 3)
+fviz_pca_ind(res.pca, ggtheme = theme_factoextra())
+fviz_cluster(km, data = iris[, 1:4], ggtheme = theme_factoextra())
 }
 }
 \seealso{
