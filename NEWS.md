@@ -2,6 +2,13 @@
 
 ## New features
 
+* `fviz_dend()` gains a `highlight` argument to emphasize the branches leading to
+  specific leaves (with `highlight.col` / `highlight.lwd`); it layers on top of
+  the cluster colouring, so highlighted branches stand out while every other
+  branch keeps its colour. `highlight = NULL` (default) is unchanged. For other
+  branch styling (e.g. dashed branches) pass a pre-styled `dendextend` object,
+  which `fviz_dend()` honours (see `?fviz_dend`).
+
 * New `fviz_umap()` and `fviz_tsne()` to visualize a 2-D UMAP or t-SNE embedding
   (from `uwot`, `Rtsne`, `umap`, or a plain coordinate matrix) with factoextra's
   grouping, ellipse and palette styling, including colouring points by a

@@ -18,6 +18,9 @@ fviz_dend(
   labels_track_height = NULL,
   repel = FALSE,
   lwd = 0.7,
+  highlight = NULL,
+  highlight.col = "red",
+  highlight.lwd = NULL,
   type = c("rectangle", "circular", "phylogenic"),
   phylo_layout = "layout.auto",
   rect = FALSE,
@@ -76,6 +79,18 @@ type = "phylogenic".}
 \item{lwd}{a numeric value specifying dendrogram branch and rectangle line
 width.}
 
+\item{highlight}{an optional character vector of leaf labels; the branches
+leading to those leaves are emphasized (thicker, and coloured
+\code{highlight.col}) while every other branch keeps its colour and width.
+\code{NULL} (default) highlights nothing. Has no effect for
+\code{type = "phylogenic"} (that layout does not colour branch segments).}
+
+\item{highlight.col}{colour (name or hex) for the highlighted branches.}
+
+\item{highlight.lwd}{line width for the highlighted branches. \code{NULL}
+(default) uses \code{2 * lwd} so the emphasis stands out by thickness
+regardless of colour; set \code{highlight.lwd = lwd} for colour-only emphasis.}
+
 \item{type}{type of plot. Allowed values are one of "rectangle",
 "circular", "phylogenic".}
 
@@ -116,14 +131,25 @@ theme_gray(), theme_bw(), theme_minimal(), theme_classic(), theme_void(),
 \item{...}{other arguments to be passed to the function plot.dendrogram()}
 }
 \value{
-an object of class fviz_dend which is a ggplot with the attributes 
-  "dendrogram" accessible using attr(x, "dendrogram"), where x is the result 
+an object of class fviz_dend which is a ggplot with the attributes
+  "dendrogram" accessible using attr(x, "dendrogram"), where x is the result
   of fviz_dend().
 }
 \description{
 Draws easily beautiful dendrograms using either R base plot or 
   ggplot2. Provides also an option for drawing a circular dendrogram and 
   phylogenic trees.
+}
+\details{
+For branch styling beyond \code{highlight} - for example dashed
+  branches or per-branch colours - pre-style a \code{dendextend} dendrogram and
+  pass it to \code{fviz_dend()}, which honours its \code{set()} aesthetics:
+  \preformatted{
+  library(dendextend)
+  dend <- as.dendrogram(hclust(dist(scale(USArrests))))
+  dend <- set(dend, "branches_lty", 2)   # dashed branches
+  fviz_dend(dend)
+  }
 }
 \examples{
 \donttest{
