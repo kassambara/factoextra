@@ -24,6 +24,32 @@ test_that(".fe_layout extracts coordinates from every embedding source", {
   expect_equal(factoextra:::.fe_layout(m3, dims = c(1, 3)), m3[, c(1, 3)], ignore_attr = TRUE)
 })
 
+test_that("fviz_umap/fviz_tsne accept the real uwot / Rtsne / umap objects", {
+  X <- as.matrix(iris[, 1:4])
+  if (requireNamespace("uwot", quietly = TRUE)) {
+    set.seed(1)
+    um <- uwot::umap(X, n_neighbors = 15)                 # a bare matrix
+    p <- fviz_umap(um, habillage = iris$Species)
+    expect_s3_class(p, "ggplot")
+    expect_equal(sort(point_data(p)$x), sort(um[, 1]), tolerance = 1e-9)
+  }
+  if (requireNamespace("Rtsne", quietly = TRUE)) {
+    set.seed(1)
+    ts <- Rtsne::Rtsne(X, check_duplicates = FALSE)       # list with $Y
+    p <- fviz_tsne(ts, habillage = iris$Species)
+    expect_identical(p$labels$x, "tSNE1")
+    expect_equal(sort(point_data(p)$x), sort(ts$Y[, 1]), tolerance = 1e-9)
+  }
+  if (requireNamespace("umap", quietly = TRUE)) {
+    set.seed(1)
+    uu <- umap::umap(X)                                   # umap object with $layout
+    expect_s3_class(uu, "umap")
+    p <- fviz_umap(uu, habillage = iris$Species)
+    expect_s3_class(p, "ggplot")
+    expect_equal(sort(point_data(p)$x), sort(uu$layout[, 1]), tolerance = 1e-9)
+  }
+})
+
 test_that(".fe_layout errors clearly on degenerate / unknown input", {
   expect_error(factoextra:::.fe_layout(matrix(1:10, ncol = 1)), "least 2|2 are needed|dimension")
   expect_error(factoextra:::.fe_layout(list(foo = 1)), "Unrecognized")

@@ -50,6 +50,7 @@ Suggests:
     rmarkdown,
     Rtsne,
     testthat (>= 3.0.0),
+    umap,
     uwot,
     workflows
 VignetteBuilder: knitr
