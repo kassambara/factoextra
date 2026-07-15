@@ -79,6 +79,24 @@
 #'   dend <- set(dend, "branches_lty", 2)   # dashed branches
 #'   fviz_dend(dend)
 #'   }
+#'
+#'   \strong{Comparing two dendrograms.} To compare two hierarchical clusterings of
+#'   the same observations (e.g. different linkages), draw a \emph{tanglegram} with
+#'   \code{dendextend} (already a dependency): the two trees face each other, matched
+#'   leaves are connected, and \code{entanglement()} measures agreement (0 = perfect,
+#'   1 = worst). This uses base graphics.
+#'   \preformatted{
+#'   library(dendextend)
+#'   d1 <- as.dendrogram(hclust(dist(scale(USArrests)), "complete"))
+#'   d2 <- as.dendrogram(hclust(dist(scale(USArrests)), "average"))
+#'   dl <- dendlist(d1, d2)
+#'   dl <- untangle(dl, method = "step2side")        # reduce crossings
+#'   tanglegram(dl, common_subtrees_color_branches = TRUE)
+#'   entanglement(dl)                                 # agreement, in [0, 1]
+#'   }
+#'   Both dendrograms must share the same leaf labels.
+#' @seealso \code{\link[dendextend]{tanglegram}}, \code{\link[dendextend]{entanglement}}
+#'   for comparing two dendrograms (see \strong{Details}).
 #' @examples
 #' \donttest{
 #' # Load and scale the data
