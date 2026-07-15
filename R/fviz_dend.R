@@ -31,7 +31,7 @@
 #'   type = "phylogenic".
 #' @param lwd a numeric value specifying dendrogram branch and rectangle line
 #'   width.
-#' @param type type of plot. Allowed values are one of "rectangle", "triangle", 
+#' @param type type of plot. Allowed values are one of "rectangle",
 #'   "circular", "phylogenic".
 #' @param phylo_layout the layout to be used for phylogenic trees. Default value
 #'   is "layout.auto", which is kept as a compatibility alias for
