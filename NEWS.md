@@ -1,4 +1,4 @@
-# factoextra 2.1.0.9000
+# factoextra 2.2.0
 
 ## New features
 

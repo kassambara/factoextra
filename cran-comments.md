@@ -1,72 +1,49 @@
-## Submission — factoextra 2.1.0
+## Submission — factoextra 2.2.0
 
-A minor release adding new visualization features and bug fixes; no breaking
-changes (new behavior is gated, existing inputs are unchanged).
+A minor release. All new behavior is opt-in and gated, so existing inputs
+produce byte-identical output; there are no breaking changes.
 
-## Resubmission
+## Changes in this version (2.2.0)
 
-This is a resubmission addressing the auto-check feedback on the previous
-2.1.0 upload:
+Minor update from 2.1.0 (see NEWS.md for the full list):
 
-* **Reverse dependency (chooseGCM) fixed.** `hcut()`/`hkmeans()` had added a
-  custom early error for `k > number-of-observations` that pre-empted (and so
-  changed the message of) `stats::cutree()`'s native error. chooseGCM's test
-  pins that native message (`"elements of 'k' must be between 1 and 11"`). We
-  removed the custom early error so the native message is restored — matching the
-  long-published behaviour. chooseGCM's tests pass again. A regression test now
-  guards this so it cannot recur.
-* **Spelling NOTE fixed.** "phylogenic" → "phylogenetic" in DESCRIPTION.
-* The "examples > 5s" NOTE comes from a few `fviz_*` examples that run inherently
-  slow FactoMineR computations (MCA/MFA/CA); these are correctness illustrations.
-  Happy to wrap them in `\donttest{}` if preferred.
+* New `fviz_umap()` / `fviz_tsne()` to visualize a 2-D UMAP or t-SNE embedding
+  (from uwot, Rtsne, umap, or a plain coordinate matrix) with factoextra's
+  grouping, ellipse and palette styling. An embedding has no eigenvalues, so the
+  axes carry no percentage and there is no scree plot or correlation circle.
+* New `theme_factoextra()` and `factoextra_palette()`: a clean publication theme
+  and an Okabe-Ito colorblind-safe palette, both stateless (no global option).
+* `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a PCA fitted
+  inside a tidymodels recipe or workflow plots with the `fviz_pca_*()` family.
+* New arguments (all default to the current behavior): `fviz_dend(highlight=)`;
+  `max.points` for `fviz_pca_ind()` / `fviz_cluster()` and the other point
+  plots; `display = "heatmap"` for `fviz_cos2()` / `fviz_contrib()`;
+  `mark_optimal` for `fviz_nbclust()` / `fviz_gap_stat()`; `quanti.sup` for
+  `fviz_mca_ind()` / `fviz_mca_biplot()`; and a `union` element in the
+  `select.*` selection lists (OR selection; the default stays AND).
 
 ## Test environments
 
-* Local: macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
-* win-builder: R release — OK
-* GitHub Actions: macOS (release), Windows (release), Ubuntu 22.04
-  (release, devel, oldrel-1) — all pass
+* Local: macOS (Darwin 24.6.0) — R 4.5.1 (2025-06-13)
+* win-builder: R release and R devel
+* GitHub Actions: macOS (release), Windows (release), Ubuntu
+  (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
+  all pass.
 
 ## R CMD check results
 
 0 errors | 0 warnings | 0 notes
 
-(A local "unable to verify current time" / future-file-timestamps NOTE seen on a
-sandboxed machine without network is environment-specific and does not occur on
-win-builder or the CI machines.)
-
-## Additional local pre-submission checks (June 26, 2026)
-
-* macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
-* `R CMD check --as-cran factoextra_2.1.0.tar.gz`: 0 errors | 0 warnings | 0 notes
-* `devtools::test()`: 404 passed, 0 failed, 0 warnings, 0 skipped
-* `tools::checkRd()`: no Rd issues
-* `urlchecker::url_check()`: no problems
-
-## Changes in this version (2.1.0)
-
-Minor update from 2.0.0. Highlights (see NEWS.md for the full list):
-
-* New `as_factoextra_pca()` constructor to visualize coordinates from any
-  dimension-reduction method with the `fviz_pca_*()` family.
-* New arguments: `shape.ind` (shape individuals by a second factor),
-  `rotate.labels` (ggbiplot-style variable-label rotation).
-* Support for ade4 between-class / within-class PCA (`bca()`/`wca()`).
-* New vignette "Extending factoextra to support new analysis backends".
-* Bug fixes: `fviz_mca_biplot()` `map` argument, `get_pca_ind()` for ade4
-  `dudi.pca`, `fviz_dend()` honoring `k` for HCPC, and clearer warnings for
-  unrecognized `label`/`invisible` values.
-
-(The last CRAN release was 1.0.7; version 2.0.0 introduced the larger
-modernization documented in NEWS.md.)
-
-## Notes
-
-* No local notes.
+The previously reported "examples > 5s" NOTE comes from a few `fviz_*` examples
+that run inherently slow FactoMineR computations (MCA / MFA / CA) as correctness
+illustrations; happy to wrap them in `\donttest{}` if preferred.
 
 ## Downstream dependencies
 
-The previously failing reverse dependency **chooseGCM** now passes: its
-`hclust_gcms()` k > n test again receives `stats::cutree()`'s native
-`"elements of 'k' must be between 1 and N"` error (verified against the fixed
-package). No other reverse dependency is affected by this change.
+We ran R CMD check on the reverse dependencies. No new problems were introduced
+by this release. <!-- revdep summary finalized after revdepcheck run -->
+
+## Notes
+
+* `datanovia.com` URLs can return HTTP 503 to automated crawlers but resolve
+  correctly in a browser.

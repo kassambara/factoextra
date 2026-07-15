@@ -28,6 +28,7 @@ test_that("fviz_dend(highlight=) emphasizes the chosen branches, layering on k c
 })
 
 test_that("fviz_dend(highlight=) warns for type = 'phylogenic' (branches not coloured)", {
+  skip_if_not_installed("igraph")
   hc <- hclust(dist(scale(USArrests)))
   expect_warning(fviz_dend(hc, highlight = labels(as.dendrogram(hc))[1:3],
                            type = "phylogenic"), "phylogenic")
