@@ -106,9 +106,13 @@ NULL
 #'  \strong{full} data, so a convex / confidence frame is not shrunk or inflated by
 #'  the draw. When points are coloured/split by a group (e.g. \code{habillage}),
 #'  the draw is \strong{stratified} so every group keeps at least a minimum number
-#'  of points and none is decimated. A message reports how many points are shown.
-#'  The subset is reproducible (see \code{sample.seed}) and does not change the
-#'  caller's random stream. \code{NULL} (default) draws every point.
+#'  of points and none is decimated. When colour, fill or size is mapped to a
+#'  continuous metric (e.g. \code{col.ind = "cos2"}), its scale and legend are
+#'  pinned to the full-data range, so a point's colour, fill and size do not depend
+#'  on how many points are drawn. A message reports how many points are shown. The
+#'  subset is reproducible
+#'  (see \code{sample.seed}) and does not change the caller's random stream.
+#'  \code{NULL} (default) draws every point.
 #'@param sample.seed the random seed used to pick the \code{max.points} subset,
 #'  for a reproducible figure. Ignored when \code{max.points} is \code{NULL}.
 #'@inheritParams ggpubr::ggpar
@@ -389,8 +393,24 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 
   if(!is.null(gradient.cols))
     p <- p + ggpubr::gradient_color(gradient.cols)
-    
-    
+
+  # When max.points has thinned the drawn points (sampled_idx set), pin every
+  # continuous aesthetic (colour / fill / size) to the full-data range, so its
+  # scale and legend do not retrain on the drawn subset and a point's colour, fill
+  # and size do not depend on how many points were drawn. expand_limits only widens
+  # the existing scale (subset range is a subset of the full range), so a custom
+  # gradient.cols palette is preserved. Uses `df` (the post-select, post-CA-scale,
+  # still un-thinned set that would be plotted at max.points = NULL) so the range
+  # matches the non-sampled plot exactly under select.ind / a rescaled CA map --
+  # the layer-swap above thins only the drawn layers' data, never `df` itself.
+  # Gated on the sampling path and on a continuous mapping, so default plots and
+  # discrete / fixed aesthetics are byte-identical.
+  if(!is.null(sampled_idx)){
+    p <- .pin_full_range(p, "colour", color, df)
+    p <- .pin_full_range(p, "fill", fill, df)
+    p <- .pin_full_range(p, "size", pointsize, df)
+  }
+
   if(is.null(extra_args$legend)) p <- p + theme(legend.position = "right" )
   # Add arrows
   if("arrow" %in% geom && !hide[[element]])
@@ -451,6 +471,21 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
 # Helper functions
 #+++++++++++++++++++++
 
+
+# Pin a continuous aesthetic (colour / fill / size) to the full-data range so a
+# max.points subsample does not retrain its scale/legend on the drawn subset.
+# `var` is the mapped column name (or a fixed value like "black"/1.5); the pin
+# only applies when it names a numeric column of `data`. expand_limits() widens
+# the existing scale without replacing the palette.
+.pin_full_range <- function(p, aes, var, data){
+  if(is.character(var) && length(var) == 1L && var %in% names(data) &&
+     is.numeric(data[[var]])){
+    lim <- suppressWarnings(range(data[[var]], na.rm = TRUE))
+    if(all(is.finite(lim)))   # skip an all-NA metric (range -> c(Inf, -Inf))
+      p <- p + do.call(expand_limits, stats::setNames(list(lim), aes))
+  }
+  p
+}
 
 # Check if fill/color variable is continous in the context of PCA
 .is_continuous_var <- function(x){
