@@ -94,9 +94,12 @@ NULL
 #'  \item name: is a character vector containing individuals/variables to be 
 #'  drawn \item cos2: if cos2 is in [0, 1], ex: 0.6, then individuals/variables 
 #'  with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5 
-#'  individuals/variables with the highest cos2 are drawn. \item contrib: if 
-#'  contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest 
-#'  contrib are drawn }
+#'  individuals/variables with the highest cos2 are drawn. \item contrib: if
+#'  contrib > 1, ex: 5,  then the top 5 individuals/variables with the highest
+#'  contrib are drawn \item union: logical. When several of name/cos2/contrib
+#'  are given, FALSE (default) combines them with AND (each condition further
+#'  narrows the selection); TRUE combines them with OR (an element is kept if it
+#'  matches any condition), e.g. named items \emph{plus} the top-cos2 ones. }
 #'@param ggp a ggplot. If not NULL, points are added to an existing plot.
 #'@param max.points integer or NULL. When the individual / row / column cloud has
 #'  more than \code{max.points} points, a random subset of that many \emph{points}
@@ -278,7 +281,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(!is.null(select) && !is.null(select$name) && .factominer_needs_category_map(facto.class, element)){
     select$name <- map_factominer_legacy_names(X, select$name, element = element)
   }
-  if(!is.null(select) && !is.null(select$contrib) && !("contrib" %in% colnames(df))){
+  if(!is.null(select) && !is.null(select$contrib) && !("contrib" %in% colnames(df))
+     && !isTRUE(select$union)){
     stop("Contributions are not available for element = '", element, "'.")
   }
   if(!is.null(select)) df <- .select(df, select)

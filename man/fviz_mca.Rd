@@ -135,9 +135,13 @@ Allowed values are NULL or a list containing the arguments name, cos2 or
 contrib: \itemize{ \item name is a character vector containing 
 individuals/variables to be drawn \item cos2 if cos2 is in [0, 1], ex: 0.6, 
 then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, 
-then the top 5 individuals/variables with the highest cos2 are drawn. \item 
-contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
-the highest contrib are drawn }}
+then the top 5 individuals/variables with the highest cos2 are drawn. \item
+contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with
+the highest contrib are drawn \item union: logical. When several of
+name/cos2/contrib are given, FALSE (default) combines them with AND (each
+condition further narrows the selection); TRUE combines them with OR (an
+element is kept if it matches any condition), e.g. named items \emph{plus}
+the top-cos2 ones. }}
 
 \item{quanti.sup}{logical. If \code{TRUE}, the supplementary quantitative
 variables of a FactoMineR \code{\link[FactoMineR]{MCA}} are overlaid on the

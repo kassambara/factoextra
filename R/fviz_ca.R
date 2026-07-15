@@ -56,8 +56,12 @@ NULL
 #'  \itemize{ \item name is a character vector containing column/row names to be
 #'  drawn \item cos2 if cos2 is in [0, 1], ex: 0.6, then columns/rows with a 
 #'  cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, then the top 5 columns/rows with 
-#'  the highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the 
-#'  top 5 columns/rows with the highest contrib are drawn }
+#'  the highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the
+#'  top 5 columns/rows with the highest contrib are drawn \item union: logical.
+#'  When several of name/cos2/contrib are given, FALSE (default) combines them
+#'  with AND (each condition further narrows the selection); TRUE combines them
+#'  with OR (an element is kept if it matches any condition), e.g. named items
+#'  \emph{plus} the top-cos2 ones. }
 #'@param map character string specifying the map type. Allowed options include: 
 #'  "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
 #'  "colgab", "rowgreen" and "colgreen". See details

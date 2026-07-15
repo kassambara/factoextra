@@ -55,7 +55,11 @@ NULL
 #'  if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 
 #'  are drawn. if cos2 > 1, ex: 5, then the top 5 individuals/variables with the
 #'  highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the top 5
-#'  individuals/variables with the highest cos2 are drawn }
+#'  individuals/variables with the highest cos2 are drawn \item union: logical.
+#'  When several of name/cos2/contrib are given, FALSE (default) combines them
+#'  with AND (each condition further narrows the selection); TRUE combines them
+#'  with OR (an element is kept if it matches any condition), e.g. named items
+#'  \emph{plus} the top-cos2 ones. }
 #'@param ... Arguments to be passed to the function fviz()
 #'@param repel a boolean, whether to use ggrepel to avoid overplotting text
 #'  labels or not. The old \code{jitter} argument is kept for backward
@@ -166,12 +170,14 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     ind.partial <- ind.sum$res.partial
     colnames(ind.partial)[3:4] <-  c("x.partial", "y.partial")
     ind.partial <- merge(ind, ind.partial, by = "name")
-    # Selection
+    # Selection (re-applied here only to filter the partial-point overlay; the
+    # user-facing selection + any union message already happened in fviz() above,
+    # so use check = FALSE to stay silent and avoid a duplicate message).
     ind.all <- ind
-    if(!is.null(select.ind)) ind <- .select(ind, select.ind)
+    if(!is.null(select.ind)) ind <- .select(ind, select.ind, check = FALSE)
     if(!is.null(select.partial)) {
       if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
-      ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial)$name, , drop = FALSE]
+      ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial, check = FALSE)$name, , drop = FALSE]
     }
     # elements to be hidden
     hide <- .hide(invisible)
