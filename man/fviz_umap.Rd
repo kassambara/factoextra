@@ -135,9 +135,9 @@ decomposition. In the layout, \strong{tight local neighbourhoods are
 trustworthy}, but the \strong{size} of a cluster, the \strong{distance} between
 well-separated clusters and the amount of empty space between them are not
 quantitatively meaningful and change with the method's \code{perplexity} /
-\code{n_neighbors} settings - read groupings, not geometry. Similar embedding
-scatter plots are drawn by \code{Seurat::DimPlot()} / \code{FeaturePlot()} and
-\code{ggpca}.
+\code{n_neighbors} settings (Wattenberg et al., 2016) - read groupings, not
+geometry. Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
+/ \code{FeaturePlot()} and \code{ggpca}.
 }
 \examples{
 \donttest{
@@ -149,6 +149,13 @@ if (requireNamespace("uwot", quietly = TRUE)) {
   fviz_umap(um, col.ind = iris$Petal.Length)
 }
 }
+}
+\references{
+McInnes, L., Healy, J. and Melville, J. (2018). UMAP: Uniform Manifold
+Approximation and Projection for Dimension Reduction. \emph{arXiv:1802.03426}.
+
+Wattenberg, M., \enc{Viégas}{Viegas}, F. and Johnson, I. (2016). How to Use
+t-SNE Effectively. \emph{Distill}. \doi{10.23915/distill.00002}.
 }
 \seealso{
 \code{\link{fviz_pca}}, \code{\link{as_factoextra_pca}},
