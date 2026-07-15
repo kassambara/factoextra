@@ -1,6 +1,13 @@
 # factoextra 2.1.0.9000
 
-* Development version.
+## New features
+
+* `fviz_nbclust()` and `fviz_gap_stat()` gain a `mark_optimal` argument. Set
+  `mark_optimal = TRUE` to mark the elbow of the `"wss"` plot with a dashed guide
+  line (a deterministic maximum-distance heuristic; see `?fviz_nbclust`);
+  `mark_optimal = FALSE` omits the optimal-cluster guide line for every method.
+  The default (`NULL`) keeps each method's existing behavior: the guide line is
+  shown for `"silhouette"` and `"gap_stat"` and omitted for `"wss"`.
 
 # factoextra 2.1.0
 

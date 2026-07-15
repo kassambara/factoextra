@@ -97,6 +97,51 @@ test_that("fviz_nbclust wss handles clustering helpers that reject k = 1", {
   expect_false(anyNA(p_hkmeans$data$y))
 })
 
+test_that("fviz_nbclust wss is unmarked by default; mark_optimal = TRUE marks the elbow", {
+  x <- scale(iris[, 1:4])
+  vline_x <- function(p) {
+    L <- Filter(function(l) inherits(l$geom, "GeomVline"), p$layers)
+    if (!length(L)) return(numeric(0))
+    L[[1]]$data$xintercept
+  }
+
+  set.seed(123); p_default <- fviz_nbclust(x, stats::kmeans, method = "wss", nstart = 25)
+  set.seed(123); p_marked  <- fviz_nbclust(x, stats::kmeans, method = "wss", nstart = 25,
+                                           mark_optimal = TRUE)
+
+  # Default (mark_optimal = NULL) leaves the wss plot unmarked -- unchanged output.
+  expect_length(vline_x(p_default), 0)
+  # Opt in: a dashed guide marks the elbow at k = 3 (levels "1".."10", position == k).
+  expect_equal(vline_x(p_marked), 3)
+  expect_equal(levels(p_marked$data$clusters)[vline_x(p_marked)], "3")
+  # Marking is a presentation layer only: the underlying data is identical.
+  expect_equal(p_default$data, p_marked$data)
+})
+
+test_that("fviz_nbclust silhouette/gap keep their default mark; mark_optimal = FALSE removes it (no-regression)", {
+  x <- scale(iris[, 1:4])
+  has_vline <- function(p) any(vapply(p$layers, function(l) inherits(l$geom, "GeomVline"), logical(1)))
+
+  set.seed(123); sil_on  <- fviz_nbclust(x, stats::kmeans, method = "silhouette")
+  set.seed(123); sil_off <- fviz_nbclust(x, stats::kmeans, method = "silhouette", mark_optimal = FALSE)
+  expect_true(has_vline(sil_on))    # unchanged default
+  expect_false(has_vline(sil_off))  # new suppression
+
+  set.seed(123)
+  gs <- cluster::clusGap(x, FUN = stats::kmeans, nstart = 5, K.max = 4, B = 5)
+  expect_true(has_vline(fviz_gap_stat(gs)))                        # unchanged default
+  expect_false(has_vline(fviz_gap_stat(gs, mark_optimal = FALSE))) # new suppression
+})
+
+test_that(".wss_elbow locates the elbow and returns NA when undefined", {
+  expect_equal(factoextra:::.wss_elbow(1:10, c(596, 221, 139, 114, 90, 81, 72, 65, 56, 53)), 3)
+  expect_true(is.na(factoextra:::.wss_elbow(1:2, c(10, 5))))            # < 3 points
+  expect_true(is.na(factoextra:::.wss_elbow(1:5, rep(4, 5))))           # flat curve
+  expect_true(is.na(factoextra:::.wss_elbow(1:5, c(10, 8, 6, 4, 2))))   # straight line: no elbow
+  expect_true(is.na(factoextra:::.wss_elbow(1:5, c(10, 8, NA, 4, 2))))  # non-finite value
+  expect_equal(factoextra:::.wss_elbow(1:3, c(10, 3, 1)), 2)           # 3 points
+})
+
 test_that("fviz_nbclust gap_stat continues to support hcut", {
   set.seed(123)
   x <- scale(iris[, 1:4])
