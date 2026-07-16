@@ -551,13 +551,25 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if (!dendextend::is.dendrogram(dend)) stop("x is not a dendrogram object.")
   if (length(h) > 1L || length(k) > 1L) 
     stop("'k' and 'h' must be a scalar(i.e.: of length 1)")
+  if(!is.null(k)){
+    n_leaves <- length(stats::order.dendrogram(dend))
+    k <- .coerce_integerish(
+      k, "k", lower = 1L, upper = n_leaves,
+      value_label = "single integer value"
+    )
+  }
   tree_heights <- dendextend::heights_per_k.dendrogram(dend)[-1]
   tree_order <- stats::order.dendrogram(dend)
   if (!is.null(h)) {
     if (!is.null(k)) 
       stop("specify exactly one of 'k' and 'h'")
-    ss_ks <- tree_heights < h
-    k <- min(as.numeric(names(ss_ks))[ss_ks])
+    if (!is.numeric(h) || length(h) != 1L || is.na(h) || !is.finite(h))
+      stop("'h' must be a single finite numeric value", call. = FALSE)
+    candidate_k <- as.numeric(names(tree_heights))[tree_heights < h]
+    if (!length(candidate_k))
+      stop("'h' is at or below the lowest merge height; increase 'h'",
+           call. = FALSE)
+    k <- min(candidate_k)
     k <- max(k, 2)
   }
   k
@@ -605,10 +617,10 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   tree_order <- stats::order.dendrogram(dend)
   
   if (is.null(k)) stop("specify k")
-  if (k < 2) {
-      stop(gettextf("k must be between 2 and %d", length(tree_heights)), 
-              domain = NA)
-  }
+  k <- .coerce_integerish(
+    k, "k", lower = 2L, upper = length(tree_order),
+    value_label = "single integer value"
+  )
 
   cluster <- dendextend::cutree(dend, k = k)
   clustab <- table(cluster)[unique(cluster[tree_order])]

@@ -163,3 +163,13 @@ test_that("k.max and partial maxSE lists honor their documented contracts", {
     fake_gap, maxSE = list(method = "firstmax", SE.factor = 1)
   )), 2)
 })
+
+test_that("fviz_dend validates k against the number of leaves", {
+  hc <- hclust(dist(matrix(seq_len(15), nrow = 5)))
+  expect_s3_class(fviz_dend(hc, k = 5, rect = TRUE), "ggplot")
+  expect_error(fviz_dend(hc, k = 6), "in \\[1, 5\\]")
+  expect_error(fviz_dend(hc, k = 2.5), "single integer value")
+  expect_error(fviz_dend(hc, k = NA_real_), "single integer value")
+  expect_error(fviz_dend(hc, k = 1, rect = TRUE), "in \\[2, 5\\]")
+  expect_s3_class(fviz_dend(hc, k = 1), "ggplot")
+})

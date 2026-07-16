@@ -17,6 +17,19 @@ test_that("hcut validates k and scaled inputs", {
   )
 })
 
+test_that("fviz_dend validates height cuts before deriving k", {
+  dend <- stats::as.dendrogram(stats::hclust(stats::dist(USArrests)))
+  lowest <- min(dendextend::heights_per_k.dendrogram(dend)[-1])
+
+  expect_error(
+    factoextra:::.get_k(dend, h = lowest - 1),
+    "at or below the lowest merge height"
+  )
+  expect_error(factoextra:::.get_k(dend, h = NA_real_), "finite numeric")
+  expect_error(factoextra:::.get_k(dend, h = Inf), "finite numeric")
+  expect_error(factoextra:::.get_k(dend, h = "1"), "finite numeric")
+})
+
 test_that("hcut requires dist input when isdiss is TRUE", {
   x <- iris[, 1:4]
   bad_dist <- stats::as.dist(matrix(c(
