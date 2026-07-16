@@ -91,10 +91,41 @@ test_that("fviz_dend applies lwd to branch segments without adding a linewidth g
 
 test_that("fviz_pca_biplot supports form and covariance scaling modes", {
   res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
-  p_form <- fviz_pca_biplot(res.pca, biplot.type = "form")
-  p_cov <- fviz_pca_biplot(res.pca, biplot.type = "covariance")
+  p_form <- fviz_pca_biplot(
+    res.pca, biplot.type = "form", geom.ind = "point",
+    geom.var = "arrow", label = "none"
+  )
+  p_cov <- fviz_pca_biplot(
+    res.pca, biplot.type = "covariance", geom.ind = "point",
+    geom.var = "arrow", label = "none"
+  )
   expect_s3_class(p_form, "ggplot")
   expect_s3_class(p_cov, "ggplot")
+
+  layer_data <- function(p, geom){
+    layer <- Filter(function(x) inherits(x$geom, geom), p$layers)[[1]]
+    as.data.frame(layer$data)[, c("x", "y"), drop = FALSE]
+  }
+  expect_equal(
+    unname(as.matrix(layer_data(p_form, "GeomPoint"))),
+    unname(res.pca$x[, 1:2]), tolerance = 1e-12
+  )
+  expect_equal(
+    unname(as.matrix(layer_data(p_form, "GeomSegment"))),
+    unname(res.pca$rotation[, 1:2]), tolerance = 1e-12
+  )
+
+  lambda <- sqrt(nrow(res.pca$x)) * res.pca$sdev[1:2]
+  expect_equal(
+    unname(as.matrix(layer_data(p_cov, "GeomPoint"))),
+    unname(sweep(res.pca$x[, 1:2], 2, lambda, "/")),
+    tolerance = 1e-12
+  )
+  expect_equal(
+    unname(as.matrix(layer_data(p_cov, "GeomSegment"))),
+    unname(sweep(res.pca$rotation[, 1:2], 2, lambda, "*")),
+    tolerance = 1e-12
+  )
 })
 
 test_that("fviz_eig parallel analysis is reproducible with parallel.seed", {

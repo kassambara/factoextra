@@ -92,10 +92,12 @@
 #' @param biplot.type type of biplot scaling for fviz_pca_biplot(). Options are:
 #'   \itemize{
 #'     \item "auto" (default): Uses range-based rescaling for visualization
-#'     \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
-#'       readability of individual relationships.
-#'     \item "covariance": Covariance-oriented scaling (Gabriel-style).
-#'       Prioritizes readability of variable relationships.
+#'     \item "form": Gabriel form biplot scaling (equivalent to
+#'       \code{stats::biplot(..., scale = 0)}), preserving the score geometry
+#'       used to compare individuals.
+#'     \item "covariance": Gabriel covariance biplot scaling (equivalent to
+#'       \code{stats::biplot(..., scale = 1)}), preserving the variable
+#'       covariance geometry.
 #'   }
 #'   Note: "form" and "covariance" scaling requires prcomp or princomp objects.
 #' @inheritParams ggpubr::ggpar
@@ -279,31 +281,48 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
   colnames(ind)<- c("x", "y")
   
-  # Rescale variable coordinates based on biplot.type
-
-  # Heuristic Gabriel-style scaling choices for improved readability.
+  # Rescale both score and loading coordinates according to Gabriel's biplot
+  # factorization. The default auto mode retains factoextra's historical
+  # range-based display scaling.
+  plot_X <- X
+  var_scale <- NULL
   if(biplot.type == "form" || biplot.type == "covariance") {
-    # Get eigenvalues (singular values squared for scaling)
-    if(inherits(X, "prcomp")) {
-      sdev <- X$sdev[axes]
-    } else if(inherits(X, "princomp")) {
-      sdev <- X$sdev[axes]
-    } else {
+    if(!inherits(X, c("prcomp", "princomp"))) {
       # Fall back to auto for other object types
       warning("biplot.type 'form' or 'covariance' requires prcomp/princomp objects. Using 'auto'.")
       biplot.type <- "auto"
-    }
+    } else {
+      sdev <- as.numeric(X$sdev)
+      if(any(!is.finite(sdev[axes])) || any(sdev[axes] <= 0))
+        stop("The selected axes must have positive finite standard deviations for ",
+             "form/covariance biplot scaling.", call. = FALSE)
 
-    if(biplot.type == "form") {
-      # Form biplot (scale=0): preserves distances between individuals
-      # Variables are scaled down, individuals keep their scores
-      r <- 1 / max(abs(var[, c("x", "y")])) * 0.8 * max(abs(ind[, c("x", "y")]))
-    } else if(biplot.type == "covariance") {
-      # Covariance biplot (scale=1): preserves correlations between variables
-      # Variables scaled by sqrt(n) * sdev, individuals scaled down
-      n_obs <- nrow(ind)
-      # Scale factor to make variable vectors meaningful while keeping individuals visible
-      r <- sqrt(n_obs) * 0.15
+      pca.var <- get_pca_var(X)
+      display_ind <- pca.ind$coord
+      display_var <- pca.var$coord
+      if(biplot.type == "form") {
+        # scale = 0: score coordinates and unscaled loading vectors.
+        display_var[, axes] <- sweep(
+          display_var[, axes, drop = FALSE], 2, sdev[axes], "/"
+        )
+      } else {
+        # scale = 1: scores divided by sqrt(n)*sdev and loadings multiplied
+        # by the same factor.
+        lambda <- sqrt(nrow(display_ind)) * sdev[axes]
+        display_ind[, axes] <- sweep(
+          display_ind[, axes, drop = FALSE], 2, lambda, "/"
+        )
+        display_var[, axes] <- sweep(
+          display_var[, axes, drop = FALSE], 2, sqrt(nrow(display_ind)), "*"
+        )
+      }
+      plot_X <- as_factoextra_pca(
+        ind.coord = display_ind, var.coord = display_var, eig = X$sdev^2,
+        ind.cos2 = pca.ind$cos2, ind.contrib = pca.ind$contrib,
+        var.cos2 = pca.var$cos2, var.contrib = pca.var$contrib,
+        var.cor = pca.var$cor, scale.unit = FALSE
+      )
+      var_scale <- 1
     }
   }
 
@@ -315,6 +334,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
     valid_ratios <- c(ratio_x, ratio_y)
     valid_ratios <- valid_ratios[is.finite(valid_ratios) & valid_ratios > 0]
     r <- if(length(valid_ratios) > 0) min(valid_ratios) else 1
+    var_scale <- r * 0.7
   }
   
   # When fill.ind = grouping variable & col.var = continuous variable,
@@ -329,17 +349,17 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   
   # Individuals
-  p <- fviz_pca_ind(X,  axes = axes, geom = geom.ind, repel = repel,
+  p <- fviz_pca_ind(plot_X,  axes = axes, geom = geom.ind, repel = repel,
                     col.ind = col.ind, fill.ind = fill.ind, shape.ind = shape.ind,
                     label = label, invisible=invisible, habillage = habillage,
                     addEllipses = addEllipses, # palette = palette,
                     ellipse.border.remove = ellipse.border.remove,
                     ...)
   # Add variables
-  p <- fviz_pca_var(X, axes = axes, geom =  geom.var, repel = repel,
+  p <- fviz_pca_var(plot_X, axes = axes, geom =  geom.var, repel = repel,
                     col.var = col.var, fill.var = fill.var,
                     label = label, invisible = invisible,
-                    scale.= r*0.7, ggp = p,  ...)
+                    scale.= var_scale, ggp = p,  ...)
   
   if(!is.null(gradient.cols)){
     if(is.gradient.color) p <- p + ggpubr::gradient_color(gradient.cols)

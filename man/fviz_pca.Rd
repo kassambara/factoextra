@@ -197,10 +197,12 @@ Default value is "none". Allowed values are the combination of c("ind",
 \item{biplot.type}{type of biplot scaling for fviz_pca_biplot(). Options are:
 \itemize{
   \item "auto" (default): Uses range-based rescaling for visualization
-  \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
-    readability of individual relationships.
-  \item "covariance": Covariance-oriented scaling (Gabriel-style).
-    Prioritizes readability of variable relationships.
+  \item "form": Gabriel form biplot scaling (equivalent to
+    \code{stats::biplot(..., scale = 0)}), preserving the score geometry
+    used to compare individuals.
+  \item "covariance": Gabriel covariance biplot scaling (equivalent to
+    \code{stats::biplot(..., scale = 1)}), preserving the variable
+    covariance geometry.
 }
 Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }
