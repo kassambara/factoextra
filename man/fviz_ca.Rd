@@ -113,7 +113,7 @@ with OR (an element is kept if it matches any condition), e.g. named items
 \emph{plus} the top-cos2 ones. }}
 
 \item{label}{a character vector specifying the elements to be labelled. 
-Default value is "all". Allowed values are "none" or the combination of 
+Default value is "all". Allowed values are "all", "none", or a combination of
 c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
 variables; "col.sup" to label only supplementary columns; etc}
 

@@ -29,7 +29,7 @@ NULL
 #'   respectively. Default is geom.row = c("point", "text), geom.col =
 #'   c("point", "text").
 #'@param label a character vector specifying the elements to be labelled. 
-#'  Default value is "all". Allowed values are "none" or the combination of 
+#'  Default value is "all". Allowed values are "all", "none", or a combination of
 #'  c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
 #'  variables; "col.sup" to label only supplementary columns; etc
 #'@param invisible a character value specifying the elements to be hidden on the

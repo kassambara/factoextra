@@ -63,7 +63,7 @@ value is "auto". Allowed values are the combination of c("point", "arrow",
 c("point", "text") or c("arrow", "text") to show both types.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
-"all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+"all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only 
 active individuals. "ind.sup" is for supplementary individuals. "quali" is 
 for supplementary qualitative variables. "var" is for active variables. 

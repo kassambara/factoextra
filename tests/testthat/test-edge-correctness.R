@@ -173,3 +173,28 @@ test_that("fviz_dend validates k against the number of leaves", {
   expect_error(fviz_dend(hc, k = 1, rect = TRUE), "in \\[2, 5\\]")
   expect_s3_class(fviz_dend(hc, k = 1), "ggplot")
 })
+
+test_that("selection warns once about unmatched names without dropping matches", {
+  d <- data.frame(
+    name = c("a", "b", "c"), cos2 = c(0.9, 0.2, 0.8),
+    contrib = c(5, 3, 1), row.names = c("a", "b", "c")
+  )
+  expect_warning(
+    selected <- factoextra:::.select(
+      d, list(name = c("a", "typo")), check = TRUE
+    ),
+    "Selection name.*typo"
+  )
+  expect_identical(selected$name, "a")
+
+  expect_warning(
+    union <- factoextra:::.select(
+      d, list(name = "typo", cos2 = 0.8, union = TRUE), check = TRUE
+    ),
+    "Selection name.*typo"
+  )
+  expect_identical(union$name, c("a", "c"))
+  expect_silent(factoextra:::.select(
+    d, list(name = "typo"), check = FALSE
+  ))
+})

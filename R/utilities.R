@@ -654,16 +654,24 @@ NULL
 # - name: is a character vector containing row names of interest
 # - cos2: if cos2 is in [0, 1], ex: 0.6, then rows with a cos2 > 0.6 are extracted.
 #   if cos2 > 1, ex: 5, then the top 5 rows with the highest cos2 are extracted
-# - contrib: if contrib > 1, ex: 5,  then the top 5 rows with the highest cos2 are extracted
+# - contrib: if contrib > 1, ex: 5, then the top 5 rows with the highest contributions are extracted
 # - union: logical. When several of name/cos2/contrib are supplied, FALSE (default) combines
 #   them with AND (each condition narrows the survivors of the previous one - the historical
 #   behavior); TRUE combines them with OR (an element is kept if it matches ANY condition).
 #   union has an effect only when >= 2 conditions are present; with 0 or 1 condition the AND
 #   path below runs unchanged, so a single-condition selection is byte-identical to before.
 # check: if TRUE, check the data after filtering
-.select <- function(d, filter = NULL, check= TRUE){
+.select <- function(d, filter = NULL, check = TRUE, warn_unmatched = check){
 
   if(!is.null(filter)){
+
+    if(warn_unmatched && !is.null(filter$name)){
+      unmatched <- setdiff(filter$name, d$name)
+      if(length(unmatched))
+        warning("Selection name(s) not found: ",
+                paste0('"', unmatched, '"', collapse = ", "), ".",
+                call. = FALSE)
+    }
 
     # Number of active selection conditions (union is a modifier, not a condition)
     n_cond <- sum(!is.null(filter$name), !is.null(filter$cos2), !is.null(filter$contrib))
@@ -711,7 +719,6 @@ NULL
     if(!is.null(filter$name)){
       name <- filter$name
       common <- intersect(name, d$name)
-      diff <- setdiff(name, d$name)
       d <- d[common, , drop = FALSE]
     }
 

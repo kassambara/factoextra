@@ -164,7 +164,7 @@ dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for
 the supplementary quantitative variables.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
-"all". Allowed values are "none" or the combination of c("ind", 
+"all". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup","var", "quali.sup",  "quanti.sup"). "ind" can be used to label 
 only active individuals. "ind.sup" is for supplementary individuals. "var" 
 is for active variable categories. "quali.sup" is for supplementary 

@@ -9,7 +9,7 @@ NULL
 #'  "text"). Use "point" (to show only points); "text" to show only labels; 
 #'  c("point", "text") or c("arrow", "text") to show both types.
 #'@param label a text specifying the elements to be labelled. Default value is 
-#'  "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+#'  "all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 #'  "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only 
 #'  active individuals. "ind.sup" is for supplementary individuals. "quali" is 
 #'  for supplementary qualitative variables. "var" is for active variables. 
@@ -278,14 +278,41 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Selection
   df.all <- df
+  # Resolve supplementary elements before validating selection names so a name
+  # that belongs only to a supplementary point is not reported as a typo.
+  esup <- .define_element_sup(
+    X, element, geom = geom, lab = lab, hide = hide,
+    col.row.sup = col.row.sup, col.col.sup = col.col.sup, ...
+  )
   if(!is.null(select) && !is.null(select$name) && .factominer_needs_category_map(facto.class, element)){
     select$name <- map_factominer_legacy_names(X, select$name, element = element)
+  }
+  if(!is.null(select) && !is.null(select$name)){
+    valid_selection_names <- as.character(df$name)
+    if(!is.null(esup$name)){
+      for(sup_element in esup$name){
+        sup_data <- tryCatch(
+          .get_supp(X, element = sup_element, axes = axes, result = "coord"),
+          error = function(e) NULL
+        )
+        if(!is.null(sup_data))
+          valid_selection_names <- c(valid_selection_names,
+                                     as.character(sup_data$name))
+      }
+    }
+    unmatched <- unique(setdiff(as.character(select$name),
+                                unique(valid_selection_names)))
+    if(length(unmatched))
+      warning("Selection name(s) not found: ",
+              paste0('"', unmatched, '"', collapse = ", "), ".",
+              call. = FALSE)
   }
   if(!is.null(select) && !is.null(select$contrib) && !("contrib" %in% colnames(df))
      && !isTRUE(select$union)){
     stop("Contributions are not available for element = '", element, "'.")
   }
-  if(!is.null(select)) df <- .select(df, select)
+  if(!is.null(select))
+    df <- .select(df, select, warn_unmatched = FALSE)
   
   # Special cases: data transformation
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -453,8 +480,6 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Supplementary elements: available only for FactoMineR
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   scale. <- ifelse(is.null(extra_args$scale.), 1, extra_args$scale.)
-  esup <- .define_element_sup(X, element, geom = geom, lab = lab, hide = hide,
-                              col.row.sup = col.row.sup, col.col.sup = col.col.sup,...) 
   ca_map = extra_args$map
   if(element == "mca.cor") ca_map = NULL
   

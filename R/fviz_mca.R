@@ -20,7 +20,7 @@ NULL
 #'   respectively. Default is geom.ind = c("point", "text), geom.var =
 #'   c("point", "text").
 #'@param label a text specifying the elements to be labelled. Default value is 
-#'  "all". Allowed values are "none" or the combination of c("ind", 
+#'  "all". Allowed values are "all", "none", or a combination of c("ind",
 #'  "ind.sup","var", "quali.sup",  "quanti.sup"). "ind" can be used to label 
 #'  only active individuals. "ind.sup" is for supplementary individuals. "var" 
 #'  is for active variable categories. "quali.sup" is for supplementary 
@@ -319,4 +319,3 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 fviz_mca <- function(X, ...){
   fviz_mca_biplot(X, ...)
 }
-
