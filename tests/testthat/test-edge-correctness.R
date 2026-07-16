@@ -133,3 +133,33 @@ test_that("embedding dimensions require distinct finite positive integers", {
     ignore_attr = TRUE
   )
 })
+
+test_that("k.max and partial maxSE lists honor their documented contracts", {
+  x <- scale(iris[1:20, 1:4])
+  for(k_max in list(1, NA_real_, Inf, 2.5, c(2, 3))){
+    expect_error(
+      fviz_nbclust(x, stats::kmeans, method = "wss", k.max = k_max),
+      "k.max must be a single integer value"
+    )
+  }
+  expect_s3_class(
+    fviz_nbclust(x, stats::kmeans, method = "wss", k.max = 2,
+                 nstart = 2),
+    "ggplot"
+  )
+
+  fake_gap <- structure(list(Tab = cbind(
+    gap = c(1, 1.5, 1.4), SE.sim = c(0.1, 0.6, 0.1)
+  )), class = "clusGap")
+  vline <- function(p){
+    layer <- Filter(function(x) inherits(x$geom, "GeomVline"), p$layers)[[1]]
+    layer$data$xintercept
+  }
+  expect_equal(vline(fviz_gap_stat(fake_gap)), 1)
+  expect_equal(vline(fviz_gap_stat(
+    fake_gap, maxSE = list(SE.factor = 1)
+  )), 1)
+  expect_equal(vline(fviz_gap_stat(
+    fake_gap, maxSE = list(method = "firstmax", SE.factor = 1)
+  )), 2)
+})

@@ -61,14 +61,14 @@ FUNcluster is a hierarchical clustering function such as one of "hclust",
 \item{hc_method}{the agglomeration method to be used (?hclust): "ward.D", 
 "ward.D2", "single", "complete", "average", ...}
 
-\item{gap_maxSE}{a list containing the parameters (method and SE.factor) for 
-determining the location of the maximum of the gap statistic (Read the 
-documentation ?cluster::maxSE).}
+\item{gap_maxSE}{a list containing the \code{method} and \code{SE.factor}
+parameters passed to \code{\link[cluster]{maxSE}}. The default is
+\code{list(method = "firstSEmax", SE.factor = 1)}.}
 
 \item{nboot}{integer, number of Monte Carlo ("bootstrap") samples. Used only 
-for determining the number of clusters using gap statistic.}
+for determining the number of clusters using the gap statistic.}
 
-\item{verbose}{logical value. If TRUE, the result of progress is printed.}
+\item{verbose}{logical value. If TRUE, progress information is printed.}
 
 \item{seed}{integer used for seeding the random number generator.}
 
@@ -86,7 +86,7 @@ Returns an object of class "eclust" containing the result of the
   width of each cluster) and $avg.width (average width of all clusters)
   \item size: the size of clusters \item data: a matrix containing the
   original or the standardized data (if stand = TRUE) } The "eclust" class
-  has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
+  has methods for fviz_silhouette(), fviz_dend(), and fviz_cluster().
 }
 \description{
 Provides a convenient workflow for clustering analyses and
