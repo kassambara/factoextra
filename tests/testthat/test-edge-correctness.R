@@ -54,3 +54,48 @@ test_that("fviz_cluster aligns exact named assignments and rejects ambiguity", {
   )
   expect_true(all(as.character(both_plot$data$cluster) == "1"))
 })
+
+test_that("Hopkins sampling is finite, duplicate-aware, and fail-closed", {
+  old_warn <- getOption("factoextra.warn_hopkins", TRUE)
+  old_cells <- getOption("factoextra.hopkins.max_matrix_cells", 2e7)
+  on.exit(options(factoextra.warn_hopkins = old_warn,
+                  factoextra.hopkins.max_matrix_cells = old_cells), add = TRUE)
+  options(factoextra.warn_hopkins = FALSE)
+
+  for(limit in c(1, 1e9)){
+    options(factoextra.hopkins.max_matrix_cells = limit)
+    out <- get_clust_tendency(iris[, 1:4], n = 1, graph = FALSE, seed = 4)
+    expect_true(is.finite(out$hopkins_stat))
+    expect_true(out$hopkins_stat >= 0 && out$hopkins_stat <= 1)
+  }
+
+  expect_error(
+    get_clust_tendency(matrix(c(1, Inf, 2, 3), ncol = 2), 1,
+                        graph = FALSE),
+    "finite values"
+  )
+  expect_error(get_clust_tendency(iris[, 1:4], Inf, graph = FALSE),
+               "positive integer")
+  expect_error(
+    get_clust_tendency(matrix(1, nrow = 4, ncol = 2), 2,
+                        graph = FALSE, seed = 1),
+    "undefined"
+  )
+
+  duplicate_data <- matrix(c(0, 0, 1, 1), ncol = 1)
+  duplicate_out <- get_clust_tendency(
+    duplicate_data, n = 2, graph = FALSE, seed = 8
+  )
+  expect_equal(duplicate_out$hopkins_stat, 1)
+  set.seed(903)
+  sampled <- factoextra:::.sample_hopkins_rows(10, 9)
+  expect_length(sampled, 9)
+  expect_equal(length(unique(sampled)), 9)
+
+  set.seed(902)
+  high_dimensional <- matrix(rnorm(20 * 200, sd = 1e6), nrow = 20)
+  high_dimensional_out <- get_clust_tendency(
+    high_dimensional, n = 5, graph = FALSE, seed = 9
+  )
+  expect_true(is.finite(high_dimensional_out$hopkins_stat))
+})

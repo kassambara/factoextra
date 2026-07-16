@@ -62,7 +62,10 @@ test_that("get_clust_tendency validates numeric data and n", {
   bad_x <- as.matrix(data.frame(a = letters[1:5], b = letters[1:5]))
   expect_error(get_clust_tendency(bad_x, n = 2, graph = FALSE), "numeric")
   expect_error(get_clust_tendency(iris[, 1:4], n = 0, graph = FALSE), "positive integer")
-  expect_error(get_clust_tendency(iris[, 1:4], n = nrow(iris), graph = FALSE), "no larger")
+  expect_error(
+    get_clust_tendency(iris[, 1:4], n = nrow(iris), graph = FALSE),
+    "smaller than the number of complete samples"
+  )
 
   x_na <- matrix(c(1, 2, NA, NA), ncol = 2)
   expect_error(get_clust_tendency(x_na, n = 1, graph = FALSE), "at least two complete rows")
