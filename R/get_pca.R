@@ -11,7 +11,8 @@ NULL
 #' \item get_pca_var(): Extract the results for variables only
 #' }
 #' @param res.pca an object of class PCA [FactoMineR]; 
-#' prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].
+#' \code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
+#' pca, dudi [adea4]; epPCA [ExPosition].
 #' @param element the element to subset from the output. Allowed values are 
 #' "var" (for active variables) or "ind" (for active individuals).
 #' @param ... not used
@@ -21,6 +22,9 @@ NULL
 #' \item{contrib}{contributions of the individuals/variables; contributions to
 #' each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
 #' contains zeros}
+#' \item{cor}{loading-times-component-standard-deviation coordinates for PCA
+#' objects from \code{stats}; these equal variable-component correlations when
+#' the input variables were standardized. Returned for variables.}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.sthda.com/english/}
 #' @examples

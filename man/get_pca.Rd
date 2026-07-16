@@ -14,7 +14,8 @@ get_pca_var(res.pca)
 }
 \arguments{
 \item{res.pca}{an object of class PCA [FactoMineR]; 
-prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].}
+\code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
+pca, dudi [adea4]; epPCA [ExPosition].}
 
 \item{element}{the element to subset from the output. Allowed values are 
 "var" (for active variables) or "ind" (for active individuals).}
@@ -28,6 +29,9 @@ a list of matrices containing all the results for the active individuals/variabl
 \item{contrib}{contributions of the individuals/variables; contributions to
 each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
 contains zeros}
+\item{cor}{loading-times-component-standard-deviation coordinates for PCA
+objects from \code{stats}; these equal variable-component correlations when
+the input variables were standardized. Returned for variables.}
 }
 \description{
 Extract all the results (coordinates, squared cosines, and contributions) for

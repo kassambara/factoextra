@@ -99,12 +99,15 @@ workflow, \code{workflows::extract_mold()}), the loadings from
 \code{tidy(step, type = "coef")}, and the \emph{full} set of eigenvalues from
 \code{tidy(step, type = "variance")} (so the scree plot and axis percentages are
 honest even when \code{num_comp} keeps only a few components). Variable
-coordinates are the true variable-component correlations (loading times the
-square root of the eigenvalue), and \code{scale.unit} is set to \code{TRUE} when
-a \code{step_normalize()}/\code{step_scale()} precedes the PCA, so the
-correlation circle is drawn only when it is meaningful. Variable coordinates,
-cos2 and contributions, and the eigenvalue percentages, match a full
-\code{FactoMineR::PCA()} of the same (scaled) data regardless of how many
+coordinates are loading times the square root of the eigenvalue. Exact
+variable-component correlations and cos2 are recovered from the full PCA
+inertia when every PCA input is provably centered. Uncentered recipe PCA is
+rejected because Pearson correlations cannot be recovered from its fitted
+\code{step_pca()} object. \code{scale.unit} is set to \code{TRUE} only when every
+PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
+therefore does not draw a correlation circle. For fully normalized data,
+variable coordinates, correlations, cos2 and contributions, and the eigenvalue
+percentages match a full \code{FactoMineR::PCA()} regardless of how many
 components \code{step_pca()} keeps; the \emph{individual} cos2 is computed over
 the retained components (it equals the full-space cos2 only when all components
 are kept). The two-dimensional plots (\code{fviz_pca_ind()},
@@ -126,8 +129,9 @@ fviz_eig(obj)
 pca <- prcomp(iris[, -5], scale. = TRUE)
 obj2 <- as_factoextra_pca(
   ind.coord = pca$x,
-  var.coord = pca$rotation,
-  eig       = pca$sdev^2
+  var.coord = sweep(pca$rotation, 2, pca$sdev, "*"),
+  eig       = pca$sdev^2,
+  scale.unit = TRUE
 )
 fviz_pca_biplot(obj2, label = "var", col.ind = "steelblue")
 

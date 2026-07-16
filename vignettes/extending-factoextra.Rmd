@@ -48,11 +48,11 @@ variable coordinates/loadings (`var.coord`) and eigenvalues (`eig`). Squared
 cosines and contributions are derived from the coordinates when you don't supply
 them.
 
-Here we *illustrate* it with a base-R PCA (`stats::prcomp()`) — passing its
-scores, loadings and eigenvalues through the constructor reproduces a standard
-factoextra biplot:
+Here we illustrate it with a base-R PCA (`stats::prcomp()`). Passing its scores,
+variable-component correlations, and eigenvalues through the constructor
+reproduces the standard factoextra PCA representation:
 
-```{r quick-start-prcomp}
+```{r quick-start-prcomp, eval=TRUE, fig.alt="PCA biplot, scree plot, and contribution plot created through the factoextra constructor"}
 library(factoextra)
 
 # A base-R PCA (any analysis that yields coordinates would do)
@@ -60,9 +60,10 @@ pca <- prcomp(iris[, -5], scale. = TRUE)
 
 # Wrap the coordinates into a factoextra-ready object
 res <- as_factoextra_pca(
-  ind.coord = pca$x,         # individual scores  (n x k)
-  var.coord = pca$rotation,  # variable loadings  (p x k)
-  eig       = pca$sdev^2     # eigenvalues        (optional)
+  ind.coord = pca$x,
+  var.coord = sweep(pca$rotation, 2, pca$sdev, "*"),
+  eig       = pca$sdev^2,
+  scale.unit = TRUE
 )
 
 # Now the full fviz_pca_* family works on `res`

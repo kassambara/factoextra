@@ -79,8 +79,9 @@ NULL
 #' pca <- prcomp(iris[, -5], scale. = TRUE)
 #' obj2 <- as_factoextra_pca(
 #'   ind.coord = pca$x,
-#'   var.coord = pca$rotation,
-#'   eig       = pca$sdev^2
+#'   var.coord = sweep(pca$rotation, 2, pca$sdev, "*"),
+#'   eig       = pca$sdev^2,
+#'   scale.unit = TRUE
 #' )
 #' fviz_pca_biplot(obj2, label = "var", col.ind = "steelblue")
 #'
@@ -109,14 +110,31 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
   if(missing(ind.coord) || is.null(ind.coord))
     stop("`ind.coord` is required.", call. = FALSE)
 
+  if(!is.logical(scale.unit) || length(scale.unit) != 1L || is.na(scale.unit))
+    stop("`scale.unit` must be TRUE or FALSE.", call. = FALSE)
+
   ind.coord <- .fe_as_dim_matrix(ind.coord, "ind.coord")
   k <- ncol(ind.coord)
 
   # Eigenvalues: default to the variance of each coordinate column.
-  if(is.null(eig)) eig <- apply(ind.coord, 2, stats::var)
+  if(is.null(eig)) {
+    if(nrow(ind.coord) < 2L)
+      stop("At least two observations are required to infer `eig` from `ind.coord`.",
+           call. = FALSE)
+    eig <- apply(ind.coord, 2, stats::var)
+  }
   if(!is.numeric(eig) || length(eig) < k)
     stop("`eig` must be a numeric vector with at least ", k,
          " value(s) (one per dimension).", call. = FALSE)
+  eig <- as.numeric(eig)
+  if(any(!is.finite(eig)))
+    stop("`eig` must contain finite values only.", call. = FALSE)
+  eig.tol <- sqrt(.Machine$double.eps) * max(abs(eig))
+  if(any(eig < -eig.tol))
+    stop("`eig` must contain non-negative eigenvalues.", call. = FALSE)
+  eig[eig < 0] <- 0
+  if(!any(eig > 0))
+    stop("`eig` must contain at least one positive eigenvalue.", call. = FALSE)
 
   ind <- list(
     coord   = ind.coord,
@@ -140,7 +158,7 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 
   structure(
     list(ind = ind, var = var, eig.values = as.numeric(eig),
-         scale.unit = isTRUE(scale.unit)),
+         scale.unit = scale.unit),
     class = c("factoextra_pca", "list")
   )
 }
@@ -153,12 +171,15 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 #' \code{tidy(step, type = "coef")}, and the \emph{full} set of eigenvalues from
 #' \code{tidy(step, type = "variance")} (so the scree plot and axis percentages are
 #' honest even when \code{num_comp} keeps only a few components). Variable
-#' coordinates are the true variable-component correlations (loading times the
-#' square root of the eigenvalue), and \code{scale.unit} is set to \code{TRUE} when
-#' a \code{step_normalize()}/\code{step_scale()} precedes the PCA, so the
-#' correlation circle is drawn only when it is meaningful. Variable coordinates,
-#' cos2 and contributions, and the eigenvalue percentages, match a full
-#' \code{FactoMineR::PCA()} of the same (scaled) data regardless of how many
+#' coordinates are loading times the square root of the eigenvalue. Exact
+#' variable-component correlations and cos2 are recovered from the full PCA
+#' inertia when every PCA input is provably centered. Uncentered recipe PCA is
+#' rejected because Pearson correlations cannot be recovered from its fitted
+#' \code{step_pca()} object. \code{scale.unit} is set to \code{TRUE} only when every
+#' PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
+#' therefore does not draw a correlation circle. For fully normalized data,
+#' variable coordinates, correlations, cos2 and contributions, and the eigenvalue
+#' percentages match a full \code{FactoMineR::PCA()} regardless of how many
 #' components \code{step_pca()} keeps; the \emph{individual} cos2 is computed over
 #' the retained components (it equals the full-space cos2 only when all components
 #' are kept). The two-dimensional plots (\code{fviz_pca_ind()},
@@ -174,7 +195,8 @@ as_factoextra_pca.recipe <- function(ind.coord, ...){
   .fe_need("recipes")
   ex <- .fe_extract_recipe_pca(ind.coord, scores = NULL)
   as_factoextra_pca.default(ind.coord = ex$scores, var.coord = ex$var.coord,
-                            var.cos2 = ex$var.cos2, eig = ex$eig,
+                            var.cos2 = ex$var.cos2, var.cor = ex$var.cor,
+                            eig = ex$eig,
                             scale.unit = ex$scale.unit)
 }
 
@@ -199,7 +221,8 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   mold <- workflows::extract_mold(wf)
   ex <- .fe_extract_recipe_pca(rec, scores = as.matrix(mold$predictors))
   as_factoextra_pca.default(ind.coord = ex$scores, var.coord = ex$var.coord,
-                            var.cos2 = ex$var.cos2, eig = ex$eig,
+                            var.cos2 = ex$var.cos2, var.cor = ex$var.cor,
+                            eig = ex$eig,
                             scale.unit = ex$scale.unit)
 }
 
@@ -215,7 +238,7 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
 # Extract scores / loadings / eigenvalues from a prepped recipe whose dimension
 # reduction is step_pca(). `scores` may be supplied (fitted-workflow path, from the
 # mold) to avoid bake(new_data = NULL), which fails when the training set was not
-# retained. Returns a list(scores, var.coord, eig, scale.unit).
+# retained. Returns a list(scores, var.coord, var.cor, var.cos2, eig, scale.unit).
 .fe_extract_recipe_pca <- function(rec, scores = NULL){
   if(!isTRUE(recipes::fully_trained(rec)))
     stop("The recipe is not prepped. Call prep() on it first.", call. = FALSE)
@@ -252,23 +275,29 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   load_long <- recipes::tidy(rec, id = st$id, type = "coef")
   all_comp  <- unique(load_long$component)
   all_comp  <- all_comp[order(suppressWarnings(as.integer(gsub("\\D", "", all_comp))))]
+  if(k < 1L || k > length(all_comp))
+    stop("The fitted step_pca() retained an invalid number of components.",
+         call. = FALSE)
   load_comp <- all_comp[seq_len(k)]
   terms <- unique(load_long$terms)
-  loadings <- matrix(NA_real_, nrow = length(terms), ncol = k,
-                     dimnames = list(terms, score_comp))
-  for(j in seq_len(k)){
-    cj <- load_long[load_long$component == load_comp[j], ]
-    loadings[cj$terms, j] <- cj$value
+  full.loadings <- matrix(NA_real_, nrow = length(terms), ncol = length(all_comp),
+                          dimnames = list(terms, all_comp))
+  for(j in seq_along(all_comp)){
+    cj <- load_long[load_long$component == all_comp[j], ]
+    full.loadings[cj$terms, j] <- cj$value
   }
+  loadings <- full.loadings[, seq_len(k), drop = FALSE]
+  colnames(loadings) <- score_comp
 
   # Eigenvalues: the FULL set (all components) for an honest scree / percentages.
   var_long <- recipes::tidy(rec, id = st$id, type = "variance")
   vv  <- var_long[var_long$terms == "variance", , drop = FALSE]
   eig <- vv$value[order(vv$component)]
+  if(length(eig) < ncol(full.loadings))
+    stop("Could not recover the full eigenvalue set from the fitted step_pca().",
+         call. = FALSE)
 
-  # Variable coordinates = variable-component correlations = loading * sqrt(eig)
-  # (matches FactoMineR's var$coord); valid as a correlation circle only when the
-  # predictors were scaled before PCA.
+  # Variable coordinates use the ordinary PCA loading * component-SD definition.
   var.coord <- sweep(loadings, 2, sqrt(eig[seq_len(k)]), "*")
 
   # Scores: from the mold (workflow) or the baked training data (recipe).
@@ -284,19 +313,74 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
     scores <- scores[, score_comp, drop = FALSE]
   }
 
-  # Correlation circle only when a scaling step precedes the PCA.
+  # Correlations require centered PCA inputs. Preprocessing state is tracked in
+  # recipe order and unknown value-changing steps reset the proof; an internal
+  # prcomp center/scale option, when present, is applied at the PCA boundary.
   pca_pos <- which(is_pca)
-  scaled  <- any(vapply(rec$steps[seq_len(pca_pos - 1L)], inherits, logical(1),
-                        c("step_normalize", "step_scale")))
+  prep.state <- .fe_recipe_pca_preprocessing(rec, pca_pos, st)
+  if(!prep.state$centered)
+    stop("The fitted step_pca() used uncentered inputs. Exact variable-component ",
+         "correlations cannot be recovered; add step_center()/step_normalize() ",
+         "or set step_pca(options = list(center = TRUE)).", call. = FALSE)
 
-  # On scaled data a variable is fully represented (its total squared correlation
-  # is 1), so its cos2 on each axis is exactly the squared correlation. Supplying
-  # it makes fviz_pca_var()'s cos2 match FactoMineR at any num_comp, instead of the
-  # default within-retained-subspace normalization.
-  var.cos2 <- if(scaled) var.coord^2 else NULL
+  full.var.coord <- sweep(full.loadings, 2,
+                          sqrt(eig[seq_len(ncol(full.loadings))]), "*")
+  var.inertia <- rowSums(full.var.coord^2)
+  if(any(!is.finite(var.inertia)) || any(var.inertia <= .Machine$double.eps))
+    stop("Variable correlations are undefined for a zero-inertia PCA input.",
+         call. = FALSE)
+  var.cor <- sweep(var.coord, 1, sqrt(var.inertia), "/")
+  var.cos2 <- var.cor^2
 
-  list(scores = scores, var.coord = var.coord, var.cos2 = var.cos2,
-       eig = eig, scale.unit = scaled)
+  unit.tol <- sqrt(.Machine$double.eps)
+  unit.inertia <- all(abs(var.inertia - 1) <= unit.tol * pmax(1, var.inertia))
+  scale.unit <- prep.state$scaled && unit.inertia
+
+  list(scores = scores, var.coord = var.coord, var.cor = var.cor,
+       var.cos2 = var.cos2, eig = eig, scale.unit = scale.unit)
+}
+
+# Prove whether every fitted step_pca() input is centered and unit-scaled at the
+# PCA boundary. Unknown intervening transformations fail closed; a later known
+# center/scale/normalize step can re-establish the relevant property.
+.fe_recipe_pca_preprocessing <- function(rec, pca_pos, pca_step){
+  columns <- unname(pca_step$columns)
+  centered <- stats::setNames(rep(FALSE, length(columns)), columns)
+  scaled <- stats::setNames(rep(FALSE, length(columns)), columns)
+
+  preceding <- rec$steps[seq_len(pca_pos - 1L)]
+  for(step in preceding){
+    if(inherits(step, "step_normalize")){
+      hit <- intersect(columns, intersect(names(step$means), names(step$sds)))
+      centered[hit] <- TRUE
+      scaled[hit] <- TRUE
+    }
+    else if(inherits(step, "step_center")){
+      hit <- intersect(columns, names(step$means))
+      centered[hit] <- TRUE
+    }
+    else if(inherits(step, "step_scale")){
+      hit <- intersect(columns, names(step$sds))
+      is.unit <- is.numeric(step$factor) && length(step$factor) == 1L &&
+        is.finite(step$factor) && abs(step$factor - 1) <= sqrt(.Machine$double.eps)
+      scaled[hit] <- is.unit
+    }
+    else {
+      centered[] <- FALSE
+      scaled[] <- FALSE
+    }
+  }
+
+  internal.center <- pca_step$res$center
+  if(is.numeric(internal.center) && length(internal.center) == length(columns) &&
+     all(is.finite(internal.center))) centered[] <- TRUE
+
+  internal.scale <- pca_step$res$scale
+  if(is.numeric(internal.scale) && length(internal.scale) == length(columns) &&
+     all(is.finite(internal.scale)) && all(internal.scale > 0)) scaled[] <- TRUE
+
+  list(centered = length(columns) > 0L && all(centered),
+       scaled = length(columns) > 0L && all(scaled))
 }
 
 # Coerce coordinates to a numeric matrix with Dim.1..k colnames and row names.
@@ -306,6 +390,8 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
     stop("`", argname, "` must be numeric.", call. = FALSE)
   if(ncol(x) < 1)
     stop("`", argname, "` must have at least one column (dimension).", call. = FALSE)
+  if(any(!is.finite(x)))
+    stop("`", argname, "` must contain finite values only.", call. = FALSE)
   colnames(x) <- paste0("Dim.", seq_len(ncol(x)))
   if(is.null(rownames(x))) rownames(x) <- as.character(seq_len(nrow(x)))
   x
@@ -319,6 +405,8 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   if(!all(dim(x) == dim(coord)))
     stop("`", argname, "` must have the same dimensions as its coordinates (",
          nrow(coord), " x ", ncol(coord), ").", call. = FALSE)
+  if(any(!is.finite(x)))
+    stop("`", argname, "` must contain finite values only.", call. = FALSE)
   colnames(x) <- colnames(coord)
   rownames(x) <- rownames(coord)
   x
