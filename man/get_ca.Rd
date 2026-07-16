@@ -19,7 +19,7 @@ correspondence [MASS].}
 \item{element}{the element to subset from the output. Possible values are "row" or "col".}
 }
 \value{
-a list of matrices containing the results for the active rows/columns including : 
+a list of matrices containing the results for the active rows/columns, including:
 \item{coord}{coordinates for the rows/columns}
 \item{cos2}{cos2 for the rows/columns}
 \item{contrib}{contributions of the rows/columns}

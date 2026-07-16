@@ -42,8 +42,8 @@ Allowed values are "point" or "arrow" or "text"}
 
 \item{linetype}{the linetype to be used when geom ="arrow"}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{font.family}{character vector specifying font family.}

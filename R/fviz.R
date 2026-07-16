@@ -24,8 +24,8 @@ NULL
 #'@param arrow.linetype linetype of the variable arrows (e.g. "solid",
 #'  "dashed", "dotted"). Default is "solid".
 #'@param title the title of the graph
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param habillage an optional factor variable for coloring the observations by 
 #'  groups. Default value is "none". If X is a PCA object from FactoMineR 
@@ -72,8 +72,8 @@ NULL
 #'  \code{fviz_pca_var}, \code{fviz_pca_biplot}).
 #'@param axes.linetype linetype of x and y axes.
 #'@param color color to be used for the specified geometries (point, text). Can 
-#'  be a continuous variable or a factor variable. Possible values include also 
-#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+#'  be a continuous variable or a factor variable. Possible values also include
+#'  "cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 #'  individuals/variables are automatically controlled by their qualities of 
 #'  representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 #'  "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -81,8 +81,8 @@ NULL
 #'@param fill same as the argument \code{color}, but for point fill color. 
 #'  Useful when pointshape = 21, for example.
 #'@param alpha controls the transparency of individual and variable colors, 
-#'  respectively. The value can variate from 0 (total transparency) to 1 (no 
-#'  transparency). Default value is 1. Possible values include also : "cos2", 
+#'  respectively. The value can vary from 0 (total transparency) to 1 (no
+#'  transparency). Default value is 1. Possible values also include "cos2",
 #'  "contrib", "coord", "x" or "y". In this case, the transparency for the 
 #'  individual/variable colors are automatically controlled by their qualities 
 #'  ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x 

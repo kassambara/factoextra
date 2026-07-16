@@ -19,7 +19,7 @@ NULL
 #'   between variables and principal dimensions, and "quanti.sup" for
 #'   quantitative supplementary variables in FactoMineR MCA results.
 #' @return a list of matrices containing the results for the active 
-#'   individuals/variable categories including : \item{coord}{coordinates for 
+#'   individuals/variable categories, including: \item{coord}{coordinates for
 #'   the individuals/variable categories} \item{cos2}{cos2 for the 
 #'   individuals/variable categories} \item{contrib}{contributions of the 
 #'   individuals/variable categories} \item{inertia}{inertia of the 

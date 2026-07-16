@@ -69,7 +69,7 @@ fviz_pca_biplot(
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
-dudi and pca [ade4]; expOutput/epPCA [ExPosition].}
+dudi and pca [ade4]; expoOutput/epPCA [ExPosition].}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_pca_ind() and 
 fviz_pca_var(): Additional arguments are passed to the functions fviz() and
@@ -90,8 +90,8 @@ variables.}
 respectively. Default is geom.ind = c("point", "text), geom.var = 
 c("arrow", "text").}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by
@@ -113,8 +113,8 @@ case a basic color palette is created using the function
 individuals when habillage != "none".}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. Can
-be a continuous variable or a factor variable. Possible values include also
-: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+be a continuous variable or a factor variable. Possible values also include
+"cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 individuals/variables are automatically controlled by their qualities of 
 representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -125,9 +125,9 @@ cos2, contrib, ....), make sure that habillage ="none".}
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var}{controls the transparency of individual and 
-variable colors, respectively. The value can variate from 0 (total 
+variable colors, respectively. The value can vary from 0 (total
 transparency) to 1 (no transparency). Default value is 1. Possible values 
-include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 transparency for the individual/variable colors are automatically 
 controlled by their qualities ("cos2"), contributions ("contrib"), 
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 

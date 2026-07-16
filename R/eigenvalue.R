@@ -16,9 +16,11 @@
 #'  integer-like numeric values while still rejecting fractional inputs.
 #'  
 #'  
-#'@param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
-#'  and princomp [stats]; dudi, pca, coa and acm [ade4]; ca and mjca [ca 
-#'  package].
+#'@param X an object of class PCA, CA, MCA, FAMD, MFA, or HMFA [FactoMineR];
+#'  \code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
+#'  \code{dudi}, \code{pca}, \code{coa}, \code{acm}, \code{between}, or
+#'  \code{within} [ade4]; \code{ca} or \code{mjca} [ca];
+#'  \code{correspondence} [MASS]; or \code{expoOutput} [ExPosition].
 #'@param choice a text specifying the data to be plotted. Allowed values are 
 #'  "variance" or "eigenvalue".
 #'@param geom a text specifying the geometry to be used for the graph. Allowed 

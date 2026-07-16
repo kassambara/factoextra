@@ -15,9 +15,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  # All chunks are illustrative: they document the extension contract rather
-  # than execute backend code, so the vignette builds without any optional
-  # backend package (ExPosition, ade4, vegan, ...) installed.
+  # Backend templates are illustrative by default. The self-contained base-R
+  # quick starts opt in to evaluation below.
   eval = FALSE
 )
 ```
@@ -77,7 +76,7 @@ The same pattern turns the output of any **eigenvalue-based** method factoextra
 doesn't natively know about into elegant biplots — e.g. classical MDS / PCoA
 (coordinates only; supply `var.coord` only if your method has variable loadings):
 
-```{r quick-start-mds}
+```{r quick-start-mds, eval=TRUE, fig.alt="Classical multidimensional-scaling coordinates plotted with factoextra"}
 mds <- stats::cmdscale(dist(scale(mtcars)), k = 3)   # classical MDS (eigen-based)
 fviz_pca_ind(as_factoextra_pca(ind.coord = mds), repel = TRUE)
 ```
@@ -97,7 +96,8 @@ the eigen surface entirely, and default the group outline to a convex hull rathe
 than a confidence ellipse (which would assume a metric the embedding does not
 preserve):
 
-```{r umap-face}
+```{r umap-face, eval=FALSE}
+set.seed(123)
 um <- uwot::umap(iris[, 1:4])
 fviz_umap(um, habillage = iris$Species, addEllipses = TRUE)
 fviz_umap(um, col.ind = iris$Petal.Length)   # colour by a continuous feature value
@@ -159,7 +159,7 @@ frame (see below). Contributions are expressed as **percentages** (note the
 analysis token: `"PCA"`, `"CA"`, `"MCA"`, `"FAMD"`, `"MFA"` or `"HMFA"`. Add one
 `else if` branch before the final `stop()`:
 
-```{r}
+```r
 # inside .get_facto_class()
 else if (inherits(X, "myPCA"))            # your new class
   facto_class <- "PCA"
@@ -168,7 +168,7 @@ else if (inherits(X, "myPCA"))            # your new class
 For a *wrapper* object (a list that carries the real result in a slot), test the
 inner class — this is exactly how ExPosition is handled:
 
-```{r}
+```r
 else if (inherits(X, "expoOutput")) {
   if      (inherits(X$ExPosition.Data, "epCA"))  facto_class <- "CA"
   else if (inherits(X$ExPosition.Data, "epPCA")) facto_class <- "PCA"
@@ -191,7 +191,7 @@ Dim.2            0.914             22.85                       95.81
 You only need to supply the raw eigenvalues; the helper normalizes them to
 percentages and cumulative percentages. Add a branch:
 
-```{r}
+```r
 # inside get_eig(), before the final stop()
 else if (inherits(X, "myPCA"))
   eig <- X$eigenvalues          # a numeric vector of eigenvalues
@@ -200,7 +200,7 @@ else if (inherits(X, "myPCA"))
 If your object already stores a FactoMineR-style `$eig` data frame, it is used
 as-is. The ExPosition branch is a one-liner:
 
-```{r}
+```r
 else if (inherits(X, "expoOutput"))
   eig <- X$ExPosition.Data$eigs
 ```
@@ -215,7 +215,7 @@ templates you can copy.
 `get_pca_ind()` and `get_pca_var()` live in `R/get_pca.R`. The two existing
 templates are `prcomp` (stats) and `dudi` (ade4):
 
-```{r}
+```r
 # get_pca_ind(): stats::prcomp template
 else if (inherits(res.pca, "prcomp")) {
   ind.coord <- res.pca$x
@@ -234,7 +234,7 @@ else if (inherits(res.pca, "pca") && inherits(res.pca, "dudi")) {
 }
 ```
 
-```{r}
+```r
 # get_pca_var(): stats::prcomp template
 else if (inherits(res.pca, "prcomp")) {
   var.cor <- sweep(res.pca$rotation, 2, res.pca$sdev, "*")
@@ -255,7 +255,7 @@ and `contrib` for you, so if you can produce coordinates you are nearly done.
 For CA backends edit `get_ca_row()` and `get_ca_col()` in `R/get_ca.R`, returning
 `$coord`, `$cos2`, `$contrib` and `$inertia` with `Dim.N` columns:
 
-```{r}
+```r
 # get_ca_row(): build the standardized list directly
 else if (inherits(res.ca, "myCA")) {
   coord   <- res.ca$row.coord
@@ -272,7 +272,7 @@ else if (inherits(res.ca, "myCA")) {
 (symmetric / row-/col-principal maps) needs row and column masses. Add a branch
 returning a named numeric vector of masses:
 
-```{r}
+```r
 # inside .get_ca_mass()
 else if (inherits(res.ca, "myCA")) {
   if      (element == "row") mass <- res.ca$row.mass
@@ -290,22 +290,22 @@ Edit `get_mca_ind()` and `get_mca_var()` in `R/get_mca.R`, returning `$coord`,
 ExPosition is the most recent multi-family backend (PCA + CA + MCA) and is the
 best template to study. Every place it is wired in:
 
-| Extension point | Location (file / line) |
-|-----------------|-----------|
-| Class dispatch (wrapper) | `R/utilities.R:103-107` |
-| Eigenvalues | `R/eigenvalue.R:123-124` |
-| `get_pca_ind()` | `R/get_pca.R:92-95` |
-| `get_pca_var()` | `R/get_pca.R:133-139` |
-| `get_ca_col()` | `R/get_ca.R:127-136` |
-| `get_ca_row()` | `R/get_ca.R:213-221` |
-| `.get_ca_mass()` | `R/utilities.R:473-476` |
-| `get_mca_var()` | `R/get_mca.R:120-129` |
-| `get_mca_ind()` | `R/get_mca.R:168-175` |
+| Extension point | Source owner |
+|-----------------|--------------|
+| Class dispatch (wrapper) | `.get_facto_class()` in `R/utilities.R` |
+| Eigenvalues | `get_eig()` in `R/eigenvalue.R` |
+| `get_pca_ind()` | `R/get_pca.R` |
+| `get_pca_var()` | `R/get_pca.R` |
+| `get_ca_col()` | `R/get_ca.R` |
+| `get_ca_row()` | `R/get_ca.R` |
+| `.get_ca_mass()` | `R/utilities.R` |
+| `get_mca_var()` | `R/get_mca.R` |
+| `get_mca_ind()` | `R/get_mca.R` |
 
 For instance the PCA-individual branch simply maps ExPosition's slots onto the
 standardized names:
 
-```{r}
+```r
 # R/get_pca.R — ExPosition epPCA, individuals
 else if (inherits(res.pca, "expoOutput") &&
          inherits(res.pca$ExPosition.Data, "epPCA")) {
@@ -316,7 +316,7 @@ else if (inherits(res.pca, "expoOutput") &&
 
 Once these branches exist, the full ExPosition workflow plots like any other:
 
-```{r}
+```{r exposition-example, eval=FALSE}
 library(ExPosition)
 library(factoextra)
 
@@ -334,7 +334,7 @@ you would add a backend yourself. A constrained ordination is CA-like, so you
 would map vegan's scores onto the CA extractors. **This is a sketch, not a
 supported path** — treat it as a starting point for a contribution:
 
-```{r}
+```r
 # .get_facto_class(): treat an unconstrained CA component as CA
 else if (inherits(X, c("cca", "rda")))
   facto_class <- "CA"
@@ -363,7 +363,7 @@ Mirror the existing smoke tests in
 `tests/testthat/test-ca-backends-smoke.R`. They assert the standardized contract
 holds, which is exactly what a new backend must satisfy:
 
-```{r}
+```r
 test_that("CA extractors work with <your package> outputs", {
   skip_if_not_installed("yourpkg")
   data("housetasks", package = "factoextra")
@@ -386,12 +386,13 @@ absent (backends belong in `Suggests`, never `Imports`).
 
 1. Add the needed `else if` branches: `.get_facto_class()`, `get_eig()`, the
    relevant `get_*()` extractor(s), and `.get_ca_mass()` for CA.
-2. Keep changes **gated** — each new branch only fires for the new class, so all
-   existing backends are byte-identical (factoextra's non-regression policy).
+2. Keep changes **gated** so each new branch only fires for the new class, and
+   add regression tests demonstrating that existing backends retain their
+   documented behavior.
 3. Add a smoke test mirroring `test-ca-backends-smoke.R`, guarded with
    `skip_if_not_installed()`.
 4. Put the backend package in `Suggests` (not `Imports`).
 5. Update `NEWS.md` and open a pull request at
-   <https://github.com/kassambara/factoextra/issues>.
+   <https://github.com/kassambara/factoextra/pulls>.
 
 That's it — no `fviz_*()` changes required.

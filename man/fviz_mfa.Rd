@@ -79,8 +79,8 @@ values are the combination of \code{c("point", "arrow", "text")}. Use
 texts. Using \code{c("arrow", "text")} is sensible only for the graph of 
 variables.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by 
@@ -102,7 +102,7 @@ individuals when habillage != "none".}
 
 \item{col.ind, col.var, col.axes}{color for individuals, variables and col.axes 
 respectively. Can be a continuous variable or a factor variable. Possible
-values include also : "cos2", "contrib", "coord", "x" or "y". In this case,
+values also include "cos2", "contrib", "coord", "x", and "y". In this case,
 the colors for individuals/variables are automatically controlled by their
 qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 ,
 "coord"), x values("x") or y values("y"). To use automatic coloring (by
@@ -111,9 +111,9 @@ cos2, contrib, ....), make sure that habillage ="none".}
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var, alpha.axes}{controls the transparency of individual,
-variable, group and axes colors, respectively. The value can variate from 0 
+variable, group and axes colors, respectively. The value can vary from 0
 (total transparency) to 1 (no transparency). Default value is 1. Possible 
-values include also : "cos2", "contrib", "coord", "x" or "y". In this case, 
+values also include "cos2", "contrib", "coord", "x", and "y". In this case,
 the transparency for individual/variable colors are automatically controlled
 by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
 y^2 , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -132,7 +132,7 @@ a character vector containing individuals/variables to be drawn \item cos2
 if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 
 are drawn. if cos2 > 1, ex: 5, then the top 5 individuals/variables with the
 highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the top 5
-individuals/variables with the highest cos2 are drawn \item union: logical.
+individuals/variables with the highest contributions are drawn \item union: logical.
 When several of name/cos2/contrib are given, FALSE (default) combines them
 with AND (each condition further narrows the selection); TRUE combines them
 with OR (an element is kept if it matches any condition), e.g. named items

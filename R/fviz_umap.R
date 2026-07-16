@@ -58,12 +58,12 @@ NULL
 #' @return a ggplot2 object.
 #'
 #' @details UMAP and t-SNE produce a low-dimensional embedding, not a variance
-#' decomposition. In the layout, \strong{tight local neighbourhoods are
-#' trustworthy}, but the \strong{size} of a cluster, the \strong{distance} between
-#' well-separated clusters and the amount of empty space between them are not
-#' quantitatively meaningful and change with the method's \code{perplexity} /
-#' \code{n_neighbors} settings (Wattenberg et al., 2016) - read groupings, not
-#' geometry. Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
+#' decomposition. Local relationships are often more informative than global
+#' geometry, but both remain method- and parameter-dependent. In particular, the
+#' \strong{size} of a cluster, the \strong{distance} between well-separated
+#' clusters, and the amount of empty space between them are not quantitatively
+#' meaningful and change with \code{perplexity} or \code{n_neighbors}
+#' (Wattenberg et al., 2016). Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
 #' / \code{FeaturePlot()} and \code{ggpca}.
 #'
 #' @references

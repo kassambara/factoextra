@@ -37,9 +37,11 @@ fviz_eig(
 fviz_screeplot(...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
-and princomp [stats]; dudi, pca, coa and acm [ade4]; ca and mjca [ca 
-package].}
+\item{X}{an object of class PCA, CA, MCA, FAMD, MFA, or HMFA [FactoMineR];
+\code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
+\code{dudi}, \code{pca}, \code{coa}, \code{acm}, \code{between}, or
+\code{within} [ade4]; \code{ca} or \code{mjca} [ca];
+\code{correspondence} [MASS]; or \code{expoOutput} [ExPosition].}
 
 \item{choice}{a text specifying the data to be plotted. Allowed values are 
 "variance" or "eigenvalue".}

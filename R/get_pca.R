@@ -10,10 +10,10 @@ NULL
 #' \item get_pca_ind(): Extract the results for individuals only
 #' \item get_pca_var(): Extract the results for variables only
 #' }
-#' @param res.pca an object of class PCA [FactoMineR]; 
-#' \code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca}; \code{pca},
-#' \code{dudi}, \code{between}, or \code{within} [ade4]; or
-#' \code{expoOutput}/\code{epPCA} [ExPosition].
+#' @param res.pca an object of class PCA [FactoMineR]; \code{prcomp} or
+#' \code{princomp} [stats]; \code{factoextra_pca}; \code{pca}, \code{dudi},
+#' \code{between}, or \code{within} [ade4]; or \code{expoOutput}/\code{epPCA}
+#' [ExPosition].
 #' @param element the element to subset from the output. Allowed values are 
 #' "var" (for active variables) or "ind" (for active individuals).
 #' @param ... not used
@@ -134,9 +134,8 @@ get_pca_var<-function(res.pca){
   }
   # stats package
   else if(inherits(res.pca, 'princomp')){
-    # OPTIMIZED: Correlation of variables with the principal component
-    # Using sweep() instead of t(apply()) - much faster for element-wise operations
-    # var.cor[i,j] = loadings[i,j] * sdev[j]
+    # Loading-times-component-standard-deviation coordinates. For standardized
+    # variables these equal the variable-component correlations.
     # unclass() strips the base R "loadings" S3 class so coord/cos2/contrib are
     # returned as plain numeric matrices. Otherwise print.loadings() hides values
     # with |x| < 0.1 (its cutoff) and the result breaks downstream manipulation.
@@ -144,9 +143,8 @@ get_pca_var<-function(res.pca){
     var <- .get_pca_var_results(var.cor)
   }
   else if(inherits(res.pca, 'prcomp')){
-    # OPTIMIZED: Correlation of variables with the principal component
-    # Using sweep() instead of t(apply()) - much faster for element-wise operations
-    # var.cor[i,j] = rotation[i,j] * sdev[j]
+    # Loading-times-component-standard-deviation coordinates. For standardized
+    # variables these equal the variable-component correlations.
     var.cor <- sweep(res.pca$rotation, 2, res.pca$sdev, "*")
     var <- .get_pca_var_results(var.cor)
   }
@@ -175,7 +173,7 @@ get_pca_var<-function(res.pca){
 # ind.coord : coordinates of variables on the principal component
 # pca.center, pca.scale : numeric vectors corresponding to the pca
 # center and scale respectively
-# data : the orignal data used during the pca analysis
+# data : the original data used during the pca analysis
 # eigenvalues : principal component eigenvalues
 #
 # OPTIMIZATION: Replaced apply() loops with vectorized matrix operations

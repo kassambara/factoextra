@@ -1,15 +1,15 @@
 #' Enhanced Visualization of Dendrogram
 #' 
 #' @description Draws easily beautiful dendrograms using either R base plot or 
-#'   ggplot2. Provides also an option for drawing a circular dendrogram and 
-#'   phylogenic trees.
+#'   ggplot2. It also provides options for circular dendrograms and
+#'   phylogenetic-style trees.
 #' @param x an object of class dendrogram, hclust, agnes, diana, hcut, 
 #'   hkmeans or HCPC (FactoMineR).
 #' @param k the number of groups for cutting the tree.
 #' @param h a numeric value. Cut the dendrogram by cutting at height h. (k 
 #'   overrides h)
 #' @param k_colors,palette a vector containing colors to be used for the groups.
-#'   It should contains k number of colors. Allowed values include also "grey" 
+#'   It should contain \code{k} colors. Allowed values also include "grey"
 #'   for grey color palettes; brewer palettes e.g. "RdBu", "Blues", ...;  and 
 #'   scientific journal palettes from ggsci R package, e.g.: "npg", "aaas", 
 #'   "lancet", "jco", "ucscgb", "uchicago", "simpsons" and "rickandmorty".
@@ -28,7 +28,8 @@
 #' @param labels_track_height a positive numeric value for adjusting the room for the 
 #'   labels. Used only when type = "rectangle".
 #' @param repel logical value. Use repel = TRUE to avoid label overplotting when
-#'   type = "phylogenic".
+#'   \code{type = "phylogenic"}. The literal \code{"phylogenic"} value is a
+#'   historical API token retained for compatibility.
 #' @param lwd a numeric value specifying dendrogram branch and rectangle line
 #'   width.
 #' @param highlight an optional character vector of leaf labels; the branches
@@ -40,9 +41,10 @@
 #' @param highlight.lwd line width for the highlighted branches. \code{NULL}
 #'   (default) uses \code{2 * lwd} so the emphasis stands out by thickness
 #'   regardless of colour; set \code{highlight.lwd = lwd} for colour-only emphasis.
-#' @param type type of plot. Allowed values are one of "rectangle",
-#'   "circular", "phylogenic".
-#' @param phylo_layout the layout to be used for phylogenic trees. Default value
+#' @param type type of plot. Allowed values are \code{"rectangle"},
+#'   \code{"circular"}, and the historical compatibility token
+#'   \code{"phylogenic"} for a phylogenetic-style tree.
+#' @param phylo_layout the layout used for phylogenetic-style trees. Default value
 #'   is "layout.auto", which is kept as a compatibility alias for
 #'   \code{"layout_nicely"}. Allowed values include:
 #'   \code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_nicely}},
@@ -56,7 +58,7 @@
 #' @param rect_fill a logical value. If TRUE, fill the rectangle.
 #' @param lower_rect a value of how low should the lower part of the rectangle 
 #'   around clusters. Ignored when rect = FALSE.
-#' @param horiz a logical value. If TRUE, an horizontal dendrogram is drawn.
+#' @param horiz a logical value. If TRUE, a horizontal dendrogram is drawn.
 #' @param cex size of labels
 #' @param main,xlab,ylab main and axis titles
 #' @param sub Plot subtitle. Default is NULL (no subtitle). Set to a character
@@ -135,7 +137,7 @@
 #'    k_colors = c("blue", "green3", "red", "black"),
 #'    label_cols =  km.clust[res.hc$order], cex = 0.6)
 #' 
-#'  # Phylogenic tree layouts support both compatibility aliases and
+#'  # Phylogenetic-style tree layouts support both compatibility aliases and
 #'  # current igraph layout names
 #'  if (requireNamespace("igraph", quietly = TRUE)) {
 #'    fviz_dend(res.hc, type = "phylogenic", phylo_layout = "layout_nicely",
@@ -302,14 +304,16 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                              phylo_layout = "layout.auto", ...){
   
   if (!requireNamespace("igraph", quietly = TRUE)) {
-    stop("igraph package needed for phylogenic tree. Please install it using install.packages('igraph').")
+    stop("The igraph package is required for a phylogenetic-style tree. ",
+         "Install it with install.packages('igraph').")
   }
   
   
   allowed_layouts <- c("layout.auto", "layout_nicely", "layout_with_drl", "layout_as_tree",
                       "layout.gem", "layout_with_gem", "layout.mds", "layout_with_mds", "layout_with_lgl")
   
-  if(!(phylo_layout %in% allowed_layouts)) stop( phylo_layout, " is not supported as layout. ", "Allowed phylogenic layout are: ",
+  if(!(phylo_layout %in% allowed_layouts)) stop(phylo_layout, " is not a supported layout. ",
+                                                "Allowed phylogenetic-style layouts are: ",
                                                 paste( allowed_layouts, collapse = ", "))
   
   layout_func <- switch(phylo_layout,

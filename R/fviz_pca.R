@@ -23,7 +23,7 @@
 #'   \code{\link{fviz_pca_ind}()} and \code{\link{fviz_pca_var}()}.
 #'   
 #' @param X an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
-#'   dudi and pca [ade4]; expOutput/epPCA [ExPosition].
+#'   dudi and pca [ade4]; expoOutput/epPCA [ExPosition].
 #' @param axes a numeric vector of length 2 specifying the dimensions to be 
 #'   plotted.
 #' @param geom a text specifying the geometry to be used for the graph. Allowed 
@@ -53,8 +53,8 @@
 #' @param addEllipses logical value. If TRUE, draws ellipses around the 
 #'   individuals when habillage != "none".
 #' @param col.ind,col.var color for individuals and variables, respectively. Can
-#'   be a continuous variable or a factor variable. Possible values include also
-#'   : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+#'   be a continuous variable or a factor variable. Possible values also include
+#'   "cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 #'   individuals/variables are automatically controlled by their qualities of 
 #'   representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 #'   "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -69,9 +69,9 @@
 #'   to rename the legends.
 #' @param col.ind.sup color for supplementary individuals
 #' @param alpha.ind,alpha.var controls the transparency of individual and 
-#'   variable colors, respectively. The value can variate from 0 (total 
+#'   variable colors, respectively. The value can vary from 0 (total
 #'   transparency) to 1 (no transparency). Default value is 1. Possible values 
-#'   include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+#'   also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 #'   transparency for the individual/variable colors are automatically 
 #'   controlled by their qualities ("cos2"), contributions ("contrib"), 
 #'   coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 

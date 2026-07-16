@@ -28,8 +28,8 @@
 #'@param geom a text specifying the geometry to be used for the graph. Allowed
 #'  values are the combination of c("point", "text"). Use "point" (to show only
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
 #'@param ellipse logical value; if TRUE, draws outline around points of each
@@ -106,13 +106,13 @@
 #' # PAM clustering
 #' # ++++++++++++++++++++
 #' requireNamespace("cluster", quietly = TRUE)
-#' pam.res <- pam(iris.scaled, 3)
+#' pam.res <- cluster::pam(iris.scaled, 3)
 #'  # Visualize pam clustering
 #' fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 #'
 #' # Hierarchical clustering
 #' # ++++++++++++++++++++++++
-#' # Use hcut() which compute hclust and cut the tree
+#' # Use hcut(), which computes hclust and cuts the tree
 #' hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 #' # Visualize dendrogram
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)

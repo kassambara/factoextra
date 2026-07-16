@@ -13,10 +13,10 @@ get_pca_ind(res.pca, ...)
 get_pca_var(res.pca)
 }
 \arguments{
-\item{res.pca}{an object of class PCA [FactoMineR]; 
-\code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca}; \code{pca},
-\code{dudi}, \code{between}, or \code{within} [ade4]; or
-\code{expoOutput}/\code{epPCA} [ExPosition].}
+\item{res.pca}{an object of class PCA [FactoMineR]; \code{prcomp} or
+\code{princomp} [stats]; \code{factoextra_pca}; \code{pca}, \code{dudi},
+\code{between}, or \code{within} [ade4]; or \code{expoOutput}/\code{epPCA}
+[ExPosition].}
 
 \item{element}{the element to subset from the output. Allowed values are 
 "var" (for active variables) or "ind" (for active individuals).}
