@@ -25,10 +25,12 @@ prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].}
 a list of matrices containing all the results for the active individuals/variables including: 
 \item{coord}{coordinates for the individuals/variables}
 \item{cos2}{cos2 for the individuals/variables}
-\item{contrib}{contributions of the individuals/variables}
+\item{contrib}{contributions of the individuals/variables; contributions to
+each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
+contains zeros}
 }
 \description{
-Extract all the results (coordinates, squared cosine, contributions) for 
+Extract all the results (coordinates, squared cosines, and contributions) for
 the active individuals/variables from Principal Component Analysis (PCA) outputs.\cr\cr
 \itemize{
 \item get_pca(): Extract the results for variables and individuals

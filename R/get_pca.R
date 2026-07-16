@@ -3,7 +3,7 @@ NULL
 #' Extract the results for individuals/variables - PCA
 #' 
 #' @description
-#' Extract all the results (coordinates, squared cosine, contributions) for 
+#' Extract all the results (coordinates, squared cosines, and contributions) for
 #' the active individuals/variables from Principal Component Analysis (PCA) outputs.\cr\cr
 #' \itemize{
 #' \item get_pca(): Extract the results for variables and individuals
@@ -18,7 +18,9 @@ NULL
 #' @return a list of matrices containing all the results for the active individuals/variables including: 
 #' \item{coord}{coordinates for the individuals/variables}
 #' \item{cos2}{cos2 for the individuals/variables}
-#' \item{contrib}{contributions of the individuals/variables}
+#' \item{contrib}{contributions of the individuals/variables; contributions to
+#' each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
+#' contains zeros}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.sthda.com/english/}
 #' @examples
@@ -190,7 +192,6 @@ get_pca_var<-function(res.pca){
   ind.coord <- as.matrix(ind.coord)
   data <- as.matrix(data)
 
-  eigenvalues <- eigenvalues[seq_len(ncol(ind.coord))]
   n.ind <- nrow(ind.coord)
   n.dim <- ncol(ind.coord)
 
@@ -215,10 +216,19 @@ get_pca_var<-function(res.pca){
     ind.cos2[positive_d2, ] <- ind.coord.sq[positive_d2, , drop = FALSE] / d2[positive_d2]
   }
 
-  # OPTIMIZED: Compute contributions using vectorized operations
-  # contrib[i,j] = 100 * (1/n) * (coord[i,j]^2 / eigenvalue[j])
-  # Use sweep to divide each column by its eigenvalue
-  ind.contrib <- sweep(ind.coord.sq, 2, eigenvalues, "/") * (100 / n.ind)
+  # Contributions are shares of a component's score sum of squares. This
+  # definition is backend-independent: stats::prcomp() reports eigenvalues with
+  # an (n - 1) divisor whereas stats::princomp() uses n, so dividing by the
+  # backend eigenvalue made prcomp contributions sum to 100 * (n - 1) / n.
+  comp.ss <- colSums(ind.coord.sq)
+  positive.comp <- comp.ss > .Machine$double.eps
+  ind.contrib <- matrix(0, nrow = n.ind, ncol = n.dim)
+  if(any(positive.comp)) {
+    ind.contrib[, positive.comp] <- sweep(
+      ind.coord.sq[, positive.comp, drop = FALSE],
+      2, comp.ss[positive.comp], "/"
+    ) * 100
+  }
 
   # Set column and row names
   dim.names <- paste0("Dim.", 1:n.dim)

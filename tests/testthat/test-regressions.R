@@ -863,7 +863,35 @@ test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regres
     expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
     expect_equal(nrow(ind$coord), nrow(iris))
     expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+    expect_true(all(abs(colSums(ind$contrib) - 100) < 1e-6))
   }
+})
+
+test_that("PCA individual contributions are backend-independent and zero-safe", {
+  x <- iris[, -5]
+  fits <- list(
+    prcomp(x, center = TRUE, scale. = TRUE),
+    prcomp(x, center = TRUE, scale. = FALSE),
+    princomp(x, cor = TRUE),
+    princomp(x, cor = FALSE)
+  )
+  for(fit in fits) {
+    ind <- get_pca_ind(fit)
+    truth <- sweep(ind$coord^2, 2, colSums(ind$coord^2), "/") * 100
+    expect_equal(ind$contrib, truth, tolerance = 1e-10,
+                 ignore_attr = TRUE)
+    expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+                 tolerance = 1e-10)
+  }
+
+  coord <- cbind(nonzero = c(-1, 1), zero = c(0, 0))
+  out <- factoextra:::.get_pca_ind_results(
+    coord, data = cbind(c(-1, 1), c(0, 0)), eigenvalues = c(1, 0),
+    pca.center = c(0, 0), pca.scale = c(1, 1)
+  )
+  expect_true(all(is.finite(out$contrib)))
+  expect_equal(unname(out$contrib[, 2]), c(0, 0))
+  expect_equal(sum(out$contrib[, 1]), 100)
 })
 
 test_that("ade4 between-/within-class PCA (bca/wca) are supported (#126)", {
