@@ -72,6 +72,43 @@ NULL
   force(expr)
 }
 
+.cluster_assignments <- function(object){
+  cluster <- object[["cluster"]]
+  if(is.null(cluster)) cluster <- object[["clustering"]]
+  if(is.null(cluster))
+    stop("The clustering object has no `cluster` or `clustering` assignments.",
+         call. = FALSE)
+  cluster
+}
+
+.align_cluster_assignments <- function(cluster, observation_names, n_obs){
+  if(length(cluster) != n_obs)
+    stop("Cluster assignments and plotted observations do not match in length (",
+         length(cluster), " versus ", n_obs, ").",
+         call. = FALSE)
+
+  cluster_names <- names(cluster)
+  has_cluster_names <- !is.null(cluster_names) && any(nzchar(cluster_names))
+  if(has_cluster_names){
+    if(length(cluster_names) != n_obs || anyNA(cluster_names) ||
+       any(!nzchar(cluster_names)))
+      stop("Cluster assignment names must be complete and non-empty.",
+           call. = FALSE)
+    if(is.null(observation_names) || length(observation_names) != n_obs ||
+       anyNA(observation_names) || any(!nzchar(observation_names)))
+      stop("Named cluster assignments require complete data row names.",
+           call. = FALSE)
+    if(anyDuplicated(cluster_names) || anyDuplicated(observation_names))
+      stop("Cluster and data names must be unique for unambiguous alignment.",
+           call. = FALSE)
+    if(!setequal(cluster_names, observation_names))
+      stop("The cluster names do not match the plotted data row names.",
+           call. = FALSE)
+    cluster <- cluster[observation_names]
+  }
+  cluster
+}
+
 # Pick row indices for a downsampled plot (used by max.points).
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # n          : total number of rows

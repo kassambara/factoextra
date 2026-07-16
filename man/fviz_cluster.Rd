@@ -34,14 +34,17 @@ fviz_cluster(
 )
 }
 \arguments{
-\item{object}{an object of class "partition" created by the functions pam(),
-clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
-[in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
-Possible value are also any list object with data and cluster components
-(e.g.: object = list(data = mydata, cluster = myclust)).}
+\item{object}{an object of class "partition" created by \code{pam()},
+\code{clara()}, or \code{fanny()} [cluster]; "kmeans" [stats]; "dbscan"
+[fpc]; "Mclust" [mclust]; or "hkmeans" or "eclust" [factoextra]. A custom
+list may instead contain \code{data} plus either \code{cluster} or
+\code{clustering}. Named assignments are aligned to unique data row names by
+exact match; unnamed assignments remain positional, and partially named
+assignments are rejected.}
 
-\item{data}{the data that has been used for clustering. Required only when
-object is a class of kmeans or dbscan.}
+\item{data}{the data used for clustering. It is required for kmeans and dbscan
+objects, and for partition or hcut objects fitted from dissimilarities when
+those objects do not retain the original observations.}
 
 \item{choose.vars}{a character vector containing variables to be considered
 for plotting.}
