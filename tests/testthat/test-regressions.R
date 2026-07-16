@@ -1027,6 +1027,26 @@ test_that("get_pca_ind works for ade4 dudi.pca (data.frame $li) (#126)", {
   expect_s3_class(fviz_pca_ind(pca), "ggplot")
 })
 
+test_that("ade4 dudi.pca individual results respect nonuniform row weights", {
+  skip_if_not_installed("ade4")
+  row_weights <- seq_len(nrow(iris))
+  row_weights <- row_weights / sum(row_weights)
+  pca <- ade4::dudi.pca(
+    iris[, -5], row.w = row_weights, scannf = FALSE, nf = 3
+  )
+
+  ind <- get_pca_ind(pca)
+  inertia <- ade4::inertia.dudi(pca, row.inertia = TRUE)
+  ade4_contrib <- as.matrix(
+    inertia$row.abs[, seq_len(ncol(ind$contrib)), drop = FALSE]
+  )
+
+  expect_equal(unname(ind$contrib), unname(ade4_contrib), tolerance = 1e-8)
+  expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+               tolerance = 1e-8)
+  expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+})
+
 test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regression)", {
   pc <- prcomp(iris[, -5], scale. = TRUE)
   pr <- princomp(iris[, -5], cor = TRUE)

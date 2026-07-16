@@ -11,8 +11,9 @@ NULL
 #' \item get_pca_var(): Extract the results for variables only
 #' }
 #' @param res.pca an object of class PCA [FactoMineR]; 
-#' \code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
-#' pca, dudi [adea4]; epPCA [ExPosition].
+#' \code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca}; \code{pca},
+#' \code{dudi}, \code{between}, or \code{within} [ade4]; or
+#' \code{expoOutput}/\code{epPCA} [ExPosition].
 #' @param element the element to subset from the output. Allowed values are 
 #' "var" (for active variables) or "ind" (for active individuals).
 #' @param ... not used
@@ -71,16 +72,10 @@ get_pca_ind<-function(res.pca, ...){
   # user-supplied coordinates wrapped by as_factoextra_pca()
   else if(inherits(res.pca, "factoextra_pca")) ind <- res.pca$ind
 
-  # ade4 package
+  # ade4 package. Use the dudi row/column metrics for both ordinary and
+  # between-/within-class PCA so nonuniform row weights are respected.
   else if(inherits(res.pca, "pca") && inherits(res.pca, "dudi")){
-    ind.coord <- res.pca$li
-    # OPTIMIZED: get the original data using vectorized sweep() instead of apply()
-    # sweep() is much faster than t(apply()) for element-wise row operations
-    data <- res.pca$tab
-    data <- sweep(data, 2, res.pca$norm, "*")
-    data <- sweep(data, 2, res.pca$cent, "+")
-    ind <- .get_pca_ind_results(ind.coord, data, res.pca$eig,
-                                res.pca$cent, res.pca$norm)
+    ind <- .get_dudi_class_ind_results(res.pca)
   }
 
   # ade4 between-class / within-class PCA (bca/wca). These dudi objects carry
@@ -286,10 +281,10 @@ get_pca_var<-function(res.pca){
   list(coord = var.coord, cor = var.cor, cos2 = var.cos2, contrib = var.contrib)
 }
 
-# Individual results for ade4 between-class / within-class PCA (bca/wca).
-# These dudi objects expose row coordinates ($li), the transformed table ($tab)
-# and row/column weights ($lw/$cw) but no $cent/$norm, so we use the general
-# weighted-dudi definitions:
+# Individual results for ade4 PCA, including ordinary dudi.pca and
+# between-/within-class PCA (bca/wca). These objects expose row coordinates
+# ($li), the transformed table ($tab), and row/column weights ($lw/$cw), so use
+# the general weighted-dudi definitions:
 #   d2[i]        = sum_j cw[j] * tab[i, j]^2      (squared distance, column metric)
 #   cos2[i, k]   = li[i, k]^2 / d2[i]
 #   contrib[i,k] = 100 * lw[i] * li[i, k]^2 / eig[k]
