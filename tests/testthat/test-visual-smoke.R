@@ -101,12 +101,13 @@ test_that("fviz_eig parallel analysis is reproducible with parallel.seed", {
   res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
 
   extract_parallel_threshold <- function(p) {
-    layers <- ggplot2::ggplot_build(p)$data
-    idx <- which(vapply(layers, function(df) {
-      "shape" %in% names(df) && all(df$shape == 4)
+    layers <- p$layers
+    idx <- which(vapply(layers, function(layer) {
+      !inherits(layer$data, "waiver") &&
+        "threshold" %in% names(as.data.frame(layer$data))
     }, logical(1)))
     if(length(idx) == 0) return(numeric(0))
-    layers[[idx[1]]]$y
+    as.data.frame(layers[[idx[1]]]$data)$threshold
   }
 
   p1 <- fviz_eig(
