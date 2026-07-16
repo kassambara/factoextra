@@ -15,7 +15,9 @@ Default is "factoextra". Use "all" to remove all lock files.}
 \item{ask}{Logical. If TRUE (default), asks for confirmation before removing.}
 }
 \value{
-Invisibly returns TRUE if files were removed, FALSE otherwise.
+Invisibly returns \code{TRUE} only when every discovered lock
+  directory is removed. Returns \code{FALSE} when no lock directories are
+  found, removal is declined, or any removal fails.
 }
 \description{
 Removes stale lock directories that can prevent package installation.
@@ -25,15 +27,13 @@ removed when installation completes. If installation is interrupted (e.g., by
 closing R or a crash), these lock files may remain and block future installations.
 }
 \examples{
-\dontrun{
-# Remove factoextra lock file
-clean_lock_files()
-
-# Remove all lock files
-clean_lock_files("all")
-
-# Remove without confirmation
-clean_lock_files(ask = FALSE)
-}
+# Use a temporary library so the example cannot affect installed packages.
+example_lib <- tempfile("factoextra-lock-example-")
+example_lock <- file.path(example_lib, "00LOCK-factoextra")
+dir.create(example_lock, recursive = TRUE)
+clean_locks <- getFromNamespace("clean_lock_files", "factoextra")
+clean_locks(lib = example_lib, ask = FALSE)
+stopifnot(!dir.exists(example_lock))
+unlink(example_lib, recursive = TRUE)
 }
 \keyword{internal}

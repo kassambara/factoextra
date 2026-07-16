@@ -552,6 +552,177 @@ test_that("fviz_eig validates parallel.iter for parallel analysis", {
   )
 })
 
+test_that("Horn thresholds use the original prcomp variable dimension", {
+  reference_threshold <- function(n_obs, n_var, iterations, seed){
+    set.seed(seed)
+    simulated <- matrix(NA_real_, nrow = iterations,
+                        ncol = min(n_obs - 1L, n_var))
+    for(i in seq_len(iterations)){
+      random_data <- matrix(rnorm(n_obs * n_var), nrow = n_obs,
+                            ncol = n_var)
+      simulated[i, ] <- eigen(
+        cor(random_data), symmetric = TRUE, only.values = TRUE
+      )$values[seq_len(ncol(simulated))]
+    }
+    unname(apply(simulated, 2, quantile, probs = 0.95, names = FALSE))
+  }
+
+  set.seed(301)
+  x <- matrix(rnorm(80 * 6), nrow = 80, ncol = 6)
+  truncated <- prcomp(x, center = TRUE, scale. = TRUE, rank. = 2)
+  seed <- 17
+  iterations <- 7
+
+  got <- factoextra:::.parallel_analysis_threshold(
+    truncated, iterations = iterations, seed = seed
+  )
+  expected <- reference_threshold(nrow(x), ncol(x), iterations, seed)
+
+  expect_equal(ncol(truncated$rotation), 2)
+  expect_equal(length(got), ncol(x))
+  expect_equal(got, expected, tolerance = 1e-12)
+
+  set.seed(302)
+  wide <- matrix(rnorm(8 * 12), nrow = 8, ncol = 12)
+  wide_fit <- prcomp(wide, center = TRUE, scale. = TRUE)
+  wide_got <- factoextra:::.parallel_analysis_threshold(
+    wide_fit, iterations = iterations, seed = seed
+  )
+  wide_expected <- reference_threshold(
+    nrow(wide), ncol(wide), iterations, seed
+  )
+  expect_equal(length(wide_got), min(nrow(wide) - 1L, ncol(wide)))
+  expect_equal(wide_got, wide_expected, tolerance = 1e-12)
+})
+
+test_that("Horn prcomp analysis fails closed when preprocessing is unrecoverable", {
+  set.seed(305)
+  x <- matrix(rnorm(60 * 4), nrow = 60, ncol = 4)
+
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = FALSE, scale. = TRUE)
+    ),
+    "mean-centered"
+  )
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = TRUE, scale. = c(1, 2, 3, 4))
+    ),
+    "custom scale"
+  )
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = TRUE, scale. = TRUE, retx = FALSE)
+    ),
+    "retx = TRUE"
+  )
+
+  x_na <- as.data.frame(x)
+  x_na[c(2, 11), 1] <- NA_real_
+  fit_na <- prcomp(
+    ~ ., data = x_na, center = TRUE, scale. = TRUE,
+    na.action = na.exclude
+  )
+  spec_na <- factoextra:::.parallel_analysis_spec(fit_na)
+  expect_equal(spec_na$n_obs, sum(complete.cases(fit_na$x)))
+})
+
+test_that("Horn thresholds preserve covariance-PCA marginal scales", {
+  reference_threshold <- function(x, iterations, seed, divisor){
+    target_sd <- sqrt(colSums(sweep(x, 2, colMeans(x), "-")^2) / divisor)
+    set.seed(seed)
+    simulated <- matrix(NA_real_, nrow = iterations, ncol = ncol(x))
+    for(i in seq_len(iterations)){
+      random_data <- sweep(
+        matrix(rnorm(length(x)), nrow = nrow(x), ncol = ncol(x)),
+        2, target_sd, "*"
+      )
+      centered <- scale(random_data, center = TRUE, scale = FALSE)
+      covariance <- crossprod(centered) / divisor
+      simulated[i, ] <- pmax(
+        eigen(covariance, symmetric = TRUE, only.values = TRUE)$values, 0
+      )
+    }
+    unname(apply(simulated, 2, quantile, probs = 0.95, names = FALSE))
+  }
+
+  set.seed(303)
+  x <- sweep(matrix(rnorm(90 * 4), nrow = 90), 2,
+             c(0.25, 1, 3, 8), "*")
+  iterations <- 8
+  seed <- 23
+
+  pc <- prcomp(x, center = TRUE, scale. = FALSE)
+  pc_spec <- factoextra:::.parallel_analysis_spec(pc)
+  expect_equal(pc_spec$marginal_sd, apply(x, 2, sd), tolerance = 1e-12)
+  expect_equal(
+    factoextra:::.parallel_analysis_threshold(pc, iterations, seed),
+    reference_threshold(x, iterations, seed, nrow(x) - 1),
+    tolerance = 1e-12
+  )
+
+  pc_truncated <- prcomp(x, center = TRUE, scale. = FALSE, rank. = 2)
+  expect_error(
+    factoextra:::.parallel_analysis_threshold(pc_truncated, iterations, seed),
+    "truncated covariance prcomp"
+  )
+
+  pn <- princomp(x, cor = FALSE, scores = FALSE)
+  pn_spec <- factoextra:::.parallel_analysis_spec(pn)
+  expected_ml_sd <- sqrt(colSums(sweep(x, 2, colMeans(x), "-")^2) / nrow(x))
+  expect_equal(pn_spec$marginal_sd, expected_ml_sd, tolerance = 1e-12)
+  expect_equal(
+    factoextra:::.parallel_analysis_threshold(pn, iterations, seed),
+    reference_threshold(x, iterations, seed, nrow(x)),
+    tolerance = 1e-12
+  )
+})
+
+test_that("Horn correlation mode is reproducible and seed-safe for princomp", {
+  set.seed(304)
+  x <- matrix(rnorm(70 * 4), nrow = 70, ncol = 4)
+  pn <- princomp(x, cor = TRUE, scores = FALSE)
+
+  set.seed(812)
+  seed_before <- .Random.seed
+  got <- factoextra:::.parallel_analysis_threshold(pn, 6, seed = 31)
+  expect_identical(.Random.seed, seed_before)
+
+  set.seed(31)
+  simulated <- matrix(NA_real_, nrow = 6, ncol = ncol(x))
+  for(i in seq_len(6)){
+    random_data <- matrix(rnorm(length(x)), nrow = nrow(x), ncol = ncol(x))
+    simulated[i, ] <- eigen(
+      cor(random_data), symmetric = TRUE, only.values = TRUE
+    )$values
+  }
+  expected <- unname(apply(
+    simulated, 2, quantile, probs = 0.95, names = FALSE
+  ))
+  expect_equal(got, expected, tolerance = 1e-12)
+
+  expect_false(factoextra:::.princomp_uses_correlation(
+    princomp(x, cor = 0, scores = FALSE)
+  ))
+  expect_true(factoextra:::.princomp_uses_correlation(
+    princomp(x, cor = 1, scores = FALSE)
+  ))
+
+  old_seed_exists <- exists(".Random.seed", envir = .GlobalEnv,
+                            inherits = FALSE)
+  if(old_seed_exists) old_seed <- get(".Random.seed", envir = .GlobalEnv)
+  on.exit({
+    if(old_seed_exists) assign(".Random.seed", old_seed, envir = .GlobalEnv)
+    else if(exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+      rm(".Random.seed", envir = .GlobalEnv)
+  }, add = TRUE)
+  if(exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+    rm(".Random.seed", envir = .GlobalEnv)
+  factoextra:::.parallel_analysis_threshold(pn, 2, seed = 31)
+  expect_false(exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+})
+
 test_that("arrow.linetype controls variable-arrow linetype; default unchanged (#73)", {
   skip_if_not_installed("FactoMineR")
   res <- FactoMineR::PCA(decathlon2[1:23, 1:10], graph = FALSE)
@@ -856,6 +1027,26 @@ test_that("get_pca_ind works for ade4 dudi.pca (data.frame $li) (#126)", {
   expect_s3_class(fviz_pca_ind(pca), "ggplot")
 })
 
+test_that("ade4 dudi.pca individual results respect nonuniform row weights", {
+  skip_if_not_installed("ade4")
+  row_weights <- seq_len(nrow(iris))
+  row_weights <- row_weights / sum(row_weights)
+  pca <- ade4::dudi.pca(
+    iris[, -5], row.w = row_weights, scannf = FALSE, nf = 3
+  )
+
+  ind <- get_pca_ind(pca)
+  inertia <- ade4::inertia.dudi(pca, row.inertia = TRUE)
+  ade4_contrib <- as.matrix(
+    inertia$row.abs[, seq_len(ncol(ind$contrib)), drop = FALSE]
+  )
+
+  expect_equal(unname(ind$contrib), unname(ade4_contrib), tolerance = 1e-8)
+  expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+               tolerance = 1e-8)
+  expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+})
+
 test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regression)", {
   pc <- prcomp(iris[, -5], scale. = TRUE)
   pr <- princomp(iris[, -5], cor = TRUE)
@@ -863,7 +1054,35 @@ test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regres
     expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
     expect_equal(nrow(ind$coord), nrow(iris))
     expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+    expect_true(all(abs(colSums(ind$contrib) - 100) < 1e-6))
   }
+})
+
+test_that("PCA individual contributions are backend-independent and zero-safe", {
+  x <- iris[, -5]
+  fits <- list(
+    prcomp(x, center = TRUE, scale. = TRUE),
+    prcomp(x, center = TRUE, scale. = FALSE),
+    princomp(x, cor = TRUE),
+    princomp(x, cor = FALSE)
+  )
+  for(fit in fits) {
+    ind <- get_pca_ind(fit)
+    truth <- sweep(ind$coord^2, 2, colSums(ind$coord^2), "/") * 100
+    expect_equal(ind$contrib, truth, tolerance = 1e-10,
+                 ignore_attr = TRUE)
+    expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+                 tolerance = 1e-10)
+  }
+
+  coord <- cbind(nonzero = c(-1, 1), zero = c(0, 0))
+  out <- factoextra:::.get_pca_ind_results(
+    coord, data = cbind(c(-1, 1), c(0, 0)), eigenvalues = c(1, 0),
+    pca.center = c(0, 0), pca.scale = c(1, 1)
+  )
+  expect_true(all(is.finite(out$contrib)))
+  expect_equal(unname(out$contrib[, 2]), c(0, 0))
+  expect_equal(sum(out$contrib[, 1]), 100)
 })
 
 test_that("ade4 between-/within-class PCA (bca/wca) are supported (#126)", {

@@ -60,6 +60,80 @@ test_that("as_factoextra_pca(recipe) cross-validates against base-R ground truth
   expect_equal(abs(unname(obj$ind$coord)), abs(unname(pc$x[, 1:2])), tolerance = 1e-6)
 })
 
+test_that("recipe PCA separates coordinates, correlations and scaling state", {
+  centered <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_center(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
+  obj <- as_factoextra_pca(recipes::prep(centered))
+  x_centered <- scale(iris[, 1:4], center = TRUE, scale = FALSE)
+  truth <- stats::cor(x_centered, obj$ind$coord)
+
+  expect_false(obj$scale.unit)
+  expect_equal(unname(obj$var$cor), unname(truth), tolerance = 1e-9)
+  expect_equal(unname(obj$var$cos2), unname(truth^2), tolerance = 1e-9)
+  expect_false(isTRUE(all.equal(unname(obj$var$coord), unname(obj$var$cor))))
+
+  partial <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_center(recipes::all_numeric_predictors()) |>
+    recipes::step_scale(Sepal.Length) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
+  partial_obj <- as_factoextra_pca(recipes::prep(partial))
+  x_partial <- scale(iris[, 1:4], center = TRUE, scale = FALSE)
+  x_partial[, "Sepal.Length"] <- x_partial[, "Sepal.Length"] /
+    stats::sd(x_partial[, "Sepal.Length"])
+  partial_truth <- stats::cor(x_partial, partial_obj$ind$coord)
+
+  expect_false(partial_obj$scale.unit)
+  expect_equal(unname(partial_obj$var$cor), unname(partial_truth), tolerance = 1e-9)
+  expect_equal(unname(partial_obj$var$cos2), unname(partial_truth^2), tolerance = 1e-9)
+})
+
+test_that("recipe PCA detects internal scaling and rejects uncentered semantics", {
+  internal <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_pca(
+      recipes::all_numeric_predictors(), num_comp = 2,
+      options = list(center = TRUE, scale. = TRUE)
+  )
+  internal_obj <- as_factoextra_pca(recipes::prep(internal))
+  internal_truth <- stats::prcomp(
+    iris[, 1:4], center = TRUE, scale. = TRUE, rank. = 2
+  )
+  expect_true(internal_obj$scale.unit)
+  expect_equal(unname(internal_obj$ind$coord),
+               unname(internal_truth$x[, 1:2]), tolerance = 1e-9)
+  expect_equal(unname(internal_obj$var$cor),
+               unname(stats::cor(iris[, 1:4], internal_truth$x[, 1:2])),
+               tolerance = 1e-9)
+  expect_equal(internal_obj$var$coord, internal_obj$var$cor,
+               tolerance = 1e-9)
+
+  uncentered <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
+  expect_error(as_factoextra_pca(recipes::prep(uncentered)), "uncentered")
+
+  scale_only <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_scale(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
+  expect_error(as_factoextra_pca(recipes::prep(scale_only)), "uncentered")
+})
+
+test_that("as_factoextra_pca validates finite coordinates and eigenvalues", {
+  x <- matrix(c(-1, 1, -2, 2), ncol = 2)
+  expect_error(as_factoextra_pca(x, eig = c(NA, 1)), "finite")
+  expect_error(as_factoextra_pca(x, eig = c(Inf, 1)), "finite")
+  expect_error(as_factoextra_pca(x, eig = c(-1, 1)), "non-negative")
+  expect_error(as_factoextra_pca(x, eig = c(0, 0)), "positive")
+  expect_error(as_factoextra_pca(replace(x, 1, NA), eig = c(1, 1)), "finite")
+  expect_error(as_factoextra_pca(matrix(1, nrow = 1), eig = NULL),
+               "At least two")
+  expect_error(as_factoextra_pca(x, eig = c(1, 1), scale.unit = NA),
+               "TRUE or FALSE")
+
+  tiny_negative <- -sqrt(.Machine$double.eps) / 2
+  obj <- as_factoextra_pca(x, eig = c(1, tiny_negative, 0))
+  expect_identical(obj$eig.values, c(1, 0, 0))
+})
+
 test_that("as_factoextra_pca(recipe) matches FactoMineR (authoritative engine)", {
   skip_if_not_installed("FactoMineR")
   # A step_normalize + step_pca recipe is a scaled PCA, directly comparable to

@@ -13,8 +13,10 @@ get_pca_ind(res.pca, ...)
 get_pca_var(res.pca)
 }
 \arguments{
-\item{res.pca}{an object of class PCA [FactoMineR]; 
-prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].}
+\item{res.pca}{an object of class PCA [FactoMineR]; \code{prcomp} or
+\code{princomp} [stats]; \code{factoextra_pca}; \code{pca}, \code{dudi},
+\code{between}, or \code{within} [ade4]; or \code{expoOutput}/\code{epPCA}
+[ExPosition].}
 
 \item{element}{the element to subset from the output. Allowed values are 
 "var" (for active variables) or "ind" (for active individuals).}
@@ -25,10 +27,15 @@ prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].}
 a list of matrices containing all the results for the active individuals/variables including: 
 \item{coord}{coordinates for the individuals/variables}
 \item{cos2}{cos2 for the individuals/variables}
-\item{contrib}{contributions of the individuals/variables}
+\item{contrib}{contributions of the individuals/variables; contributions to
+each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
+contains zeros}
+\item{cor}{loading-times-component-standard-deviation coordinates for PCA
+objects from \code{stats}; these equal variable-component correlations when
+the input variables were standardized. Returned for variables.}
 }
 \description{
-Extract all the results (coordinates, squared cosine, contributions) for 
+Extract all the results (coordinates, squared cosines, and contributions) for
 the active individuals/variables from Principal Component Analysis (PCA) outputs.\cr\cr
 \itemize{
 \item get_pca(): Extract the results for variables and individuals

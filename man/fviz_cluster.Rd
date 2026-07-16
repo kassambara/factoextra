@@ -34,14 +34,16 @@ fviz_cluster(
 )
 }
 \arguments{
-\item{object}{an object of class "partition" created by the functions pam(),
-clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
-[in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
-Possible value are also any list object with data and cluster components
-(e.g.: object = list(data = mydata, cluster = myclust)).}
+\item{object}{an object of class "partition" created by \code{pam()},
+\code{clara()}, or \code{fanny()} [cluster]; "kmeans" [stats]; "dbscan"
+[fpc]; "Mclust" [mclust]; or "hkmeans" or "eclust" [factoextra]. A custom
+list may instead contain \code{data} plus either \code{cluster} or
+\code{clustering}. Named assignments are aligned to unique data row names by
+exact match; unnamed assignments remain positional.}
 
-\item{data}{the data that has been used for clustering. Required only when
-object is a class of kmeans or dbscan.}
+\item{data}{the data used for clustering. It is required for kmeans and dbscan
+objects, and for partition or hcut objects fitted from dissimilarities when
+those objects do not retain the original observations.}
 
 \item{choose.vars}{a character vector containing variables to be considered
 for plotting.}
@@ -57,8 +59,8 @@ plotted.}
 values are the combination of c("point", "text"). Use "point" (to show only
 points);  "text" to show only labels; c("point", "text") to show both types.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{show.clust.cent}{logical; if TRUE, shows cluster centers}
@@ -159,13 +161,13 @@ fviz_cluster(km.res, iris[, -5], geom = "text")
 # PAM clustering
 # ++++++++++++++++++++
 requireNamespace("cluster", quietly = TRUE)
-pam.res <- pam(iris.scaled, 3)
+pam.res <- cluster::pam(iris.scaled, 3)
  # Visualize pam clustering
 fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 
 # Hierarchical clustering
 # ++++++++++++++++++++++++
-# Use hcut() which compute hclust and cut the tree
+# Use hcut(), which computes hclust and cuts the tree
 hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 # Visualize dendrogram
 fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)

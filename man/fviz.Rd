@@ -63,14 +63,14 @@ value is "auto". Allowed values are the combination of c("point", "arrow",
 c("point", "text") or c("arrow", "text") to show both types.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
-"all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+"all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only 
 active individuals. "ind.sup" is for supplementary individuals. "quali" is 
 for supplementary qualitative variables. "var" is for active variables. 
 "quanti.sup" is for quantitative supplementary variables.}
 
 \item{invisible}{a text specifying the elements to be hidden on the plot. 
-Default value is "none". Allowed values are the combination of c("ind", 
+Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup", "quali", "var", "quanti.sup", "group.sup").}
 
 \item{labelsize}{font size for the labels}
@@ -117,8 +117,8 @@ fill color. Use alpha = 0 for no fill color.}
 added to the plot.}
 
 \item{color}{color to be used for the specified geometries (point, text). Can 
-be a continuous variable or a factor variable. Possible values include also 
-: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+be a continuous variable or a factor variable. Possible values also include
+"cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 individuals/variables are automatically controlled by their qualities of 
 representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -128,8 +128,8 @@ cos2, contrib, ....), make sure that habillage ="none".}
 Useful when pointshape = 21, for example.}
 
 \item{alpha}{controls the transparency of individual and variable colors, 
-respectively. The value can variate from 0 (total transparency) to 1 (no 
-transparency). Default value is 1. Possible values include also : "cos2", 
+respectively. The value can vary from 0 (total transparency) to 1 (no
+transparency). Default value is 1. Possible values also include "cos2",
 "contrib", "coord", "x" or "y". In this case, the transparency for the 
 individual/variable colors are automatically controlled by their qualities 
 ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x 
@@ -157,8 +157,8 @@ matches any condition), e.g. named items \emph{plus} the top-cos2 ones. }}
 
 \item{axes.linetype}{linetype of x and y axes.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{col.circle}{a color for the correlation circle. Used only when X is a 

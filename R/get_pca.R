@@ -3,22 +3,29 @@ NULL
 #' Extract the results for individuals/variables - PCA
 #' 
 #' @description
-#' Extract all the results (coordinates, squared cosine, contributions) for 
+#' Extract all the results (coordinates, squared cosines, and contributions) for
 #' the active individuals/variables from Principal Component Analysis (PCA) outputs.\cr\cr
 #' \itemize{
 #' \item get_pca(): Extract the results for variables and individuals
 #' \item get_pca_ind(): Extract the results for individuals only
 #' \item get_pca_var(): Extract the results for variables only
 #' }
-#' @param res.pca an object of class PCA [FactoMineR]; 
-#' prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].
+#' @param res.pca an object of class PCA [FactoMineR]; \code{prcomp} or
+#' \code{princomp} [stats]; \code{factoextra_pca}; \code{pca}, \code{dudi},
+#' \code{between}, or \code{within} [ade4]; or \code{expoOutput}/\code{epPCA}
+#' [ExPosition].
 #' @param element the element to subset from the output. Allowed values are 
 #' "var" (for active variables) or "ind" (for active individuals).
 #' @param ... not used
 #' @return a list of matrices containing all the results for the active individuals/variables including: 
 #' \item{coord}{coordinates for the individuals/variables}
 #' \item{cos2}{cos2 for the individuals/variables}
-#' \item{contrib}{contributions of the individuals/variables}
+#' \item{contrib}{contributions of the individuals/variables; contributions to
+#' each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
+#' contains zeros}
+#' \item{cor}{loading-times-component-standard-deviation coordinates for PCA
+#' objects from \code{stats}; these equal variable-component correlations when
+#' the input variables were standardized. Returned for variables.}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.sthda.com/english/}
 #' @examples
@@ -65,16 +72,10 @@ get_pca_ind<-function(res.pca, ...){
   # user-supplied coordinates wrapped by as_factoextra_pca()
   else if(inherits(res.pca, "factoextra_pca")) ind <- res.pca$ind
 
-  # ade4 package
+  # ade4 package. Use the dudi row/column metrics for both ordinary and
+  # between-/within-class PCA so nonuniform row weights are respected.
   else if(inherits(res.pca, "pca") && inherits(res.pca, "dudi")){
-    ind.coord <- res.pca$li
-    # OPTIMIZED: get the original data using vectorized sweep() instead of apply()
-    # sweep() is much faster than t(apply()) for element-wise row operations
-    data <- res.pca$tab
-    data <- sweep(data, 2, res.pca$norm, "*")
-    data <- sweep(data, 2, res.pca$cent, "+")
-    ind <- .get_pca_ind_results(ind.coord, data, res.pca$eig,
-                                res.pca$cent, res.pca$norm)
+    ind <- .get_dudi_class_ind_results(res.pca)
   }
 
   # ade4 between-class / within-class PCA (bca/wca). These dudi objects carry
@@ -133,9 +134,8 @@ get_pca_var<-function(res.pca){
   }
   # stats package
   else if(inherits(res.pca, 'princomp')){
-    # OPTIMIZED: Correlation of variables with the principal component
-    # Using sweep() instead of t(apply()) - much faster for element-wise operations
-    # var.cor[i,j] = loadings[i,j] * sdev[j]
+    # Loading-times-component-standard-deviation coordinates. For standardized
+    # variables these equal the variable-component correlations.
     # unclass() strips the base R "loadings" S3 class so coord/cos2/contrib are
     # returned as plain numeric matrices. Otherwise print.loadings() hides values
     # with |x| < 0.1 (its cutoff) and the result breaks downstream manipulation.
@@ -143,9 +143,8 @@ get_pca_var<-function(res.pca){
     var <- .get_pca_var_results(var.cor)
   }
   else if(inherits(res.pca, 'prcomp')){
-    # OPTIMIZED: Correlation of variables with the principal component
-    # Using sweep() instead of t(apply()) - much faster for element-wise operations
-    # var.cor[i,j] = rotation[i,j] * sdev[j]
+    # Loading-times-component-standard-deviation coordinates. For standardized
+    # variables these equal the variable-component correlations.
     var.cor <- sweep(res.pca$rotation, 2, res.pca$sdev, "*")
     var <- .get_pca_var_results(var.cor)
   }
@@ -174,7 +173,7 @@ get_pca_var<-function(res.pca){
 # ind.coord : coordinates of variables on the principal component
 # pca.center, pca.scale : numeric vectors corresponding to the pca
 # center and scale respectively
-# data : the orignal data used during the pca analysis
+# data : the original data used during the pca analysis
 # eigenvalues : principal component eigenvalues
 #
 # OPTIMIZATION: Replaced apply() loops with vectorized matrix operations
@@ -190,7 +189,6 @@ get_pca_var<-function(res.pca){
   ind.coord <- as.matrix(ind.coord)
   data <- as.matrix(data)
 
-  eigenvalues <- eigenvalues[seq_len(ncol(ind.coord))]
   n.ind <- nrow(ind.coord)
   n.dim <- ncol(ind.coord)
 
@@ -215,10 +213,19 @@ get_pca_var<-function(res.pca){
     ind.cos2[positive_d2, ] <- ind.coord.sq[positive_d2, , drop = FALSE] / d2[positive_d2]
   }
 
-  # OPTIMIZED: Compute contributions using vectorized operations
-  # contrib[i,j] = 100 * (1/n) * (coord[i,j]^2 / eigenvalue[j])
-  # Use sweep to divide each column by its eigenvalue
-  ind.contrib <- sweep(ind.coord.sq, 2, eigenvalues, "/") * (100 / n.ind)
+  # Contributions are shares of a component's score sum of squares. This
+  # definition is backend-independent: stats::prcomp() reports eigenvalues with
+  # an (n - 1) divisor whereas stats::princomp() uses n, so dividing by the
+  # backend eigenvalue made prcomp contributions sum to 100 * (n - 1) / n.
+  comp.ss <- colSums(ind.coord.sq)
+  positive.comp <- comp.ss > .Machine$double.eps
+  ind.contrib <- matrix(0, nrow = n.ind, ncol = n.dim)
+  if(any(positive.comp)) {
+    ind.contrib[, positive.comp] <- sweep(
+      ind.coord.sq[, positive.comp, drop = FALSE],
+      2, comp.ss[positive.comp], "/"
+    ) * 100
+  }
 
   # Set column and row names
   dim.names <- paste0("Dim.", 1:n.dim)
@@ -272,10 +279,10 @@ get_pca_var<-function(res.pca){
   list(coord = var.coord, cor = var.cor, cos2 = var.cos2, contrib = var.contrib)
 }
 
-# Individual results for ade4 between-class / within-class PCA (bca/wca).
-# These dudi objects expose row coordinates ($li), the transformed table ($tab)
-# and row/column weights ($lw/$cw) but no $cent/$norm, so we use the general
-# weighted-dudi definitions:
+# Individual results for ade4 PCA, including ordinary dudi.pca and
+# between-/within-class PCA (bca/wca). These objects expose row coordinates
+# ($li), the transformed table ($tab), and row/column weights ($lw/$cw), so use
+# the general weighted-dudi definitions:
 #   d2[i]        = sum_j cw[j] * tab[i, j]^2      (squared distance, column metric)
 #   cos2[i, k]   = li[i, k]^2 / d2[i]
 #   contrib[i,k] = 100 * lw[i] * li[i, k]^2 / eig[k]

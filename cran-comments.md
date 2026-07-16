@@ -1,56 +1,59 @@
 ## Submission — factoextra 2.2.0
 
-A minor release. All new behavior is opt-in and gated, so existing inputs
-produce byte-identical output; there are no breaking changes.
+This release adds new visualization and interoperability features and hardens
+existing numerical, validation, and documentation paths. Corrected numerical
+results and stricter validation are described in `NEWS.md`; this submission does
+not claim byte-identical behavior for affected inputs.
 
 ## Changes in this version (2.2.0)
 
-Minor update from 2.1.0 (see NEWS.md for the full list):
+See `NEWS.md` for the complete list. The principal changes are:
 
-* New `fviz_umap()` / `fviz_tsne()` to visualize a 2-D UMAP or t-SNE embedding
-  (from uwot, Rtsne, umap, or a plain coordinate matrix) with factoextra's
-  grouping, ellipse and palette styling. An embedding has no eigenvalues, so the
-  axes carry no percentage and there is no scree plot or correlation circle.
-* New `theme_factoextra()` and `factoextra_palette()`: a clean publication theme
-  and an Okabe-Ito colorblind-safe palette, both stateless (no global option).
-* `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a PCA fitted
-  inside a tidymodels recipe or workflow plots with the `fviz_pca_*()` family.
-* New arguments (all default to the current behavior): `fviz_dend(highlight=)`;
-  `max.points` for `fviz_pca_ind()` / `fviz_cluster()` and the other point
-  plots; `display = "heatmap"` for `fviz_cos2()` / `fviz_contrib()`;
-  `mark_optimal` for `fviz_nbclust()` / `fviz_gap_stat()`; `quanti.sup` for
-  `fviz_mca_ind()` / `fviz_mca_biplot()`; and a `union` element in the
-  `select.*` selection lists (OR selection; the default stays AND).
+* new two-dimensional UMAP and t-SNE visualization helpers;
+* new publication theme and colorblind-safe palette helpers;
+* support for adapting PCA results from tidymodels recipes and workflows;
+* corrected PCA contributions, Gabriel biplot scaling, and Horn parallel
+  analysis;
+* stronger validation and edge-case handling in clustering, selection,
+  supplementary-element, and Hopkins-statistic paths; and
+* refreshed help pages, examples, the extension vignette, pkgdown
+  configuration, and release notes.
 
-## Test environments
+## Test environment
 
-* Local: macOS (Darwin 24.6.0) — R 4.5.1 (2025-06-13)
-* win-builder: R release and R devel
-* GitHub Actions: macOS (release), Windows (release), Ubuntu
-  (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
-  all pass.
+* Local: macOS Tahoe 26.5.2, arm64 — R 4.6.0 (2026-04-24)
+
+No win-builder, GitHub Actions, or external reverse-dependency result is claimed
+in this local preparation packet.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+* `R CMD check`: 0 errors | 0 warnings | 0 notes
+* `R CMD check --as-cran --run-donttest --run-dontrun`:
+  0 errors | 0 warnings | 0 notes
 
-The previously reported "examples > 5s" NOTE comes from a few `fviz_*` examples
-that run inherently slow FactoMineR computations (MCA / MFA / CA) as correctness
-illustrations; happy to wrap them in `\donttest{}` if preferred.
+Both checks used a freshly built source tarball from a clean exported source
+tree. The CRAN-style check completed incoming-feasibility checks, package tests,
+all example classes, vignette rebuilds, and PDF and HTML manual checks.
 
-## Downstream dependencies
+## Additional local validation
 
-We checked the 49 reverse dependencies. This release is additive and opt-in:
-every new argument defaults to the previous behavior, no default output or
-numeric result changed, no function or argument was removed or renamed, and no
-existing error/message text changed (the new messages are all on new functions
-or new opt-in argument paths). We scanned the reverse-dependency sources for any
-pinned factoextra message or snapshot of factoextra output; the only revdeps that
-call factoextra and assert on errors/snapshots (PLNmodels, Silhouette) use `fviz()`,
-`eclust()` and `hcut()`, which are unchanged for their existing calls. No new
-problems.
+* The complete testthat suite passed.
+* Standard, `\donttest`, and `\dontrun` examples all completed successfully.
+* Package coverage increased from 77.75% on the fetched branch to 79.59% after
+  the added regression tests.
+* roxygen documentation generation, manual consistency checks, pkgdown site
+  generation, R-source parsing, and PDF structural and visual checks passed.
+* Package-wide spelling output was reviewed; reported tokens are proper names,
+  software/API identifiers, accepted British spellings, hyphen fragments, or an
+  intentionally quoted historical misspelling.
 
-## Notes
+`urlchecker` reports HTTP 403 for the canonical DOI
+<https://doi.org/10.1093/bioinformatics/btv428> because the publisher blocks the
+automated request. The DOI is retained, and the CRAN incoming-feasibility check
+passes.
 
-* `datanovia.com` URLs can return HTTP 503 to automated crawlers but resolve
-  correctly in a browser.
+## Reverse dependencies
+
+A fresh full reverse-dependency matrix was not run locally, so no reverse-
+dependency pass count is claimed here.
