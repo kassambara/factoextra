@@ -21,7 +21,8 @@ NULL
 #'   \code{$embedding}), an \code{Rtsne::Rtsne()} result (\code{$Y}), a
 #'   \code{umap::umap()} result (\code{$layout}), or a numeric matrix / data frame
 #'   of coordinates (one column per dimension).
-#' @param dims length-2 integer vector: which two embedding dimensions to plot.
+#' @param dims two distinct positive integer indices specifying which embedding
+#'   dimensions to plot.
 #' @param habillage an optional factor / vector used to colour the points by group
 #'   (discrete). Its length must equal the number of embedded observations.
 #' @param col.ind point colour: a factor / character vector (discrete groups) or a
@@ -240,8 +241,11 @@ fviz_tsne <- function(X, dims = c(1L, 2L), habillage = NULL, col.ind = NULL,
 # Extract an n x 2 coordinate matrix from an embedding object. Matrix/data.frame
 # are handled FIRST so `$` is never applied to an atomic matrix.
 .fe_layout <- function(x, dims = c(1L, 2L)) {
-  if(length(dims) != 2L || !is.numeric(dims) || anyNA(dims))
-    stop("`dims` must be two column indices, e.g. c(1, 2).", call. = FALSE)
+  if(length(dims) != 2L || !is.numeric(dims) || anyNA(dims) ||
+     any(!is.finite(dims)) || any(dims %% 1 != 0) || any(dims < 1) ||
+     length(unique(dims)) != 2L)
+    stop("`dims` must be two distinct positive integer column indices, e.g. c(1, 2).",
+         call. = FALSE)
   dims <- as.integer(dims)
 
   if(is.data.frame(x)) {

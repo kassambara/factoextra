@@ -121,3 +121,15 @@ test_that("supplementary CA columns and invisible = all use the right flags", {
   }, logical(1))
   expect_false(any(primary_geoms))
 })
+
+test_that("embedding dimensions require distinct finite positive integers", {
+  x <- matrix(rnorm(30), nrow = 10, ncol = 3)
+  for(dims in list(c(1, 1), c(1.5, 2), c(1, Inf), c(0, 1), 1:3)){
+    expect_error(factoextra:::.fe_layout(x, dims),
+                 "two distinct positive integer")
+  }
+  expect_equal(
+    factoextra:::.fe_layout(x, c(1, 3)), x[, c(1, 3), drop = FALSE],
+    ignore_attr = TRUE
+  )
+})

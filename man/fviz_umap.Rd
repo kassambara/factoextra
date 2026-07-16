@@ -63,7 +63,8 @@ fviz_tsne(
 \code{umap::umap()} result (\code{$layout}), or a numeric matrix / data frame
 of coordinates (one column per dimension).}
 
-\item{dims}{length-2 integer vector: which two embedding dimensions to plot.}
+\item{dims}{two distinct positive integer indices specifying which embedding
+dimensions to plot.}
 
 \item{habillage}{an optional factor / vector used to colour the points by group
 (discrete). Its length must equal the number of embedded observations.}
