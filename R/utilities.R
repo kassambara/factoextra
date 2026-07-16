@@ -912,7 +912,7 @@ NULL
   )
   .warn_unknown_elements(invisible, c("all", "none", element), "invisible")
   for(el in element){
-    if(el %in% invisible) hide[[el]] <- TRUE
+    if("all" %in% invisible || el %in% invisible) hide[[el]] <- TRUE
     else hide[[el]] <- FALSE
   }
   hide

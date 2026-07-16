@@ -42,7 +42,7 @@
 #'   supplementary qualitative variables. "var" is for active variables. 
 #'   "quanti.sup" is for quantitative supplementary variables.
 #' @param invisible a text specifying the elements to be hidden on the plot. 
-#'   Default value is "none". Allowed values are the combination of c("ind", 
+#'   Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 #'   "ind.sup", "quali", "var", "quanti.sup").
 #' @param title the title of the graph
 #' @param habillage an optional factor variable for coloring the observations by

@@ -118,7 +118,7 @@ c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
 variables; "col.sup" to label only supplementary columns; etc}
 
 \item{invisible}{a character value specifying the elements to be hidden on the
-plot. Default value is "none". Allowed values are the combination of 
+plot. Default value is "none". Allowed values are "all", "none", or a combination of
 c("row", "row.sup","col", "col.sup").}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain 

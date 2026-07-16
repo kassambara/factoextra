@@ -15,7 +15,7 @@ NULL
 #'  for supplementary qualitative variables. "var" is for active variables. 
 #'  "quanti.sup" is for quantitative supplementary variables.
 #'@param invisible a text specifying the elements to be hidden on the plot. 
-#'  Default value is "none". Allowed values are the combination of c("ind", 
+#'  Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 #'  "ind.sup", "quali", "var", "quanti.sup", "group.sup").
 #'@param labelsize font size for the labels
 #'@param pointsize the size of points
@@ -676,7 +676,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # CA
   else if(element == "row" && inherits(X, c("CA", "ca")) && !hide$row.sup)
     res <- list(name = "row.sup", addlabel = (lab$row.sup && "text" %in% geom))
-  else if(element == "col" && inherits(X, c("CA", "ca")) && !hide$row.sup)
+  else if(element == "col" && inherits(X, c("CA", "ca")) && !hide$col.sup)
     res <- list(name = "col.sup", addlabel = (lab$col.sup && "text" %in% geom))
   else if(element == "group" && inherits(X, "MFA") && !hide$group.sup)
     res <- list(name = "group", addlabel = (lab$group.sup && "text" %in% geom))

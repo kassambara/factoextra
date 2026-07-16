@@ -33,7 +33,7 @@ NULL
 #'  c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
 #'  variables; "col.sup" to label only supplementary columns; etc
 #'@param invisible a character value specifying the elements to be hidden on the
-#'  plot. Default value is "none". Allowed values are the combination of 
+#'  plot. Default value is "none". Allowed values are "all", "none", or a combination of
 #'  c("row", "row.sup","col", "col.sup").
 #'@param title the title of the graph
 #'@param col.col,col.row color for column/row points. The default values are 

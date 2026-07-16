@@ -99,3 +99,25 @@ test_that("Hopkins sampling is finite, duplicate-aware, and fail-closed", {
   )
   expect_true(is.finite(high_dimensional_out$hopkins_stat))
 })
+
+test_that("supplementary CA columns and invisible = all use the right flags", {
+  lab <- factoextra:::.label("all")
+  visible <- factoextra:::.define_element_sup(
+    structure(list(), class = "CA"), "col", "point", lab,
+    factoextra:::.hide("none")
+  )
+  hidden <- factoextra:::.define_element_sup(
+    structure(list(), class = "CA"), "col", "point", lab,
+    factoextra:::.hide("col.sup")
+  )
+  expect_identical(visible$name, "col.sup")
+  expect_null(hidden$name)
+  expect_true(all(unlist(factoextra:::.hide("all"))))
+
+  pca <- prcomp(iris[, -5], scale. = TRUE)
+  p <- fviz_pca_ind(pca, invisible = "all")
+  primary_geoms <- vapply(p$layers, function(layer) {
+    inherits(layer$geom, c("GeomPoint", "GeomText", "GeomTextRepel"))
+  }, logical(1))
+  expect_false(any(primary_geoms))
+})

@@ -189,7 +189,7 @@ supplementary qualitative variables. "var" is for active variables.
 "quanti.sup" is for quantitative supplementary variables.}
 
 \item{invisible}{a text specifying the elements to be hidden on the plot. 
-Default value is "none". Allowed values are the combination of c("ind", 
+Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup", "quali", "var", "quanti.sup").}
 
 \item{title}{the title of the graph}

@@ -27,7 +27,7 @@ NULL
 #'  qualitative variable categories. "quanti.sup" is for quantitative 
 #'  supplementary variables.
 #'@param invisible a text specifying the elements to be hidden on the plot. 
-#'  Default value is "none". Allowed values are the combination of c("ind", 
+#'  Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 #'  "ind.sup","var", "quali.sup",  "quanti.sup").
 #'@param habillage an optional factor variable for coloring the observations by 
 #'  groups. Default value is "none". If X is an MCA object from FactoMineR 
@@ -319,5 +319,4 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 fviz_mca <- function(X, ...){
   fviz_mca_biplot(X, ...)
 }
-
 
