@@ -14,6 +14,13 @@
 #'  (HMFA) functions. \code{fviz_eig()} validates \code{ncp},
 #'  \code{parallel.iter}, and \code{parallel.seed} before plotting, accepting
 #'  integer-like numeric values while still rejecting fractional inputs.
+#'
+#'  Recent versions of \code{FactoMineR::PCA()} may retain only the number of
+#'  eigenvalues requested through its \code{ncp} argument. When the stored
+#'  eigenvalues do not account for the result's recorded total inertia,
+#'  \code{fviz_eig()} warns that the scree plot is incomplete. Refit the PCA
+#'  with a sufficiently large \code{ncp} to plot the complete spectrum.
+#'  \code{get_eig()} continues to return the eigenvalues stored in the object.
 #'  
 #'  
 #'@param X an object of class PCA, CA, MCA, FAMD, MFA, or HMFA [FactoMineR];
@@ -153,6 +160,50 @@ get_eig<-function(X){
 #' @export
 get_eigenvalue <- function(X){
   get_eig(X)
+}
+
+fm_pca_spectrum_truncated <- function(x, eig) {
+  sparse_classes <- c("sPCA", "sCA", "sMCA", "sMFA", "sHMFA")
+  if (!inherits(x, "PCA") || inherits(x, sparse_classes)) {
+    return(FALSE)
+  }
+
+  svd_info <- x[["svd"]]
+  if (!is.list(svd_info)) {
+    return(FALSE)
+  }
+  total_inertia <- svd_info[["sumvp"]]
+  if (!is.numeric(total_inertia) || length(total_inertia) != 1L ||
+        !is.finite(total_inertia) || total_inertia <= 0) {
+    return(FALSE)
+  }
+
+  if (!(is.matrix(eig) || is.data.frame(eig)) || ncol(eig) < 1L) {
+    return(FALSE)
+  }
+  eigenvalues <- eig[, 1L, drop = TRUE]
+  if (!is.numeric(eigenvalues) || length(eigenvalues) < 1L ||
+        any(!is.finite(eigenvalues))) {
+    return(FALSE)
+  }
+
+  captured_inertia <- sum(eigenvalues)
+  tolerance <- 1e-6 * total_inertia
+  isTRUE(total_inertia - captured_inertia > tolerance)
+}
+
+warn_truncated_pca_spectrum <- function(n_eigenvalues) {
+  message <- paste0(
+    "This FactoMineR PCA result contains only ", n_eigenvalues,
+    " eigenvalues and does not include the complete spectrum. Refit the PCA ",
+    "with a larger `ncp` before drawing a complete scree plot."
+  )
+  warning(structure(
+    list(message = message, call = NULL),
+    class = c(
+      "factoextra_truncated_pca_spectrum", "warning", "condition"
+    )
+  ))
 }
 
 .princomp_uses_correlation <- function(X){
@@ -346,6 +397,9 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   ncp <- .coerce_integerish(ncp, "ncp")
 
   eig <- get_eigenvalue(X)
+  if (fm_pca_spectrum_truncated(X, eig)) {
+    warn_truncated_pca_spectrum(nrow(eig))
+  }
   eig <-eig[seq_len(min(ncp, nrow(eig))), , drop=FALSE]
   
   choice <- choice[1]

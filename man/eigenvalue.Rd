@@ -66,7 +66,11 @@ or points showing the information retained by each dimension.}
 
 \item{main, xlab, ylab}{plot main and axis titles.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
@@ -117,6 +121,13 @@ Eigenvalues correspond to the amount of the variation explained
  (HMFA) functions. \code{fviz_eig()} validates \code{ncp},
  \code{parallel.iter}, and \code{parallel.seed} before plotting, accepting
  integer-like numeric values while still rejecting fractional inputs.
+
+ Recent versions of \code{FactoMineR::PCA()} may retain only the number of
+ eigenvalues requested through its \code{ncp} argument. When the stored
+ eigenvalues do not account for the result's recorded total inertia,
+ \code{fviz_eig()} warns that the scree plot is incomplete. Refit the PCA
+ with a sufficiently large \code{ncp} to plot the complete spectrum.
+ \code{get_eig()} continues to return the eigenvalues stored in the object.
 }
 \examples{
 # Principal Component Analysis
