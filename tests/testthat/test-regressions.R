@@ -915,6 +915,22 @@ test_that("fviz_mclust_bic optimal-cluster line uses factor position (#116)", {
   expect_equal(vline_x(fviz_mclust_bic(m_std)), m_std$G)
 })
 
+test_that("fviz_mclust honors ggtheme for every plot type", {
+  skip_if_not_installed("mclust")
+  suppressPackageStartupMessages(library(mclust))
+  on.exit(detach("package:mclust", unload = FALSE), add = TRUE)
+
+  set.seed(4)
+  model <- Mclust(iris[, -5], G = 2:4, verbose = FALSE)
+  custom_theme <- ggplot2::theme_minimal() +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "linen"))
+
+  for (what in c("classification", "uncertainty", "BIC")) {
+    plot <- fviz_mclust(model, what = what, ggtheme = custom_theme)
+    expect_equal(plot$theme$plot.background$fill, "linen")
+  }
+})
+
 test_that("fviz_pca add.circle forces/suppresses the correlation circle (#88)", {
   has_circle <- function(p) {
     any(vapply(p$layers, function(l) inherits(l$geom, c("GeomPath", "GeomCircle")),
