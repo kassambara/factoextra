@@ -82,6 +82,9 @@
 
 ## Minor changes
 
+* The declared minimum R version is now 4.3, matching the current FactoMineR
+  dependency. Minimum versions are also declared for the optional recipes,
+  workflows, and testthat interfaces used by the package and its tests.
 * `fviz_dend()`: corrected the documentation of the `type` argument, which listed
   a `"triangle"` value that the function does not accept (the valid values are
   `"rectangle"`, `"circular"` and `"phylogenic"`). Thanks to @Nelson-Gon (#144).
@@ -93,6 +96,13 @@
 
 ## Bug fixes
 
+* `fviz_mclust()` now honors its `ggtheme` argument for classification,
+  uncertainty, and BIC plots. User-supplied themes were previously replaced by
+  `theme_classic()`; the default remains unchanged.
+* `fviz_eig()` now warns when a FactoMineR PCA result contains only a truncated
+  eigenvalue spectrum. Refit `FactoMineR::PCA()` with a larger `ncp` to obtain a
+  complete scree plot; explicitly limiting the number of displayed components
+  does not trigger the warning for a complete fitted spectrum.
 * Corrected PCA individual contributions so each component is normalized by
   its own score sum of squares. Degenerate zero-variance components now return
   finite zero contributions.

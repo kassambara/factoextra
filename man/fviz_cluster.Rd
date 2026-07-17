@@ -96,7 +96,11 @@ respectively.}
 \item{outlier.pointsize, outlier.color, outlier.shape, outlier.labelsize}{arguments for customizing outliers, which can be detected only in DBSCAN
 clustering.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
