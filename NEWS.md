@@ -91,6 +91,22 @@
   variable contributions, coordinates, and cos2 are unchanged. Cross-validated
   against `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
 
+* `fviz_eig(parallel = TRUE)` (Horn's parallel analysis, an opt-in overlay):
+  the simulated eigenvalue thresholds now use a corrected reference distribution.
+  Covariance PCA (`prcomp(scale. = FALSE)` / `princomp(cor = FALSE)`) previously
+  simulated unit-variance random data, giving statistically wrong thresholds; the
+  reference now matches the fitted object's marginal variances. Full-rank
+  correlation PCA is unaffected in distribution (parallel analysis is a
+  Monte-Carlo procedure, so exact threshold values depend on the seed);
+  rank-truncated or wide (n <= p) fits now simulate over the original variable
+  count. Fits whose reference distribution
+  cannot be reconstructed (uncentered fits, custom scale vectors, rank-truncated
+  covariance fits, ambiguous `princomp` `cor`) now error clearly instead of
+  returning misleading thresholds. Separately, `fviz_eig()` warns when a
+  FactoMineR PCA object stores an incomplete eigenvalue spectrum (refit with a
+  larger `ncp` for a complete scree plot). Cross-validated against an independent
+  Monte-Carlo reference. Thanks to @erdeyl (#274).
+
 * `fviz_gap_stat()` (and `fviz_nbclust(method = "gap_stat")`): when a partial
   `maxSE` list is supplied without a `method`, the fallback is now `"firstSEmax"`
   (the documented default and `cluster::maxSE`'s default) instead of `"firstmax"`.

@@ -37,9 +37,11 @@ fviz_eig(
 fviz_screeplot(...)
 }
 \arguments{
-\item{X}{an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR]; prcomp 
-and princomp [stats]; dudi, pca, coa and acm [ade4]; ca and mjca [ca 
-package].}
+\item{X}{an object of class PCA, CA, MCA, FAMD, MFA, or HMFA [FactoMineR];
+\code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
+\code{dudi}, \code{pca}, \code{coa}, \code{acm}, \code{between}, or
+\code{within} [ade4]; \code{ca} or \code{mjca} [ca];
+\code{correspondence} [MASS]; or \code{expoOutput} [ExPosition].}
 
 \item{choice}{a text specifying the data to be plotted. Allowed values are 
 "variance" or "eigenvalue".}
@@ -68,14 +70,21 @@ or points showing the information retained by each dimension.}
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
-\item{parallel}{logical value. If TRUE, adds a parallel analysis threshold line
-(Horn's method) to help determine the number of components to retain. Components
-with eigenvalues above this line are considered significant. Only works when
-choice = "eigenvalue" and X is a prcomp or princomp object. Default is FALSE.}
+\item{parallel}{logical value. If TRUE, adds a Horn parallel-analysis threshold
+curve. Each point is the 95th percentile of the corresponding ordered
+eigenvalue from independently simulated reference data. Components whose
+eigenvalues exceed their component-specific thresholds are retained by the
+parallel-analysis rule. Correlation PCA uses standardized reference data;
+covariance PCA uses reconstructed marginal scales. This is available only
+when \code{choice = "eigenvalue"} and \code{X} is a sufficiently complete
+\code{prcomp} or \code{princomp} object. Mean centering is required;
+\code{prcomp} also requires retained scores. Custom scaling and incomplete
+covariance decompositions are rejected when their reference distribution
+cannot be reconstructed. Default is FALSE.}
 
-\item{parallel.color}{color of the parallel analysis threshold line. Default is "red".}
+\item{parallel.color}{color of the parallel-analysis threshold curve. Default is "red".}
 
-\item{parallel.lty}{line type for the parallel analysis line. Default is "dashed".}
+\item{parallel.lty}{line type for the parallel-analysis curve. Default is "dashed".}
 
 \item{parallel.iter}{a single positive integer giving the number of
 iterations for parallel analysis simulation. Integer-like numeric values
@@ -108,6 +117,13 @@ Eigenvalues correspond to the amount of the variation explained
  (HMFA) functions. \code{fviz_eig()} validates \code{ncp},
  \code{parallel.iter}, and \code{parallel.seed} before plotting, accepting
  integer-like numeric values while still rejecting fractional inputs.
+
+ Recent versions of \code{FactoMineR::PCA()} may retain only the number of
+ eigenvalues requested through its \code{ncp} argument. When the stored
+ eigenvalues do not account for the result's recorded total inertia,
+ \code{fviz_eig()} warns that the scree plot is incomplete. Refit the PCA
+ with a sufficiently large \code{ncp} to plot the complete spectrum.
+ \code{get_eig()} continues to return the eigenvalues stored in the object.
 }
 \examples{
 # Principal Component Analysis
@@ -127,8 +143,8 @@ fviz_eig(res.pca, choice = "eigenvalue", addlabels=TRUE)
 # Use only bar  or line plot: geom = "bar" or geom = "line"
 fviz_eig(res.pca, geom="line")
 
-# Parallel analysis (Horn's method) to determine number of components
-# Components with eigenvalues above the red line are significant
+# Parallel analysis (Horn's method) to determine the number of components
+# Retain components whose eigenvalues exceed their component-specific points
 fviz_eig(res.pca, choice = "eigenvalue", parallel = TRUE,
          addlabels = TRUE, parallel.color = "red",
          parallel.iter = 10, parallel.seed = 123)
