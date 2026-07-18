@@ -326,7 +326,7 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   full.var.coord <- sweep(full.loadings, 2,
                           sqrt(eig[seq_len(ncol(full.loadings))]), "*")
   var.inertia <- rowSums(full.var.coord^2)
-  if(any(!is.finite(var.inertia)) || any(var.inertia <= .Machine$double.eps))
+  if(any(!is.finite(var.inertia)) || any(var.inertia <= 0))
     stop("Variable correlations are undefined for a zero-inertia PCA input.",
          call. = FALSE)
   var.cor <- sweep(var.coord, 1, sqrt(var.inertia), "/")
@@ -365,15 +365,20 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
         is.finite(step$factor) && abs(step$factor - 1) <= sqrt(.Machine$double.eps)
       scaled[hit] <- is.unit
     }
+    else if(inherits(step, c("step_rm", "step_select", "step_zv", "step_nzv",
+                             "step_corr", "step_lincomb"))){
+      # These fitted steps only remove columns. Values of the surviving PCA
+      # inputs are unchanged, so an earlier centering/scaling proof remains valid.
+    }
     else {
       centered[] <- FALSE
       scaled[] <- FALSE
     }
   }
 
-  internal.center <- pca_step$res$center
-  if(is.numeric(internal.center) && length(internal.center) == length(columns) &&
-     all(is.finite(internal.center))) centered[] <- TRUE
+  # Only a literal center = TRUE proves centering at the training means. prcomp()
+  # also accepts arbitrary numeric centers, which must not be treated as means.
+  if(isTRUE(pca_step$options$center)) centered[] <- TRUE
 
   internal.scale <- pca_step$res$scale
   if(is.numeric(internal.scale) && length(internal.scale) == length(columns) &&

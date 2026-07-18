@@ -245,7 +245,7 @@ warn_truncated_pca_spectrum <- function(n_eigenvalues) {
     if(identical(X[["center"]], FALSE) || is.null(X[["center"]]))
       stop("Parallel analysis requires a mean-centered prcomp fit.")
     score_tolerance <- sqrt(.Machine$double.eps) *
-      max(1, abs(complete_scores))
+      max(abs(complete_scores))
     if(any(abs(colMeans(complete_scores)) > score_tolerance))
       stop("Parallel analysis requires a prcomp fit centered at the variable means.")
     correlation <- !is.null(X[["scale"]]) && !identical(X[["scale"]], FALSE)
@@ -271,7 +271,7 @@ warn_truncated_pca_spectrum <- function(n_eigenvalues) {
       if(retained > n_components)
         stop("The prcomp rotation contains more components than its eigenvalues.")
 
-      tolerance <- sqrt(.Machine$double.eps) * max(1, eigenvalues)
+      tolerance <- sqrt(.Machine$double.eps) * max(eigenvalues)
       if(retained < n_components &&
          any(eigenvalues[seq.int(retained + 1L, n_components)] > tolerance)){
         stop(

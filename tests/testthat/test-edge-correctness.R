@@ -55,6 +55,55 @@ test_that("fviz_cluster aligns exact named assignments and rejects ambiguity", {
   expect_true(all(as.character(both_plot$data$cluster) == "1"))
 })
 
+test_that("PCA metrics remain finite and scale-invariant on tiny or zero axes", {
+  x <- as.matrix(iris[, 1:4])
+  ordinary <- get_pca_ind(prcomp(x, center = TRUE, scale. = FALSE))
+  tiny <- get_pca_ind(prcomp(x * 1e-10, center = TRUE, scale. = FALSE))
+  subnormal_fit <- prcomp(x * 1e-170, center = TRUE, scale. = FALSE)
+  subnormal_square <- get_pca_ind(subnormal_fit)
+
+  expect_equal(tiny$cos2, ordinary$cos2, tolerance = 1e-12)
+  expect_equal(tiny$contrib, ordinary$contrib, tolerance = 1e-12)
+  expect_equal(subnormal_square$cos2, ordinary$cos2, tolerance = 1e-12)
+  expect_equal(subnormal_square$contrib, ordinary$contrib, tolerance = 1e-12)
+  expect_equal(unname(colSums(tiny$contrib)), rep(100, ncol(x)), tolerance = 1e-10)
+  expect_equal(
+    unname(colSums(subnormal_square$contrib)),
+    rep(100, ncol(x)), tolerance = 1e-10
+  )
+  expect_equal(
+    get_pca_var(subnormal_fit)$contrib,
+    get_pca_var(prcomp(x, center = TRUE, scale. = FALSE))$contrib,
+    tolerance = 1e-12
+  )
+
+  rank_deficient <- prcomp(cbind(signal = seq_len(8), constant = 1))
+  ind <- get_pca_ind(rank_deficient)
+  var <- get_pca_var(rank_deficient)
+  expect_true(all(is.finite(ind$cos2)))
+  expect_true(all(is.finite(ind$contrib)))
+  expect_true(all(is.finite(var$contrib)))
+  expect_equal(unname(var$contrib[, 2]), c(0, 0))
+})
+
+test_that("PCA metrics preserve excluded rows without corrupting complete shares", {
+  x <- iris[, 1:4]
+  x[c(2, 11), 1] <- NA_real_
+  fit <- prcomp(
+    ~ ., data = x, center = TRUE, scale. = TRUE,
+    na.action = na.exclude
+  )
+  ind <- get_pca_ind(fit)
+
+  expect_true(all(is.na(ind$cos2[c(2, 11), ])))
+  expect_true(all(is.na(ind$contrib[c(2, 11), ])))
+  expect_true(all(is.finite(ind$cos2[-c(2, 11), ])))
+  expect_equal(
+    unname(colSums(ind$contrib, na.rm = TRUE)),
+    rep(100, ncol(ind$contrib)), tolerance = 1e-10
+  )
+})
+
 test_that("Hopkins sampling is finite, duplicate-aware, and fail-closed", {
   old_warn <- getOption("factoextra.warn_hopkins", TRUE)
   old_cells <- getOption("factoextra.hopkins.max_matrix_cells", 2e7)

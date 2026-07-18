@@ -196,36 +196,18 @@ get_pca_var<-function(res.pca){
   if(isFALSE(pca.center[1])) pca.center <- rep(0, ncol(data))
   if(isFALSE(pca.scale[1])) pca.scale <- rep(1, ncol(data))
 
-  # OPTIMIZED: Compute squared distances using vectorized operations
-  # d2[i] = sum(((data[i,] - center) / scale)^2)
-  # Using sweep() for center/scale and rowSums() for summation
+  # Compute distances in the PCA metric. The squared-share helper rescales each
+  # row before squaring, so valid globally tiny or large inputs do not
+  # underflow or overflow merely because of their measurement units.
   data_centered <- sweep(data, 2, pca.center, "-")
   data_scaled <- sweep(data_centered, 2, pca.scale, "/")
-  d2 <- rowSums(data_scaled^2)
-
-  # OPTIMIZED: Compute cos2 using vectorized division
-
-  # cos2[i,j] = coord[i,j]^2 / d2[i]
-  ind.coord.sq <- ind.coord^2
-  ind.cos2 <- matrix(0, nrow = n.ind, ncol = n.dim)
-  positive_d2 <- d2 > .Machine$double.eps
-  if(any(positive_d2)) {
-    ind.cos2[positive_d2, ] <- ind.coord.sq[positive_d2, , drop = FALSE] / d2[positive_d2]
-  }
+  ind.cos2 <- .pca_row_squared_shares(ind.coord, data_scaled)
 
   # Contributions are shares of a component's score sum of squares. This
   # definition is backend-independent: stats::prcomp() reports eigenvalues with
   # an (n - 1) divisor whereas stats::princomp() uses n, so dividing by the
   # backend eigenvalue made prcomp contributions sum to 100 * (n - 1) / n.
-  comp.ss <- colSums(ind.coord.sq)
-  positive.comp <- comp.ss > .Machine$double.eps
-  ind.contrib <- matrix(0, nrow = n.ind, ncol = n.dim)
-  if(any(positive.comp)) {
-    ind.contrib[, positive.comp] <- sweep(
-      ind.coord.sq[, positive.comp, drop = FALSE],
-      2, comp.ss[positive.comp], "/"
-    ) * 100
-  }
+  ind.contrib <- .pca_column_contributions(ind.coord)
 
   # Set column and row names
   dim.names <- paste0("Dim.", 1:n.dim)
@@ -248,6 +230,8 @@ get_pca_var<-function(res.pca){
 # - Maintains full econometric precision
 .get_pca_var_results <- function(var.coord){
 
+  var.coord <- as.matrix(var.coord)
+
   # Preserve row names from input
   rnames <- rownames(var.coord)
 
@@ -258,11 +242,7 @@ get_pca_var<-function(res.pca){
   # var.cos2*100/total Cos2 of the component
   # Using colSums instead of apply(, 2, sum) - much faster
 
-  comp.cos2 <- colSums(var.cos2)
-
-  # OPTIMIZED: Using sweep instead of t(apply()) for column-wise division
-  # contrib[i,j] = var.cos2[i,j] * 100 / comp.cos2[j]
-  var.contrib <- sweep(var.cos2, 2, comp.cos2, "/") * 100
+  var.contrib <- .pca_column_contributions(var.coord)
 
   # Set column names
   dim.names <- paste0("Dim.", seq_len(ncol(var.coord)))
@@ -294,18 +274,9 @@ get_pca_var<-function(res.pca){
   cw  <- res.pca$cw
   lw  <- res.pca$lw
   n.dim <- ncol(ind.coord)
-  eigenvalues <- res.pca$eig[seq_len(n.dim)]
 
-  d2 <- rowSums(sweep(tab^2, 2, cw, "*"))
-  coord.sq <- ind.coord^2
-
-  ind.cos2 <- matrix(0, nrow = nrow(ind.coord), ncol = n.dim)
-  positive_d2 <- d2 > .Machine$double.eps
-  if(any(positive_d2))
-    ind.cos2[positive_d2, ] <- coord.sq[positive_d2, , drop = FALSE] / d2[positive_d2]
-
-  ind.contrib <- sweep(coord.sq, 2, eigenvalues, "/")
-  ind.contrib <- sweep(ind.contrib, 1, lw, "*") * 100
+  ind.cos2 <- .pca_row_squared_shares(ind.coord, tab, column_weights = cw)
+  ind.contrib <- .pca_column_contributions(ind.coord, row_weights = lw)
 
   dim.names <- paste0("Dim.", seq_len(n.dim))
   colnames(ind.coord) <- colnames(ind.cos2) <- colnames(ind.contrib) <- dim.names
@@ -314,4 +285,74 @@ get_pca_var<-function(res.pca){
   rownames(ind.coord) <- rownames(ind.cos2) <- rownames(ind.contrib) <- rnames
 
   list(coord = ind.coord, cos2 = ind.cos2, contrib = ind.contrib)
+}
+
+# Stable row-wise squared shares. Each row is normalized before squaring, with
+# the same scale applied to the numerator coordinates and reference metric.
+.pca_row_squared_shares <- function(coord, reference, column_weights = NULL){
+  coord <- as.matrix(coord)
+  reference <- as.matrix(reference)
+  result <- matrix(0, nrow = nrow(coord), ncol = ncol(coord),
+                   dimnames = dimnames(coord))
+
+  finite_rows <- apply(is.finite(coord), 1, all) &
+    apply(is.finite(reference), 1, all)
+  result[!finite_rows, ] <- NA_real_
+  if(!any(finite_rows)) return(result)
+
+  row_scale <- pmax(
+    apply(abs(coord[finite_rows, , drop = FALSE]), 1, max),
+    apply(abs(reference[finite_rows, , drop = FALSE]), 1, max)
+  )
+  positive <- row_scale > 0
+  if(!any(positive)) return(result)
+
+  finite_indices <- which(finite_rows)
+  target_rows <- finite_indices[positive]
+  scaled_coord <- sweep(coord[target_rows, , drop = FALSE], 1,
+                        row_scale[positive], "/")
+  scaled_reference <- sweep(reference[target_rows, , drop = FALSE], 1,
+                            row_scale[positive], "/")
+  reference_sq <- scaled_reference^2
+  if(!is.null(column_weights))
+    reference_sq <- sweep(reference_sq, 2, column_weights, "*")
+  denominator <- rowSums(reference_sq)
+  valid <- is.finite(denominator) & denominator > 0
+  if(any(valid)) {
+    result[target_rows[valid], ] <- scaled_coord[valid, , drop = FALSE]^2 /
+      denominator[valid]
+  }
+  result
+}
+
+# Stable per-axis contributions. Rescaling each coordinate column cancels from
+# numerator and denominator while avoiding underflow/overflow in x^2.
+.pca_column_contributions <- function(coord, row_weights = NULL){
+  coord <- as.matrix(coord)
+  result <- matrix(0, nrow = nrow(coord), ncol = ncol(coord),
+                   dimnames = dimnames(coord))
+  finite_rows <- apply(is.finite(coord), 1, all)
+  if(!is.null(row_weights))
+    finite_rows <- finite_rows & is.finite(row_weights) & row_weights >= 0
+  result[!finite_rows, ] <- NA_real_
+  if(!any(finite_rows)) return(result)
+
+  complete_coord <- coord[finite_rows, , drop = FALSE]
+  column_scale <- apply(abs(complete_coord), 2, max)
+  positive <- column_scale > 0
+  if(!any(positive)) return(result)
+
+  scaled_sq <- sweep(complete_coord[, positive, drop = FALSE], 2,
+                     column_scale[positive], "/")^2
+  if(!is.null(row_weights))
+    scaled_sq <- sweep(scaled_sq, 1, row_weights[finite_rows], "*")
+  denominator <- colSums(scaled_sq)
+  valid <- is.finite(denominator) & denominator > 0
+  if(any(valid)) {
+    target_columns <- which(positive)[valid]
+    result[finite_rows, target_columns] <- sweep(
+      scaled_sq[, valid, drop = FALSE], 2, denominator[valid], "/"
+    ) * 100
+  }
+  result
 }

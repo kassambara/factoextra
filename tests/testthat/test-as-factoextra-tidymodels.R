@@ -115,6 +115,31 @@ test_that("recipe PCA detects internal scaling and rejects uncentered semantics"
     recipes::step_scale(recipes::all_numeric_predictors()) |>
     recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
   expect_error(as_factoextra_pca(recipes::prep(scale_only)), "uncentered")
+
+  arbitrary_center <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_pca(
+      recipes::all_numeric_predictors(), num_comp = 2,
+      options = list(center = rep(0, 4))
+    )
+  expect_error(as_factoextra_pca(recipes::prep(arbitrary_center)), "uncentered")
+})
+
+test_that("column-only recipe steps preserve centering and scaling evidence", {
+  rec <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_normalize(recipes::all_numeric_predictors()) |>
+    recipes::step_corr(recipes::all_numeric_predictors(), threshold = 0.99) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
+  prepped <- recipes::prep(rec)
+  obj <- as_factoextra_pca(prepped)
+  baked <- recipes::bake(prepped, new_data = NULL)
+  score_names <- recipes::names0(2, prepped$steps[[3]]$prefix)
+
+  expect_true(obj$scale.unit)
+  expect_equal(
+    abs(unname(obj$ind$coord)),
+    abs(unname(as.matrix(baked[, score_names, drop = FALSE]))),
+    tolerance = 1e-10
+  )
 })
 
 test_that("as_factoextra_pca validates finite coordinates and eigenvalues", {

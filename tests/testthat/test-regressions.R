@@ -618,6 +618,20 @@ test_that("Horn prcomp analysis fails closed when preprocessing is unrecoverable
     "retx = TRUE"
   )
 
+  tiny <- x * 1e-10
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(tiny, center = rep(0, ncol(tiny)), scale. = FALSE)
+    ),
+    "centered at the variable means"
+  )
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(tiny, center = TRUE, scale. = FALSE, rank. = 1)
+    ),
+    "truncated covariance prcomp"
+  )
+
   x_na <- as.data.frame(x)
   x_na[c(2, 11), 1] <- NA_real_
   fit_na <- prcomp(
