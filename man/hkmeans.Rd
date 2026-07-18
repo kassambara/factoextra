@@ -61,7 +61,7 @@ the hierarchical clustering and the k-means methods. The procedure is explained 
 }
 }
 \details{
-The procedure is as follow:   
+The procedure is as follows:
      
 1. Compute hierarchical clustering
    

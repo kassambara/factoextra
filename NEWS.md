@@ -89,6 +89,12 @@
   already depends on.
 * Fixed a typo in the default title of `fviz_cos2()` / `fviz_contrib()` for
   quantitative variables ("quantitive" -> "quantitative").
+* Clarified and corrected documentation across several help pages: the
+  contribution-based selection help now says "highest contributions" (was
+  "highest cos2"), `fviz_famd()`'s `habillage` help refers to a FAMD (not MFA)
+  object, the ExPosition class name is spelled `expoOutput` in `fviz_ca()` /
+  `fviz_mca()`, and the `clean_lock_files()` example is now self-contained.
+  Thanks to @erdeyl (#274).
 
 # factoextra 2.1.0
 

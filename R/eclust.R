@@ -39,12 +39,12 @@ NULL
 #'   "agnes" or "diana". Ignored when \code{x} is already a \code{"dist"} object.
 #' @param hc_method the agglomeration method to be used (?hclust): "ward.D", 
 #'   "ward.D2", "single", "complete", "average", ...
-#' @param gap_maxSE a list containing the parameters (method and SE.factor) for 
-#'   determining the location of the maximum of the gap statistic (Read the 
-#'   documentation ?cluster::maxSE).
+#' @param gap_maxSE a list containing the \code{method} and \code{SE.factor}
+#'   parameters passed to \code{\link[cluster]{maxSE}}. The default is
+#'   \code{list(method = "firstSEmax", SE.factor = 1)}.
 #' @param nboot integer, number of Monte Carlo ("bootstrap") samples. Used only 
-#'   for determining the number of clusters using gap statistic.
-#' @param verbose logical value. If TRUE, the result of progress is printed.
+#'   for determining the number of clusters using the gap statistic.
+#' @param verbose logical value. If TRUE, progress information is printed.
 #' @param seed integer used for seeding the random number generator.
 #' @param ... other arguments to be passed to FUNcluster.
 #' @return Returns an object of class "eclust" containing the result of the 
@@ -58,7 +58,7 @@ NULL
 #'   width of each cluster) and $avg.width (average width of all clusters)
 #'   \item size: the size of clusters \item data: a matrix containing the
 #'   original or the standardized data (if stand = TRUE) } The "eclust" class
-#'   has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
+#'   has methods for fviz_silhouette(), fviz_dend(), and fviz_cluster().
 #' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, 
 #'   \code{\link{fviz_cluster}}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}

@@ -13,7 +13,7 @@ NULL
 #' @param res.ca an object of class CA [FactoMineR], ca [ca], coa [ade4];
 #'  correspondence [MASS].
 #' @param element the element to subset from the output. Possible values are "row" or "col".
-#' @return a list of matrices containing the results for the active rows/columns including : 
+#' @return a list of matrices containing the results for the active rows/columns, including:
 #' \item{coord}{coordinates for the rows/columns}
 #' \item{cos2}{cos2 for the rows/columns}
 #' \item{contrib}{contributions of the rows/columns}
@@ -225,4 +225,3 @@ get_ca_row <- function(res.ca){
   class(row)<-c("factoextra", "ca_row")
   return(row)
 }
-
