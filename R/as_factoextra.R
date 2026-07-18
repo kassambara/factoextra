@@ -109,14 +109,31 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
   if(missing(ind.coord) || is.null(ind.coord))
     stop("`ind.coord` is required.", call. = FALSE)
 
+  if(!is.logical(scale.unit) || length(scale.unit) != 1L || is.na(scale.unit))
+    stop("`scale.unit` must be TRUE or FALSE.", call. = FALSE)
+
   ind.coord <- .fe_as_dim_matrix(ind.coord, "ind.coord")
   k <- ncol(ind.coord)
 
   # Eigenvalues: default to the variance of each coordinate column.
-  if(is.null(eig)) eig <- apply(ind.coord, 2, stats::var)
+  if(is.null(eig)) {
+    if(nrow(ind.coord) < 2L)
+      stop("At least two observations are required to infer `eig` from `ind.coord`.",
+           call. = FALSE)
+    eig <- apply(ind.coord, 2, stats::var)
+  }
   if(!is.numeric(eig) || length(eig) < k)
     stop("`eig` must be a numeric vector with at least ", k,
          " value(s) (one per dimension).", call. = FALSE)
+  eig <- as.numeric(eig)
+  if(any(!is.finite(eig)))
+    stop("`eig` must contain finite values only.", call. = FALSE)
+  eig.tol <- sqrt(.Machine$double.eps) * max(abs(eig))
+  if(any(eig < -eig.tol))
+    stop("`eig` must contain non-negative eigenvalues.", call. = FALSE)
+  eig[eig < 0] <- 0
+  if(!any(eig > 0))
+    stop("`eig` must contain at least one positive eigenvalue.", call. = FALSE)
 
   ind <- list(
     coord   = ind.coord,
@@ -140,7 +157,7 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 
   structure(
     list(ind = ind, var = var, eig.values = as.numeric(eig),
-         scale.unit = isTRUE(scale.unit)),
+         scale.unit = scale.unit),
     class = c("factoextra_pca", "list")
   )
 }
@@ -306,6 +323,8 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
     stop("`", argname, "` must be numeric.", call. = FALSE)
   if(ncol(x) < 1)
     stop("`", argname, "` must have at least one column (dimension).", call. = FALSE)
+  if(any(!is.finite(x)))
+    stop("`", argname, "` must contain finite values only.", call. = FALSE)
   colnames(x) <- paste0("Dim.", seq_len(ncol(x)))
   if(is.null(rownames(x))) rownames(x) <- as.character(seq_len(nrow(x)))
   x
@@ -319,6 +338,8 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   if(!all(dim(x) == dim(coord)))
     stop("`", argname, "` must have the same dimensions as its coordinates (",
          nrow(coord), " x ", ncol(coord), ").", call. = FALSE)
+  if(any(!is.finite(x)))
+    stop("`", argname, "` must contain finite values only.", call. = FALSE)
   colnames(x) <- colnames(coord)
   rownames(x) <- rownames(coord)
   x

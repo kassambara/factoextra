@@ -95,6 +95,13 @@
   object, the ExPosition class name is spelled `expoOutput` in `fviz_ca()` /
   `fviz_mca()`, and the `clean_lock_files()` example is now self-contained.
   Thanks to @erdeyl (#274).
+* Clearer, earlier input validation for edge cases, so mistakes fail with an
+  informative message instead of a downstream error: `fviz_umap()`/`fviz_tsne()`
+  require two distinct positive integer `dims`; `fviz_nbclust()` validates
+  `k.max`; `fviz_dend()` validates `k`/`h` against the tree; `get_clust_tendency()`
+  checks `n` and requires finite data; and `as_factoextra_pca()` validates
+  `scale.unit` and the supplied eigenvalues. Valid calls are unaffected.
+  Thanks to @erdeyl (#274).
 
 # factoextra 2.1.0
 

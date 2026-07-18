@@ -92,14 +92,17 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     stop("data must be data.frame or matrix")
   if (!is.numeric(data))
     stop("data must contain numeric values only")
-  if (!is.numeric(n) || length(n) != 1L || is.na(n) || n < 1 || n %% 1 != 0)
+  if (!is.numeric(n) || length(n) != 1L || is.na(n) || !is.finite(n) ||
+      n < 1 || n %% 1 != 0)
     stop("n must be a positive integer")
 
   data <- na.omit(data)
   if (nrow(data) < 2)
     stop("data must contain at least two complete rows")
+  if(any(!is.finite(data)))
+    stop("data must contain finite values only")
   if (n >= nrow(data))
-    stop("n must be no larger than num of samples")
+    stop("n must be smaller than the number of complete samples")
   rownames(data) <- paste0("r", seq_len(nrow(data)))
 
   if (!is.null(seed)) {

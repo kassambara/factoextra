@@ -21,7 +21,8 @@ NULL
 #'   \code{$embedding}), an \code{Rtsne::Rtsne()} result (\code{$Y}), a
 #'   \code{umap::umap()} result (\code{$layout}), or a numeric matrix / data frame
 #'   of coordinates (one column per dimension).
-#' @param dims length-2 integer vector: which two embedding dimensions to plot.
+#' @param dims two distinct positive integer indices specifying which embedding
+#'   dimensions to plot.
 #' @param habillage an optional factor / vector used to colour the points by group
 #'   (discrete). Its length must equal the number of embedded observations.
 #' @param col.ind point colour: a factor / character vector (discrete groups) or a
@@ -57,12 +58,12 @@ NULL
 #' @return a ggplot2 object.
 #'
 #' @details UMAP and t-SNE produce a low-dimensional embedding, not a variance
-#' decomposition. In the layout, \strong{tight local neighbourhoods are
-#' trustworthy}, but the \strong{size} of a cluster, the \strong{distance} between
-#' well-separated clusters and the amount of empty space between them are not
-#' quantitatively meaningful and change with the method's \code{perplexity} /
-#' \code{n_neighbors} settings (Wattenberg et al., 2016) - read groupings, not
-#' geometry. Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
+#' decomposition. Local relationships are often more informative than global
+#' geometry, but both remain method- and parameter-dependent. In particular, the
+#' \strong{size} of a cluster, the \strong{distance} between well-separated
+#' clusters, and the amount of empty space between them are not quantitatively
+#' meaningful and change with \code{perplexity} or \code{n_neighbors}
+#' (Wattenberg et al., 2016). Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
 #' / \code{FeaturePlot()} and \code{ggpca}.
 #'
 #' @references
@@ -240,8 +241,11 @@ fviz_tsne <- function(X, dims = c(1L, 2L), habillage = NULL, col.ind = NULL,
 # Extract an n x 2 coordinate matrix from an embedding object. Matrix/data.frame
 # are handled FIRST so `$` is never applied to an atomic matrix.
 .fe_layout <- function(x, dims = c(1L, 2L)) {
-  if(length(dims) != 2L || !is.numeric(dims) || anyNA(dims))
-    stop("`dims` must be two column indices, e.g. c(1, 2).", call. = FALSE)
+  if(length(dims) != 2L || !is.numeric(dims) || anyNA(dims) ||
+     any(!is.finite(dims)) || any(dims %% 1 != 0) || any(dims < 1) ||
+     length(unique(dims)) != 2L)
+    stop("`dims` must be two distinct positive integer column indices, e.g. c(1, 2).",
+         call. = FALSE)
   dims <- as.integer(dims)
 
   if(is.data.frame(x)) {
