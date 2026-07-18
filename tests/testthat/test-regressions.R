@@ -1066,6 +1066,17 @@ test_that("as_factoextra_pca() validates inputs and errors clearly", {
                "same number of dimensions")
   expect_error(as_factoextra_pca(mds, eig = 1),         # too few eigenvalues
                "at least 2")
+
+  # PR #274 additive constructor validation
+  expect_error(as_factoextra_pca(mds, scale.unit = "yes"), "must be TRUE or FALSE")
+  expect_error(as_factoextra_pca(mds, eig = c(NA, 1)), "finite values only")
+  expect_error(as_factoextra_pca(mds, eig = c(-1, -2)), "non-negative")
+  expect_error(as_factoextra_pca(mds, eig = c(0, 0)), "at least one positive")
+  expect_error(as_factoextra_pca(mds[1, , drop = FALSE]), "At least two observations")
+  mds_inf <- mds; mds_inf[1, 1] <- Inf
+  expect_error(as_factoextra_pca(mds_inf), "finite values only")
+  expect_error(as_factoextra_pca(mds, var.coord = mds, var.cos2 = matrix(Inf, nrow(mds), 2)),
+               "finite values only")
 })
 
 test_that("as_factoextra_pca() does not change existing prcomp/PCA paths (no-regression)", {

@@ -17,6 +17,19 @@ test_that("hcut validates k and scaled inputs", {
   )
 })
 
+test_that("fviz_dend validates height cuts before deriving k", {
+  dend <- stats::as.dendrogram(stats::hclust(stats::dist(USArrests)))
+  lowest <- min(dendextend::heights_per_k.dendrogram(dend)[-1])
+
+  expect_error(
+    factoextra:::.get_k(dend, h = lowest - 1),
+    "at or below the lowest merge height"
+  )
+  expect_error(factoextra:::.get_k(dend, h = NA_real_), "finite numeric")
+  expect_error(factoextra:::.get_k(dend, h = Inf), "finite numeric")
+  expect_error(factoextra:::.get_k(dend, h = "1"), "finite numeric")
+})
+
 test_that("hcut requires dist input when isdiss is TRUE", {
   x <- iris[, 1:4]
   bad_dist <- stats::as.dist(matrix(c(
@@ -62,10 +75,16 @@ test_that("get_clust_tendency validates numeric data and n", {
   bad_x <- as.matrix(data.frame(a = letters[1:5], b = letters[1:5]))
   expect_error(get_clust_tendency(bad_x, n = 2, graph = FALSE), "numeric")
   expect_error(get_clust_tendency(iris[, 1:4], n = 0, graph = FALSE), "positive integer")
-  expect_error(get_clust_tendency(iris[, 1:4], n = nrow(iris), graph = FALSE), "no larger")
+  expect_error(
+    get_clust_tendency(iris[, 1:4], n = nrow(iris), graph = FALSE),
+    "smaller than the number of complete samples"
+  )
 
   x_na <- matrix(c(1, 2, NA, NA), ncol = 2)
   expect_error(get_clust_tendency(x_na, n = 1, graph = FALSE), "at least two complete rows")
+
+  x_inf <- matrix(c(1, 2, Inf, 4, 5, 6), ncol = 2)
+  expect_error(get_clust_tendency(x_inf, n = 1, graph = FALSE), "finite values only")
 })
 
 test_that("get_dist validates scaled inputs and fviz_dist validates dist values", {
