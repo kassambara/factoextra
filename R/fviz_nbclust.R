@@ -319,7 +319,7 @@ fviz_gap_stat <- function(gap_stat,  linecolor = "steelblue",
   # NULL keeps the historical behavior of marking the optimum; FALSE omits it.
   if(is.null(mark_optimal)) mark_optimal <- TRUE
   if(is.list(maxSE)){
-    if(is.null(maxSE$method)) maxSE$method = "firstmax"
+    if(is.null(maxSE$method)) maxSE$method = "firstSEmax"
     if(is.null(maxSE$SE.factor)) maxSE$SE.factor = 1
   }
   else stop("The argument maxSE must be a list containing the parameters method and SE.factor")

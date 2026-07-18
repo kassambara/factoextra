@@ -90,8 +90,8 @@ variables.}
 respectively. Default is geom.ind = c("point", "text), geom.var = 
 c("arrow", "text").}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by

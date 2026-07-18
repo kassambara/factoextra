@@ -79,6 +79,17 @@
   convenience for building it inline. The default (no `union`, or `union = FALSE`)
   is unchanged. Thanks to @qfazille (#53).
 
+## Main changes
+
+* `fviz_gap_stat()` (and `fviz_nbclust(method = "gap_stat")`): when a partial
+  `maxSE` list is supplied without a `method`, the fallback is now `"firstSEmax"`
+  (the documented default and `cluster::maxSE`'s default) instead of `"firstmax"`.
+  This only affects callers who pass, e.g., `maxSE = list(SE.factor = 2)` with no
+  `method`; the previous `"firstmax"` fallback silently ignored the `SE.factor`
+  they set (that rule does not use it). Default calls and calls that pass a
+  `method` are unchanged. `eclust()`'s internal gap default is aligned for
+  consistency. Thanks to @erdeyl (#274).
+
 ## Minor changes
 
 * `fviz_dend()`: corrected the documentation of the `type` argument, which listed
@@ -101,6 +112,25 @@
   `k.max`; `fviz_dend()` validates `k`/`h` against the tree; `get_clust_tendency()`
   checks `n` and requires finite data; and `as_factoextra_pca()` validates
   `scale.unit` and the supplied eigenvalues. Valid calls are unaffected.
+  Thanks to @erdeyl (#274).
+
+## Bug fixes
+
+* `fviz_ca_biplot()` / `fviz_ca()`: `invisible = "col.sup"` now hides
+  supplementary columns (the column branch was keyed off the row-supplementary
+  flag, so supplementary columns stayed visible). Thanks to @erdeyl (#274).
+* `fviz_mclust()` now applies the `ggtheme` argument to every plot type
+  (`"classification"`, `"uncertainty"`, `"BIC"`); it previously ignored it and
+  always used `theme_classic()`. The default is unchanged. Thanks to @erdeyl (#274).
+* `fviz_cluster()` now aligns a named clustering to the plotted data by row name
+  when both carry complete, unique, matching names, so points are not
+  mis-coloured when `data` is ordered differently from the clustering; it also
+  accepts a `clustering` component (as produced by `pam()`/`clara()`) in a custom
+  `list(data=, clustering=)` object. Assignments that do not line up by name are
+  used positionally, as before. Thanks to @erdeyl (#274).
+* `invisible = "all"` now hides all plotted elements (it was silently accepted
+  but had no effect); on the individual and variable maps, a selection by `name`
+  that includes names not present now warns instead of silently dropping them.
   Thanks to @erdeyl (#274).
 
 # factoextra 2.1.0
