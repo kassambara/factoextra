@@ -863,6 +863,7 @@ test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regres
     expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
     expect_equal(nrow(ind$coord), nrow(iris))
     expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+    expect_true(all(abs(colSums(ind$contrib) - 100) < 1e-6))
   }
 })
 
@@ -1118,4 +1119,68 @@ test_that("fviz_mclust honors ggtheme for every plot type", {
     plot <- fviz_mclust(model, what = what, ggtheme = custom_theme)
     expect_equal(plot$theme$plot.background$fill, "linen")
   }
+})
+
+# ---- Batch D1 (PR #274) get_pca contribution normalization ----------------
+
+test_that("ade4 dudi.pca individual results respect nonuniform row weights", {
+  skip_if_not_installed("ade4")
+  row_weights <- seq_len(nrow(iris))
+  row_weights <- row_weights / sum(row_weights)
+  pca <- ade4::dudi.pca(
+    iris[, -5], row.w = row_weights, scannf = FALSE, nf = 3
+  )
+
+  ind <- get_pca_ind(pca)
+  inertia <- ade4::inertia.dudi(pca, row.inertia = TRUE)
+  ade4_contrib <- as.matrix(
+    inertia$row.abs[, seq_len(ncol(ind$contrib)), drop = FALSE]
+  )
+
+  expect_equal(unname(ind$contrib), unname(ade4_contrib), tolerance = 1e-8)
+  expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+               tolerance = 1e-8)
+  expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+})
+
+test_that("PCA individual contributions are backend-independent and zero-safe", {
+  x <- iris[, -5]
+  fits <- list(
+    prcomp(x, center = TRUE, scale. = TRUE),
+    prcomp(x, center = TRUE, scale. = FALSE),
+    princomp(x, cor = TRUE),
+    princomp(x, cor = FALSE)
+  )
+  for(fit in fits) {
+    ind <- get_pca_ind(fit)
+    truth <- sweep(ind$coord^2, 2, colSums(ind$coord^2), "/") * 100
+    expect_equal(ind$contrib, truth, tolerance = 1e-10,
+                 ignore_attr = TRUE)
+    expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+                 tolerance = 1e-10)
+  }
+
+  coord <- cbind(nonzero = c(-1, 1), zero = c(0, 0))
+  out <- factoextra:::.get_pca_ind_results(
+    coord, data = cbind(c(-1, 1), c(0, 0)), eigenvalues = c(1, 0),
+    pca.center = c(0, 0), pca.scale = c(1, 1)
+  )
+  expect_true(all(is.finite(out$contrib)))
+  expect_equal(unname(out$contrib[, 2]), c(0, 0))
+  expect_equal(sum(out$contrib[, 1]), 100)
+})
+
+
+test_that("get_pca contributions/cos2 match FactoMineR::PCA (independent-engine cross-validation)", {
+  skip_if_not_installed("FactoMineR")
+  X <- iris[, -5]
+  pc <- prcomp(X, scale. = TRUE)
+  fm <- FactoMineR::PCA(X, scale.unit = TRUE, graph = FALSE, ncp = 4)
+  ind <- get_pca_ind(pc); var <- get_pca_var(pc)
+  # Contributions and cos2 are sign-invariant, so they must match FactoMineR
+  # exactly even though prcomp's axis signs may differ.
+  expect_equal(unname(ind$contrib), unname(fm$ind$contrib), tolerance = 1e-8)
+  expect_equal(unname(var$contrib), unname(fm$var$contrib), tolerance = 1e-8)
+  expect_equal(unname(ind$cos2),    unname(fm$ind$cos2),    tolerance = 1e-8)
+  expect_equal(unname(var$cos2),    unname(fm$var$cos2),    tolerance = 1e-8)
 })

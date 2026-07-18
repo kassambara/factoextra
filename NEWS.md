@@ -81,6 +81,16 @@
 
 ## Main changes
 
+* `get_pca_ind()`: individual contributions for `prcomp` objects, and for `ade4`
+  PCA objects with non-uniform row weights, are now normalized to sum to 100
+  percent per axis, matching `FactoMineR::PCA()`. Previously `prcomp` individual
+  contributions were divided by the (n-1)-normalized eigenvalue and summed to
+  `100 * (n - 1) / n` instead of 100. This changes the individual contribution
+  values returned for those objects (and any `fviz_contrib()` / `fviz_pca()`
+  colouring derived from them). `princomp` individual contributions, all
+  variable contributions, coordinates, and cos2 are unchanged. Cross-validated
+  against `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
+
 * `fviz_gap_stat()` (and `fviz_nbclust(method = "gap_stat")`): when a partial
   `maxSE` list is supplied without a `method`, the fallback is now `"firstSEmax"`
   (the documented default and `cluster::maxSE`'s default) instead of `"firstmax"`.
