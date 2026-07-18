@@ -14,7 +14,7 @@ NULL
 #' @param element the element to subset from the output. Possible values are
 #'   "ind", "var", "quanti.var", "quali.var" or "quali.sup".
 #' @return a list of matrices containing the results for the active 
-#' individuals and variables, including : 
+#' individuals and variables, including:
 #' \item{coord}{coordinates of individuals/variables.}
 #' \item{cos2}{cos2 values representing the quality of representation on the factor map.}
 #' \item{contrib}{contributions of individuals / variables to the principal components.}

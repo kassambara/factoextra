@@ -21,7 +21,7 @@
 #' @param iter.max the maximum number of iterations allowed for k-means.
 #' @param km.algorithm the algorithm to be used for kmeans (see ?kmeans).
 #' @details 
-#' The procedure is as follow:   
+#' The procedure is as follows:
 #'      
 #' 1. Compute hierarchical clustering
 #'    

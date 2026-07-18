@@ -5,7 +5,7 @@ NULL
 #'@description Multiple Correspondence Analysis (MCA) is an extension of simple 
 #'  CA to analyse a data table containing more than two categorical variables. 
 #'  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
-#'  the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
+#'  the R functions: MCA [in FactoMineR], acm [in ade4], and expoOutput/epMCA [in
 #'  ExPosition]. Read more: 
 #'  \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/}{Multiple
 #'   Correspondence Analysis Essentials.}
@@ -13,37 +13,37 @@ NULL
 #'  \itemize{ \item fviz_mca_ind(): Graph of individuals \item fviz_mca_var():
 #'  Graph of variables \item fviz_mca_biplot(): Biplot of individuals and
 #'  variables \item fviz_mca(): An alias of fviz_mca_biplot() }
-#'@param X an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
+#'@param X an object of class MCA [FactoMineR], acm [ade4] and expoOutput/epMCA
 #'  [ExPosition].
 #'@inheritParams fviz_pca
 #' @param geom.ind,geom.var as \code{geom} but for individuals and variables,
 #'   respectively. Default is geom.ind = c("point", "text), geom.var =
 #'   c("point", "text").
 #'@param label a text specifying the elements to be labelled. Default value is 
-#'  "all". Allowed values are "none" or the combination of c("ind", 
+#'  "all". Allowed values are "all", "none", or a combination of c("ind",
 #'  "ind.sup","var", "quali.sup",  "quanti.sup"). "ind" can be used to label 
 #'  only active individuals. "ind.sup" is for supplementary individuals. "var" 
 #'  is for active variable categories. "quali.sup" is for supplementary 
 #'  qualitative variable categories. "quanti.sup" is for quantitative 
 #'  supplementary variables.
 #'@param invisible a text specifying the elements to be hidden on the plot. 
-#'  Default value is "none". Allowed values are the combination of c("ind", 
+#'  Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 #'  "ind.sup","var", "quali.sup",  "quanti.sup").
 #'@param habillage an optional factor variable for coloring the observations by 
 #'  groups. Default value is "none". If X is an MCA object from FactoMineR 
 #'  package, habillage can also specify the index of the factor variable in the 
 #'  data.
 #'@param col.ind,col.var color for individuals and variables, respectively. Can 
-#'  be a continuous variable or a factor variable. Possible values include also
-#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+#'  be a continuous variable or a factor variable. Possible values also include
+#'  "cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 #'  individuals/variables are automatically controlled by their qualities
 #'  ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
 #'  values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
 #'  ....), make sure that habillage ="none".
 #'@param alpha.ind,alpha.var controls the transparency of individual and 
-#'  variable colors, respectively. The value can variate from 0 (total 
+#'  variable colors, respectively. The value can vary from 0 (total
 #'  transparency) to 1 (no transparency). Default value is 1. Possible values 
-#'  include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+#'  also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 #'  transparency for individual/variable colors are automatically controlled by 
 #'  their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
 #'  , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -56,8 +56,8 @@ NULL
 #'  individuals / biplot map as correlation arrows (see the Details section).
 #'  Default \code{FALSE} leaves the map unchanged. Used by \code{fviz_mca_ind()}
 #'  and \code{fviz_mca_biplot()}.
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param choice the graph to plot. Allowed values include: i) "var" and 
 #'  "mca.cor" for plotting the correlation between variables and principal 
@@ -78,8 +78,8 @@ NULL
 #'  the top-cos2 ones. }
 #'@inheritParams ggpubr::ggpar
 #'@inheritParams fviz
-#'@param ... Additional arguments. \itemize{ \item in fviz_mca_ind(), 
-#'  fviz_mca_var() and fviz_mca_cor(): Additional arguments are passed to the 
+#'@param ... Additional arguments. \itemize{ \item in fviz_mca_ind() and
+#'  fviz_mca_var() (including \code{choice = "mca.cor"}): Additional arguments are passed to the
 #'  functions fviz() and ggpubr::ggpar(). \item in fviz_mca_biplot() and 
 #'  fviz_mca(): Additional arguments are passed to fviz_mca_ind() and 
 #'  fviz_mca_var().}
@@ -319,5 +319,3 @@ fviz_mca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
 fviz_mca <- function(X, ...){
   fviz_mca_biplot(X, ...)
 }
-
-

@@ -26,7 +26,7 @@ get_hmfa_partial(res.hmfa)
 }
 \value{
 a list of matrices containing the results for the active 
-  individuals, variables, groups and partial nodes, including : 
+  individuals, variables, groups, and partial nodes, including:
   \item{coord}{coordinates} \item{cos2}{cos2} 
   \item{contrib}{contributions}
 }
@@ -36,8 +36,8 @@ contributions) for the active individuals/quantitative variables/qualitative
 variable categories/groups/partial axes from Hierarchical Multiple Factor
 Analysis (HMFA) outputs.\cr\cr \itemize{ \item get_hmfa(): Extract the
 results for variables and individuals \item get_hmfa_ind(): Extract the
-results for individuals only \item get_mfa_var(): Extract the results for
-variables (quantitatives, qualitatives and groups) 
+results for individuals only \item get_hmfa_var(): Extract the results for
+quantitative variables, qualitative variables, and groups
 \item get_hmfa_partial(): Extract the results for partial.node. }
 }
 \examples{

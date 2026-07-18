@@ -27,7 +27,7 @@ NULL
 #'  data.
 #'@param col.ind,col.var,col.axes color for individuals, variables and col.axes 
 #'  respectively. Can be a continuous variable or a factor variable. Possible
-#'  values include also : "cos2", "contrib", "coord", "x" or "y". In this case,
+#'  values also include "cos2", "contrib", "coord", "x", and "y". In this case,
 #'  the colors for individuals/variables are automatically controlled by their
 #'  qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 ,
 #'  "coord"), x values("x") or y values("y"). To use automatic coloring (by
@@ -36,9 +36,9 @@ NULL
 #'  colored according to the groups.
 #'@param col.var.sup color for supplementary variables.
 #'@param alpha.ind,alpha.var,alpha.axes controls the transparency of individual,
-#'  variable, group and axes colors, respectively. The value can variate from 0 
+#'  variable, group and axes colors, respectively. The value can vary from 0
 #'  (total transparency) to 1 (no transparency). Default value is 1. Possible 
-#'  values include also : "cos2", "contrib", "coord", "x" or "y". In this case, 
+#'  values also include "cos2", "contrib", "coord", "x", and "y". In this case,
 #'  the transparency for individual/variable colors are automatically controlled
 #'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
 #'  y^2 , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -55,14 +55,14 @@ NULL
 #'  if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 
 #'  are drawn. if cos2 > 1, ex: 5, then the top 5 individuals/variables with the
 #'  highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the top 5
-#'  individuals/variables with the highest cos2 are drawn \item union: logical.
+#'  individuals/variables with the highest contributions are drawn \item union: logical.
 #'  When several of name/cos2/contrib are given, FALSE (default) combines them
 #'  with AND (each condition further narrows the selection); TRUE combines them
 #'  with OR (an element is kept if it matches any condition), e.g. named items
 #'  \emph{plus} the top-cos2 ones. }
 #'@param ... Arguments to be passed to the function fviz()
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param partial list of the individuals for which the partial points should be
 #'  drawn. (by default, partial = NULL and no partial points are drawn). Use

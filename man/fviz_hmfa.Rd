@@ -65,8 +65,8 @@ values are the combination of \code{c("point", "arrow", "text")}. Use
 texts. Using \code{c("arrow", "text")} is sensible only for the graph of 
 variables.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by 
@@ -82,7 +82,7 @@ respectively.}
 
 \item{col.ind, col.var}{color for individuals, partial individuals and 
 variables, respectively. Can be a continuous variable or a factor variable.
-Possible values include also : "cos2", "contrib", "coord", "x" or "y". In
+Possible values also include "cos2", "contrib", "coord", "x", and "y". In
 this case, the colors for individuals/variables are automatically controlled
 by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 +
 y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring
@@ -91,9 +91,9 @@ y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var}{controls the transparency of individual, partial 
-individual and variable, respectively. The value can variate from 0 (total 
+individual and variable, respectively. The value can vary from 0 (total
 transparency) to 1 (no transparency). Default value is 1. Possible values 
-include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 transparency for individual/variable colors are automatically controlled by 
 their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
 , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -106,7 +106,7 @@ individuals/variables to be drawn \item cos2 if cos2 is in [0, 1], ex: 0.6,
 then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, 
 then the top 5 individuals/variables with the highest cos2 are drawn. \item 
 contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
-the highest cos2 are drawn }}
+the highest contributions are drawn }}
 
 \item{partial}{list of the individuals for which the partial points should be
 drawn. (by default, partial = NULL and no partial points are drawn). Use
@@ -116,7 +116,7 @@ partial = "all" to visualize partial points for all individuals.}
 colored according to the groups.}
 
 \item{group.names}{a vector containing the name of the groups (by default, 
-NULL and the group are named group.1, group.2 and so on).}
+NULL and the groups are named group.1, group.2, and so on).}
 
 \item{node.level}{a single number indicating the HMFA node level to plot.}
 
@@ -134,7 +134,7 @@ variables and group of variables, respectively.}
 a ggplot
 }
 \description{
-Hierarchical Multiple Factor Analysis (HMFA) is, an extension of
+Hierarchical Multiple Factor Analysis (HMFA) is an extension of
  MFA, used in a situation where the data are organized into a hierarchical
  structure.  fviz_hmfa() provides ggplot2-based elegant visualization of HMFA
  outputs from the R function: HMFA [FactoMineR].\cr\cr \itemize{
