@@ -36,18 +36,18 @@ fviz_mclust <- function(object,
   what <- match.arg(what)
   if(what == "classification")
     p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level,
-                      ggtheme = theme_classic(), ...)+
+                      ggtheme = ggtheme, ...)+
     labs(subtitle = "Classification")
   if(what == "uncertainty")
     p <- fviz_cluster(object, ellipse.type = ellipse.type, ellipse.level =ellipse.level,
-                      ggtheme = theme_classic(), geom = "none", ...)+
+                      ggtheme = ggtheme, geom = "none", ...)+
     geom_point(aes(size = uncertainty, color = cluster))+
     scale_size(range =c(0, 2))+
     labs(subtitle = "Uncertainty")+
     # FIX: ggplot2 3.3.4+ deprecation - use "none" instead of FALSE for guides()
     # See: https://github.com/kassambara/factoextra/issues/179
     guides(size = "none")
-  else if(what == "BIC") p <- fviz_mclust_bic(object, ggtheme = theme_classic(),  ...)
+  else if(what == "BIC") p <- fviz_mclust_bic(object, ggtheme = ggtheme,  ...)
   
   return(p)
 }
@@ -117,4 +117,3 @@ fviz_mclust_bic <- function(object, model.names = NULL, shape = 19, color = "mod
     guides(color = guide_legend(nrow=5,byrow=TRUE))
   else p + theme(legend.position = legend)
 }
-

@@ -1103,3 +1103,19 @@ test_that("hcut()/hkmeans() let the NATIVE k > n error surface (chooseGCM revdep
                "elements of 'k' must be between 1 and 11")
   expect_error(hkmeans(x, k = 100), "elements of 'k' must be between 1 and 11")
 })
+
+test_that("fviz_mclust honors ggtheme for every plot type", {
+  skip_if_not_installed("mclust")
+  suppressPackageStartupMessages(library(mclust))
+  on.exit(detach("package:mclust", unload = FALSE), add = TRUE)
+
+  set.seed(4)
+  model <- Mclust(iris[, -5], G = 2:4, verbose = FALSE)
+  custom_theme <- ggplot2::theme_minimal() +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "linen"))
+
+  for (what in c("classification", "uncertainty", "BIC")) {
+    plot <- fviz_mclust(model, what = what, ggtheme = custom_theme)
+    expect_equal(plot$theme$plot.background$fill, "linen")
+  }
+})
