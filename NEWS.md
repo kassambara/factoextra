@@ -91,6 +91,15 @@
   variable contributions, coordinates, and cos2 are unchanged. Cross-validated
   against `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
 
+* `get_clust_tendency()`: the Hopkins statistic now samples the observed points
+  **without replacement** (the previous code sampled with replacement, which could
+  draw the same observation more than once), counts a duplicated row as a valid
+  zero-distance neighbour, and is computed on a normalized distance scale for
+  numerical stability. This changes the Hopkins value returned for a given `seed`.
+  It now errors clearly when every nearest-neighbour distance is zero (the
+  statistic is undefined). The statistic is cross-validated against an independent
+  distance/formula computation. Thanks to @erdeyl (#274).
+
 * `fviz_eig(parallel = TRUE)` (Horn's parallel analysis, an opt-in overlay):
   the simulated eigenvalue thresholds now use a corrected reference distribution.
   Covariance PCA (`prcomp(scale. = FALSE)` / `princomp(cor = FALSE)`) previously

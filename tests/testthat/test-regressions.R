@@ -17,9 +17,8 @@ test_that("get_clust_tendency Hopkins value matches regression baseline", {
 
   res <- get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123)
   # BLAS matrix operations (tcrossprod/outer) yield slightly different
-
   # floating-point results across platforms; use a wider tolerance.
-  expect_equal(res$hopkins_stat, 0.989362891844348, tolerance = 0.01)
+  expect_equal(res$hopkins_stat, 0.989087156491451, tolerance = 0.01)
 })
 
 test_that("get_clust_tendency low-memory fallback matches vectorized computation", {
