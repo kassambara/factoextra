@@ -1063,7 +1063,9 @@ test_that("as_factoextra_pca() infers representable large eigenvalues without ov
     c(-0.5, -0.25, 0.25, 0.5)
   )
   coord <- shape * 1e154
-  expect_false(is.finite(stats::var(coord[, 1])))
+  naive_variance <- sum((coord[, 1] - mean(coord[, 1]))^2) /
+    (nrow(coord) - 1)
+  expect_false(is.finite(naive_variance))
 
   obj <- as_factoextra_pca(coord)
   expected <- c(5 / 6, 5 / 24) * 1e308
@@ -1074,7 +1076,11 @@ test_that("as_factoextra_pca() infers representable large eigenvalues without ov
     c(80, 20), tolerance = 1e-12
   )
   expect_true(all(is.finite(obj$ind$cos2)))
-  expect_true(all(is.finite(obj$ind$contrib)))
+  expected_contrib <- cbind(
+    c(40, 10, 10, 40),
+    c(40, 10, 10, 40)
+  )
+  expect_equal(unname(obj$ind$contrib), expected_contrib, tolerance = 1e-12)
 })
 
 test_that("as_factoextra_pca() validates inputs and errors clearly", {
