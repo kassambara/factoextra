@@ -52,7 +52,11 @@ Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for des
 
 \item{xtickslab.rt}{rotation angle for x axis tick labels. Default is 45 degrees.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 

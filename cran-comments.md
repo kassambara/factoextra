@@ -13,8 +13,9 @@ For transparency, the changes that alter a value or message returned by 2.1.0:
 * `get_pca_ind()`: individual contributions for `prcomp` and non-uniform-weight
   `ade4` PCA objects are now normalized to sum to 100% per axis, matching
   `FactoMineR::PCA()` (the `prcomp` values previously summed to `100 * (n - 1) / n`).
-  Coordinates, cos2, `princomp` contributions, and all variable contributions are
-  unchanged.
+  Coordinates, `princomp` contributions, and ordinary full-rank cos2 are
+  unchanged. Variable contributions are unchanged on nonzero, ordinarily scaled
+  axes; zero-inertia and extreme-magnitude axes now return stable finite values.
 * `get_clust_tendency()`: the Hopkins statistic now samples the observed points
   without replacement (a correctness fix), so its value changes for a given seed.
 * `fviz_gap_stat()` / `fviz_nbclust(method = "gap_stat")`: when a partial `maxSE`
@@ -27,7 +28,7 @@ For transparency, the changes that alter a value or message returned by 2.1.0:
 * Clearer input-validation errors/warnings across `fviz_umap()`/`fviz_tsne()`,
   `fviz_dend()`, `fviz_nbclust()`, `get_clust_tendency()`, and `as_factoextra_pca()`.
 
-All other functions produce byte-identical output for existing inputs.
+The remaining output and message changes are itemized in NEWS.md.
 
 ## New features (additive)
 
@@ -36,23 +37,20 @@ See NEWS.md; highlights: `fviz_umap()` / `fviz_tsne()`; `theme_factoextra()` and
 opt-in arguments (`fviz_dend(highlight=)`, `max.points`, `display = "heatmap"`,
 `mark_optimal`, `fviz_mca_*(quanti.sup=)`, and a `union` element in `select.*`).
 
-## Test environments
+## Test environment
 
-* Local: macOS (Darwin 24.6.0) — R 4.5.1 (2025-06-13)
-* GitHub Actions: macOS (release), Windows (release), Ubuntu
-  (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
-  all pass.
+* Local: macOS 26.5.2, arm64 — R 4.6.1 (2026-06-24)
+
+No new hosted-CI or win-builder result is claimed for the final correction stage.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes on the CI environments (which include pandoc).
+* `R CMD check --run-donttest --run-dontrun`: status OK
+* `R CMD check --as-cran --run-donttest --run-dontrun`: status OK
 
-A local `R CMD check --as-cran` run without pandoc reports two environment-only
-NOTEs — "Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc'" and a
-missing prebuilt vignette index — that do not appear where pandoc is available.
-As in 2.1.0, a few `fviz_*` examples (MCA / MFA / CA) run inherently slow
-FactoMineR computations and may trip the "examples > 5s" NOTE on slower machines;
-we can wrap them in `\donttest{}` if preferred.
+Both checks used a freshly built source tarball from the current release branch
+projection and completed package tests, examples, vignette rebuilding, and
+manual checks.
 
 ## Downstream dependencies
 

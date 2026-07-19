@@ -276,8 +276,10 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   
   # Data frame to be used for plotting
-  var <- facto_summarize(X, element = "var", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
+  var.results <- c("coord", "contrib", "cos2")
+  if(inherits(X, "factoextra_pca") && is.null(X$var$cos2))
+    var.results <- setdiff(var.results, "cos2")
+  var <- facto_summarize(X, element = "var", result = var.results, axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
   
   pca.ind <- get_pca_ind(X)
@@ -311,19 +313,33 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
       } else {
         # scale = 1: scores divided by sqrt(n)*sdev and loadings multiplied
         # by the same factor.
-        lambda <- sqrt(nrow(display_ind)) * sdev[axes]
+        n_factor <- if(inherits(X, "princomp")) X[["n.obs"]] else nrow(display_ind)
+        if(!is.numeric(n_factor) || length(n_factor) != 1L ||
+           !is.finite(n_factor) || n_factor <= 0)
+          stop("Could not determine the number of fitted observations for ",
+               "covariance biplot scaling.", call. = FALSE)
+        lambda <- sqrt(n_factor) * sdev[axes]
         display_ind[, axes] <- sweep(
           display_ind[, axes, drop = FALSE], 2, lambda, "/"
         )
         display_var[, axes] <- sweep(
-          display_var[, axes, drop = FALSE], 2, sqrt(nrow(display_ind)), "*"
+          display_var[, axes, drop = FALSE], 2, sqrt(n_factor), "*"
         )
       }
-      plot_X <- as_factoextra_pca(
-        ind.coord = display_ind, var.coord = display_var, eig = X$sdev^2,
-        ind.cos2 = pca.ind$cos2, ind.contrib = pca.ind$contrib,
-        var.cos2 = pca.var$cos2, var.contrib = pca.var$contrib,
-        var.cor = pca.var$cor, scale.unit = FALSE
+      # Formula fits with na.exclude retain NA score rows so predictions line up
+      # with the original data. Keep those rows for plotting, while preserving
+      # the already validated PCA metrics; the public constructor intentionally
+      # rejects non-finite user input and is therefore not appropriate here.
+      plot_X <- structure(
+        list(
+          ind = list(coord = display_ind, cos2 = pca.ind$cos2,
+                     contrib = pca.ind$contrib),
+          var = list(coord = display_var, cor = pca.var$cor,
+                     cos2 = pca.var$cos2, contrib = pca.var$contrib),
+          eig.values = as.numeric(X$sdev)^2,
+          scale.unit = FALSE
+        ),
+        class = c("factoextra_pca", "list")
       )
       var_scale <- 1
     }

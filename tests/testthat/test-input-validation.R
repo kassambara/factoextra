@@ -168,6 +168,10 @@ test_that("axes validation rejects invalid axis indices", {
     fviz_ellipses(res.pca, habillage = iris$Species, axes = c(1, 1.5)),
     "The value of the argument axes is incorrect"
   )
+  expect_error(
+    fviz_pca_ind(res.pca, axes = c(1, 3e9)),
+    "axes should contain positive integers"
+  )
 })
 
 test_that("fviz_eig validates ncp", {

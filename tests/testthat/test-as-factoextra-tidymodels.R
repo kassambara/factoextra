@@ -116,9 +116,26 @@ test_that("recipe PCA detects internal scaling and degrades uncentered semantics
   expect_warning(u_obj <- as_factoextra_pca(recipes::prep(uncentered)),
                  "correlation circle is omitted")
   expect_false(u_obj$scale.unit)
+  expect_null(u_obj$var$cor)
+  expect_null(u_obj$var$cos2)
+  printed_var <- capture.output(print(get_pca_var(u_obj)))
+  expect_true(any(grepl("$coord", printed_var, fixed = TRUE)))
+  expect_false(any(grepl("$cor", printed_var, fixed = TRUE)) ||
+               any(grepl("$cos2", printed_var, fixed = TRUE)))
   expect_equal(nrow(get_eig(u_obj)), 4L)
   expect_s3_class(fviz_pca_ind(u_obj, geom = "point"), "ggplot")
   expect_s3_class(fviz_eig(u_obj), "ggplot")
+  expect_s3_class(fviz_pca_var(u_obj), "ggplot")
+  expect_s3_class(fviz_pca_biplot(u_obj), "ggplot")
+  expect_error(fviz_cos2(u_obj, choice = "var"), "cos2.*not available")
+  expect_error(fviz_pca_var(u_obj, col.var = "cos2"), "cos2.*not available")
+  expect_error(fviz_pca_var(u_obj, alpha.var = "cos2"), "cos2.*not available")
+  expect_error(
+    fviz_pca_var(u_obj, geom = "point", pointsize = "cos2"),
+    "cos2.*not available"
+  )
+  expect_error(fviz_pca_var(u_obj, select.var = list(cos2 = 1)),
+               "Cos2.*not available")
 
   scale_only <- recipes::recipe(~ ., data = iris[, 1:4]) |>
     recipes::step_scale(recipes::all_numeric_predictors()) |>
@@ -126,14 +143,29 @@ test_that("recipe PCA detects internal scaling and degrades uncentered semantics
   expect_warning(so_obj <- as_factoextra_pca(recipes::prep(scale_only)),
                  "correlation circle is omitted")
   expect_false(so_obj$scale.unit)
+  expect_null(so_obj$var$cor)
+  expect_null(so_obj$var$cos2)
 
   arbitrary_center <- recipes::recipe(~ ., data = iris[, 1:4]) |>
     recipes::step_pca(
       recipes::all_numeric_predictors(), num_comp = 2,
       options = list(center = rep(0, 4))
     )
-  expect_warning(as_factoextra_pca(recipes::prep(arbitrary_center)),
+  expect_warning(ac_obj <- as_factoextra_pca(recipes::prep(arbitrary_center)),
                  "correlation circle is omitted")
+  expect_null(ac_obj$var$cor)
+  expect_null(ac_obj$var$cos2)
+
+  with_constant <- cbind(iris[, 1:4], constant = 1)
+  zero_inertia <- recipes::recipe(~ ., data = with_constant) |>
+    recipes::step_center(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
+  expect_warning(z_obj <- as_factoextra_pca(recipes::prep(zero_inertia)),
+                 "zero or non-finite inertia")
+  expect_false(z_obj$scale.unit)
+  expect_null(z_obj$var$cor)
+  expect_null(z_obj$var$cos2)
+  expect_s3_class(fviz_pca_var(z_obj), "ggplot")
 })
 
 test_that("column-only recipe steps preserve centering and scaling evidence", {
@@ -222,6 +254,23 @@ test_that("as_factoextra_pca(recipe) errors clearly on non-PCA / unprepped recip
   rec_plain <- recipes::prep(recipes::recipe(~ ., data = iris[, 1:4]) |>
                                recipes::step_center(recipes::all_numeric_predictors()))
   expect_error(as_factoextra_pca(rec_plain), "step_pca")
+
+  post_pca <- recipes::recipe(~ ., data = iris[, 1:4]) |>
+    recipes::step_normalize(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2) |>
+    recipes::step_scale(recipes::all_numeric_predictors()) |>
+    recipes::prep()
+  expect_error(as_factoextra_pca(post_pca), "must be the final recipe step")
+
+  weighted_data <- iris[, 1:4]
+  weighted_data$case_weight <- hardhat::frequency_weights(
+    c(100, rep(1, nrow(weighted_data) - 1L))
+  )
+  weighted_pca <- recipes::recipe(~ ., data = weighted_data) |>
+    recipes::step_normalize(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2) |>
+    recipes::prep()
+  expect_error(as_factoextra_pca(weighted_pca), "Case-weighted step_pca")
 })
 
 test_that("as_factoextra_pca(recipe) names a non-PCA dimension-reduction step in its error", {
@@ -251,6 +300,41 @@ test_that("as_factoextra_pca(workflow) matches the recipe path (fitted workflow)
   expect_equal(abs(obj_wf$var$cor), abs(obj_rec$var$cor), tolerance = 1e-6)
   expect_identical(obj_wf$scale.unit, obj_rec$scale.unit)
 
+  raw_rec <- recipes::recipe(mpg ~ ., data = mtcars) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 3)
+  raw_wf <- workflows::workflow() |>
+    workflows::add_recipe(raw_rec) |>
+    workflows::add_model(parsnip::linear_reg()) |>
+    parsnip::fit(data = mtcars)
+  expect_warning(raw_obj <- as_factoextra_pca(raw_wf),
+                 "correlation circle is omitted")
+  expect_null(raw_obj$var$cor)
+  expect_null(raw_obj$var$cos2)
+  expect_s3_class(fviz_pca_var(raw_obj), "ggplot")
+
+  post_pca_rec <- recipes::recipe(mpg ~ ., data = mtcars) |>
+    recipes::step_normalize(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 3) |>
+    recipes::step_scale(recipes::all_numeric_predictors())
+  post_pca_wf <- workflows::workflow() |>
+    workflows::add_recipe(post_pca_rec) |>
+    workflows::add_model(parsnip::linear_reg()) |>
+    parsnip::fit(data = mtcars)
+  expect_error(as_factoextra_pca(post_pca_wf), "must be the final recipe step")
+
+  weighted_mtcars <- mtcars
+  weighted_mtcars$case_weight <- hardhat::frequency_weights(
+    c(10, rep(1, nrow(weighted_mtcars) - 1L))
+  )
+  weighted_rec <- recipes::recipe(mpg ~ ., data = weighted_mtcars) |>
+    recipes::step_normalize(recipes::all_numeric_predictors()) |>
+    recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 3)
+  weighted_wf <- workflows::workflow() |>
+    workflows::add_recipe(weighted_rec) |>
+    workflows::add_model(parsnip::linear_reg()) |>
+    parsnip::fit(data = weighted_mtcars)
+  expect_error(as_factoextra_pca(weighted_wf), "Case-weighted step_pca")
+
   # unfitted workflow (recipe added but not fit) errors with a fit()/prep() hint
   wf_unfit <- workflows::workflow() |> workflows::add_recipe(rec)
   expect_error(as_factoextra_pca(wf_unfit))
@@ -267,4 +351,30 @@ test_that("as_factoextra_pca() default method keeps its published call forms", {
   expect_identical(o_named$ind$coord, o_pos$ind$coord)
   expect_identical(o_named$var$coord, o_pos$var$coord)
   expect_identical(o_named$eig.values, o_pos$eig.values)
+})
+
+test_that("as_factoextra_pca() derives scale-invariant finite metrics", {
+  coord <- matrix(c(-1, 1, -2, 2, -3, 3, -4, 4), ncol = 2)
+  reference <- as_factoextra_pca(
+    coord, var.coord = coord, eig = c(1, 1)
+  )
+  metrics <- function(x) list(
+    ind.cos2 = x$ind$cos2,
+    ind.contrib = x$ind$contrib,
+    var.cos2 = x$var$cos2,
+    var.contrib = x$var$contrib
+  )
+
+  for(multiplier in c(1e-200, 1e200)){
+    scaled <- as_factoextra_pca(
+      coord * multiplier, var.coord = coord * multiplier, eig = c(1, 1)
+    )
+    expect_equal(metrics(scaled), metrics(reference), tolerance = 1e-14)
+  }
+
+  large_eigenvalues <- as_factoextra_pca(coord, eig = c(1e308, 1e308))
+  expect_equal(
+    unname(get_eig(large_eigenvalues)[, "variance.percent"]),
+    c(50, 50)
+  )
 })

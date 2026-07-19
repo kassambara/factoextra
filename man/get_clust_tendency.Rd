@@ -45,7 +45,9 @@ Before applying clustering methods, assess whether the data show
   optionally, an ordered dissimilarity image (ODI). Rows containing missing
   values are omitted, and the remaining matrix must be numeric and finite.
   The observed rows are sampled without replacement; artificial points are
-  sampled uniformly within the observed bounding box. In the ODI, objects
+  sampled uniformly within the observed bounding box. Zero-range columns are
+  ignored for the Hopkins calculation when at least one column varies; an
+  all-constant data set remains undefined. In the ODI, objects
   grouped by hierarchical clustering are displayed in consecutive order.
   For more details and
   interpretation, see 
@@ -57,7 +59,8 @@ Before applying clustering methods, assess whether the data show
 values near 0.5 are consistent with complete spatial randomness, and values
 near 0 indicate regular spacing. The statistic uses the formula from Cross
 and Jain (1982), with exponent \eqn{d = D}, where \eqn{D} is the number of
-columns. A Beta(\eqn{n}, \eqn{n}) comparison is an approximation under ideal
+varying columns. Redundant constant columns therefore do not change the
+statistic. A Beta(\eqn{n}, \eqn{n}) comparison is an approximation under ideal
 complete-spatial-randomness assumptions, not an unconditional finite-sample
 distribution for every data set.
 

@@ -242,7 +242,8 @@ fviz_tsne <- function(X, dims = c(1L, 2L), habillage = NULL, col.ind = NULL,
 # are handled FIRST so `$` is never applied to an atomic matrix.
 .fe_layout <- function(x, dims = c(1L, 2L)) {
   if(length(dims) != 2L || !is.numeric(dims) || anyNA(dims) ||
-     any(!is.finite(dims)) || any(dims %% 1 != 0) || any(dims < 1) ||
+     any(!is.finite(dims)) || any(dims > .Machine$integer.max) ||
+     any(dims %% 1 != 0) || any(dims < 1) ||
      length(unique(dims)) != 2L)
     stop("`dims` must be two distinct positive integer column indices, e.g. c(1, 2).",
          call. = FALSE)

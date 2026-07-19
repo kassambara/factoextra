@@ -971,6 +971,9 @@ NULL
      any(axes %% 1 != 0) || any(axes < 1))
     stop("The value of the argument axes is incorrect. axes should contain positive integers.")
 
+  if(any(axes > .Machine$integer.max))
+    stop("The value of the argument axes is incorrect. axes should contain positive integers.")
+
   axes <- as.integer(axes)
   if(!is.null(ndim) && max(axes) > ndim)
     stop("The value of the argument axes is incorrect. ",

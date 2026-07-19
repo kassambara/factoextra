@@ -101,12 +101,14 @@ workflow, \code{workflows::extract_mold()}), the loadings from
 honest even when \code{num_comp} keeps only a few components). Variable
 coordinates are loading times the square root of the eigenvalue. Exact
 variable-component correlations and cos2 are recovered from the full PCA
-inertia when every PCA input is provably centered. When the inputs are not
-provably centered (e.g. a bare \code{step_pca()} with no centering), the
-correlations cannot be recovered: the scores, eigenvalues and variable
-coordinates are still returned (so \code{fviz_pca_ind()}, \code{fviz_eig()} and
-the variable arrows work), but the correlation circle is omitted and a warning
-is issued. \code{scale.unit} is set to \code{TRUE} only when every
+inertia when every PCA input is provably centered. When those metrics cannot
+be recovered (for example, for a bare \code{step_pca()} with no centering or a
+zero-inertia variable), their entries in \code{get_pca_var()} are \code{NULL}.
+Scores, eigenvalues, variable coordinates and contributions are still returned,
+so the individual, scree, variable-arrow and biplot displays remain available;
+correlation/cos2-dependent displays fail with an explicit unavailable-metric
+error. The correlation circle is omitted and a warning explains how to recover
+the metrics. \code{scale.unit} is set to \code{TRUE} only when every
 PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
 therefore does not draw a correlation circle. For fully normalized data,
 variable coordinates, correlations, cos2 and contributions, and the eigenvalue
@@ -115,9 +117,14 @@ components \code{step_pca()} keeps; the \emph{individual} cos2 is computed over
 the retained components (it equals the full-space cos2 only when all components
 are kept). The two-dimensional plots (\code{fviz_pca_ind()},
 \code{fviz_pca_var()}, \code{fviz_pca_biplot()}) need \code{num_comp >= 2}. The
-recipe must be prepped and its PCA step must be \code{step_pca()} (non-linear
-embedding steps such as \code{step_umap()} have no eigenvalues and are rejected
-with a message). For the loadings display of a recipe PCA see also
+recipe must be prepped, and its single PCA step must be an unweighted
+\code{step_pca()} and must be the final recipe step. Case-weighted PCA is
+rejected because the adapter cannot yet propagate those weights into individual
+contributions. Later steps could transform the baked/mold PCA
+scores without updating the fitted PCA loadings or eigenvalues, so such recipes
+fail explicitly instead of returning internally inconsistent geometry.
+Non-linear embedding steps such as \code{step_umap()} have no eigenvalues and
+are rejected with a message. For the loadings display of a recipe PCA see also
 \code{learntidymodels::plot_top_loadings()}.
 }
 \examples{

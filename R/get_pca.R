@@ -19,13 +19,18 @@ NULL
 #' @param ... not used
 #' @return a list of matrices containing all the results for the active individuals/variables including: 
 #' \item{coord}{coordinates for the individuals/variables}
-#' \item{cos2}{cos2 for the individuals/variables}
+#' \item{cos2}{cos2 for the individuals/variables. For an adapted recipe/workflow
+#' object this is \code{NULL} when the metric cannot be recovered. For a
+#' rank-truncated \code{prcomp} object, individual cos2 is the quality within the
+#' retained component subspace because the discarded row inertia is not stored
+#' in the fitted object.}
 #' \item{contrib}{contributions of the individuals/variables; contributions to
 #' each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
 #' contains zeros}
 #' \item{cor}{loading-times-component-standard-deviation coordinates for PCA
 #' objects from \code{stats}; these equal variable-component correlations when
-#' the input variables were standardized. Returned for variables.}
+#' the input variables were standardized. Returned for variables; for an adapted
+#' recipe/workflow object it is \code{NULL} when correlations cannot be recovered.}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.sthda.com/english/}
 #' @examples
@@ -139,13 +144,15 @@ get_pca_var<-function(res.pca){
     # unclass() strips the base R "loadings" S3 class so coord/cos2/contrib are
     # returned as plain numeric matrices. Otherwise print.loadings() hides values
     # with |x| < 0.1 (its cutoff) and the result breaks downstream manipulation.
-    var.cor <- sweep(unclass(res.pca$loadings), 2, res.pca$sdev, "*")
+    loadings <- unclass(res.pca$loadings)
+    var.cor <- sweep(loadings, 2, res.pca$sdev[seq_len(ncol(loadings))], "*")
     var <- .get_pca_var_results(var.cor)
   }
   else if(inherits(res.pca, 'prcomp')){
     # Loading-times-component-standard-deviation coordinates. For standardized
     # variables these equal the variable-component correlations.
-    var.cor <- sweep(res.pca$rotation, 2, res.pca$sdev, "*")
+    rotation <- res.pca$rotation
+    var.cor <- sweep(rotation, 2, res.pca$sdev[seq_len(ncol(rotation))], "*")
     var <- .get_pca_var_results(var.cor)
   }
   # ExPosition package
