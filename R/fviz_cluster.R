@@ -14,7 +14,10 @@
 #'  list may instead contain \code{data} plus either \code{cluster} or
 #'  \code{clustering}. When the assignments and the data both carry complete,
 #'  unique, matching names, the assignments are aligned to the data rows by name;
-#'  otherwise they are used in their given (positional) order.
+#'  otherwise they are used in their given (positional) order. The exception is a
+#'  clustering fitted from dissimilarities and plotted with external \code{data}:
+#'  complete, unique, non-matching name sets are rejected because positional use
+#'  would attach clusters to the wrong observations.
 #'@param data the data used for clustering. It is required for kmeans and dbscan
 #'  objects, and for partition or hcut objects fitted from dissimilarities when
 #'  those objects do not retain the original observations.
@@ -184,13 +187,17 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                                    c("jitter", "frame", "frame.type", "frame.level", "frame.alpha", "title"))]
   
   
+  dissimilarity_uses_external_data <- FALSE
   # object from cluster package
   if(inherits(object, c("partition", "hkmeans", "eclust"))){
     # Use the object's own data when present; otherwise keep the user-supplied
-    # `data=`. pam()/fanny() fitted on a dissimilarity matrix store no
-    # coordinates (object$data is NULL), so the original data is needed for the
-    # 2-D layout; the cluster assignments still come from the object (#128).
-    if(!is.null(object[["data"]])) data <- object[["data"]]
+    # `data=`. Fits built from dissimilarities store no plottable coordinates
+    # (object$data is NULL or a dist object), so the original observations are
+    # needed for the 2-D layout; assignments still come from the object (#128).
+    stored_data <- object[["data"]]
+    dissimilarity_uses_external_data <-
+      is.null(stored_data) || inherits(stored_data, "dist")
+    if(!dissimilarity_uses_external_data) data <- stored_data
     if(is.null(data))
       stop("This clustering has no stored data (e.g. pam()/fanny() on a ",
            "dissimilarity matrix). Supply the original data via 'data=' - it is ",
@@ -216,6 +223,7 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   }
   else if(inherits(object, "hcut")){
     if(inherits(object$data, "dist")){
+      dissimilarity_uses_external_data <- TRUE
       if(is.null(data)) stop("The option 'data' is required for an object of class hcut." )
     }
     else data <- object$data
@@ -245,6 +253,19 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   } else {
     observation_names <- NULL
     n_obs <- length(cluster)
+  }
+  if(dissimilarity_uses_external_data){
+    cluster_names <- names(cluster)
+    complete_cluster_names <- !is.null(cluster_names) &&
+      length(cluster_names) == n_obs && !anyNA(cluster_names) &&
+      all(nzchar(cluster_names)) && !anyDuplicated(cluster_names)
+    complete_observation_names <- !is.null(observation_names) &&
+      length(observation_names) == n_obs && !anyNA(observation_names) &&
+      all(nzchar(observation_names)) && !anyDuplicated(observation_names)
+    if(complete_cluster_names && complete_observation_names &&
+       !setequal(cluster_names, observation_names))
+      stop("The row names of data do not match the observations used to build ",
+           "the clustering.", call. = FALSE)
   }
   cluster <- .align_cluster_assignments(cluster, observation_names, n_obs)
   cluster <- as.factor(cluster)

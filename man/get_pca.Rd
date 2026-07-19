@@ -26,13 +26,18 @@ get_pca_var(res.pca)
 \value{
 a list of matrices containing all the results for the active individuals/variables including: 
 \item{coord}{coordinates for the individuals/variables}
-\item{cos2}{cos2 for the individuals/variables}
+\item{cos2}{cos2 for the individuals/variables. For an adapted recipe/workflow
+object this is \code{NULL} when the metric cannot be recovered. For a
+rank-truncated \code{prcomp} object, individual cos2 is the quality within the
+retained component subspace because the discarded row inertia is not stored
+in the fitted object.}
 \item{contrib}{contributions of the individuals/variables; contributions to
 each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
 contains zeros}
 \item{cor}{loading-times-component-standard-deviation coordinates for PCA
 objects from \code{stats}; these equal variable-component correlations when
-the input variables were standardized. Returned for variables.}
+the input variables were standardized. Returned for variables; for an adapted
+recipe/workflow object it is \code{NULL} when correlations cannot be recovered.}
 }
 \description{
 Extract all the results (coordinates, squared cosines, and contributions) for

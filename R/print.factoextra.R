@@ -52,12 +52,23 @@ print.factoextra<-function(x, ...){
   else if(inherits(x, "pca_var")){
     cat("Principal Component Analysis Results for variables\n",
         "===================================================\n")
-    res <- array(data="", dim=c(4,2), dimnames=list(1:4, c("Name", "Description")))
-    res[1, ] <- c("$coord", "Coordinates for the variables")
-    res[2, ] <- c("$cor", "Correlations between variables and dimensions")
-    res[3, ] <- c("$cos2", "Cos2 for the variables")
-    res[4, ] <- c("$contrib", "contributions of the variables")
-    print(res[1:4,])
+    nms <- names(x)
+    nrows <- length(nms)
+    res <- array(data = "", dim = c(nrows, 2),
+                 dimnames = list(seq_len(nrows), c("Name", "Description")))
+    res[, 1] <- paste0("$", nms)
+    pca_var_descriptions <- c(
+      coord = "Coordinates for the variables",
+      cor = "Correlations between variables and dimensions",
+      cos2 = "Cos2 for the variables",
+      contrib = "contributions of the variables"
+    )
+    descriptions <- unname(pca_var_descriptions[nms])
+    missing <- is.na(descriptions)
+    if(any(missing))
+      descriptions[missing] <- .factoextra_descriptions(nms[missing])
+    res[, 2] <- descriptions
+    print(res[seq_len(nrows), ], ...)
   }
   
   else if(inherits(x, "ca_row")){

@@ -222,8 +222,21 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(element == "partial.axes" || (element == "quali.var" && facto.class == "HMFA")) 
     summary.res <- c("coord", "contrib")
   else if(element == "group" && facto.class == "HMFA") summary.res <- "coord"
+  if(inherits(X, "factoextra_pca")){
+    available <- get_pca(X, element)
+    summary.res <- summary.res[!vapply(
+      summary.res, function(metric) is.null(available[[metric]]), logical(1)
+    )]
+  }
   df <- facto_summarize(X, element = element, axes = axes, result = summary.res)
   colnames(df)[2:3] <-  c("x", "y")
+  uses_missing_cos2 <- function(value){
+    is.character(value) && length(value) == 1L && identical(value, "cos2") &&
+      !("cos2" %in% names(df))
+  }
+  if(any(vapply(list(color, fill, alpha, pointsize),
+                uses_missing_cos2, logical(1))))
+    stop("`cos2` is not available for element = '", element, "'.", call. = FALSE)
   # Color by grouping variables
   #::::::::::::::::::::::::::::::::::::::
   is_grouping_var_exists <- !("none" %in% habillage) || .is_grouping_var(color) || .is_grouping_var(fill)
@@ -307,9 +320,16 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
               paste0('"', unmatched, '"', collapse = ", "), ".",
               call. = FALSE)
   }
+  if(!is.null(select) && !is.null(select$cos2) && !("cos2" %in% colnames(df)))
+    stop("Cos2 is not available for element = '", element, "'.", call. = FALSE)
+  n_select_conditions <- if(is.null(select)) 0L else
+    sum(!is.null(select$name), !is.null(select$cos2), !is.null(select$contrib))
+  union_has_alternative <- !is.null(select) && isTRUE(select$union) &&
+    n_select_conditions >= 2L
   if(!is.null(select) && !is.null(select$contrib) && !("contrib" %in% colnames(df))
-     && !isTRUE(select$union)){
-    stop("Contributions are not available for element = '", element, "'.")
+     && !union_has_alternative){
+    stop("Contributions are not available for element = '", element, "'.",
+         call. = FALSE)
   }
   if(!is.null(select))
     df <- .select(df, select, warn_unmatched = FALSE)
@@ -687,7 +707,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     res <- list(name = "ind.sup", addlabel = (lab$ind.sup && "text" %in% geom))
   # Supplementary quantitative variables
   else if(element == "var" && inherits(X, "PCA") && !hide$quanti.sup)
-    res <- list(name = "quanti", addlabel = (lab$quanti.sup && "text" %in% geom))
+    res <- list(name = "quanti.sup",
+                addlabel = (lab$quanti.sup && "text" %in% geom))
   else if(element == "mca.cor" && inherits(X, "MCA") && !hide$quanti)
     res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti && "text" %in% geom))
   else if(element %in% "var" && inherits(X, "MCA") && !hide$quali.sup)

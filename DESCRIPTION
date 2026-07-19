@@ -42,6 +42,7 @@ Imports:
 Suggests:
     ade4,
     ca,
+    hardhat,
     igraph,
     MASS,
     knitr,
