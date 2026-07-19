@@ -88,8 +88,8 @@
   `100 * (n - 1) / n` instead of 100. This changes the individual contribution
   values returned for those objects (and any `fviz_contrib()` / `fviz_pca()`
   colouring derived from them). `princomp` individual contributions, all
-  variable contributions, coordinates, and cos2 are unchanged. Cross-validated
-  against `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
+  variable contributions, coordinates, and cos2 are unchanged. The corrected
+  values match `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
 
 * `fviz_pca_biplot()`: `biplot.type = "form"` and `biplot.type = "covariance"`
   now use the exact Gabriel biplot factorization, matching
@@ -109,8 +109,7 @@
   and variable coordinates are still returned (so `fviz_pca_ind()` / `fviz_eig()`
   and the variable arrows keep working), but the correlation circle is omitted
   and a warning is issued (add `step_center()` / `step_normalize()`, or set
-  `step_pca(options = list(center = TRUE))`, to recover them). Cross-validated
-  against `FactoMineR::PCA()`. Thanks to @erdeyl (#274).
+  `step_pca(options = list(center = TRUE))`, to recover them). Thanks to @erdeyl (#274).
 
 * `get_clust_tendency()`: the Hopkins statistic now samples the observed points
   **without replacement** (the previous code sampled with replacement, which could
@@ -118,8 +117,7 @@
   zero-distance neighbour, and is computed on a normalized distance scale for
   numerical stability. This changes the Hopkins value returned for a given `seed`.
   It now errors clearly when every nearest-neighbour distance is zero (the
-  statistic is undefined). The statistic is cross-validated against an independent
-  distance/formula computation. Thanks to @erdeyl (#274).
+  statistic is undefined). Thanks to @erdeyl (#274).
 
 * `fviz_eig(parallel = TRUE)` (Horn's parallel analysis, an opt-in overlay):
   the simulated eigenvalue thresholds now use a corrected reference distribution.
@@ -134,8 +132,7 @@
   covariance fits, ambiguous `princomp` `cor`) now error clearly instead of
   returning misleading thresholds. Separately, `fviz_eig()` warns when a
   FactoMineR PCA object stores an incomplete eigenvalue spectrum (refit with a
-  larger `ncp` for a complete scree plot). Cross-validated against an independent
-  Monte-Carlo reference. Thanks to @erdeyl (#274).
+  larger `ncp` for a complete scree plot). Thanks to @erdeyl (#274).
 
 * `fviz_gap_stat()` (and `fviz_nbclust(method = "gap_stat")`): when a partial
   `maxSE` list is supplied without a `method`, the fallback is now `"firstSEmax"`

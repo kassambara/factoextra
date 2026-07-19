@@ -1,54 +1,74 @@
 ## Submission — factoextra 2.2.0
 
-A minor release. All new behavior is opt-in and gated, so existing inputs
-produce byte-identical output; there are no breaking changes.
+A minor release. Most changes are additive or opt-in, but this version also
+**corrects a few numeric outputs** and clarifies several error/warning messages
+(all documented in NEWS.md and listed below), so a small number of results differ
+from 2.1.0. We checked the reverse dependencies with this in mind (see
+"Downstream dependencies").
 
-## Changes in this version (2.2.0)
+## Corrected / changed outputs in this version
 
-Minor update from 2.1.0 (see NEWS.md for the full list):
+For transparency, the changes that alter a value or message returned by 2.1.0:
 
-* New `fviz_umap()` / `fviz_tsne()` to visualize a 2-D UMAP or t-SNE embedding
-  (from uwot, Rtsne, umap, or a plain coordinate matrix) with factoextra's
-  grouping, ellipse and palette styling. An embedding has no eigenvalues, so the
-  axes carry no percentage and there is no scree plot or correlation circle.
-* New `theme_factoextra()` and `factoextra_palette()`: a clean publication theme
-  and an Okabe-Ito colorblind-safe palette, both stateless (no global option).
-* `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a PCA fitted
-  inside a tidymodels recipe or workflow plots with the `fviz_pca_*()` family.
-* New arguments (all default to the current behavior): `fviz_dend(highlight=)`;
-  `max.points` for `fviz_pca_ind()` / `fviz_cluster()` and the other point
-  plots; `display = "heatmap"` for `fviz_cos2()` / `fviz_contrib()`;
-  `mark_optimal` for `fviz_nbclust()` / `fviz_gap_stat()`; `quanti.sup` for
-  `fviz_mca_ind()` / `fviz_mca_biplot()`; and a `union` element in the
-  `select.*` selection lists (OR selection; the default stays AND).
+* `get_pca_ind()`: individual contributions for `prcomp` and non-uniform-weight
+  `ade4` PCA objects are now normalized to sum to 100% per axis, matching
+  `FactoMineR::PCA()` (the `prcomp` values previously summed to `100 * (n - 1) / n`).
+  Coordinates, cos2, `princomp` contributions, and all variable contributions are
+  unchanged.
+* `get_clust_tendency()`: the Hopkins statistic now samples the observed points
+  without replacement (a correctness fix), so its value changes for a given seed.
+* `fviz_gap_stat()` / `fviz_nbclust(method = "gap_stat")`: when a partial `maxSE`
+  list omits `method`, the fallback is now `"firstSEmax"` (the documented default)
+  instead of `"firstmax"`.
+* Opt-in paths only: `fviz_eig(parallel = TRUE)` (Horn parallel analysis, with the
+  covariance-PCA reference corrected) and
+  `fviz_pca_biplot(biplot.type = "form"/"covariance")` (now the exact Gabriel
+  factorization, matching `stats::biplot(scale = 0/1)`).
+* Clearer input-validation errors/warnings across `fviz_umap()`/`fviz_tsne()`,
+  `fviz_dend()`, `fviz_nbclust()`, `get_clust_tendency()`, and `as_factoextra_pca()`.
+
+All other functions produce byte-identical output for existing inputs.
+
+## New features (additive)
+
+See NEWS.md; highlights: `fviz_umap()` / `fviz_tsne()`; `theme_factoextra()` and
+`factoextra_palette()`; `as_factoextra_pca()` `recipe` / `workflow` methods; and new
+opt-in arguments (`fviz_dend(highlight=)`, `max.points`, `display = "heatmap"`,
+`mark_optimal`, `fviz_mca_*(quanti.sup=)`, and a `union` element in `select.*`).
 
 ## Test environments
 
 * Local: macOS (Darwin 24.6.0) — R 4.5.1 (2025-06-13)
-* win-builder: R release and R devel
 * GitHub Actions: macOS (release), Windows (release), Ubuntu
   (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
   all pass.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 0 notes on the CI environments (which include pandoc).
 
-The previously reported "examples > 5s" NOTE comes from a few `fviz_*` examples
-that run inherently slow FactoMineR computations (MCA / MFA / CA) as correctness
-illustrations; happy to wrap them in `\donttest{}` if preferred.
+A local `R CMD check --as-cran` run without pandoc reports two environment-only
+NOTEs — "Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc'" and a
+missing prebuilt vignette index — that do not appear where pandoc is available.
+As in 2.1.0, a few `fviz_*` examples (MCA / MFA / CA) run inherently slow
+FactoMineR computations and may trip the "examples > 5s" NOTE on slower machines;
+we can wrap them in `\donttest{}` if preferred.
 
 ## Downstream dependencies
 
-We checked the 49 reverse dependencies. This release is additive and opt-in:
-every new argument defaults to the previous behavior, no default output or
-numeric result changed, no function or argument was removed or renamed, and no
-existing error/message text changed (the new messages are all on new functions
-or new opt-in argument paths). We scanned the reverse-dependency sources for any
-pinned factoextra message or snapshot of factoextra output; the only revdeps that
-call factoextra and assert on errors/snapshots (PLNmodels, Silhouette) use `fviz()`,
-`eclust()` and `hcut()`, which are unchanged for their existing calls. No new
-problems.
+We checked all 49 reverse dependencies by downloading their sources and reading
+the code, tests, and vignettes that call the functions whose output or messages
+changed. No reverse dependency snapshots the changed numeric outputs
+(`get_pca_ind()` contributions, the Hopkins statistic) or uses the opt-in changed
+paths (`biplot.type`, `fviz_eig(parallel = TRUE)`).
+
+The one reverse dependency that pins a factoextra error message — **chooseGCM**,
+whose tests assert `stats::cutree()`'s native "k must be between 1 and N" error via
+`hcut()` — is unaffected: `hcut()` / `hkmeans()` are unchanged and still surface
+that native message verbatim (verified). RelativeDistClust reads
+`get_pca_ind()$coord` (coordinates are unchanged), and PLNmodels calls
+`get_pca_ind()` on a non-`prcomp` object (the contribution change does not apply).
+No new problems.
 
 ## Notes
 
