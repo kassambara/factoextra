@@ -1077,6 +1077,11 @@ test_that("as_factoextra_pca() validates inputs and errors clearly", {
   expect_error(as_factoextra_pca(mds_inf), "finite values only")
   expect_error(as_factoextra_pca(mds, var.coord = mds, var.cos2 = matrix(Inf, nrow(mds), 2)),
                "finite values only")
+  # a within-tolerance negative eigenvalue is clamped to 0, not rejected
+  tiny_negative <- -sqrt(.Machine$double.eps) / 2
+  clamped <- as_factoextra_pca(matrix(c(-1, 1, -2, 2), ncol = 2),
+                               eig = c(1, tiny_negative, 0))
+  expect_identical(clamped$eig.values, c(1, 0, 0))
 })
 
 test_that("as_factoextra_pca() does not change existing prcomp/PCA paths (no-regression)", {
