@@ -69,7 +69,7 @@ fviz_pca_biplot(
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
-dudi and pca [ade4]; expOutput/epPCA [ExPosition].}
+dudi and pca [ade4]; expoOutput/epPCA [ExPosition].}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_pca_ind() and 
 fviz_pca_var(): Additional arguments are passed to the functions fviz() and
@@ -113,8 +113,8 @@ case a basic color palette is created using the function
 individuals when habillage != "none".}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. Can
-be a continuous variable or a factor variable. Possible values include also
-: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+be a continuous variable or a factor variable. Possible values also include
+"cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 individuals/variables are automatically controlled by their qualities of 
 representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -125,9 +125,9 @@ cos2, contrib, ....), make sure that habillage ="none".}
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var}{controls the transparency of individual and 
-variable colors, respectively. The value can variate from 0 (total 
+variable colors, respectively. The value can vary from 0 (total
 transparency) to 1 (no transparency). Default value is 1. Possible values 
-include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 transparency for the individual/variable colors are automatically 
 controlled by their qualities ("cos2"), contributions ("contrib"), 
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
@@ -182,14 +182,14 @@ PCA output.}
 values include brewer and ggsci color palettes.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
-"all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+"all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 "quali", "var", "quanti.sup"). "ind" can be used to label only active 
 individuals. "ind.sup" is for supplementary individuals. "quali" is for 
 supplementary qualitative variables. "var" is for active variables. 
 "quanti.sup" is for quantitative supplementary variables.}
 
 \item{invisible}{a text specifying the elements to be hidden on the plot. 
-Default value is "none". Allowed values are the combination of c("ind", 
+Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup", "quali", "var", "quanti.sup").}
 
 \item{title}{the title of the graph}
@@ -197,10 +197,15 @@ Default value is "none". Allowed values are the combination of c("ind",
 \item{biplot.type}{type of biplot scaling for fviz_pca_biplot(). Options are:
 \itemize{
   \item "auto" (default): Uses range-based rescaling for visualization
-  \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
-    readability of individual relationships.
-  \item "covariance": Covariance-oriented scaling (Gabriel-style).
-    Prioritizes readability of variable relationships.
+  \item "form": Gabriel form biplot scaling (equivalent to
+    \code{stats::biplot(..., scale = 0)}), preserving the score geometry
+    used to compare individuals.
+  \item "covariance": Gabriel covariance biplot scaling (equivalent to
+    \code{stats::biplot(..., scale = 1)}), preserving the variable
+    covariance geometry. Because both clouds share a single set of axes
+    (unlike \code{stats::biplot()}'s dual axes), the individuals can appear
+    compressed relative to the variable arrows; use "form" or "auto" if the
+    individual cloud is the focus.
 }
 Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }

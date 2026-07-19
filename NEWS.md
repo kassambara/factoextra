@@ -91,6 +91,13 @@
   variable contributions, coordinates, and cos2 are unchanged. Cross-validated
   against `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
 
+* `fviz_pca_biplot()`: `biplot.type = "form"` and `biplot.type = "covariance"`
+  now use the exact Gabriel biplot factorization, matching
+  `stats::biplot(scale = 0)` and `stats::biplot(scale = 1)` respectively, instead
+  of the previous display heuristic. The default `biplot.type = "auto"` is
+  unchanged (byte-identical). These two modes require a `prcomp` / `princomp`
+  object. Thanks to @erdeyl (#274).
+
 * `as_factoextra_pca()` recipe / workflow methods (tidymodels): variable-component
   correlations and cos2 are now recovered from the full PCA inertia, so they match
   `FactoMineR::PCA()` of the same data even when `step_pca()` keeps only a few
