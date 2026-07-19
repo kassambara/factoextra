@@ -1,7 +1,7 @@
 url: https://rpkgs.datanovia.com/factoextra/
-templates:
-  params:
-    bootswatch: lumen
+template:
+  bootstrap: 5
+  bootswatch: lumen
 reference:
   - title: Visualizing Dimension Reduction Analysis Outputs
     desc:  Visualization of PCA, CA, MCA, FAMD, MFA and HMFA.
@@ -65,5 +65,4 @@ reference:
       - map_factominer_legacy_names
       - deprecated
     
-
 
