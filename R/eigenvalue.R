@@ -162,7 +162,7 @@ get_eigenvalue <- function(X){
   get_eig(X)
 }
 
-fm_pca_spectrum_truncated <- function(x, eig) {
+.fm_pca_spectrum_truncated <- function(x, eig) {
   sparse_classes <- c("sPCA", "sCA", "sMCA", "sMFA", "sHMFA")
   if (!inherits(x, "PCA") || inherits(x, sparse_classes)) {
     return(FALSE)
@@ -192,7 +192,7 @@ fm_pca_spectrum_truncated <- function(x, eig) {
   isTRUE(total_inertia - captured_inertia > tolerance)
 }
 
-warn_truncated_pca_spectrum <- function(n_eigenvalues) {
+.warn_truncated_pca_spectrum <- function(n_eigenvalues) {
   message <- paste0(
     "This FactoMineR PCA result contains only ", n_eigenvalues,
     " eigenvalues and does not include the complete spectrum. Refit the PCA ",
@@ -397,8 +397,8 @@ fviz_eig<-function(X, choice=c("variance", "eigenvalue"), geom=c("bar", "line"),
   ncp <- .coerce_integerish(ncp, "ncp")
 
   eig <- get_eigenvalue(X)
-  if (fm_pca_spectrum_truncated(X, eig)) {
-    warn_truncated_pca_spectrum(nrow(eig))
+  if (.fm_pca_spectrum_truncated(X, eig)) {
+    .warn_truncated_pca_spectrum(nrow(eig))
   }
   eig <-eig[seq_len(min(ncp, nrow(eig))), , drop=FALSE]
   

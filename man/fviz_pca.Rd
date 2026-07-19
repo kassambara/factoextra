@@ -202,7 +202,10 @@ Default value is "none". Allowed values are "all", "none", or a combination of c
     used to compare individuals.
   \item "covariance": Gabriel covariance biplot scaling (equivalent to
     \code{stats::biplot(..., scale = 1)}), preserving the variable
-    covariance geometry.
+    covariance geometry. Because both clouds share a single set of axes
+    (unlike \code{stats::biplot()}'s dual axes), the individuals can appear
+    compressed relative to the variable arrows; use "form" or "auto" if the
+    individual cloud is the focus.
 }
 Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }

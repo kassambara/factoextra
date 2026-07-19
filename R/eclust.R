@@ -231,7 +231,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
 
 # Compute gap stat and get k
 .gap_stat <- function(x, fun_clust, k.max = 10, nboot = 100,
-                   gap_maxSE = list(method = "firstmax", SE.factor = 1),
+                   gap_maxSE = list(method = "firstSEmax", SE.factor = 1),
                    verbose = interactive(), ...)
   {
   gap_stat <- cluster::clusGap(x, fun_clust, K.max = k.max,  B = nboot, 

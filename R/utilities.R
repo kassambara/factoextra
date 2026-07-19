@@ -88,24 +88,21 @@ NULL
          call. = FALSE)
 
   cluster_names <- names(cluster)
-  has_cluster_names <- !is.null(cluster_names) && any(nzchar(cluster_names))
-  if(has_cluster_names){
-    if(length(cluster_names) != n_obs || anyNA(cluster_names) ||
-       any(!nzchar(cluster_names)))
-      stop("Cluster assignment names must be complete and non-empty.",
-           call. = FALSE)
-    if(is.null(observation_names) || length(observation_names) != n_obs ||
-       anyNA(observation_names) || any(!nzchar(observation_names)))
-      stop("Named cluster assignments require complete data row names.",
-           call. = FALSE)
-    if(anyDuplicated(cluster_names) || anyDuplicated(observation_names))
-      stop("Cluster and data names must be unique for unambiguous alignment.",
-           call. = FALSE)
-    if(!setequal(cluster_names, observation_names))
-      stop("The cluster names do not match the plotted data row names.",
-           call. = FALSE)
-    cluster <- cluster[observation_names]
-  }
+  # Reorder the clustering to the data's row order ONLY when both sides carry
+  # complete, unique, matching names. Otherwise keep the positional order (the
+  # historical behaviour), so a clustering whose names do not line up with `data`
+  # still plots positionally instead of erroring. This fixes the reordering
+  # mis-colouring (#128) when names match, without regressing inputs that used to
+  # plot.
+  aligns_by_name <-
+    !is.null(cluster_names) && any(nzchar(cluster_names)) &&
+    length(cluster_names) == n_obs && !anyNA(cluster_names) &&
+    all(nzchar(cluster_names)) &&
+    !is.null(observation_names) && length(observation_names) == n_obs &&
+    !anyNA(observation_names) && all(nzchar(observation_names)) &&
+    !anyDuplicated(cluster_names) && !anyDuplicated(observation_names) &&
+    setequal(cluster_names, observation_names)
+  if(aligns_by_name) cluster <- cluster[observation_names]
   cluster
 }
 
@@ -661,7 +658,7 @@ NULL
 #   union has an effect only when >= 2 conditions are present; with 0 or 1 condition the AND
 #   path below runs unchanged, so a single-condition selection is byte-identical to before.
 # check: if TRUE, check the data after filtering
-.select <- function(d, filter = NULL, check = TRUE, warn_unmatched = check){
+.select <- function(d, filter = NULL, check = TRUE, warn_unmatched = FALSE){
 
   if(!is.null(filter)){
 

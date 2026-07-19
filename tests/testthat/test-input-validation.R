@@ -82,6 +82,9 @@ test_that("get_clust_tendency validates numeric data and n", {
 
   x_na <- matrix(c(1, 2, NA, NA), ncol = 2)
   expect_error(get_clust_tendency(x_na, n = 1, graph = FALSE), "at least two complete rows")
+
+  x_inf <- matrix(c(1, 2, Inf, 4, 5, 6), ncol = 2)
+  expect_error(get_clust_tendency(x_inf, n = 1, graph = FALSE), "finite values only")
 })
 
 test_that("get_dist validates scaled inputs and fviz_dist validates dist values", {

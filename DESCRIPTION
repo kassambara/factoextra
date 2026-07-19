@@ -28,7 +28,7 @@ LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 Depends:
-    R (>= 4.3.0),
+    R (>= 4.1.0),
     ggplot2 (>= 3.5.2)
 Imports:
     cluster (>= 2.1.8.2),
@@ -47,13 +47,13 @@ Suggests:
     knitr,
     mclust,
     parsnip,
-    recipes (>= 0.1.15),
+    recipes,
     rmarkdown,
     Rtsne,
-    testthat (>= 3.2.0),
+    testthat (>= 3.0.0),
     umap,
     uwot,
-    workflows (>= 0.2.3)
+    workflows
 VignetteBuilder: knitr
 URL: https://github.com/kassambara/factoextra,
     https://rpkgs.datanovia.com/factoextra/
@@ -100,5 +100,5 @@ Collate:
     'poison.R'
     'theme_palette.R'
     'zzz.R'
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
-Config/roxygen2/version: 8.0.0

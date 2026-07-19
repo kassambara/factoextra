@@ -31,7 +31,7 @@ test_that("fviz_eig recognizes truncated spectra produced by FactoMineR", {
   )
   eig <- get_eigenvalue(truncated)
   skip_if_not(
-    factoextra:::fm_pca_spectrum_truncated(truncated, eig),
+    factoextra:::.fm_pca_spectrum_truncated(truncated, eig),
     "this FactoMineR version does not record detectable truncation"
   )
 

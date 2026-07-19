@@ -101,9 +101,12 @@ workflow, \code{workflows::extract_mold()}), the loadings from
 honest even when \code{num_comp} keeps only a few components). Variable
 coordinates are loading times the square root of the eigenvalue. Exact
 variable-component correlations and cos2 are recovered from the full PCA
-inertia when every PCA input is provably centered. Uncentered recipe PCA is
-rejected because Pearson correlations cannot be recovered from its fitted
-\code{step_pca()} object. \code{scale.unit} is set to \code{TRUE} only when every
+inertia when every PCA input is provably centered. When the inputs are not
+provably centered (e.g. a bare \code{step_pca()} with no centering), the
+correlations cannot be recovered: the scores, eigenvalues and variable
+coordinates are still returned (so \code{fviz_pca_ind()}, \code{fviz_eig()} and
+the variable arrows work), but the correlation circle is omitted and a warning
+is issued. \code{scale.unit} is set to \code{TRUE} only when every
 PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
 therefore does not draw a correlation circle. For fully normalized data,
 variable coordinates, correlations, cos2 and contributions, and the eigenvalue

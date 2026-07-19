@@ -12,9 +12,9 @@
 #'  \code{clara()}, or \code{fanny()} [cluster]; "kmeans" [stats]; "dbscan"
 #'  [fpc]; "Mclust" [mclust]; or "hkmeans" or "eclust" [factoextra]. A custom
 #'  list may instead contain \code{data} plus either \code{cluster} or
-#'  \code{clustering}. Named assignments are aligned to unique data row names by
-#'  exact match; unnamed assignments remain positional, and partially named
-#'  assignments are rejected.
+#'  \code{clustering}. When the assignments and the data both carry complete,
+#'  unique, matching names, the assignments are aligned to the data rows by name;
+#'  otherwise they are used in their given (positional) order.
 #'@param data the data used for clustering. It is required for kmeans and dbscan
 #'  objects, and for partition or hcut objects fitted from dissimilarities when
 #'  those objects do not retain the original observations.

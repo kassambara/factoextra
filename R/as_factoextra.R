@@ -173,9 +173,12 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 #' honest even when \code{num_comp} keeps only a few components). Variable
 #' coordinates are loading times the square root of the eigenvalue. Exact
 #' variable-component correlations and cos2 are recovered from the full PCA
-#' inertia when every PCA input is provably centered. Uncentered recipe PCA is
-#' rejected because Pearson correlations cannot be recovered from its fitted
-#' \code{step_pca()} object. \code{scale.unit} is set to \code{TRUE} only when every
+#' inertia when every PCA input is provably centered. When the inputs are not
+#' provably centered (e.g. a bare \code{step_pca()} with no centering), the
+#' correlations cannot be recovered: the scores, eigenvalues and variable
+#' coordinates are still returned (so \code{fviz_pca_ind()}, \code{fviz_eig()} and
+#' the variable arrows work), but the correlation circle is omitted and a warning
+#' is issued. \code{scale.unit} is set to \code{TRUE} only when every
 #' PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
 #' therefore does not draw a correlation circle. For fully normalized data,
 #' variable coordinates, correlations, cos2 and contributions, and the eigenvalue
@@ -313,28 +316,41 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
     scores <- scores[, score_comp, drop = FALSE]
   }
 
-  # Correlations require centered PCA inputs. Preprocessing state is tracked in
-  # recipe order and unknown value-changing steps reset the proof; an internal
-  # prcomp center/scale option, when present, is applied at the PCA boundary.
+  # Variable-component correlations require provably centered PCA inputs.
+  # Preprocessing state is tracked in recipe order and unknown value-changing
+  # steps reset the proof; an internal prcomp center/scale option, when present,
+  # is applied at the PCA boundary. When correlations cannot be recovered
+  # (uncentered inputs, or a zero-inertia variable), we still return the scores,
+  # eigenvalues and variable coordinates - so fviz_pca_ind()/fviz_eig()/
+  # fviz_pca_var() work - but omit the recovered correlations/cos2 and the
+  # correlation circle (scale.unit = FALSE), with a one-time warning.
   pca_pos <- which(is_pca)
   prep.state <- .fe_recipe_pca_preprocessing(rec, pca_pos, st)
-  if(!prep.state$centered)
-    stop("The fitted step_pca() used uncentered inputs. Exact variable-component ",
-         "correlations cannot be recovered; add step_center()/step_normalize() ",
-         "or set step_pca(options = list(center = TRUE)).", call. = FALSE)
 
-  full.var.coord <- sweep(full.loadings, 2,
-                          sqrt(eig[seq_len(ncol(full.loadings))]), "*")
-  var.inertia <- rowSums(full.var.coord^2)
-  if(any(!is.finite(var.inertia)) || any(var.inertia <= 0))
-    stop("Variable correlations are undefined for a zero-inertia PCA input.",
-         call. = FALSE)
-  var.cor <- sweep(var.coord, 1, sqrt(var.inertia), "/")
-  var.cos2 <- var.cor^2
-
-  unit.tol <- sqrt(.Machine$double.eps)
-  unit.inertia <- all(abs(var.inertia - 1) <= unit.tol * pmax(1, var.inertia))
-  scale.unit <- prep.state$scaled && unit.inertia
+  var.cor <- NULL
+  var.cos2 <- NULL
+  scale.unit <- FALSE
+  can.recover <- prep.state$centered
+  if(can.recover){
+    full.var.coord <- sweep(full.loadings, 2,
+                            sqrt(eig[seq_len(ncol(full.loadings))]), "*")
+    var.inertia <- rowSums(full.var.coord^2)
+    if(any(!is.finite(var.inertia)) || any(var.inertia <= 0)) can.recover <- FALSE
+  }
+  if(can.recover){
+    var.cor <- sweep(var.coord, 1, sqrt(var.inertia), "/")
+    var.cos2 <- var.cor^2
+    unit.tol <- sqrt(.Machine$double.eps)
+    unit.inertia <- all(abs(var.inertia - 1) <= unit.tol * pmax(1, var.inertia))
+    scale.unit <- prep.state$scaled && unit.inertia
+  } else {
+    warning("Variable-component correlations cannot be recovered from this ",
+            "step_pca() fit (its inputs are not provably centered, or a variable ",
+            "has zero inertia), so the correlation circle is omitted. Add ",
+            "step_center()/step_normalize(), or set ",
+            "step_pca(options = list(center = TRUE)), to recover them.",
+            call. = FALSE)
+  }
 
   list(scores = scores, var.coord = var.coord, var.cor = var.cor,
        var.cos2 = var.cos2, eig = eig, scale.unit = scale.unit)

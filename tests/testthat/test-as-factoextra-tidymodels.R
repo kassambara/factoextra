@@ -88,7 +88,7 @@ test_that("recipe PCA separates coordinates, correlations and scaling state", {
   expect_equal(unname(partial_obj$var$cos2), unname(partial_truth^2), tolerance = 1e-9)
 })
 
-test_that("recipe PCA detects internal scaling and rejects uncentered semantics", {
+test_that("recipe PCA detects internal scaling and degrades uncentered semantics", {
   internal <- recipes::recipe(~ ., data = iris[, 1:4]) |>
     recipes::step_pca(
       recipes::all_numeric_predictors(), num_comp = 2,
@@ -107,21 +107,33 @@ test_that("recipe PCA detects internal scaling and rejects uncentered semantics"
   expect_equal(internal_obj$var$coord, internal_obj$var$cor,
                tolerance = 1e-9)
 
+  # Uncentered recipe PCA cannot yield variable-component correlations, so the
+  # correlation circle is dropped (scale.unit = FALSE) with a warning, but the
+  # scores / eigenvalues / variable coordinates are still returned so the scatter
+  # and scree plots keep working.
   uncentered <- recipes::recipe(~ ., data = iris[, 1:4]) |>
     recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
-  expect_error(as_factoextra_pca(recipes::prep(uncentered)), "uncentered")
+  expect_warning(u_obj <- as_factoextra_pca(recipes::prep(uncentered)),
+                 "correlation circle is omitted")
+  expect_false(u_obj$scale.unit)
+  expect_equal(nrow(get_eig(u_obj)), 4L)
+  expect_s3_class(fviz_pca_ind(u_obj, geom = "point"), "ggplot")
+  expect_s3_class(fviz_eig(u_obj), "ggplot")
 
   scale_only <- recipes::recipe(~ ., data = iris[, 1:4]) |>
     recipes::step_scale(recipes::all_numeric_predictors()) |>
     recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 2)
-  expect_error(as_factoextra_pca(recipes::prep(scale_only)), "uncentered")
+  expect_warning(so_obj <- as_factoextra_pca(recipes::prep(scale_only)),
+                 "correlation circle is omitted")
+  expect_false(so_obj$scale.unit)
 
   arbitrary_center <- recipes::recipe(~ ., data = iris[, 1:4]) |>
     recipes::step_pca(
       recipes::all_numeric_predictors(), num_comp = 2,
       options = list(center = rep(0, 4))
     )
-  expect_error(as_factoextra_pca(recipes::prep(arbitrary_center)), "uncentered")
+  expect_warning(as_factoextra_pca(recipes::prep(arbitrary_center)),
+                 "correlation circle is omitted")
 })
 
 test_that("column-only recipe steps preserve centering and scaling evidence", {
@@ -140,23 +152,6 @@ test_that("column-only recipe steps preserve centering and scaling evidence", {
     abs(unname(as.matrix(baked[, score_names, drop = FALSE]))),
     tolerance = 1e-10
   )
-})
-
-test_that("as_factoextra_pca validates finite coordinates and eigenvalues", {
-  x <- matrix(c(-1, 1, -2, 2), ncol = 2)
-  expect_error(as_factoextra_pca(x, eig = c(NA, 1)), "finite")
-  expect_error(as_factoextra_pca(x, eig = c(Inf, 1)), "finite")
-  expect_error(as_factoextra_pca(x, eig = c(-1, 1)), "non-negative")
-  expect_error(as_factoextra_pca(x, eig = c(0, 0)), "positive")
-  expect_error(as_factoextra_pca(replace(x, 1, NA), eig = c(1, 1)), "finite")
-  expect_error(as_factoextra_pca(matrix(1, nrow = 1), eig = NULL),
-               "At least two")
-  expect_error(as_factoextra_pca(x, eig = c(1, 1), scale.unit = NA),
-               "TRUE or FALSE")
-
-  tiny_negative <- -sqrt(.Machine$double.eps) / 2
-  obj <- as_factoextra_pca(x, eig = c(1, tiny_negative, 0))
-  expect_identical(obj$eig.values, c(1, 0, 0))
 })
 
 test_that("as_factoextra_pca(recipe) matches FactoMineR (authoritative engine)", {
@@ -252,6 +247,9 @@ test_that("as_factoextra_pca(workflow) matches the recipe path (fitted workflow)
   expect_s3_class(obj_wf, "factoextra_pca")
   expect_equal(obj_wf$eig.values, obj_rec$eig.values, tolerance = 1e-6)
   expect_equal(abs(obj_wf$ind$coord), abs(obj_rec$ind$coord), tolerance = 1e-6)
+  # the workflow path recovers the same variable correlations and scaling state
+  expect_equal(abs(obj_wf$var$cor), abs(obj_rec$var$cor), tolerance = 1e-6)
+  expect_identical(obj_wf$scale.unit, obj_rec$scale.unit)
 
   # unfitted workflow (recipe added but not fit) errors with a fit()/prep() hint
   wf_unfit <- workflows::workflow() |> workflows::add_recipe(rec)

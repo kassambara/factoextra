@@ -59,10 +59,7 @@ test_that("an empty single condition under union is not fatal if another supplie
 test_that("union errors only when the FINAL union is empty (and only under check)", {
   d <- .mk()
   f <- list(name = "zzz", cos2 = 0.99, union = TRUE) # both empty (max cos2 = 0.95)
-  expect_warning(
-    expect_error(factoextra:::.select(d, f, check = TRUE), "union"),
-    "Selection name"
-  )
+  expect_error(factoextra:::.select(d, f, check = TRUE), "union")
   expect_silent(res <- factoextra:::.select(d, f, check = FALSE))
   expect_equal(nrow(res), 0L)
 })

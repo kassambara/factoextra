@@ -19,15 +19,14 @@
   assume a metric the embedding does not preserve). `uwot` and `Rtsne` are
   Suggests.
 
-* `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a centered PCA fitted
+* `as_factoextra_pca()` gains `recipe` and `workflow` methods, so a PCA fitted
   inside a tidymodels `recipe` (`recipes::step_pca()`) or a fitted `workflow`
   plots directly with the `fviz_pca_*`/`fviz_eig`/`fviz_contrib`/`fviz_cos2`
   family: `prep(rec) |> as_factoextra_pca() |> fviz_pca_biplot()`. Scores,
-  loadings, and the full set of eigenvalues are extracted through the public
-  recipes/workflows API. Recoverable centered preprocessing yields
-  variable-component correlations and full-spectrum axis percentages even when
-  only a few components are retained; uncentered or otherwise unrecoverable
-  preprocessing is rejected. `recipes` and `workflows` are Suggests.
+  loadings and the full set of eigenvalues are extracted through the public
+  recipes/workflows API, so the scree plot and axis percentages are honest even
+  when only a few components are kept, and the variable arrows are the true
+  variable-component correlations. `recipes` and `workflows` are Suggests.
 
 * New `factoextra_palette()` and `theme_factoextra()`. `factoextra_palette("okabe")`
   returns the Okabe-Ito colorblind-safe categorical colors as a vector to pass to
@@ -80,11 +79,72 @@
   convenience for building it inline. The default (no `union`, or `union = FALSE`)
   is unchanged. Thanks to @qfazille (#53).
 
+## Main changes
+
+* `get_pca_ind()`: individual contributions for `prcomp` objects, and for `ade4`
+  PCA objects with non-uniform row weights, are now normalized to sum to 100
+  percent per axis, matching `FactoMineR::PCA()`. Previously `prcomp` individual
+  contributions were divided by the (n-1)-normalized eigenvalue and summed to
+  `100 * (n - 1) / n` instead of 100. This changes the individual contribution
+  values returned for those objects (and any `fviz_contrib()` / `fviz_pca()`
+  colouring derived from them). `princomp` individual contributions, all
+  variable contributions, coordinates, and cos2 are unchanged. The corrected
+  values match `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
+
+* `fviz_pca_biplot()`: `biplot.type = "form"` and `biplot.type = "covariance"`
+  now use the exact Gabriel biplot factorization, matching
+  `stats::biplot(scale = 0)` and `stats::biplot(scale = 1)` respectively, instead
+  of the previous display heuristic. The default `biplot.type = "auto"` is
+  unchanged (byte-identical). These two modes require a `prcomp` / `princomp`
+  object. Thanks to @erdeyl (#274).
+
+* `as_factoextra_pca()` recipe / workflow methods (tidymodels): variable-component
+  correlations and cos2 are now recovered from the full PCA inertia, so they match
+  `FactoMineR::PCA()` of the same data even when `step_pca()` keeps only a few
+  components (previously the cos2 was normalized within the retained subspace and
+  matched only when all components were kept). `scale.unit` is set to `TRUE` only
+  when every PCA input is both centered and unit-scaled at the PCA boundary.
+  When the inputs are not provably centered (e.g. a bare `step_pca()`), the
+  variable-component correlations cannot be recovered: the scores, eigenvalues
+  and variable coordinates are still returned (so `fviz_pca_ind()` / `fviz_eig()`
+  and the variable arrows keep working), but the correlation circle is omitted
+  and a warning is issued (add `step_center()` / `step_normalize()`, or set
+  `step_pca(options = list(center = TRUE))`, to recover them). Thanks to @erdeyl (#274).
+
+* `get_clust_tendency()`: the Hopkins statistic now samples the observed points
+  **without replacement** (the previous code sampled with replacement, which could
+  draw the same observation more than once), counts a duplicated row as a valid
+  zero-distance neighbour, and is computed on a normalized distance scale for
+  numerical stability. This changes the Hopkins value returned for a given `seed`.
+  It now errors clearly when every nearest-neighbour distance is zero (the
+  statistic is undefined). Thanks to @erdeyl (#274).
+
+* `fviz_eig(parallel = TRUE)` (Horn's parallel analysis, an opt-in overlay):
+  the simulated eigenvalue thresholds now use a corrected reference distribution.
+  Covariance PCA (`prcomp(scale. = FALSE)` / `princomp(cor = FALSE)`) previously
+  simulated unit-variance random data, giving statistically wrong thresholds; the
+  reference now matches the fitted object's marginal variances. Full-rank
+  correlation PCA is unaffected in distribution (parallel analysis is a
+  Monte-Carlo procedure, so exact threshold values depend on the seed);
+  rank-truncated or wide (n <= p) fits now simulate over the original variable
+  count. Fits whose reference distribution
+  cannot be reconstructed (uncentered fits, custom scale vectors, rank-truncated
+  covariance fits, ambiguous `princomp` `cor`) now error clearly instead of
+  returning misleading thresholds. Separately, `fviz_eig()` warns when a
+  FactoMineR PCA object stores an incomplete eigenvalue spectrum (refit with a
+  larger `ncp` for a complete scree plot). Thanks to @erdeyl (#274).
+
+* `fviz_gap_stat()` (and `fviz_nbclust(method = "gap_stat")`): when a partial
+  `maxSE` list is supplied without a `method`, the fallback is now `"firstSEmax"`
+  (the documented default and `cluster::maxSE`'s default) instead of `"firstmax"`.
+  This only affects callers who pass, e.g., `maxSE = list(SE.factor = 2)` with no
+  `method`; the previous `"firstmax"` fallback silently ignored the `SE.factor`
+  they set (that rule does not use it). Default calls and calls that pass a
+  `method` are unchanged. `eclust()`'s internal gap default is aligned for
+  consistency. Thanks to @erdeyl (#274).
+
 ## Minor changes
 
-* The declared minimum R version is now 4.3, matching the current FactoMineR
-  dependency. Minimum versions are also declared for the optional recipes,
-  workflows, and testthat interfaces used by the package and its tests.
 * `fviz_dend()`: corrected the documentation of the `type` argument, which listed
   a `"triangle"` value that the function does not accept (the valid values are
   `"rectangle"`, `"circular"` and `"phylogenic"`). Thanks to @Nelson-Gon (#144).
@@ -93,41 +153,38 @@
   already depends on.
 * Fixed a typo in the default title of `fviz_cos2()` / `fviz_contrib()` for
   quantitative variables ("quantitive" -> "quantitative").
+* Clarified and corrected documentation across several help pages: the
+  contribution-based selection help now says "highest contributions" (was
+  "highest cos2"), `fviz_famd()`'s `habillage` help refers to a FAMD (not MFA)
+  object, the ExPosition class name is spelled `expoOutput` in `fviz_ca()` /
+  `fviz_mca()`, and the `clean_lock_files()` example is now self-contained.
+  Thanks to @erdeyl (#274).
+* Clearer, earlier input validation for edge cases, so mistakes fail with an
+  informative message instead of a downstream error: `fviz_umap()`/`fviz_tsne()`
+  require two distinct positive integer `dims`; `fviz_nbclust()` validates
+  `k.max`; `fviz_dend()` validates `k`/`h` against the tree; `get_clust_tendency()`
+  checks `n` and requires finite data; and `as_factoextra_pca()` validates
+  `scale.unit` and the supplied eigenvalues. Valid calls are unaffected.
+  Thanks to @erdeyl (#274).
 
 ## Bug fixes
 
-* `fviz_mclust()` now honors its `ggtheme` argument for classification,
-  uncertainty, and BIC plots. User-supplied themes were previously replaced by
-  `theme_classic()`; the default remains unchanged.
-* `fviz_eig()` now warns when a FactoMineR PCA result contains only a truncated
-  eigenvalue spectrum. Refit `FactoMineR::PCA()` with a larger `ncp` to obtain a
-  complete scree plot; explicitly limiting the number of displayed components
-  does not trigger the warning for a complete fitted spectrum.
-* Corrected PCA individual contributions so each component is normalized by
-  its own score sum of squares. Degenerate zero-variance components now return
-  finite zero contributions.
-* Corrected `as_factoextra_pca()` conversions for `recipes` and `workflows`:
-  variable coordinates now use the PCA standard deviations, full-space
-  correlations and squared cosines are retained, and uncentered or otherwise
-  unrecoverable preprocessing is rejected instead of producing misleading
-  geometry.
-* Reworked Horn parallel analysis in `fviz_eig()`. It now distinguishes
-  correlation- and covariance-based PCA, respects the original variable count
-  for truncated fits, handles wide data and `princomp(retx = FALSE)`, and
-  preserves the caller's random-number state.
-* `fviz_pca_biplot()` now implements its documented Gabriel form
-  (`scale = 0`) and covariance (`scale = 1`) coordinate factorizations for
-  `prcomp` and `princomp` objects.
-* Cluster assignments supplied as named vectors are now aligned by exact
-  observation names and invalid, duplicate, or incomplete names are rejected.
-  This prevents cluster labels from being silently attached to the wrong rows.
-* Hardened edge cases across Hopkins clustering tendency, supplementary CA
-  selections, UMAP dimension choices, dendrogram cuts, and cluster-number
-  limits. Invalid or undefined inputs now fail with targeted errors instead of
-  returning unstable values or downstream indexing failures.
-* Named selections now warn when requested elements are absent, while valid
-  supplementary elements remain selectable. `invisible = "all"` also hides
-  supplementary elements consistently.
+* `fviz_ca_biplot()` / `fviz_ca()`: `invisible = "col.sup"` now hides
+  supplementary columns (the column branch was keyed off the row-supplementary
+  flag, so supplementary columns stayed visible). Thanks to @erdeyl (#274).
+* `fviz_mclust()` now applies the `ggtheme` argument to every plot type
+  (`"classification"`, `"uncertainty"`, `"BIC"`); it previously ignored it and
+  always used `theme_classic()`. The default is unchanged. Thanks to @erdeyl (#274).
+* `fviz_cluster()` now aligns a named clustering to the plotted data by row name
+  when both carry complete, unique, matching names, so points are not
+  mis-coloured when `data` is ordered differently from the clustering; it also
+  accepts a `clustering` component (as produced by `pam()`/`clara()`) in a custom
+  `list(data=, clustering=)` object. Assignments that do not line up by name are
+  used positionally, as before. Thanks to @erdeyl (#274).
+* `invisible = "all"` now hides all plotted elements (it was silently accepted
+  but had no effect); on the individual and variable maps, a selection by `name`
+  that includes names not present now warns instead of silently dropping them.
+  Thanks to @erdeyl (#274).
 
 # factoextra 2.1.0
 
@@ -256,15 +313,11 @@
   are data frames, which previously collapsed the internal `cos2` matrix into a
   list and raised "attempt to set 'colnames' on an object with less than two
   dimensions"; `fviz_pca_ind()` on a `dudi.pca` failed as a result. `prcomp`/
-  `princomp` output is unchanged. Contributions now also respect nonuniform
-  `dudi.pca` row weights and match `ade4::inertia.dudi()`. (#126)
+  `princomp` output is unchanged. (#126)
 * `fviz_dend()` now honors an explicit `k` for `HCPC` objects (e.g.
   `fviz_dend(res.hcpc, k = 5)`); previously the user-supplied `k` was silently
   overwritten by the HCPC cluster count. With `k = NULL` (default) the behavior
   is unchanged. (#81)
-* `fviz_dend()` now rejects non-finite or non-numeric height cuts and reports a
-  clear error when `h` is at or below the lowest merge height, instead of
-  emitting an internal `min()` warning before failing.
 * `fviz_mca_biplot()` now forwards the `map` argument to the individuals and
   variable categories, so asymmetric maps (e.g. `"rowprincipal"`,
   `"colprincipal"`, `"symbiplot"`) take effect instead of always drawing the
@@ -393,7 +446,7 @@ with the current R/ggplot2/FactoMineR ecosystem.
 ## Minor changes
 
 - the function `fviz_nbclust()` checks now whether the argument `FUNcluster` is correctly specified ([@robsalasco, #82](https://github.com/kassambara/factoextra/issues/82)).
-- Clusters are now correctly ordered in `fviz_mclust_bic()` ([@hpsprecher, #84](https://github.com/kassambara/factoextra/issues/84))
+- Clusters are now correctly order in `fviz_mclust_bic()` ([@hpsprecher, #84](https://github.com/kassambara/factoextra/issues/84))
 - New arguments `outlier.pointsize` and `outlier.labelsize` added in `fviz_cluster()` to customize outliers detected with DBSCAN ([@choonghyunryu, #74](https://github.com/kassambara/factoextra/issues/74))
 - `pointsize` in the function `fviz()` can now be a continuous variable.
 
@@ -414,7 +467,7 @@ with the current R/ggplot2/FactoMineR ecosystem.
 ## Minor changes
    
 - New argument `mean.point` in the function `fviz()`. logical value. If TRUE, group mean points are added to the plot.
-- Now, PCA correlation circles have fixed coordinates so they don't appear as ellipses ([@scoavoux, #38](https://github.com/kassambara/factoextra/pull/38)).
+- Now, PCA correlation circles have fixed coordinates so they don't appear as ellipses ([@scoavoux, #38](https://github.com/kassambara/factoextra/pull/38).
 - New argument `fill.ind` and `fill.var` added in `fviz_pca()` ([@ginolhac, #27](https://github.com/kassambara/factoextra/issues/27) and [@Confurious, #42](https://github.com/kassambara/factoextra/issues/42)).
 - New arguments `geom.ind` and `geom.var` in `fviz_pca_xxx()` and `fviz_mca_xxx()` functions to have more controls on the individuals/variables geometry in the functions `fviz_pca_biplot()` and `fviz_mca_biplot()` ([@Confurious, #42](https://github.com/kassambara/factoextra/issues/42)).
 - New arguments `geom.row` and `geom.col`  in `fviz_ca_xxx()` functions to have more controls on the individuals/variables geometry in the function `fviz_ca_biplot()` ([@Confurious, #42](https://github.com/kassambara/factoextra/issues/42)).
@@ -436,7 +489,7 @@ fviz_pca_ind(res.pca, col.ind = iris$Sepal.Length,
 ```
    
    
-- factoextra can now handle Japanese characters by using the argument `font.family = "HiraKakuProN-W3"` ([#31](https://github.com/kassambara/factoextra/issues/31)). For example:
+- factoextra can now handle Japanese characters by using the argument font.family = "HiraKakuProN-W3"` ([#31](https://github.com/kassambara/factoextra/issues/31)). For example:
     
     
 ```r
@@ -452,7 +505,7 @@ dimnames(.tbl2.1) <- list(地域=c("オスロ","中部地域","北部地域"),
 
 res.CA <- CA(.tbl2.1,graph=FALSE)
 
-fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
+fviz_ca_biplot(res.CA,map="simbiplot",title="simbiplot",
                font.family = "HiraKakuProN-W3")
 ```
 
@@ -468,7 +521,7 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
    
 - New functions `fviz_mfa_var()` and `fviz_hmfa_var()` for plotting MFA and HMFA variables, respectively.  
      
-- New function `get_mfa_var()`: Extract the results for quantitative variables, qualitative variables, and groups. Deprecated functions: `get_mfa_var_quanti()`, `get_mfa_var_quali()` and `get_mfa_group()`.
+- New function `get_mfa_var()`: Extract the results for variables (quantitatives, qualitatives and groups). Deprecated functions: `get_mfa_var_quanti()`, `get_mfa_var_quali()` and `get_mfa_group()`.
     
 - New functions added for extracting and visualizing the results of FAMD (factor analysis of mixed data): `get_famd_ind()`, `get_famd_var()`, `fviz_famd_ind()` and `fviz_famd_var()`.
    
@@ -480,13 +533,13 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
     - choose.vars: a character vector containing variables to be considered for plotting.
        
 
-- New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #20](https://github.com/kassambara/factoextra/issues/20)).
+- New argument pointshape in `fviz_pca()`. When you use habillage, point shapes change automatically by groups. To avoid this behaviour use for example pointshape = 19 in combination with habillage ([@raynamharris, #15](https://github.com/kassambara/factoextra/issues/20)).
 - New argument repel in `fviz_add()`.
 - New argument gradient.cols in fviz_*() functions.
     
 - Support for the ExPosition package added (epCA, epPCA, epMCA) ([#23](https://github.com/kassambara/factoextra/issues/23))
      
-## Minor changes
+## Minor changing
    
 - Check point added in the function `fviz_nbclust()` to make sure that x is an object of class data.frame or matrix ([Jakub Nowosad, #15](https://github.com/kassambara/factoextra/issues/15)).
 - The following arguments are deprecated in `fviz_cluster`(): title, frame, frame.type, frame.level, frame.alpha. Now, use main, ellipse, ellipse.type, ellipse.level and ellipse.alpha instead.
@@ -509,18 +562,18 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
 # factoextra 1.0.3
   
   
-## New features
+## NEW FEATURES
 
 
-* New fviz_mfa function to plot MFA individuals, partial individuals, quantitative variables, categorical variables, groups relationship square and partial axes ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
+* New fviz_mfa function to plot MFA individuals, partial individuals, quantitive variables, categorical variables, groups relationship square and partial axes ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
 
-* New fviz_hmfa function to plot HMFA individuals, quantitative variables, categorical variables and groups relationship square ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
+* New fviz_hmfa function to plot HMFA individuals, quantitive variables, categorical variables and groups relationship square ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
   
 * New get_mfa and get_hmfa function ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
 
 * fviz_ca, fviz_pca, fviz_mca, fviz_mfa and fviz_hmfa ggrepel support ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
   
-* Updated facto_summarize, eigenvalue, fviz_contrib and fviz_cos2 functions to compute FactoMineR MFA and HMFA results ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
+* Updated fviz_summarize, eigenvalue, fviz_contrib and fviz_cos2 functions, to compute FactoMineR MFA and HMFA results ([@inventionate, #4](https://github.com/kassambara/factoextra/pull/4)).
 
 
 * fviz_cluster() added. This function can be used to visualize the outputs of clustering methods including:  kmeans() [stats package]; pam(), clara(), fanny() [cluster package]; dbscan() [fpc package]; Mclust() [mclust package]; HCPC() [FactoMineR package]; hkmeans() [factoextra].
@@ -539,19 +592,21 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
 
 * fviz_dend(): Enhanced visualization of dendrogram
 
+* eclust(): Visual enhancement of clustering analysis
+
 * get_dist() and fviz_dist(): Enhanced Distance Matrix Computation and Visualization
 
 * eclust(): Visual enhancement of clustering analysis
 
 
-## Minor changes
+## MINOR CHANGING
 
 * Require R >= 3.1.0
 * A dataset named "multishapes" has been added. It contains clusters of multiple shapes. Useful for comparing density-based clustering and partitioning methods such as k-means
 * The argument jitter is added to the functions fviz_pca(), fviz_mca() and fviz_ca() and fviz_cluster() in order to reduce overplotting of points and texts
 * The functions fviz_*() now use ggplot2::stat_ellipse() for drawing ellipses.
 
-## Bug fixes
+## BUG FIXES
     
     
 - Unknown parameters "shape" removed from geom_text ([@bdboy, #5](https://github.com/kassambara/factoextra/issues/5))
@@ -560,7 +615,7 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
 # factoextra 1.0.2
 
 
-## New features
+## NEW FEATURES
    
 * Visualization of Correspondence Analysis outputs from different R packages (FactoMineR, ca, ade4, MASS)
 - fviz_ca_row()
@@ -576,7 +631,7 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
 - fviz_cos2()
 - fviz_contrib()
 
-* Summarize the results of PCA, CA, and MCA
+* Sumarize the results of PCA, CA, MCA
 - facto_summarize()
 
 
@@ -585,7 +640,7 @@ fviz_ca_biplot(res.CA, map = "symbiplot", title = "symbiplot",
 * fviz_pca_contrib() is deprecated -> use fviz_contrib()
  
 
-## Minor changes
+## MINOR CHANGING
 
 * fviz_add: "text" are included in the allowed values for the argument geom
 * fviz_screeplot: the X parameter can be also an object of class ca [ca], coa [ade4], correspondence [MASS]

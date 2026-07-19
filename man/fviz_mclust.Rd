@@ -41,11 +41,7 @@ fviz_mclust_bic(
 probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored in
 'convex'. Default value is 0.95.}
 
-\item{ggtheme}{function, ggplot2 theme name. The default is set by each
-function's \code{ggtheme} argument; see the function usage for the actual
-default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
-plot keeps ggplot2 default theme or the theme set globally via
-\code{theme_set()}.
+\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 

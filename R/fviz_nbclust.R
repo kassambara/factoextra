@@ -147,7 +147,7 @@ fviz_nbclust <- function (x, FUNcluster = NULL, method = c("silhouette", "wss", 
                           diss = NULL, k.max = 10, nboot = 100, verbose = interactive(),
                           barfill="steelblue", barcolor="steelblue",
                           linecolor = "steelblue", print.summary = TRUE,  ...,
-  mark_optimal = NULL)
+                          mark_optimal = NULL)
   {
   k.max <- .coerce_integerish(k.max, "k.max", lower = 2L,
                               value_label = "single integer value")

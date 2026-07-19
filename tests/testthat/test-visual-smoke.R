@@ -106,6 +106,7 @@ test_that("fviz_pca_biplot supports form and covariance scaling modes", {
     layer <- Filter(function(x) inherits(x$geom, geom), p$layers)[[1]]
     as.data.frame(layer$data)[, c("x", "y"), drop = FALSE]
   }
+  # form == Gabriel scale = 0 (stats::biplot(scale = 0)): scores + rotation
   expect_equal(
     unname(as.matrix(layer_data(p_form, "GeomPoint"))),
     unname(res.pca$x[, 1:2]), tolerance = 1e-12
@@ -114,7 +115,7 @@ test_that("fviz_pca_biplot supports form and covariance scaling modes", {
     unname(as.matrix(layer_data(p_form, "GeomSegment"))),
     unname(res.pca$rotation[, 1:2]), tolerance = 1e-12
   )
-
+  # covariance == Gabriel scale = 1 (stats::biplot(scale = 1))
   lambda <- sqrt(nrow(res.pca$x)) * res.pca$sdev[1:2]
   expect_equal(
     unname(as.matrix(layer_data(p_cov, "GeomPoint"))),
@@ -126,19 +127,38 @@ test_that("fviz_pca_biplot supports form and covariance scaling modes", {
     unname(sweep(res.pca$rotation[, 1:2], 2, lambda, "*")),
     tolerance = 1e-12
   )
+
+  # princomp: same Gabriel factorization, using n = n.obs
+  pr <- stats::princomp(iris[, 1:4], cor = TRUE)
+  loads <- unclass(pr$loadings)[, 1:2]
+  pf2 <- fviz_pca_biplot(pr, biplot.type = "form", geom.ind = "point",
+                         geom.var = "arrow", label = "none")
+  expect_equal(unname(as.matrix(layer_data(pf2, "GeomPoint"))),
+               unname(pr$scores[, 1:2]), tolerance = 1e-10)
+  expect_equal(unname(as.matrix(layer_data(pf2, "GeomSegment"))),
+               unname(loads), tolerance = 1e-10)
+  pcv2 <- fviz_pca_biplot(pr, biplot.type = "covariance", geom.ind = "point",
+                          geom.var = "arrow", label = "none")
+  lam2 <- sqrt(pr$n.obs) * pr$sdev[1:2]
+  expect_equal(unname(as.matrix(layer_data(pcv2, "GeomPoint"))),
+               unname(sweep(pr$scores[, 1:2], 2, lam2, "/")), tolerance = 1e-10)
+  expect_equal(unname(as.matrix(layer_data(pcv2, "GeomSegment"))),
+               unname(sweep(loads, 2, lam2, "*")), tolerance = 1e-10)
+
+  # the default 'auto' path still renders (byte-identity proven separately)
+  expect_s3_class(fviz_pca_biplot(res.pca), "ggplot")
 })
 
 test_that("fviz_eig parallel analysis is reproducible with parallel.seed", {
   res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
 
   extract_parallel_threshold <- function(p) {
-    layers <- p$layers
-    idx <- which(vapply(layers, function(layer) {
-      !inherits(layer$data, "waiver") &&
-        "threshold" %in% names(as.data.frame(layer$data))
+    layers <- ggplot2::ggplot_build(p)$data
+    idx <- which(vapply(layers, function(df) {
+      "shape" %in% names(df) && all(df$shape == 4)
     }, logical(1)))
     if(length(idx) == 0) return(numeric(0))
-    as.data.frame(layers[[idx[1]]]$data)$threshold
+    layers[[idx[1]]]$y
   }
 
   p1 <- fviz_eig(
