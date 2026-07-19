@@ -91,6 +91,20 @@
   variable contributions, coordinates, and cos2 are unchanged. Cross-validated
   against `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
 
+* `as_factoextra_pca()` recipe / workflow methods (tidymodels): variable-component
+  correlations and cos2 are now recovered from the full PCA inertia, so they match
+  `FactoMineR::PCA()` of the same data even when `step_pca()` keeps only a few
+  components (previously the cos2 was normalized within the retained subspace and
+  matched only when all components were kept). `scale.unit` is set to `TRUE` only
+  when every PCA input is both centered and unit-scaled at the PCA boundary.
+  When the inputs are not provably centered (e.g. a bare `step_pca()`), the
+  variable-component correlations cannot be recovered: the scores, eigenvalues
+  and variable coordinates are still returned (so `fviz_pca_ind()` / `fviz_eig()`
+  and the variable arrows keep working), but the correlation circle is omitted
+  and a warning is issued (add `step_center()` / `step_normalize()`, or set
+  `step_pca(options = list(center = TRUE))`, to recover them). Cross-validated
+  against `FactoMineR::PCA()`. Thanks to @erdeyl (#274).
+
 * `get_clust_tendency()`: the Hopkins statistic now samples the observed points
   **without replacement** (the previous code sampled with replacement, which could
   draw the same observation more than once), counts a duplicated row as a valid
