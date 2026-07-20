@@ -21,6 +21,11 @@ For transparency, the changes that alter a value or message returned by 2.1.0:
 * `fviz_gap_stat()` / `fviz_nbclust(method = "gap_stat")`: when a partial `maxSE`
   list omits `method`, the fallback is now `"firstSEmax"` (the documented default)
   instead of `"firstmax"`.
+* `fviz_dend()`: the `cex` argument now scales the leaf-label size for the
+  `"rectangle"`/`"circular"` types (it previously had no effect, as the size was
+  rescaled away by a continuous size scale). Only the leaf-label font size
+  changes; at the default `cex = 0.8` the labels are marginally smaller. No
+  other element of the plot, and no returned value, changes.
 * Opt-in paths only: `fviz_eig(parallel = TRUE)` (Horn parallel analysis, with the
   covariance-PCA reference corrected) and
   `fviz_pca_biplot(biplot.type = "form"/"covariance")` (now the exact Gabriel
@@ -57,12 +62,12 @@ opt-in arguments (`fviz_dend(highlight=)`, `max.points`, `display = "heatmap"`,
 
 0 errors | 0 warnings | 0 notes on the CI environments (which include pandoc).
 
-A local `R CMD check --as-cran` run without pandoc reports two environment-only
-NOTEs — "Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc'" and a
-missing prebuilt vignette index — that do not appear where pandoc is available.
-As in 2.1.0, a few `fviz_*` examples (MCA / MFA / CA) run inherently slow
-FactoMineR computations and may trip the "examples > 5s" NOTE on slower machines;
-we can wrap them in `\donttest{}` if preferred.
+A local `R CMD check --as-cran` reports only environment-only NOTEs that do not
+appear where the tooling is current: "Files 'README.md' or 'NEWS.md' cannot be
+checked without 'pandoc'", an HTML Tidy version notice, and an "unable to verify
+current time" timestamp notice. As in 2.1.0, a few `fviz_*` examples (MCA / MFA /
+CA) run inherently slow FactoMineR computations and may trip the "examples > 5s"
+NOTE on slower machines; we can wrap them in `\donttest{}` if preferred.
 
 ## Downstream dependencies
 
@@ -70,7 +75,9 @@ We checked all 49 reverse dependencies by downloading their sources and reading
 the code, tests, and vignettes that call the functions whose output or messages
 changed. No reverse dependency snapshots the changed numeric outputs
 (`get_pca_ind()` contributions, the Hopkins statistic) or uses the opt-in changed
-paths (`biplot.type`, `fviz_eig(parallel = TRUE)`).
+paths (`biplot.type`, `fviz_eig(parallel = TRUE)`). The `fviz_dend()` `cex` change
+is a leaf-label font-size adjustment in a returned ggplot object; no reverse
+dependency asserts against dendrogram label sizes.
 
 The one reverse dependency that pins a factoextra error message — **chooseGCM**,
 whose tests assert `stats::cutree()`'s native "k must be between 1 and N" error via
