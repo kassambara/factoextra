@@ -25,8 +25,10 @@
   family: `prep(rec) |> as_factoextra_pca() |> fviz_pca_biplot()`. Scores,
   loadings and the full set of eigenvalues are extracted through the public
   recipes/workflows API, so the scree plot and axis percentages are honest even
-  when only a few components are kept, and the variable arrows are the true
-  variable-component correlations. `recipes` and `workflows` are Suggests.
+  when only a few components are kept. When inputs are provably centered,
+  variable-component correlations and cos2 are recovered separately from the
+  loading-times-component-SD arrow coordinates; the two coincide for centered,
+  unit-scaled inputs. `recipes` and `workflows` are Suggests.
 
 * New `factoextra_palette()` and `theme_factoextra()`. `factoextra_palette("okabe")`
   returns the Okabe-Ito colorblind-safe categorical colors as a vector to pass to
@@ -87,16 +89,25 @@
   contributions were divided by the (n-1)-normalized eigenvalue and summed to
   `100 * (n - 1) / n` instead of 100. This changes the individual contribution
   values returned for those objects (and any `fviz_contrib()` / `fviz_pca()`
-  colouring derived from them). `princomp` individual contributions, all
-  variable contributions, coordinates, and cos2 are unchanged. The corrected
-  values match `FactoMineR::PCA()` and `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
+  colouring derived from them). `princomp` individual contributions,
+  coordinates, and cos2 are unchanged for ordinary finite inputs. Variable
+  contributions are unchanged on nonzero, ordinarily scaled axes; zero-inertia
+  and extreme-magnitude axes now return stable finite values instead of NaN or
+  overflow. For a rank-truncated `prcomp` object, individual cos2 is explicitly
+  defined within the retained component subspace because discarded row inertia
+  is not stored in the fit. The corrected values match `FactoMineR::PCA()` and
+  `ade4::inertia.dudi()`. Thanks to @erdeyl (#274).
 
 * `fviz_pca_biplot()`: `biplot.type = "form"` and `biplot.type = "covariance"`
   now use the exact Gabriel biplot factorization, matching
   `stats::biplot(scale = 0)` and `stats::biplot(scale = 1)` respectively, instead
-  of the previous display heuristic. The default `biplot.type = "auto"` is
-  unchanged (byte-identical). These two modes require a `prcomp` / `princomp`
-  object. Thanks to @erdeyl (#274).
+  of the previous display heuristic. The usual `biplot.type = "auto"` scaling
+  algorithm is otherwise unchanged. Rank-truncated `prcomp` fits now use only
+  the retained component standard deviations when computing variable
+  coordinates, avoiding recycled values and incorrect arrows. The exact modes
+  also handle formula fits with `na.exclude`; covariance mode uses `n.obs` for
+  `princomp`, matching `stats::biplot()`. The exact modes require a `prcomp` /
+  `princomp` object. Thanks to @erdeyl (#274).
 
 * `as_factoextra_pca()` recipe / workflow methods (tidymodels): variable-component
   correlations and cos2 are now recovered from the full PCA inertia, so they match
@@ -104,18 +115,25 @@
   components (previously the cos2 was normalized within the retained subspace and
   matched only when all components were kept). `scale.unit` is set to `TRUE` only
   when every PCA input is both centered and unit-scaled at the PCA boundary.
-  When the inputs are not provably centered (e.g. a bare `step_pca()`), the
-  variable-component correlations cannot be recovered: the scores, eigenvalues
-  and variable coordinates are still returned (so `fviz_pca_ind()` / `fviz_eig()`
-  and the variable arrows keep working), but the correlation circle is omitted
-  and a warning is issued (add `step_center()` / `step_normalize()`, or set
-  `step_pca(options = list(center = TRUE))`, to recover them). Thanks to @erdeyl (#274).
+  When the metrics cannot be recovered (e.g. a bare `step_pca()` or a
+  zero-inertia variable), `get_pca_var()` returns `NULL` for its correlation and
+  cos2 entries instead of synthesizing them from the retained coordinates.
+  Scores, eigenvalues, variable coordinates and contributions remain available,
+  so ordinary variable arrows still work; correlation/cos2-dependent displays
+  fail explicitly, the correlation circle is omitted, and a warning gives the
+  applicable centering or zero-inertia remedy. For fully normalized inputs, the
+  recovered metrics match `FactoMineR::PCA()`. To keep scores consistent with the
+  fitted loadings and eigenvalues, `step_pca()` must be the final recipe step.
+  Case-weighted fits fail explicitly until their weights can be propagated into
+  individual contributions. Thanks to @erdeyl (#274).
 
 * `get_clust_tendency()`: the Hopkins statistic now samples the observed points
   **without replacement** (the previous code sampled with replacement, which could
   draw the same observation more than once), counts a duplicated row as a valid
   zero-distance neighbour, and is computed on a normalized distance scale for
-  numerical stability. This changes the Hopkins value returned for a given `seed`.
+  numerical stability. Zero-range columns are ignored, so adding a redundant
+  constant variable does not change the statistic. This changes the Hopkins value
+  returned for a given `seed`.
   It now errors clearly when every nearest-neighbour distance is zero (the
   statistic is undefined). Thanks to @erdeyl (#274).
 
@@ -126,11 +144,13 @@
   reference now matches the fitted object's marginal variances. Full-rank
   correlation PCA is unaffected in distribution (parallel analysis is a
   Monte-Carlo procedure, so exact threshold values depend on the seed);
-  rank-truncated or wide (n <= p) fits now simulate over the original variable
-  count. Fits whose reference distribution
-  cannot be reconstructed (uncentered fits, custom scale vectors, rank-truncated
-  covariance fits, ambiguous `princomp` `cor`) now error clearly instead of
-  returning misleading thresholds. Separately, `fviz_eig()` warns when a
+  wide (n <= p) fits now simulate over the original variable count. A
+  rank-truncated correlation fit is accepted only when a retained formula call
+  proves literal `scale. = TRUE`; default-method and custom/symbolic scale fits
+  cannot be distinguished from the truncated object and fail closed. Other fits
+  whose reference distribution cannot be reconstructed (uncentered fits,
+  rank-truncated covariance fits, ambiguous `princomp` `cor`) also error clearly
+  instead of returning misleading thresholds. Separately, `fviz_eig()` warns when a
   FactoMineR PCA object stores an incomplete eigenvalue spectrum (refit with a
   larger `ncp` for a complete scree plot). Thanks to @erdeyl (#274).
 
@@ -157,15 +177,25 @@
   contribution-based selection help now says "highest contributions" (was
   "highest cos2"), `fviz_famd()`'s `habillage` help refers to a FAMD (not MFA)
   object, the ExPosition class name is spelled `expoOutput` in `fviz_ca()` /
-  `fviz_mca()`, and the `clean_lock_files()` example is now self-contained.
+  `fviz_mca()`, the generated `ggtheme` help no longer claims a single default
+  that disagrees with function signatures, and the `clean_lock_files()` example
+  is now self-contained. The HMFA selection help now includes the supported
+  `union` option.
   Thanks to @erdeyl (#274).
 * Clearer, earlier input validation for edge cases, so mistakes fail with an
   informative message instead of a downstream error: `fviz_umap()`/`fviz_tsne()`
   require two distinct positive integer `dims`; `fviz_nbclust()` validates
   `k.max`; `fviz_dend()` validates `k`/`h` against the tree; `get_clust_tendency()`
-  checks `n` and requires finite data; and `as_factoextra_pca()` validates
-  `scale.unit` and the supplied eigenvalues. Valid calls are unaffected.
+  checks `n` and requires finite data; oversized axis indices are rejected before
+  integer conversion; and `as_factoextra_pca()` validates `scale.unit` and the
+  supplied eigenvalues. Valid calls are unaffected.
   Thanks to @erdeyl (#274).
+* `as_factoextra_pca()` now derives cos2, contributions, and eigenvalue
+  percentages on rescaled intermediate values and infers omitted eigenvalues
+  without premature overflow, so representable results remain stable at very
+  small or very large magnitudes. Its PCA-variable print method lists only
+  metrics that are actually available while preserving the established
+  descriptions for metrics that remain present.
 
 ## Bug fixes
 
@@ -180,10 +210,21 @@
   mis-coloured when `data` is ordered differently from the clustering; it also
   accepts a `clustering` component (as produced by `pam()`/`clara()`) in a custom
   `list(data=, clustering=)` object. Assignments that do not line up by name are
-  used positionally, as before. Thanks to @erdeyl (#274).
+  used positionally, as before, except that `pam()` / `fanny()` and `hcut()`
+  objects fitted on a dissimilarity reject complete non-matching row-name sets
+  because positional use would mis-colour observations. Thanks to @erdeyl (#274).
 * `invisible = "all"` now hides all plotted elements (it was silently accepted
   but had no effect); on the individual and variable maps, a selection by `name`
   that includes names not present now warns instead of silently dropping them.
+  `fviz_pca_var()` / `fviz_pca_biplot()` now draw a FactoMineR PCA's
+  supplementary quantitative variables, which were previously omitted because the
+  wrong result slot was read; their names are also recognised by the selection
+  validation, so a `select.*` list naming one no longer warns or silently drops
+  it. `select.ind` now also
+  limits MFA/HMFA partial-point and segment overlays, including union selections,
+  instead of leaving every individual's partial geometry visible. A lone
+  unavailable contribution condition wrapped in `union = TRUE` now gives the
+  same explicit unavailable-metric error as the ordinary single-condition path.
   Thanks to @erdeyl (#274).
 
 # factoextra 2.1.0

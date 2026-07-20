@@ -8,7 +8,9 @@ NULL
 #'   optionally, an ordered dissimilarity image (ODI). Rows containing missing
 #'   values are omitted, and the remaining matrix must be numeric and finite.
 #'   The observed rows are sampled without replacement; artificial points are
-#'   sampled uniformly within the observed bounding box. In the ODI, objects
+#'   sampled uniformly within the observed bounding box. Zero-range columns are
+#'   ignored for the Hopkins calculation when at least one column varies; an
+#'   all-constant data set remains undefined. In the ODI, objects
 #'   grouped by hierarchical clustering are displayed in consecutive order.
 #'   For more details and
 #'   interpretation, see 
@@ -34,7 +36,8 @@ NULL
 #' values near 0.5 are consistent with complete spatial randomness, and values
 #' near 0 indicate regular spacing. The statistic uses the formula from Cross
 #' and Jain (1982), with exponent \eqn{d = D}, where \eqn{D} is the number of
-#' columns. A Beta(\eqn{n}, \eqn{n}) comparison is an approximation under ideal
+#' varying columns. Redundant constant columns therefore do not change the
+#' statistic. A Beta(\eqn{n}, \eqn{n}) comparison is an approximation under ideal
 #' complete-spatial-randomness assumptions, not an unconditional finite-sample
 #' distribution for every data set.
 #'
@@ -133,22 +136,69 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     .factoextra_state$hopkins_warned <- TRUE
   }
   plot <- NULL
+
+  # Hopkins is invariant to a common translation and positive scale. Put the
+  # coordinates in a safe numeric range before squaring distances so finite data
+  # expressed in very small or very large units do not underflow or overflow.
+  hopkins_data <- matrix(
+    0, nrow = nrow(data), ncol = ncol(data), dimnames = dimnames(data)
+  )
+  varying <- vapply(
+    seq_len(ncol(data)),
+    function(j) min(data[, j]) != max(data[, j]),
+    logical(1)
+  )
+  if(any(varying)){
+    active <- which(varying)
+    column_scales <- vapply(
+      active, function(j) max(abs(data[, j])), numeric(1)
+    )
+    global_scale <- max(column_scales)
+    for(i in seq_along(active)){
+      j <- active[i]
+      normalized <- data[, j] / column_scales[i]
+      hopkins_data[, j] <-
+        (normalized - normalized[1]) * (column_scales[i] / global_scale)
+    }
+    coordinate_span <- max(abs(hopkins_data))
+    if(!is.finite(coordinate_span) || coordinate_span <= 0)
+      stop("Unable to rescale the data for stable distance computation.")
+    hopkins_data <- hopkins_data / coordinate_span
+  }
+  if(any(varying) && !all(varying))
+    hopkins_data <- hopkins_data[, varying, drop = FALSE]
+
   if(graph){
-    plot <- fviz_dist(stats::dist(data), order = TRUE, 
+    plot_dist <- stats::dist(data)
+    raw_distances <- unclass(plot_dist)
+    # Preserve ordinary graph distances, but use the stable similarity
+    # transform when raw squaring overflows or collapses every distance to zero.
+    if(any(!is.finite(raw_distances)) ||
+       (any(varying) && !any(raw_distances > 0)))
+      plot_dist <- stats::dist(hopkins_data)
+    plot <- fviz_dist(plot_dist, order = TRUE,
                       show_labels = FALSE, gradient = gradient)
   }
   
   # Hopkins statistic
   # Sample synthetic points uniformly within the observed ranges.
-  mins <- vapply(seq_len(ncol(data)), function(j) min(data[, j]), numeric(1))
-  maxs <- vapply(seq_len(ncol(data)), function(j) max(data[, j]), numeric(1))
-  p <- matrix(NA_real_, nrow = n, ncol = ncol(data))
-  for(j in seq_len(ncol(data)))
+  mins <- vapply(
+    seq_len(ncol(hopkins_data)),
+    function(j) min(hopkins_data[, j]),
+    numeric(1)
+  )
+  maxs <- vapply(
+    seq_len(ncol(hopkins_data)),
+    function(j) max(hopkins_data[, j]),
+    numeric(1)
+  )
+  p <- matrix(NA_real_, nrow = n, ncol = ncol(hopkins_data))
+  for(j in seq_len(ncol(hopkins_data)))
     p[, j] <- runif(n, min = mins[j], max = maxs[j])
 
   # Use sample() for uniform row selection (fixes biased sampling from PR #133).
-  k <- .sample_hopkins_rows(nrow(data), n)
-  q <- data[k, , drop = FALSE]
+  k <- .sample_hopkins_rows(nrow(hopkins_data), n)
+  q <- hopkins_data[k, , drop = FALSE]
 
   max_matrix_cells <- getOption("factoextra.hopkins.max_matrix_cells", 2e7)
   if(!is.numeric(max_matrix_cells) || length(max_matrix_cells) != 1L ||
@@ -156,8 +206,9 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     max_matrix_cells <- 2e7
   }
 
-  use_vectorized <- (nrow(p) * nrow(data) <= max_matrix_cells) &&
-                    (nrow(q) * nrow(data) <= max_matrix_cells)
+  use_vectorized <-
+    (nrow(p) * nrow(hopkins_data) <= max_matrix_cells) &&
+    (nrow(q) * nrow(hopkins_data) <= max_matrix_cells)
 
   euclid_sq <- function(a, b){
     a_sq <- rowSums(a^2)
@@ -197,15 +248,16 @@ get_clust_tendency <- function(data, n, graph = TRUE,
     mins
   }
 
-  minp <- sqrt(min_sq_dist(p, data))
-  minq <- sqrt(min_sq_dist(q, data, exclude_index = k))
+  minp <- sqrt(min_sq_dist(p, hopkins_data))
+  minq <- sqrt(min_sq_dist(q, hopkins_data, exclude_index = k))
   
   # Hopkins statistic formula fix: use exponent d=D (dimensionality) as per
 
   # Cross & Jain (1982) "Measurement of Clustering Tendency" and
   # Wright (2022) "Will the Real Hopkins Statistic Please Stand Up?" R Journal.
-  # Previous implementation incorrectly used d=1; correct formula uses d=ncol(data).
-  d <- ncol(data)
+  # Previous implementation incorrectly used d=1; the corrected formula uses the
+  # effective dimensionality after zero-range columns have been removed.
+  d <- ncol(hopkins_data)
   distance_scale <- max(c(minp, minq))
   if(!is.finite(distance_scale) || distance_scale <= 0)
     stop("Hopkins statistic is undefined because all nearest-neighbour distances are zero.")

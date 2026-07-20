@@ -13,8 +13,9 @@ For transparency, the changes that alter a value or message returned by 2.1.0:
 * `get_pca_ind()`: individual contributions for `prcomp` and non-uniform-weight
   `ade4` PCA objects are now normalized to sum to 100% per axis, matching
   `FactoMineR::PCA()` (the `prcomp` values previously summed to `100 * (n - 1) / n`).
-  Coordinates, cos2, `princomp` contributions, and all variable contributions are
-  unchanged.
+  Coordinates, `princomp` contributions, and ordinary full-rank cos2 are
+  unchanged. Variable contributions are unchanged on nonzero, ordinarily scaled
+  axes; zero-inertia and extreme-magnitude axes now return stable finite values.
 * `get_clust_tendency()`: the Hopkins statistic now samples the observed points
   without replacement (a correctness fix), so its value changes for a given seed.
 * `fviz_gap_stat()` / `fviz_nbclust(method = "gap_stat")`: when a partial `maxSE`
@@ -26,8 +27,17 @@ For transparency, the changes that alter a value or message returned by 2.1.0:
   factorization, matching `stats::biplot(scale = 0/1)`).
 * Clearer input-validation errors/warnings across `fviz_umap()`/`fviz_tsne()`,
   `fviz_dend()`, `fviz_nbclust()`, `get_clust_tendency()`, and `as_factoextra_pca()`.
+* `fviz_pca_var()` / `fviz_pca_biplot()` now draw the supplementary quantitative
+  variables of a FactoMineR `PCA(..., quanti.sup=)` object, which were previously
+  omitted (the code read the wrong slot). PCA objects without supplementary
+  quantitative variables are unchanged.
+* New adapter/plotting guards raise clear errors on previously-unsupported inputs:
+  `as_factoextra_pca()` requires `step_pca()` to be the final recipe step and
+  rejects case-weighted fits; `fviz_cluster()` errors (rather than mis-colouring)
+  when a clustering and its supplied `data` both have complete, unique, but
+  non-matching row names.
 
-All other functions produce byte-identical output for existing inputs.
+The remaining output and message changes are itemized in NEWS.md.
 
 ## New features (additive)
 
@@ -38,7 +48,7 @@ opt-in arguments (`fviz_dend(highlight=)`, `max.points`, `display = "heatmap"`,
 
 ## Test environments
 
-* Local: macOS (Darwin 24.6.0) — R 4.5.1 (2025-06-13)
+* Local: macOS — R 4.5.1 / R 4.6.1 (`R CMD check --as-cran --run-donttest`: OK)
 * GitHub Actions: macOS (release), Windows (release), Ubuntu
   (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
   all pass.

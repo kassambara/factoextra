@@ -4,7 +4,7 @@
 
 test_that("embedding dimensions require distinct finite positive integers", {
   x <- matrix(rnorm(30), nrow = 10, ncol = 3)
-  for(dims in list(c(1, 1), c(1.5, 2), c(1, Inf), c(0, 1), 1:3)){
+  for(dims in list(c(1, 1), c(1.5, 2), c(1, Inf), c(1, 3e9), c(0, 1), 1:3)){
     expect_error(factoextra:::.fe_layout(x, dims),
                  "two distinct positive integer")
   }
@@ -53,6 +53,17 @@ test_that("fviz_cluster aligns exact named assignments, falls back to positional
   expect_equal(unname(got[rownames(reordered)]),
                as.character(km$cluster[rownames(reordered)]))
 
+  fake_dbscan <- structure(list(cluster = km$cluster), class = "dbscan")
+  db <- fviz_cluster(
+    fake_dbscan, data = reordered, stand = FALSE, geom = "point",
+    ellipse = FALSE, show.clust.cent = FALSE
+  )
+  db_got <- setNames(as.character(db$data$cluster), db$data$name)
+  expect_equal(
+    unname(db_got[rownames(reordered)]),
+    as.character(km$cluster[rownames(reordered)])
+  )
+
   # Non-regression: names that do not line up are used positionally (they still
   # plot, as they did before this change) rather than erroring.
   mismatched <- reordered; rownames(mismatched)[1] <- "not-an-observation"
@@ -81,6 +92,49 @@ test_that("fviz_cluster aligns exact named assignments, falls back to positional
                           clustering = setNames(rep(3L, nrow(x)), rownames(x)))
   expect_s3_class(fviz_cluster(clustering_only, stand = FALSE, geom = "point",
                                ellipse = FALSE), "ggplot")
+})
+
+test_that("dissimilarity partition plots reject complete mismatched row names", {
+  set.seed(902)
+  x <- scale(USArrests)
+  fit <- cluster::pam(stats::dist(x), 3)
+  order <- sample(seq_len(nrow(x)))
+  reordered <- x[order, , drop = FALSE]
+
+  aligned <- fviz_cluster(
+    fit, data = reordered, stand = FALSE, geom = "point",
+    ellipse = FALSE, show.clust.cent = FALSE
+  )
+  got <- setNames(as.character(aligned$data$cluster), aligned$data$name)
+  expect_equal(
+    unname(got[rownames(reordered)]),
+    as.character(fit$clustering[rownames(reordered)])
+  )
+
+  rownames(reordered) <- paste0("unknown-", seq_len(nrow(reordered)))
+  expect_error(
+    fviz_cluster(fit, data = reordered, stand = FALSE, geom = "point"),
+    "row names of data do not match"
+  )
+
+  hfit <- hcut(stats::dist(x), k = 3)
+  aligned_hcut <- fviz_cluster(
+    hfit, data = x[order, , drop = FALSE], stand = FALSE,
+    geom = "point", ellipse = FALSE, show.clust.cent = FALSE
+  )
+  hgot <- setNames(as.character(aligned_hcut$data$cluster),
+                   aligned_hcut$data$name)
+  expect_equal(
+    unname(hgot[rownames(x)[order]]),
+    as.character(hfit$cluster[rownames(x)[order]])
+  )
+
+  hbad <- x
+  rownames(hbad) <- paste0("unknown-", seq_len(nrow(hbad)))
+  expect_error(
+    fviz_cluster(hfit, data = hbad, stand = FALSE, geom = "point"),
+    "row names of data do not match"
+  )
 })
 
 test_that("supplementary CA columns and invisible = all use the right flags", {
@@ -126,6 +180,31 @@ test_that("selection warns about unmatched names without dropping matches", {
     "Selection name.*typo"
   )
   expect_identical(selected$name, "a")
+
+  expect_warning(
+    union <- factoextra:::.select(
+      d, list(name = "typo", cos2 = 0.8, union = TRUE), check = TRUE,
+      warn_unmatched = TRUE
+    ),
+    "Selection name.*typo"
+  )
+  expect_identical(union$name, c("a", "c"))
+  expect_silent(factoextra:::.select(
+    d, list(name = "typo"), check = FALSE
+  ))
+})
+
+test_that("PCA supplementary quantitative names are valid selections", {
+  skip_if_not_installed("FactoMineR")
+  pca <- FactoMineR::PCA(iris[, 1:4], quanti.sup = 4, graph = FALSE)
+  expect_no_warning(
+    p <- fviz_pca_var(pca, select.var = list(name = "Petal.Width"))
+  )
+  layer_names <- unique(unlist(lapply(p$layers, function(layer){
+    data <- as.data.frame(layer$data)
+    if("name" %in% names(data)) as.character(data$name) else rownames(data)
+  })))
+  expect_true("Petal.Width" %in% layer_names)
 })
 
 test_that("fviz_gap_stat maxSE fallback uses firstSEmax (honours SE.factor)", {
@@ -212,6 +291,32 @@ test_that("Hopkins sampling is finite, duplicate-aware, and fail-closed", {
     out <- get_clust_tendency(iris[, 1:4], n = 1, graph = FALSE, seed = 4)
     expect_true(is.finite(out$hopkins_stat))
     expect_true(out$hopkins_stat >= 0 && out$hopkins_stat <= 1)
+  }
+
+  set.seed(904)
+  scale_probe <- matrix(runif(80, min = -2, max = 3), ncol = 4)
+  reference <- get_clust_tendency(
+    scale_probe, n = 5, graph = FALSE, seed = 11
+  )$hopkins_stat
+  for(multiplier in c(1e-200, 1e200)){
+    for(show_graph in c(FALSE, TRUE)){
+      scaled <- get_clust_tendency(
+        scale_probe * multiplier, n = 5, graph = show_graph, seed = 11
+      )
+      expect_equal(scaled$hopkins_stat, reference, tolerance = 1e-12)
+      if(show_graph) expect_s3_class(scaled$plot, "ggplot")
+    }
+  }
+
+  for(limit in c(1, 1e9)){
+    options(factoextra.hopkins.max_matrix_cells = limit)
+    baseline <- get_clust_tendency(
+      iris[, 1:4], n = 30, graph = FALSE, seed = 7
+    )$hopkins_stat
+    augmented <- get_clust_tendency(
+      cbind(iris[, 1:4], constant = 7), n = 30, graph = FALSE, seed = 7
+    )$hopkins_stat
+    expect_identical(augmented, baseline)
   }
 
   expect_error(

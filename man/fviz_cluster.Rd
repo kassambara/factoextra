@@ -40,7 +40,10 @@ fviz_cluster(
 list may instead contain \code{data} plus either \code{cluster} or
 \code{clustering}. When the assignments and the data both carry complete,
 unique, matching names, the assignments are aligned to the data rows by name;
-otherwise they are used in their given (positional) order.}
+otherwise they are used in their given (positional) order. The exception is a
+clustering fitted from dissimilarities and plotted with external \code{data}:
+complete, unique, non-matching name sets are rejected because positional use
+would attach clusters to the wrong observations.}
 
 \item{data}{the data used for clustering. It is required for kmeans and dbscan
 objects, and for partition or hcut objects fitted from dissimilarities when
@@ -96,7 +99,11 @@ respectively.}
 \item{outlier.pointsize, outlier.color, outlier.shape, outlier.labelsize}{arguments for customizing outliers, which can be detected only in DBSCAN
 clustering.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 

@@ -143,7 +143,14 @@ get_eig<-function(X){
     else stop("An object of class : ", paste(class(X), collapse = ", "), 
               " can't be handled by the function get_eigenvalue()")
     
-    variance <- eig*100/sum(eig)
+    # Normalize before summing so finite large eigenvalues do not overflow the
+    # denominator (and finite tiny values do not underflow merely due to units).
+    eig_scale <- max(abs(eig))
+    if(is.finite(eig_scale) && eig_scale > 0){
+      scaled_eig <- eig / eig_scale
+      variance <- scaled_eig * 100 / sum(scaled_eig)
+    }
+    else variance <- rep(0, length(eig))
     cumvar <- cumsum(variance)
     eig <- data.frame(eigenvalue = eig, variance = variance, 
                       cumvariance = cumvar)
@@ -222,6 +229,21 @@ get_eigenvalue <- function(X){
      all(is.finite(object_scale)) &&
      any(abs(object_scale - 1) > sqrt(.Machine$double.eps))) return(TRUE)
 
+  # When every stored scale is one, reconstruct the analyzed variables' diagonal
+  # from the full eigendecomposition. A non-unit diagonal proves that the fit used
+  # the covariance matrix even when `cor` was supplied through a wrapper symbol.
+  loadings <- unclass(X[["loadings"]])
+  sdev <- as.numeric(X[["sdev"]])
+  if(is.matrix(loadings) && ncol(loadings) == length(sdev) &&
+     length(sdev) > 0L && all(is.finite(loadings)) && all(is.finite(sdev))){
+    reconstructed_variance <- rowSums(
+      sweep(loadings^2, 2, sdev^2, "*")
+    )
+    tolerance <- sqrt(.Machine$double.eps) *
+      pmax(1, abs(reconstructed_variance))
+    if(any(abs(reconstructed_variance - 1) > tolerance)) return(FALSE)
+  }
+
   stop(
     "Cannot determine whether this princomp object used cor = TRUE or FALSE. ",
     "Refit it with a literal cor argument before requesting parallel analysis."
@@ -260,8 +282,18 @@ get_eigenvalue <- function(X){
         analyzed_var <- rowSums(sweep(rotation^2, 2, eigenvalues, "*"))
         if(any(abs(analyzed_var - 1) > tolerance))
           stop("Parallel analysis cannot reproduce a prcomp fit using a custom scale vector.")
-      } else if(abs(sum(eigenvalues) - n_var) > tolerance){
-        stop("Parallel analysis cannot verify correlation scaling for this truncated prcomp fit.")
+      } else {
+        scale_arg <- NULL
+        if(!is.null(X[["call"]])) scale_arg <- X[["call"]][["scale."]]
+        literal_unit_scaling <- is.logical(scale_arg) && length(scale_arg) == 1L &&
+          !is.na(scale_arg) && isTRUE(scale_arg)
+        if(!literal_unit_scaling)
+          stop(
+            "Parallel analysis cannot verify correlation scaling for this ",
+            "truncated prcomp fit. Refit it with a literal scale. = TRUE; a ",
+            "custom or symbolic scale vector cannot be reconstructed from the ",
+            "truncated object."
+          )
       }
     }
 

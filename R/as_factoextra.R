@@ -121,7 +121,7 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
     if(nrow(ind.coord) < 2L)
       stop("At least two observations are required to infer `eig` from `ind.coord`.",
            call. = FALSE)
-    eig <- apply(ind.coord, 2, stats::var)
+    eig <- .fe_col_variances(ind.coord)
   }
   if(!is.numeric(eig) || length(eig) < k)
     stop("`eig` must be a numeric vector with at least ", k,
@@ -173,12 +173,14 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 #' honest even when \code{num_comp} keeps only a few components). Variable
 #' coordinates are loading times the square root of the eigenvalue. Exact
 #' variable-component correlations and cos2 are recovered from the full PCA
-#' inertia when every PCA input is provably centered. When the inputs are not
-#' provably centered (e.g. a bare \code{step_pca()} with no centering), the
-#' correlations cannot be recovered: the scores, eigenvalues and variable
-#' coordinates are still returned (so \code{fviz_pca_ind()}, \code{fviz_eig()} and
-#' the variable arrows work), but the correlation circle is omitted and a warning
-#' is issued. \code{scale.unit} is set to \code{TRUE} only when every
+#' inertia when every PCA input is provably centered. When those metrics cannot
+#' be recovered (for example, for a bare \code{step_pca()} with no centering or a
+#' zero-inertia variable), their entries in \code{get_pca_var()} are \code{NULL}.
+#' Scores, eigenvalues, variable coordinates and contributions are still returned,
+#' so the individual, scree, variable-arrow and biplot displays remain available;
+#' correlation/cos2-dependent displays fail with an explicit unavailable-metric
+#' error. The correlation circle is omitted and a warning explains how to recover
+#' the metrics. \code{scale.unit} is set to \code{TRUE} only when every
 #' PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
 #' therefore does not draw a correlation circle. For fully normalized data,
 #' variable coordinates, correlations, cos2 and contributions, and the eigenvalue
@@ -187,9 +189,14 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 #' the retained components (it equals the full-space cos2 only when all components
 #' are kept). The two-dimensional plots (\code{fviz_pca_ind()},
 #' \code{fviz_pca_var()}, \code{fviz_pca_biplot()}) need \code{num_comp >= 2}. The
-#' recipe must be prepped and its PCA step must be \code{step_pca()} (non-linear
-#' embedding steps such as \code{step_umap()} have no eigenvalues and are rejected
-#' with a message). For the loadings display of a recipe PCA see also
+#' recipe must be prepped, and its single PCA step must be an unweighted
+#' \code{step_pca()} and must be the final recipe step. Case-weighted PCA is
+#' rejected because the adapter cannot yet propagate those weights into individual
+#' contributions. Later steps could transform the baked/mold PCA
+#' scores without updating the fitted PCA loadings or eigenvalues, so such recipes
+#' fail explicitly instead of returning internally inconsistent geometry.
+#' Non-linear embedding steps such as \code{step_umap()} have no eigenvalues and
+#' are rejected with a message. For the loadings display of a recipe PCA see also
 #' \code{learntidymodels::plot_top_loadings()}.
 #'
 #' @rdname as_factoextra
@@ -197,10 +204,7 @@ as_factoextra_pca.default <- function(ind.coord, var.coord = NULL, eig = NULL,
 as_factoextra_pca.recipe <- function(ind.coord, ...){
   .fe_need("recipes")
   ex <- .fe_extract_recipe_pca(ind.coord, scores = NULL)
-  as_factoextra_pca.default(ind.coord = ex$scores, var.coord = ex$var.coord,
-                            var.cos2 = ex$var.cos2, var.cor = ex$var.cor,
-                            eig = ex$eig,
-                            scale.unit = ex$scale.unit)
+  .fe_wrap_recipe_pca(ex)
 }
 
 #' @rdname as_factoextra
@@ -223,10 +227,7 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   # fails; take the scores from the fitted mold instead.
   mold <- workflows::extract_mold(wf)
   ex <- .fe_extract_recipe_pca(rec, scores = as.matrix(mold$predictors))
-  as_factoextra_pca.default(ind.coord = ex$scores, var.coord = ex$var.coord,
-                            var.cos2 = ex$var.cos2, var.cor = ex$var.cor,
-                            eig = ex$eig,
-                            scale.unit = ex$scale.unit)
+  .fe_wrap_recipe_pca(ex)
 }
 
 # ---- internal helpers -------------------------------------------------------
@@ -236,6 +237,21 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   if(!requireNamespace(pkg, quietly = TRUE))
     stop("Package '", pkg, "' is required for this method. Install it with ",
          "install.packages('", pkg, "').", call. = FALSE)
+}
+
+# The public default constructor intentionally derives missing variable metrics
+# from coordinates. Recipe/workflow extraction has a distinct state: NULL means
+# the metric was proven unavailable, not merely omitted. Restore that state after
+# construction without changing any published default-method call form.
+.fe_wrap_recipe_pca <- function(ex){
+  out <- as_factoextra_pca.default(
+    ind.coord = ex$scores, var.coord = ex$var.coord,
+    var.cos2 = ex$var.cos2, var.cor = ex$var.cor,
+    eig = ex$eig, scale.unit = ex$scale.unit
+  )
+  if(is.null(ex$var.cor)) out$var$cor <- NULL
+  if(is.null(ex$var.cos2)) out$var$cos2 <- NULL
+  out
 }
 
 # Extract scores / loadings / eigenvalues from a prepped recipe whose dimension
@@ -265,7 +281,16 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
     stop("This recipe has more than one step_pca() (", paste(ids, collapse = ", "),
          "). as_factoextra_pca() supports a single PCA step.", call. = FALSE)
   }
-  st  <- rec$steps[[which(is_pca)]]
+  pca_pos <- which(is_pca)
+  if(pca_pos != length(rec$steps))
+    stop("step_pca() must be the final recipe step because later steps can ",
+         "transform its score columns without updating the stored PCA loadings ",
+         "and eigenvalues.", call. = FALSE)
+  st  <- rec$steps[[pca_pos]]
+  if(isTRUE(st$case_weights))
+    stop("Case-weighted step_pca() fits are not supported because the adapter ",
+         "cannot propagate the case weights into individual contributions.",
+         call. = FALSE)
   k   <- st$num_comp
   # The baked/mold SCORE columns carry the step's prefix and are zero-padded to the
   # digit width of the component count (PC01.. at >=10 comps). Reuse recipes' own
@@ -321,10 +346,8 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   # steps reset the proof; an internal prcomp center/scale option, when present,
   # is applied at the PCA boundary. When correlations cannot be recovered
   # (uncentered inputs, or a zero-inertia variable), we still return the scores,
-  # eigenvalues and variable coordinates - so fviz_pca_ind()/fviz_eig()/
-  # fviz_pca_var() work - but omit the recovered correlations/cos2 and the
-  # correlation circle (scale.unit = FALSE), with a one-time warning.
-  pca_pos <- which(is_pca)
+  # eigenvalues, variable coordinates and contributions, but omit the recovered
+  # correlations/cos2 and the correlation circle (scale.unit = FALSE).
   prep.state <- .fe_recipe_pca_preprocessing(rec, pca_pos, st)
 
   var.cor <- NULL
@@ -344,12 +367,22 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
     unit.inertia <- all(abs(var.inertia - 1) <= unit.tol * pmax(1, var.inertia))
     scale.unit <- prep.state$scaled && unit.inertia
   } else {
-    warning("Variable-component correlations cannot be recovered from this ",
-            "step_pca() fit (its inputs are not provably centered, or a variable ",
-            "has zero inertia), so the correlation circle is omitted. Add ",
-            "step_center()/step_normalize(), or set ",
-            "step_pca(options = list(center = TRUE)), to recover them.",
-            call. = FALSE)
+    if(!prep.state$centered){
+      reason <- "its inputs are not provably centered"
+      remedy <- paste0(
+        "Add step_center()/step_normalize(), or set ",
+        "step_pca(options = list(center = TRUE)), to recover them."
+      )
+    } else {
+      reason <- "at least one variable has zero or non-finite inertia"
+      remedy <- paste0(
+        "Remove zero-inertia variables (for example with step_zv()) before ",
+        "step_pca() to recover them."
+      )
+    }
+    warning("Variable-component correlations and cos2 cannot be recovered from ",
+            "this step_pca() fit because ", reason,
+            ", so the correlation circle is omitted. ", remedy, call. = FALSE)
   }
 
   list(scores = scores, var.coord = var.coord, var.cor = var.cor,
@@ -433,20 +466,25 @@ as_factoextra_pca.workflow <- function(ind.coord, ...){
   x
 }
 
+# Infer sample variances without squaring the original coordinate scale first.
+# Rescaling as scale * (scale * variance) avoids a premature overflow whenever
+# the final variance itself is representable as a double.
+.fe_col_variances <- function(coord){
+  vapply(seq_len(ncol(coord)), function(j){
+    x <- coord[, j]
+    scale <- max(abs(x))
+    if(scale == 0) return(0)
+    scaled_variance <- stats::var(x / scale)
+    scale * (scale * scaled_variance)
+  }, numeric(1))
+}
+
 # Per-dimension contribution (in percent): exact from coordinates.
 .fe_contrib <- function(coord){
-  ss <- colSums(coord^2)
-  ss[ss == 0] <- 1   # avoid 0/0 for an all-zero dimension
-  contrib <- sweep(coord^2, 2, ss, "/") * 100
-  dimnames(contrib) <- dimnames(coord)
-  contrib
+  .pca_column_contributions(coord)
 }
 
 # Per-row quality of representation within the supplied dimensions.
 .fe_cos2 <- function(coord){
-  d2 <- rowSums(coord^2)
-  d2[d2 == 0] <- 1
-  cos2 <- sweep(coord^2, 1, d2, "/")
-  dimnames(cos2) <- dimnames(coord)
-  cos2
+  .pca_row_squared_shares(coord, coord)
 }

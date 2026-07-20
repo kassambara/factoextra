@@ -133,6 +133,14 @@ facto_summarize <- function(X, element, node.level = 1, group.names,
                  MFA = get_mfa(X, element),
                  HMFA = get_hmfa(X, element)
                  )
+
+  requested.metrics <- intersect(result, c("coord", "cos2", "contrib"))
+  unavailable <- requested.metrics[vapply(
+    requested.metrics, function(metric) is.null(elmt[[metric]]), logical(1)
+  )]
+  if(length(unavailable))
+    stop("'", paste(unavailable, collapse = "', '"),
+         "' is not available for element = '", element, "'.", call. = FALSE)
   
   # Check axes
   if(inherits(elmt, "hmfa_partial"))

@@ -47,7 +47,11 @@ NULL
 #'  then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, 
 #'  then the top 5 individuals/variables with the highest cos2 are drawn. \item 
 #'  contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
-#'  the highest contributions are drawn }
+#'  the highest contributions are drawn \item union: logical. When several of
+#'  name/cos2/contrib are given, FALSE (default) combines them with AND (each
+#'  condition further narrows the selection); TRUE combines them with OR (an
+#'  element is kept if it matches any condition), e.g. named items \emph{plus}
+#'  the top-cos2 ones. }
 #'@param choice the graph to plot. Allowed values include one of c("quanti.var",
 #'  "quali.var", "group") for plotting quantitative variables, qualitative 
 #'  variables and group of variables, respectively.
@@ -151,7 +155,12 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
     # user-facing selection + any union message already happened in fviz() above,
     # so use check = FALSE to stay silent and avoid a duplicate message).
     ind.all <- ind
-    if(!is.null(select.ind)) ind <- .select(ind, select.ind, check = FALSE)
+    if(!is.null(select.ind)) {
+      ind <- .select(ind, select.ind, check = FALSE)
+      ind.partial <- ind.partial[
+        ind.partial$name %in% ind$name, , drop = FALSE
+      ]
+    }
     if(!is.null(select.partial)) {
       if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
       ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial, check = FALSE)$name, , drop = FALSE]
