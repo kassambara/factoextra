@@ -216,9 +216,11 @@
 * `invisible = "all"` now hides all plotted elements (it was silently accepted
   but had no effect); on the individual and variable maps, a selection by `name`
   that includes names not present now warns instead of silently dropping them.
-  Supplementary quantitative PCA names are included in this validation and the
-  selected supplementary points are now added to the plot, avoiding both false
-  unmatched-name warnings and silently missing points. `select.ind` now also
+  `fviz_pca_var()` / `fviz_pca_biplot()` now draw a FactoMineR PCA's
+  supplementary quantitative variables, which were previously omitted because the
+  wrong result slot was read; their names are also recognised by the selection
+  validation, so a `select.*` list naming one no longer warns or silently drops
+  it. `select.ind` now also
   limits MFA/HMFA partial-point and segment overlays, including union selections,
   instead of leaving every individual's partial geometry visible. A lone
   unavailable contribution condition wrapped in `union = TRUE` now gives the

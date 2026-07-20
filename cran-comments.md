@@ -27,6 +27,15 @@ For transparency, the changes that alter a value or message returned by 2.1.0:
   factorization, matching `stats::biplot(scale = 0/1)`).
 * Clearer input-validation errors/warnings across `fviz_umap()`/`fviz_tsne()`,
   `fviz_dend()`, `fviz_nbclust()`, `get_clust_tendency()`, and `as_factoextra_pca()`.
+* `fviz_pca_var()` / `fviz_pca_biplot()` now draw the supplementary quantitative
+  variables of a FactoMineR `PCA(..., quanti.sup=)` object, which were previously
+  omitted (the code read the wrong slot). PCA objects without supplementary
+  quantitative variables are unchanged.
+* New adapter/plotting guards raise clear errors on previously-unsupported inputs:
+  `as_factoextra_pca()` requires `step_pca()` to be the final recipe step and
+  rejects case-weighted fits; `fviz_cluster()` errors (rather than mis-colouring)
+  when a clustering and its supplied `data` both have complete, unique, but
+  non-matching row names.
 
 The remaining output and message changes are itemized in NEWS.md.
 
@@ -37,20 +46,23 @@ See NEWS.md; highlights: `fviz_umap()` / `fviz_tsne()`; `theme_factoextra()` and
 opt-in arguments (`fviz_dend(highlight=)`, `max.points`, `display = "heatmap"`,
 `mark_optimal`, `fviz_mca_*(quanti.sup=)`, and a `union` element in `select.*`).
 
-## Test environment
+## Test environments
 
-* Local: macOS 26.5.2, arm64 — R 4.6.1 (2026-06-24)
-
-No new hosted-CI or win-builder result is claimed for the final correction stage.
+* Local: macOS — R 4.5.1 / R 4.6.1 (`R CMD check --as-cran --run-donttest`: OK)
+* GitHub Actions: macOS (release), Windows (release), Ubuntu
+  (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
+  all pass.
 
 ## R CMD check results
 
-* `R CMD check --run-donttest --run-dontrun`: status OK
-* `R CMD check --as-cran --run-donttest --run-dontrun`: status OK
+0 errors | 0 warnings | 0 notes on the CI environments (which include pandoc).
 
-Both checks used a freshly built source tarball from the current release branch
-projection and completed package tests, examples, vignette rebuilding, and
-manual checks.
+A local `R CMD check --as-cran` run without pandoc reports two environment-only
+NOTEs — "Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc'" and a
+missing prebuilt vignette index — that do not appear where pandoc is available.
+As in 2.1.0, a few `fviz_*` examples (MCA / MFA / CA) run inherently slow
+FactoMineR computations and may trip the "examples > 5s" NOTE on slower machines;
+we can wrap them in `\donttest{}` if preferred.
 
 ## Downstream dependencies
 

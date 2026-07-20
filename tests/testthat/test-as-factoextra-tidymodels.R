@@ -248,6 +248,7 @@ test_that("as_factoextra_pca(recipe) feeds the fviz_pca family without error", {
 })
 
 test_that("as_factoextra_pca(recipe) errors clearly on non-PCA / unprepped recipes", {
+  skip_if_not_installed("hardhat")
   # not prepped
   expect_error(as_factoextra_pca(make_pca_recipe()), "prep")
   # no step_pca
@@ -283,6 +284,7 @@ test_that("as_factoextra_pca(recipe) names a non-PCA dimension-reduction step in
 test_that("as_factoextra_pca(workflow) matches the recipe path (fitted workflow)", {
   skip_if_not_installed("workflows")
   skip_if_not_installed("parsnip")
+  skip_if_not_installed("hardhat")
   rec <- recipes::recipe(mpg ~ ., data = mtcars) |>
     recipes::step_normalize(recipes::all_numeric_predictors()) |>
     recipes::step_pca(recipes::all_numeric_predictors(), num_comp = 3)
