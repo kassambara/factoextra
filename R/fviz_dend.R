@@ -456,6 +456,11 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
     p <- p + ggpubr::geom_exec(geom_text, data = data$labels,
                                x = "x", y = "y", label = "label", color = label_cols, size = "cex",
                                 angle = "angle", hjust = "hjust", vjust = "vjust")
+    # Map the label size through an identity scale so `cex` (stored per leaf in
+    # data$labels$cex) sets the text size directly. Without this, ggplot2's
+    # default continuous size scale rescales a single per-plot cex value to a
+    # fixed midpoint, so `cex` had no visible effect on the leaf labels (#281).
+    p <- p + scale_size_identity()
     # Apply a single font face to all leaf labels (e.g. "italic") as a fixed
     # layer parameter. Only when non-default, so the "plain" path is untouched (#121).
     if(!identical(labels_font, "plain"))

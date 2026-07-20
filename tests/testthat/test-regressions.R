@@ -607,6 +607,44 @@ test_that("fviz_dend keeps leaf labels out of the legend (#14 sibling)", {
   }
 })
 
+test_that("fviz_dend leaf-label size responds to cex (#281)", {
+  skip_if_not_installed("dendextend")
+  hc <- hclust(dist(scale(USArrests)), method = "ward.D2")
+
+  leaf_size <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1)))[1]
+    unique(ggplot2::ggplot_build(p)$data[[i]]$size)
+  }
+
+  # BITING: the rendered leaf-text size must scale linearly with cex (5 * cex),
+  # not collapse to a single value. Fails if scale_size_identity() is removed
+  # (the default continuous size scale would map every cex to a fixed midpoint).
+  for (type in c("rectangle", "circular")) {
+    expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 1.0, type = type)), 5)
+    expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 0.8, type = type)), 4)
+    expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 0.4, type = type)), 2)
+  }
+  # horizontal rectangle path too
+  expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 0.4, horiz = TRUE)), 2)
+
+  # per-leaf cex (a dendextend labels_cex vector) is preserved, not flattened
+  dend <- dendextend::set(as.dendrogram(hc), "labels_cex",
+                          rep(c(1, 0.4), length.out = nobs.hc <- length(hc$order)))
+  sizes <- leaf_size(fviz_dend(dend))
+  expect_setequal(round(sizes, 6), c(5, 2))
+
+  # NO-REGRESSION: the phylogenic path derives label size from font.label
+  # (ggpubr), a separate mechanism this fix does not touch; it still responds
+  # to cex and yields a single GeomText layer.
+  skip_if_not_installed("igraph")
+  psize <- function(cx) {
+    p <- fviz_dend(hc, k = 4, type = "phylogenic", cex = cx)
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1)))[1]
+    p$layers[[i]]$aes_params$size
+  }
+  expect_gt(psize(1), psize(0.4))
+})
+
 test_that("fviz_dend rectangles match k even with tied heights (#154, #168)", {
   nrects <- function(p) {
     i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomRect"), logical(1)))[1]

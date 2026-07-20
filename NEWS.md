@@ -199,6 +199,13 @@
 
 ## Bug fixes
 
+* `fviz_dend()`: the `cex` argument now scales the leaf-label size for the
+  `"rectangle"` and `"circular"` types. The label size was mapped through
+  ggplot2's default continuous size scale, which collapsed a single per-plot
+  `cex` value to a fixed size, so `cex` had no visible effect; leaf labels are
+  now sized directly from `cex` (and a per-leaf `labels_cex` set through
+  dendextend is honoured). At the default `cex = 0.8` the labels are marginally
+  smaller than before. Thanks to @dir21 (#281).
 * `fviz_ca_biplot()` / `fviz_ca()`: `invisible = "col.sup"` now hides
   supplementary columns (the column branch was keyed off the row-supplementary
   flag, so supplementary columns stayed visible). Thanks to @erdeyl (#274).
