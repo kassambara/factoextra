@@ -7,10 +7,6 @@ Downloads](https://cranlogs.r-pkg.org/badges/grand-total/factoextra?color=orange
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Pending
-Pull-Requests](https://githubbadges.herokuapp.com/kassambara/factoextra/pulls.svg?style=flat)](https://github.com/kassambara/factoextra/pulls)
-[![Github
-Issues](https://githubbadges.herokuapp.com/kassambara/factoextra/issues.svg)](https://github.com/kassambara/factoextra/issues)
 
 # factoextra : Extract and Visualize the Results of Multivariate Data Analyses <img src="man/figures/logo.png" align="right" height="139" alt="factoextra hex logo" />
 
