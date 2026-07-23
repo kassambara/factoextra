@@ -74,7 +74,7 @@ the active individuals/variables from Principal Component Analysis (PCA) outputs
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

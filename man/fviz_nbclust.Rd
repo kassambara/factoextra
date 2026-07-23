@@ -130,7 +130,7 @@ Partitioning methods, such as k-means clustering require the
   \code{hkmeans()} can keep rejecting direct \code{k = 1} inputs.
 
   Read more:
-  \href{https://www.datanovia.com/en/lessons/determining-the-optimal-number-of-clusters-3-must-know-methods/}{Determining
+  \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining
    the optimal number of clusters}
 }
 \details{

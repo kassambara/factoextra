@@ -94,7 +94,7 @@ Provides a convenient workflow for clustering analyses and
   selects the number of clusters. Hierarchical backends may validly return
   \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
   without silhouette information. Read more:
- \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
+ \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Visual enhancement of clustering analysis}.
 }
 \examples{
 # Load and scale data

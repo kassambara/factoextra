@@ -135,7 +135,7 @@ fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

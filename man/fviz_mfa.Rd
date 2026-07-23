@@ -221,7 +221,7 @@ fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
 
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}

@@ -35,7 +35,7 @@ Silhouette (Si) analysis compares an observation's average
  \code{eclust}/\code{hcut} objects, are rejected with a package-level error.
  
  Read more: 
- \href{https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/}{Clustering
+ \href{https://www.datanovia.com/learn/machine-learning/clustering/cluster-validation-statistics}{Clustering
   Validation Statistics}.
 }
 \details{

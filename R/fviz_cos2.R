@@ -33,7 +33,7 @@ NULL
 #'   
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references \url{https://www.sthda.com/english/}
+#' @references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' \donttest{
 #' # Principal component analysis

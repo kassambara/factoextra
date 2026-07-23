@@ -7,7 +7,7 @@ NULL
 #'   selects the number of clusters. Hierarchical backends may validly return
 #'   \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
 #'   without silhouette information. Read more:
-#'  \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
+#'  \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Visual enhancement of clustering analysis}.
 #' @param x numeric vector, data matrix or data frame. For hierarchical
 #'   clustering (\code{FUNcluster} = "hclust", "agnes" or "diana"), a
 #'   precomputed dissimilarity matrix (an object of class \code{"dist"}) may be

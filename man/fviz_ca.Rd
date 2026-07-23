@@ -137,7 +137,7 @@ Correspondence analysis (CA) is an extension of Principal
  visualization of CA outputs from the R functions: CA [in FactoMineR], ca [in
  ca], coa [in ade4], correspondence [in MASS] and expoOutput/epCA [in
  ExPosition]. Read more: 
- \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/}{Correspondence
+ \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence
   Analysis}
  
  \itemize{ \item fviz_ca_row(): Graph of row variables \item fviz_ca_col():
@@ -243,7 +243,7 @@ fviz_ca_col(res.ca, select.col = list(contrib = 3))
  
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \seealso{
 \code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}

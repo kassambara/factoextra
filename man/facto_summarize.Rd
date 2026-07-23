@@ -128,7 +128,7 @@ res <- facto_summarize(res.mfa, "ind", axes = 1:2)
 head(res)
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

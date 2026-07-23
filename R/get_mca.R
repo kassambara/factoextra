@@ -25,7 +25,7 @@ NULL
 #'   individuals/variable categories} \item{inertia}{inertia of the 
 #'   individuals/variable categories}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references \url{https://www.sthda.com/english/}
+#' @references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' \donttest{
 #' # Multiple Correspondence Analysis

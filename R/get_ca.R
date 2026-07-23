@@ -19,7 +19,7 @@ NULL
 #' \item{contrib}{contributions of the rows/columns}
 #' \item{inertia}{inertia of the rows/columns}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references \url{https://www.sthda.com/english/}
+#' @references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' \donttest{
 #' # Install and load FactoMineR to compute CA

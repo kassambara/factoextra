@@ -190,7 +190,7 @@ Multiple Correspondence Analysis (MCA) is an extension of simple
  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
  the R functions: MCA [in FactoMineR], acm [in ade4], and expoOutput/epMCA [in
  ExPosition]. Read more: 
- \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/}{Multiple
+ \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple
   Correspondence Analysis Essentials.}
  
  \itemize{ \item fviz_mca_ind(): Graph of individuals \item fviz_mca_var():
@@ -238,7 +238,7 @@ fviz_mca_ind(res.mca, col.ind = "steelblue")
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the individuals on the factor map
 # 2. To keep only point or text use geom = "point" or geom = "text".
-# 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
+# 3. Change themes: https://www.datanovia.com/learn/data-visualization/ggplot2/themes
 
 fviz_mca_ind(res.mca, col.ind = "cos2", repel = TRUE)
 
@@ -263,12 +263,12 @@ fviz_mca_ind(res.mca2, label = "none", habillage = poison$Vomiting,
 
 
 # Change group colors using RColorBrewer color palettes
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+# Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 p + scale_color_brewer(palette="Dark2") +
     scale_fill_brewer(palette="Dark2") 
      
 # Change group colors manually
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+# Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 p + scale_color_manual(values=c("#999999", "#E69F00"))+
  scale_fill_manual(values=c("#999999", "#E69F00"))
              

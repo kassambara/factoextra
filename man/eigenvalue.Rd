@@ -176,7 +176,7 @@ fviz_eig(res.mca, linecolor = "#FC4E07",
 
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \seealso{
 \code{\link{fviz_pca}}, \code{\link{fviz_ca}},

@@ -14,7 +14,7 @@ NULL
 #'   grouped by hierarchical clustering are displayed in consecutive order.
 #'   For more details and
 #'   interpretation, see 
-#'   \href{https://www.datanovia.com/en/lessons/assessing-clustering-tendency/}{STHDA
+#'   \href{https://www.datanovia.com/learn/machine-learning/clustering/clustering-tendency}{STHDA
 #'    website: Assessing clustering tendency}.
 #' @param data a numeric data frame or matrix. Columns are variables and rows
 #'   are samples. Computations are performed on complete rows. To calculate the

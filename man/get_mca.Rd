@@ -74,7 +74,7 @@ res.mca <- MCA(poison, quanti.sup = 1:2, graph = FALSE)
  
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

@@ -15,19 +15,19 @@ an R package that makes it easy to *extract* and *visualize* the output
 of exploratory **multivariate data analyses**, including:
 
 1.  [Principal Component Analysis
-    (PCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/),
+    (PCA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis),
     which is used to summarize the information contained in continuous
     (i.e., quantitative) multivariate data by reducing the
     dimensionality of the data without losing important information.
 
 2.  [Correspondence Analysis
-    (CA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/),
+    (CA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis),
     which is an extension of principal component analysis suited to
     analyzing a large contingency table formed by two *qualitative
     variables* (or categorical data).
 
 3.  [Multiple Correspondence Analysis
-    (MCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/),
+    (MCA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis),
     which is an adaptation of CA to a data table containing more than
     two categorical variables.
 
@@ -97,7 +97,7 @@ provides a convenient solution.</span>
     and qualitative) and supplementary individuals using the information
     provided by the previously performed PCA or (M)CA. This can be done
     easily using the
-    [FactoMineR](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/)
+    [FactoMineR](https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis)
     package.
 
 <span class="success">If you want to make predictions with PCA/MCA and
@@ -299,7 +299,7 @@ qualitative and quantitative variables.
 
 <span class="success">Read more about computing and interpreting
 principal component analysis at: [**Principal Component Analysis**
-(PCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/).</span>
+(PCA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis).</span>
 
 1.  **Loading data**
 
@@ -309,7 +309,7 @@ principal component analysis at: [**Principal Component Analysis**
 library("factoextra")
 #> Loading required package: ggplot2
 #> Welcome to factoextra!
-#> Want to learn more? See two factoextra-related books at https://www.datanovia.com/en/product/practical-guide-to-principal-component-methods-in-r/
+#> Want to learn more? See two factoextra-related books at https://www.datanovia.com/library/principal-component-methods
 data("decathlon2")
 df <- decathlon2[1:23, 1:10]
 ```
@@ -485,7 +485,7 @@ fviz_pca_ind(iris.pca,
 
 <span class="success">Read more about computing and interpreting
 correspondence analysis at: [**Correspondence Analysis**
-(CA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/).</span>
+(CA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis).</span>
 
   - **Compute CA**:
 
@@ -547,7 +547,7 @@ fviz_contrib(res.ca, choice ="col", axes = 1)
 <span class="success">Read more about computing and interpreting
 multiple correspondence analysis at: [**Multiple Correspondence
 Analysis**
-(MCA)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/).</span>
+(MCA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis).</span>
 
 1.  **Computing MCA**:
 
@@ -632,15 +632,15 @@ visualization of advanced methods such:
   - Hierarchical Multiple Factor Analysis (HMFA): [HMFA
     Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html)
   - [Hierarchical Clustering on Principal Components
-    (HCPC)](https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/117-hcpc-hierarchical-clustering-on-principal-components-essentials/)
+    (HCPC)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/hcpc)
 
 ## Cluster analysis and factoextra
 
 To learn more about cluster analysis, you can refer to the book
 available at: [Practical Guide to Cluster Analysis in
-R](https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/)
+R](https://www.datanovia.com/library/cluster-analysis)
 
-<a href = "https://www.datanovia.com/en/product/practical-guide-to-cluster-analysis-in-r/"><img src = "man/figures/clustering-e1-cover.png" alt = "clustering book cover"/></a>
+<a href = "https://www.datanovia.com/library/cluster-analysis"><img src = "man/figures/clustering-e1-cover.png" alt = "clustering book cover"/></a>
 
 The main parts of the book include:
 
@@ -686,10 +686,10 @@ fviz_cluster(km.res, data = df,
 Read more:
 
 1.  [Cluster analysis in R: All what you should
-    know](https://www.datanovia.com/en/blog/types-of-clustering-methods-overview-and-quick-start-r-code/).
+    know](https://www.datanovia.com/learn/machine-learning/clustering/).
 
 2.  [Partitioning cluster
-    analysis](https://www.datanovia.com/en/courses/partitional-clustering-in-r-the-essentials/).
+    analysis](https://www.datanovia.com/learn/machine-learning/clustering/).
 
 </div>
 
@@ -727,10 +727,10 @@ if (requireNamespace("igraph", quietly = TRUE)) {
 Read more:
 
 1.  [Cluster analysis in R: All what you should
-    know](https://www.datanovia.com/en/blog/types-of-clustering-methods-overview-and-quick-start-r-code/)
+    know](https://www.datanovia.com/learn/machine-learning/clustering/)
 
 2.  [Hierarchical clustering
-    essentials](https://www.datanovia.com/en/courses/hierarchical-clustering-in-r-the-essentials/)
+    essentials](https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-clustering)
 
 </div>
 

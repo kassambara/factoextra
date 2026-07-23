@@ -32,7 +32,7 @@ NULL
 #' the input variables were standardized. Returned for variables; for an adapted
 #' recipe/workflow object it is \code{NULL} when correlations cannot be recovered.}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references \url{https://www.sthda.com/english/}
+#' @references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' \donttest{
 #' # Principal Component Analysis

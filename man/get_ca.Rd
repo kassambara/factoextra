@@ -62,7 +62,7 @@ for the active row/column variables from Correspondence Analysis (CA) outputs.\c
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

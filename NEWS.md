@@ -196,6 +196,15 @@
   small or very large magnitudes. Its PCA-variable print method lists only
   metrics that are actually available while preserving the established
   descriptions for metrics that remain present.
+* `get_eigenvalue()` (and the `fviz_eig()` scree plot) computes the variance
+  percentages on a rescaled intermediate, so an extreme-magnitude eigenvalue
+  spectrum returns finite percentages instead of `NaN` or an overflow. Ordinary
+  spectra are unchanged to floating-point precision.
+* `get_pca_var()`: for `ade4` `dudi.pca` objects, the `coord` and `contrib`
+  components are now returned as plain numeric matrices, matching the `prcomp`
+  and `princomp` output; the values are unchanged.
+* Refreshed the documentation links from the retired `sthda.com` pages to their
+  current `datanovia.com` locations across the help pages and README.
 
 ## Bug fixes
 

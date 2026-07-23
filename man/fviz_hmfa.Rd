@@ -192,7 +192,7 @@ fviz_hmfa_ind(res.hmfa, partial = "all", col.partial = "black")
 
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}

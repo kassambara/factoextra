@@ -72,7 +72,7 @@
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
 #'  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
-#'@references \url{https://www.sthda.com/english/}
+#'@references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' # Principal Component Analysis
 #' # ++++++++++++++++++++++++++
