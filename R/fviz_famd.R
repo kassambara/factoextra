@@ -10,6 +10,9 @@ NULL
 #'   \item fviz_famd_var(): Graph of variables \item fviz_famd(): An alias of
 #'   fviz_famd_ind(res.famd) }
 #'   
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
+#'
 #' @param X an object of class FAMD [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
@@ -59,6 +62,8 @@ NULL
 #'   compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#' @seealso \code{\link{get_famd}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' # Compute FAMD
 #'  library("FactoMineR")

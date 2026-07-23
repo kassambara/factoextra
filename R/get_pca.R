@@ -10,6 +10,9 @@ NULL
 #' \item get_pca_ind(): Extract the results for individuals only
 #' \item get_pca_var(): Extract the results for variables only
 #' }
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
+#'
 #' @param res.pca an object of class PCA [FactoMineR]; \code{prcomp} or
 #' \code{princomp} [stats]; \code{factoextra_pca}; \code{pca}, \code{dudi},
 #' \code{between}, or \code{within} [ade4]; or \code{expoOutput}/\code{epPCA}
@@ -33,6 +36,8 @@ NULL
 #' recipe/workflow object it is \code{NULL} when correlations cannot be recovered.}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.datanovia.com/learn/}
+#' @seealso \code{\link{fviz_pca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' \donttest{
 #' # Principal Component Analysis

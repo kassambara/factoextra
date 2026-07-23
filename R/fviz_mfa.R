@@ -12,6 +12,9 @@ NULL
 #'  "all") \item fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
 #'  variables }
 #'  
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
+#'
 #'@param X an object of class MFA [FactoMineR].
 #'@inheritParams fviz_mca
 #'@inheritParams fviz_pca
@@ -72,6 +75,8 @@ NULL
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@references \url{https://www.datanovia.com/learn/}
+#'@seealso \code{\link{get_mfa}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 #' @examples
 #' # Compute Multiple Factor Analysis
 #' library("FactoMineR")

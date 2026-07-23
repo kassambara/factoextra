@@ -32,7 +32,7 @@ of exploratory **multivariate data analyses**, including:
     two categorical variables.
 
 4.  [Multiple Factor Analysis
-    (MFA)](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html)
+    (MFA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis)
     dedicated to datasets where variables are organized into groups
     (qualitative and/or quantitative variables).
 
@@ -42,7 +42,7 @@ of exploratory **multivariate data analyses**, including:
     a hierarchical structure.
 
 6.  [Factor Analysis of Mixed Data
-    (FAMD)](https://rpkgs.datanovia.com/factoextra/reference/fviz_famd.html),
+    (FAMD)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data),
     a particular case of the MFA, dedicated to analyze a data set
     containing both quantitative and qualitative variables.
 
@@ -174,7 +174,10 @@ library("factoextra")
     embedding (from `uwot`, `Rtsne`, `umap`, or a coordinate matrix),
     including colouring by a continuous feature value; axes carry no
     percentage and there is no scree/loadings surface (embeddings have no
-    eigenvalues)
+    eigenvalues). Read more:
+    [UMAP](https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap)
+    and
+    [t-SNE](https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne)
   - **Themes and palettes**: `theme_factoextra()` (a clean publication
     theme) and `factoextra_palette("okabe")` (the Okabe-Ito
     colorblind-safe palette), both explicit and stateless
@@ -269,6 +272,11 @@ list.</span>
 | -------------------- | ---------------------------------------------------------------------- |
 | *theme\_factoextra*  | A clean publication theme for factoextra plots (via `ggtheme` or `+`). |
 | *factoextra\_palette* | Colorblind-safe categorical colors (Okabe-Ito) for the `palette` argument. |
+
+Read more: [ggplot2 Themes in
+R](https://www.datanovia.com/learn/data-visualization/ggplot2/themes) and
+[ggplot2 Colours in
+R](https://www.datanovia.com/learn/data-visualization/ggplot2/colors).
 
 ## Dimension reduction and factoextra
 
@@ -625,10 +633,10 @@ fviz_mca_biplot(res.mca, repel = TRUE)
 The factoextra R package has also functions that support the
 visualization of advanced methods such:
 
-  - Factor Analysis of Mixed Data (FAMD): : [FAMD
-    Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_famd.html)
-  - Multiple Factor Analysis (MFA): [MFA
-    Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html)
+  - Factor Analysis of Mixed Data (FAMD): [Factor Analysis of Mixed Data
+    (FAMD) in R](https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data)
+  - Multiple Factor Analysis (MFA): [Multiple Factor Analysis (MFA) in
+    R](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis)
   - Hierarchical Multiple Factor Analysis (HMFA): [HMFA
     Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html)
   - [Hierarchical Clustering on Principal Components
@@ -688,8 +696,8 @@ Read more:
 1.  [Cluster analysis in R: All what you should
     know](https://www.datanovia.com/learn/machine-learning/clustering/).
 
-2.  [Partitioning cluster
-    analysis](https://www.datanovia.com/learn/machine-learning/clustering/).
+2.  [K-means
+    clustering](https://www.datanovia.com/learn/machine-learning/clustering/kmeans).
 
 </div>
 
@@ -746,6 +754,13 @@ fviz_nbclust(my_data, kmeans, method = "gap_stat")
 ```
 
 ![](man/figures/README-determine-the-number-of-clusters-gap-statistics-1.png)<!-- -->
+
+<br/>
+<div class="success">
+Read more: [Determining the Optimal Number of Clusters in
+R](https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters)
+</div>
+<br/>
 
 ## Acknowledgment
 

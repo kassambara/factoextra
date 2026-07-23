@@ -8,6 +8,9 @@ NULL
 #' such as "pearson", "spearman" and "kendall". Direct calls require
 #' \code{k >= 2}; helper-level one-cluster handling is implemented in callers
 #' such as \code{eclust()} and \code{fviz_nbclust()}.
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-clustering}{Hierarchical Clustering in R: Dendrograms, Agglomerative & Divisive}.
+#'
 #' @param x a numeric matrix, numeric data frame or a dissimilarity matrix.
 #' @param k a single integer specifying the number of clusters to be generated.
 #'   Must be at least 2 and smaller than the number of observations.
@@ -41,8 +44,9 @@ NULL
 #' \item data: a matrix containing the original or  the standardized data (if stand = TRUE)
 #' }
 #' 
-#' @seealso \code{\link{fviz_dend}}, \code{\link{hkmeans}}, \code{\link{eclust}}
-#' @examples 
+#' @seealso \code{\link{fviz_dend}}, \code{\link{hkmeans}}, \code{\link{eclust}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-clustering}{Hierarchical Clustering in R: Dendrograms, Agglomerative & Divisive}.
+#' @examples
 #' \donttest{
 #' data(USArrests)
 #' 

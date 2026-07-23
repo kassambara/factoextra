@@ -133,6 +133,9 @@ Factor analysis of mixed data (FAMD) is a particular case of
   \itemize{ \item fviz_famd_ind(): Graph of individuals
   \item fviz_famd_var(): Graph of variables \item fviz_famd(): An alias of
   fviz_famd_ind(res.famd) }
+  
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 # Compute FAMD
@@ -158,6 +161,10 @@ fviz_famd_ind(res.famd, col.ind = "cos2",
   repel = TRUE)
 
 
+}
+\seealso{
+\code{\link{get_famd}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

@@ -3,9 +3,8 @@ NULL
 #' Enhanced Distance Matrix Computation and Visualization
 #' @description Clustering methods classify data samples into groups of similar 
 #'   objects. This process requires some methods for measuring the distance or 
-#'   the (dis)similarity between the observations. Read more: 
-#'   \href{https://www.datanovia.com/learn/machine-learning/clustering/distance-measures}{STHDA
-#'    website - clarifying distance measures.}. \itemize{ \item get_dist():
+#'   the (dis)similarity between the observations. Read more:
+#'   \href{https://www.datanovia.com/learn/machine-learning/clustering/distance-measures}{Clustering Distance Measures in R}. \itemize{ \item get_dist():
 #'   Computes a distance matrix between the rows of a data matrix. Compared to
 #'   the standard \code{\link[stats]{dist}}() function, it supports
 #'   correlation-based distance measures including "pearson", "kendall" and
@@ -27,7 +26,8 @@ NULL
 #' @param ... other arguments to be passed to the function dist() when using get_dist().
 #' @return \itemize{ \item get_dist(): returns an object of class "dist". \item 
 #'   fviz_dist(): returns a ggplot2 }
-#' @seealso \code{\link[stats]{dist}}
+#' @seealso \code{\link[stats]{dist}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/distance-measures}{Clustering Distance Measures in R}.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @examples
 #' data(USArrests)

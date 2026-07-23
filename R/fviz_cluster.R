@@ -8,6 +8,9 @@
 #'  using principal components if ncol(data) > 2. An ellipse is drawn around
 #'  each cluster. When \code{stand = TRUE}, the plotting data must remain
 #'  finite after scaling.
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
+#'
 #'@param object an object of class "partition" created by \code{pam()},
 #'  \code{clara()}, or \code{fanny()} [cluster]; "kmeans" [stats]; "dbscan"
 #'  [fpc]; "Mclust" [mclust]; or "hkmeans" or "eclust" [factoextra]. A custom
@@ -76,7 +79,8 @@
 #'@return a ggplot2 object.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}},
-#'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
+#'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
 #' @examples
 #' set.seed(123)
 #'

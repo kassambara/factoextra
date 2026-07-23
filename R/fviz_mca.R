@@ -6,9 +6,8 @@ NULL
 #'  CA to analyse a data table containing more than two categorical variables. 
 #'  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
 #'  the R functions: MCA [in FactoMineR], acm [in ade4], and expoOutput/epMCA [in
-#'  ExPosition]. Read more: 
-#'  \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple
-#'   Correspondence Analysis Essentials.}
+#'  ExPosition]. Read more:
+#'  \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 #'  
 #'  \itemize{ \item fviz_mca_ind(): Graph of individuals \item fviz_mca_var():
 #'  Graph of variables \item fviz_mca_biplot(): Biplot of individuals and
@@ -110,7 +109,8 @@ NULL
 #'@return a ggplot
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{get_mca}}, \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
-#'  \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
+#'  \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' # Multiple Correspondence Analysis
 #' # ++++++++++++++++++++++++++++++

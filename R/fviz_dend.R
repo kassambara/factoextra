@@ -3,7 +3,11 @@
 #' @description Draws easily beautiful dendrograms using either R base plot or 
 #'   ggplot2. It also provides options for circular dendrograms and
 #'   phylogenetic-style trees.
-#' @param x an object of class dendrogram, hclust, agnes, diana, hcut, 
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/visualizing-dendrograms}{Visualizing Dendrograms in R: Color, Zoom & Customize};
+#' to compare two trees see \href{https://www.datanovia.com/learn/machine-learning/clustering/comparing-dendrograms}{Comparing Dendrograms in R: Tanglegrams & Correlation}.
+#'
+#' @param x an object of class dendrogram, hclust, agnes, diana, hcut,
 #'   hkmeans or HCPC (FactoMineR).
 #' @param k the number of groups for cutting the tree.
 #' @param h a numeric value. Cut the dendrogram by cutting at height h. (k 
@@ -99,6 +103,8 @@
 #'   Both dendrograms must share the same leaf labels.
 #' @seealso \code{\link[dendextend]{tanglegram}}, \code{\link[dendextend]{entanglement}}
 #'   for comparing two dendrograms (see \strong{Details}).
+#'   Online tutorials: \href{https://www.datanovia.com/learn/machine-learning/clustering/visualizing-dendrograms}{Visualizing Dendrograms in R: Color, Zoom & Customize}
+#'   and \href{https://www.datanovia.com/learn/machine-learning/clustering/comparing-dendrograms}{Comparing Dendrograms in R: Tanglegrams & Correlation}.
 #' @examples
 #' \donttest{
 #' # Load and scale the data

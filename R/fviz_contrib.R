@@ -7,7 +7,10 @@ NULL
 #' from the results of Principal Component Analysis (PCA),
 #' Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 #' and Multiple Factor Analysis (MFA) functions.
-#' @param sort.val a string specifying whether the value should be sorted. 
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
+#'
+#' @param sort.val a string specifying whether the value should be sorted.
 #' Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).
 #' @param ... other arguments to be passed to the function \link[ggpubr]{ggpar}.
 #' @inheritParams fviz_cos2
@@ -22,6 +25,8 @@ NULL
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.datanovia.com/learn/}
+#' @seealso \code{\link{fviz_cos2}}, \code{\link{get_pca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' \donttest{
 #' # Principal component analysis

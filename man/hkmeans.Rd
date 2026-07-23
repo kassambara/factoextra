@@ -53,7 +53,7 @@ hkmeans returns an object of class "hkmeans" containing the following components
 The final k-means clustering solution is very sensitive to the initial random selection 
 of cluster centers. This function provides a solution using an hybrid approach by combining 
 the hierarchical clustering and the k-means methods. The procedure is explained in "Details" section. Read more:
-  \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-k-means}{Hybrid hierarchical k-means clustering for optimizing clustering outputs}.
+  \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-k-means}{Hierarchical K-Means Clustering in R: A Hybrid for Stable Clusters}.
 \itemize{
 \item hkmeans(): compute hierarchical k-means clustering
 \item print.hkmeans(): prints the result of hkmeans
@@ -99,4 +99,8 @@ fviz_dend(res.hk, cex = 0.6)
 # Visualize the hkmeans final clusters
 fviz_cluster(res.hk, ellipse.type = "norm", ellipse.level = 0.68)
 }
+}
+\seealso{
+\code{\link{eclust}}, \code{\link{hcut}}, \code{\link{fviz_dend}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-k-means}{Hierarchical K-Means Clustering in R: A Hybrid for Stable Clusters}.
 }

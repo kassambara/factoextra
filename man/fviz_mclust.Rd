@@ -85,6 +85,7 @@ A ggplot2 object.
 }
 \description{
 Plots the classification, the uncertainty and the BIC values returned by the Mclust() function.
+  Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/model-based-clustering}{Model-Based Clustering in R (Mclust)}.
 }
 \section{Functions}{
 \itemize{
@@ -109,4 +110,8 @@ fviz_mclust_bic(mc)
 fviz_mclust(mc, "classification", geom = "point")
 }
 
+}
+\seealso{
+\code{\link{fviz_cluster}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/model-based-clustering}{Model-Based Clustering in R (Mclust)}.
 }

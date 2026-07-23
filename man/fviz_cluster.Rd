@@ -136,6 +136,8 @@ Provides ggplot2-based elegant visualization of partitioning
  using principal components if ncol(data) > 2. An ellipse is drawn around
  each cluster. When \code{stand = TRUE}, the plotting data must remain
  finite after scaling.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
 }
 \examples{
 set.seed(123)
@@ -189,7 +191,8 @@ fviz_cluster(hc.cut, ellipse.type = "convex")
 }
 \seealso{
 \code{\link{fviz_silhouette}}, \code{\link{hcut}},
- \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
+ \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

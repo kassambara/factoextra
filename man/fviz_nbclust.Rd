@@ -130,8 +130,7 @@ Partitioning methods, such as k-means clustering require the
   \code{hkmeans()} can keep rejecting direct \code{k = 1} inputs.
 
   Read more:
-  \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining
-   the optimal number of clusters}
+  \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining the Optimal Number of Clusters in R}.
 }
 \details{
 When \code{mark_optimal = TRUE}, the \code{"wss"} elbow is located with
@@ -209,7 +208,8 @@ fviz_gap_stat(gap_stat)
   Workshops}, 166-171. \doi{10.1109/ICDCSW.2011.20}
 }
 \seealso{
-\code{\link{fviz_cluster}}, \code{\link{eclust}}
+\code{\link{fviz_cluster}}, \code{\link{eclust}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining the Optimal Number of Clusters in R}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

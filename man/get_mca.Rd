@@ -40,6 +40,8 @@ Extract all the results (coordinates, squared cosine and
   support \code{element = "quanti.sup"} for quantitative supplementary
   variables and report a clean package-level error when that result is
   absent.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 \donttest{
@@ -75,6 +77,10 @@ res.mca <- MCA(poison, quanti.sup = 1:2, graph = FALSE)
 }
 \references{
 \url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_mca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

@@ -35,12 +35,12 @@ knitr::opts_chunk$set(
 3. [Multiple Correspondence Analysis (MCA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis), which is an adaptation of CA to a data table containing more than two categorical variables.
      
      
-4. [Multiple Factor Analysis (MFA)](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html) dedicated to datasets where variables are organized into groups (qualitative and/or quantitative variables).   
+4. [Multiple Factor Analysis (MFA)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis) dedicated to datasets where variables are organized into groups (qualitative and/or quantitative variables).
      
      
 5. [Hierarchical Multiple Factor Analysis (HMFA)](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html): An extension of MFA in a situation where the data are organized into a hierarchical structure.
     
-6. [Factor Analysis of Mixed Data (FAMD)](https://rpkgs.datanovia.com/factoextra/reference/fviz_famd.html), a particular case of the MFA, dedicated to analyze a data set containing both quantitative and qualitative variables.
+6. [Factor Analysis of Mixed Data (FAMD)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data), a particular case of the MFA, dedicated to analyze a data set containing both quantitative and qualitative variables.
       
       
 There are a number of R packages implementing principal component methods. These packages include: *FactoMineR*, *ade4*, *stats*, *ca*, *MASS* and *ExPosition*.   
@@ -137,7 +137,7 @@ library("factoextra")
 ## What's new in the development version
 
 - **tidymodels on-ramp**: a PCA fitted in a `recipes` recipe (`step_pca()`) or a fitted `workflow` plots directly with the `fviz_pca_*` family via `as_factoextra_pca()` (honest scree, real variable-component correlations)
-- **UMAP / t-SNE**: `fviz_umap()` and `fviz_tsne()` visualize a 2-D embedding (from `uwot`, `Rtsne`, `umap`, or a coordinate matrix), including colouring by a continuous feature value; axes carry no percentage and there is no scree/loadings surface (embeddings have no eigenvalues)
+- **UMAP / t-SNE**: `fviz_umap()` and `fviz_tsne()` visualize a 2-D embedding (from `uwot`, `Rtsne`, `umap`, or a coordinate matrix), including colouring by a continuous feature value; axes carry no percentage and there is no scree/loadings surface (embeddings have no eigenvalues). Read more: [UMAP](https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap) and [t-SNE](https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne)
 - **Themes and palettes**: `theme_factoextra()` (a clean publication theme) and `factoextra_palette("okabe")` (the Okabe-Ito colorblind-safe palette), both explicit and stateless
 - **Large datasets**: a `max.points` argument on the individual/cluster plots draws a readable subset while keeping ellipses/centres on the full data
 - **`display = "heatmap"`** for `fviz_cos2()` / `fviz_contrib()` reads the quality/contribution across several dimensions at once
@@ -238,6 +238,8 @@ Functions | Description
 --------- | -----------------------------------------------------------
 *theme_factoextra* | A clean publication theme for factoextra plots (via `ggtheme` or `+`).
 *factoextra_palette* | Colorblind-safe categorical colors (Okabe-Ito) for the `palette` argument.
+
+Read more: [ggplot2 Themes in R](https://www.datanovia.com/learn/data-visualization/ggplot2/themes) and [ggplot2 Colours in R](https://www.datanovia.com/learn/data-visualization/ggplot2/colors).
 
 
 ## Dimension reduction and factoextra
@@ -527,8 +529,8 @@ fviz_mca_biplot(res.mca, repel = TRUE)
      
 The factoextra R package has also functions that support the visualization of advanced methods such:   
    
-- Factor Analysis of Mixed Data (FAMD): : [FAMD Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_famd.html)
-- Multiple Factor Analysis (MFA): [MFA Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_mfa.html)
+- Factor Analysis of Mixed Data (FAMD): [Factor Analysis of Mixed Data (FAMD) in R](https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data)
+- Multiple Factor Analysis (MFA): [Multiple Factor Analysis (MFA) in R](https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis)
 - Hierarchical Multiple Factor Analysis (HMFA): [HMFA Examples](https://rpkgs.datanovia.com/factoextra/reference/fviz_hmfa.html)
 - [Hierarchical Clustering on Principal Components (HCPC)](https://www.datanovia.com/learn/machine-learning/dimension-reduction/hcpc)
      
@@ -585,8 +587,8 @@ Read more:
    
 1. [Cluster analysis in R: All what you should know](https://www.datanovia.com/learn/machine-learning/clustering/).
     
-2. [Partitioning cluster analysis](https://www.datanovia.com/learn/machine-learning/clustering/).
-</div> 
+2. [K-means clustering](https://www.datanovia.com/learn/machine-learning/clustering/kmeans).
+</div>
 <br/>
   
 
@@ -638,8 +640,14 @@ fviz_nbclust(my_data, kmeans, method = "gap_stat")
 ```
       
       
+<br/>
+<div class = "success">
+Read more: [Determining the Optimal Number of Clusters in R](https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters)
+</div>
+<br/>
+
 ## Acknowledgment
-   
+
 
 Original package authors:
 

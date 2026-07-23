@@ -172,6 +172,9 @@ Multiple factor analysis (MFA) is used to analyze a data set in
  partial axes \item fviz_mfa(): An alias of fviz_mfa_ind(res.mfa, partial =
  "all") \item fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
  variables }
+ 
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 }
 \examples{
 # Compute Multiple Factor Analysis
@@ -222,6 +225,10 @@ fviz_mfa_quali_biplot(res.mfa, repel = FALSE, col.var = "#E7B800",
 }
 \references{
 \url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{get_mfa}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 }
 \author{
 Fabian Mundt \email{f.mundt@inventionate.de}

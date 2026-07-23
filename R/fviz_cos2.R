@@ -7,6 +7,9 @@ NULL
 #' Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
 #' Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
 #' Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
+#'
 #' @param X an object of class PCA, CA, MCA, FAMD, MFA and HMFA [FactoMineR];
 #'   prcomp and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca
 #'   package].
@@ -34,6 +37,8 @@ NULL
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.datanovia.com/learn/}
+#' @seealso \code{\link{fviz_contrib}}, \code{\link{get_pca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' \donttest{
 #' # Principal component analysis

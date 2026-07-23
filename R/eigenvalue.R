@@ -23,6 +23,9 @@
 #'  \code{get_eig()} continues to return the eigenvalues stored in the object.
 #'  
 #'  
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
+#'
 #'@param X an object of class PCA, CA, MCA, FAMD, MFA, or HMFA [FactoMineR];
 #'  \code{prcomp} or \code{princomp} [stats]; \code{factoextra_pca};
 #'  \code{dudi}, \code{pca}, \code{coa}, \code{acm}, \code{between}, or
@@ -71,7 +74,8 @@
 #'  
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
-#'  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
+#'  \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #'@references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' # Principal Component Analysis

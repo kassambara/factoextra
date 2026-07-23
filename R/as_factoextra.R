@@ -8,7 +8,8 @@ NULL
 #' variable) coordinates into an object that the \code{\link{fviz_pca}} family
 #' (\code{fviz_pca_ind()}, \code{fviz_pca_var()}, \code{fviz_pca_biplot()}),
 #' \code{\link{fviz_eig}}, \code{\link{fviz_contrib}} and \code{\link{fviz_cos2}}
-#' can plot directly.
+#' can plot directly. Read more:
+#' \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #'
 #' It lets you apply factoextra's visualizations to the output of an
 #' \emph{eigenvalue-based} dimension reduction - for example
@@ -66,6 +67,7 @@ NULL
 #'
 #' @seealso For UMAP / t-SNE embeddings, which have no eigenvalues, use
 #'   \code{\link{fviz_umap}} / \code{\link{fviz_tsne}} instead.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #'
 #' @examples
 #' # 1. Bring your own coordinates: classical MDS (cmdscale) -> factoextra

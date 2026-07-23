@@ -8,9 +8,8 @@
 #'   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
 #'   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
 #'   stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA 
-#'   [ExPosition]. Read more: 
-#'   \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal
-#'    Component Analysis}
+#'   [ExPosition]. Read more:
+#'   \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #'   
 #'   \itemize{ \item fviz_pca_ind(): Graph of individuals \item fviz_pca_var():
 #'   Graph of variables \item fviz_pca_biplot(): Biplot of individuals and
@@ -113,7 +112,8 @@
 #'   
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}
+#' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' \donttest{
 #' # Principal component analysis

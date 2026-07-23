@@ -11,6 +11,9 @@ NULL
 #' quantitative variables, qualitative variables, and groups
 #' \item get_hmfa_partial(): Extract the results for partial.node. }
 #' 
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
+#'
 #' @param res.hmfa an object of class HMFA [FactoMineR].
 #' @param element the element to subset from the output. Possible values are
 #'   "ind", "quanti.var", "quali.var", "group" or "partial.node".
@@ -20,6 +23,8 @@ NULL
 #'   \item{contrib}{contributions}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @author Fabian Mundt \email{f.mundt@@inventionate.de}
+#' @seealso \code{\link{fviz_hmfa}}, \code{\link{fviz_mfa}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 #' @examples
 #' # Multiple Factor Analysis
 #' # ++++++++++++++++++++++++

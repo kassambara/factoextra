@@ -23,8 +23,7 @@
 #'   \code{hkmeans()} can keep rejecting direct \code{k = 1} inputs.
 #'
 #'   Read more:
-#'   \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining
-#'    the optimal number of clusters}
+#'   \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining the Optimal Number of Clusters in R}.
 #'
 #' @details When \code{mark_optimal = TRUE}, the \code{"wss"} elbow is located with
 #'   a deterministic chord-distance heuristic: both axes are rescaled to the unit
@@ -91,7 +90,8 @@
 #'   
 #' @return Both \code{fviz_nbclust()} and \code{fviz_gap_stat()} return a
 #'   ggplot2 object.
-#' @seealso \code{\link{fviz_cluster}}, \code{\link{eclust}}
+#' @seealso \code{\link{fviz_cluster}}, \code{\link{eclust}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/optimal-clusters}{Determining the Optimal Number of Clusters in R}.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'   
 #' @examples 

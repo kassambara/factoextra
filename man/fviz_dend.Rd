@@ -39,7 +39,7 @@ fviz_dend(
 )
 }
 \arguments{
-\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut, 
+\item{x}{an object of class dendrogram, hclust, agnes, diana, hcut,
 hkmeans or HCPC (FactoMineR).}
 
 \item{k}{the number of groups for cutting the tree.}
@@ -141,6 +141,9 @@ an object of class fviz_dend which is a ggplot with the attributes
 Draws easily beautiful dendrograms using either R base plot or 
   ggplot2. It also provides options for circular dendrograms and
   phylogenetic-style trees.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/visualizing-dendrograms}{Visualizing Dendrograms in R: Color, Zoom & Customize};
+to compare two trees see \href{https://www.datanovia.com/learn/machine-learning/clustering/comparing-dendrograms}{Comparing Dendrograms in R: Tanglegrams & Correlation}.
 }
 \details{
 For branch styling beyond \code{highlight} - for example dashed
@@ -219,4 +222,6 @@ fviz_dend(res.hc, k = 4,
 \seealso{
 \code{\link[dendextend]{tanglegram}}, \code{\link[dendextend]{entanglement}}
   for comparing two dendrograms (see \strong{Details}).
+  Online tutorials: \href{https://www.datanovia.com/learn/machine-learning/clustering/visualizing-dendrograms}{Visualizing Dendrograms in R: Color, Zoom & Customize}
+  and \href{https://www.datanovia.com/learn/machine-learning/clustering/comparing-dendrograms}{Comparing Dendrograms in R: Tanglegrams & Correlation}.
 }

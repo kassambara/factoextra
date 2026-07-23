@@ -50,9 +50,8 @@ Before applying clustering methods, assess whether the data show
   all-constant data set remains undefined. In the ODI, objects
   grouped by hierarchical clustering are displayed in consecutive order.
   For more details and
-  interpretation, see 
-  \href{https://www.datanovia.com/learn/machine-learning/clustering/clustering-tendency}{STHDA
-   website: Assessing clustering tendency}.
+  interpretation, see
+  \href{https://www.datanovia.com/learn/machine-learning/clustering/clustering-tendency}{Assessing Clustering Tendency in R}.
 }
 \details{
 \strong{Hopkins statistic}: Values near 1 support a clustered tendency,
@@ -107,7 +106,8 @@ options(factoextra.warn_hopkins = old_hopkins_warn)
 
 }
 \seealso{
-\code{\link{fviz_dist}}
+\code{\link{fviz_dist}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/clustering-tendency}{Assessing Clustering Tendency in R}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

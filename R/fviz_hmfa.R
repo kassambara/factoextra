@@ -9,6 +9,9 @@ NULL
 #'  \item fviz_hmfa_ind(): Graph of individuals \item fviz_hmfa_var(): Graph of
 #'  variables \item fviz_hmfa_quali_biplot(): Biplot of individuals and
 #'  qualitative variables \item fviz_hmfa(): An alias of fviz_hmfa_ind() }
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
+#'
 #'@param X an object of class HMFA [FactoMineR].
 #'@inheritParams fviz_mca
 #'@inheritParams fviz_pca
@@ -67,6 +70,8 @@ NULL
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@references \url{https://www.datanovia.com/learn/}
+#'@seealso \code{\link{get_hmfa}}, \code{\link{fviz_mfa}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 #' @examples
 #' # Hierarchical Multiple Factor Analysis
 #' # ++++++++++++++++++++++++

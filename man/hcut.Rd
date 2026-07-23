@@ -66,6 +66,8 @@ into \code{k} clusters. It also accepts correlation-based distance measures
 such as "pearson", "spearman" and "kendall". Direct calls require
 \code{k >= 2}; helper-level one-cluster handling is implemented in callers
 such as \code{eclust()} and \code{fviz_nbclust()}.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-clustering}{Hierarchical Clustering in R: Dendrograms, Agglomerative & Divisive}.
 }
 \examples{
 \donttest{
@@ -91,5 +93,6 @@ fviz_cluster(res)
 
 }
 \seealso{
-\code{\link{fviz_dend}}, \code{\link{hkmeans}}, \code{\link{eclust}}
+\code{\link{fviz_dend}}, \code{\link{hkmeans}}, \code{\link{eclust}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/hierarchical-clustering}{Hierarchical Clustering in R: Dendrograms, Agglomerative & Divisive}.
 }

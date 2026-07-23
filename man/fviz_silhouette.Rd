@@ -34,9 +34,8 @@ Silhouette (Si) analysis compares an observation's average
  factoextra]. Results without silhouette information, such as one-cluster
  \code{eclust}/\code{hcut} objects, are rejected with a package-level error.
  
- Read more: 
- \href{https://www.datanovia.com/learn/machine-learning/clustering/cluster-validation-statistics}{Clustering
-  Validation Statistics}.
+ Read more:
+ \href{https://www.datanovia.com/learn/machine-learning/clustering/cluster-validation-statistics}{Cluster Validation Statistics in R}.
 }
 \details{
 - Observations with a large silhouette Si (almost 1) are very well
@@ -99,8 +98,9 @@ if (hc.cut$nbclust > 1) fviz_silhouette(hc.cut)
 }
 }
 \seealso{
-\code{\link{fviz_cluster}}, \code{\link{hcut}}, 
- \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
+\code{\link{fviz_cluster}}, \code{\link{hcut}},
+ \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/cluster-validation-statistics}{Cluster Validation Statistics in R}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

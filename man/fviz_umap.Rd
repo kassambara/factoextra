@@ -129,6 +129,10 @@ percentage of variance, so they are labelled \code{UMAP1}/\code{UMAP2}
 scree plot, no variable loadings, and no correlation circle - those are
 meaningless for an embedding. For methods that \emph{do} have eigenvalues (PCA,
 CA, MCA, MDS) see \code{\link{fviz_pca}} and \code{\link{as_factoextra_pca}}.
+
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap}{UMAP in R: Nonlinear Dimension Reduction & Visualization}
+and \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne}{t-SNE in R: Visualize High-Dimensional Data}.
 }
 \details{
 UMAP and t-SNE produce a low-dimensional embedding, not a variance
@@ -161,4 +165,6 @@ t-SNE Effectively. \emph{Distill}. \doi{10.23915/distill.00002}.
 \seealso{
 \code{\link{fviz_pca}}, \code{\link{as_factoextra_pca}},
   \code{\link{fviz_cluster}}.
+  Online tutorials: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap}{UMAP in R: Nonlinear Dimension Reduction & Visualization}
+  and \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne}{t-SNE in R: Visualize High-Dimensional Data}.
 }

@@ -203,8 +203,9 @@
 * `get_pca_var()`: for `ade4` `dudi.pca` objects, the `coord` and `contrib`
   components are now returned as plain numeric matrices, matching the `prcomp`
   and `princomp` output; the values are unchanged.
-* Refreshed the documentation links from the retired `sthda.com` pages to their
-  current `datanovia.com` locations across the help pages and README.
+* Function help pages and the `README` now link to the corresponding Datanovia
+  tutorial for each method, and the retired `sthda.com` documentation links were
+  refreshed to their current `datanovia.com` locations.
 
 ## Bug fixes
 

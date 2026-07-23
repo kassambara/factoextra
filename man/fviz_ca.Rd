@@ -136,9 +136,8 @@ Correspondence analysis (CA) is an extension of Principal
  categorical variables. fviz_ca() provides ggplot2-based elegant 
  visualization of CA outputs from the R functions: CA [in FactoMineR], ca [in
  ca], coa [in ade4], correspondence [in MASS] and expoOutput/epCA [in
- ExPosition]. Read more: 
- \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence
-  Analysis}
+ ExPosition]. Read more:
+ \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
  
  \itemize{ \item fviz_ca_row(): Graph of row variables \item fviz_ca_col():
  Graph of column variables \item fviz_ca_biplot(): Biplot of row and column
@@ -246,7 +245,8 @@ fviz_ca_col(res.ca, select.col = list(contrib = 3))
 \url{https://www.datanovia.com/learn/}
 }
 \seealso{
-\code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}
+\code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

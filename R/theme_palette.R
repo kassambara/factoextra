@@ -38,6 +38,9 @@ NULL
 #' the palest on a white background, is placed late, so plots with a few groups
 #' stay crisp.
 #'
+#'
+#' Read more: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/colors}{ggplot2 Colours in R: Change Colours by Group}.
+#'
 #' @param palette name of the palette. Currently \code{"okabe"} (alias
 #'   \code{"okabe-ito"}), the Okabe-Ito color-universal-design set.
 #' @param n number of colors to return. \code{NULL} (default) returns the whole
@@ -60,7 +63,8 @@ NULL
 #' Wong, B. (2011). Points of view: Color blindness. \emph{Nature Methods}, 8(6),
 #' 441. \doi{10.1038/nmeth.1618}.
 #'
-#' @seealso \code{\link{theme_factoextra}}
+#' @seealso \code{\link{theme_factoextra}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/colors}{ggplot2 Colours in R: Change Colours by Group}.
 #'
 #' @examples
 #' # A colorblind-safe categorical palette
@@ -99,12 +103,16 @@ factoextra_palette <- function(palette = "okabe", n = NULL){
 #' \code{fviz_pca_ind(res, ggtheme = theme_factoextra())}, or add it to any
 #' returned plot with \code{+ theme_factoextra()}.
 #'
+#'
+#' Read more: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/themes}{ggplot2 Themes in R: Customize the Look}.
+#'
 #' @param base_size base font size, in points.
 #' @param base_family base font family.
 #'
 #' @return A ggplot2 theme object.
 #'
-#' @seealso \code{\link{factoextra_palette}}
+#' @seealso \code{\link{factoextra_palette}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/themes}{ggplot2 Themes in R: Customize the Look}.
 #'
 #' @details The \code{fviz_*} functions have different default themes
 #'   (\code{fviz_pca_*} use \code{theme_minimal()}, \code{fviz_cluster()} uses

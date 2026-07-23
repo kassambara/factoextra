@@ -7,7 +7,7 @@ NULL
 #'   selects the number of clusters. Hierarchical backends may validly return
 #'   \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
 #'   without silhouette information. Read more:
-#'  \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Visual enhancement of clustering analysis}.
+#'  \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Enhanced Cluster Analysis in R with factoextra's eclust()}.
 #' @param x numeric vector, data matrix or data frame. For hierarchical
 #'   clustering (\code{FUNcluster} = "hclust", "agnes" or "diana"), a
 #'   precomputed dissimilarity matrix (an object of class \code{"dist"}) may be
@@ -59,8 +59,10 @@ NULL
 #'   \item size: the size of clusters \item data: a matrix containing the
 #'   original or the standardized data (if stand = TRUE) } The "eclust" class
 #'   has methods for fviz_silhouette(), fviz_dend(), and fviz_cluster().
-#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, 
-#'   \code{\link{fviz_cluster}}
+#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}},
+#'   \code{\link{fviz_cluster}}.
+#'   Online tutorials: \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Enhanced Cluster Analysis in R with factoextra's eclust()}
+#'   and \href{https://www.datanovia.com/learn/machine-learning/clustering/choosing-best-algorithm}{Choosing the Best Clustering Algorithm in R}.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'   
 #' @examples 

@@ -69,6 +69,8 @@ representation (cos2) of rows/columns from the results of Principal Component
 Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
 Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
 Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 \donttest{
@@ -136,6 +138,10 @@ fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
 }
 \references{
 \url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_contrib}}, \code{\link{get_pca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

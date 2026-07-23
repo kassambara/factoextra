@@ -47,6 +47,8 @@ the active individuals/variables from Principal Component Analysis (PCA) outputs
 \item get_pca_ind(): Extract the results for individuals only
 \item get_pca_var(): Extract the results for variables only
 }
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 \donttest{
@@ -75,6 +77,10 @@ the active individuals/variables from Principal Component Analysis (PCA) outputs
 }
 \references{
 \url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_pca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

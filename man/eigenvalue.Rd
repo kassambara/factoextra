@@ -128,6 +128,10 @@ Eigenvalues correspond to the amount of the variation explained
  \code{fviz_eig()} warns that the scree plot is incomplete. Refit the PCA
  with a sufficiently large \code{ncp} to plot the complete spectrum.
  \code{get_eig()} continues to return the eigenvalues stored in the object.
+ 
+ 
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 # Principal Component Analysis
@@ -180,7 +184,8 @@ fviz_eig(res.mca, linecolor = "#FC4E07",
 }
 \seealso{
 \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
- \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
+ \code{\link{fviz_mca}}, \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

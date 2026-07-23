@@ -21,6 +21,9 @@ produced by the \code{fviz_*()} functions: a light, unobtrusive coordinate grid
 axis lines. Pass it through the \code{ggtheme} argument, e.g.
 \code{fviz_pca_ind(res, ggtheme = theme_factoextra())}, or add it to any
 returned plot with \code{+ theme_factoextra()}.
+
+
+Read more: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/themes}{ggplot2 Themes in R: Customize the Look}.
 }
 \details{
 The \code{fviz_*} functions have different default themes
@@ -49,5 +52,6 @@ fviz_cluster(km, data = iris[, 1:4], ggtheme = theme_factoextra())
 }
 }
 \seealso{
-\code{\link{factoextra_palette}}
+\code{\link{factoextra_palette}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/themes}{ggplot2 Themes in R: Customize the Look}.
 }

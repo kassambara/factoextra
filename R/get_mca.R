@@ -13,6 +13,9 @@ NULL
 #'   support \code{element = "quanti.sup"} for quantitative supplementary
 #'   variables and report a clean package-level error when that result is
 #'   absent.
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
+#'
 #' @param res.mca an object of class MCA [FactoMineR], acm [ade4], expoOutput/epMCA [ExPosition].
 #' @param element the element to subset from the output. Possible values are
 #'   "var" for variables, "ind" for individuals, "mca.cor" for correlation
@@ -26,6 +29,8 @@ NULL
 #'   individuals/variable categories}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #' @references \url{https://www.datanovia.com/learn/}
+#' @seealso \code{\link{fviz_mca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' \donttest{
 #' # Multiple Correspondence Analysis
