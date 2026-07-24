@@ -1,3 +1,6 @@
+^tests/testthat/Rplots\.pdf$
+^tests/testthat/_problems(/|$)
+^vignettes/.*\.html$
 ^pkgdown$
 ^pkgdown/*
 ^.*\.Rproj$

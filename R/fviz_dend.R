@@ -1,15 +1,19 @@
 #' Enhanced Visualization of Dendrogram
 #' 
 #' @description Draws easily beautiful dendrograms using either R base plot or 
-#'   ggplot2. Provides also an option for drawing a circular dendrogram and 
-#'   phylogenic trees.
-#' @param x an object of class dendrogram, hclust, agnes, diana, hcut, 
+#'   ggplot2. It also provides options for circular dendrograms and
+#'   phylogenetic-style trees.
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/visualizing-dendrograms}{Visualizing Dendrograms in R: Color, Zoom & Customize};
+#' to compare two trees see \href{https://www.datanovia.com/learn/machine-learning/clustering/comparing-dendrograms}{Comparing Dendrograms in R: Tanglegrams & Correlation}.
+#'
+#' @param x an object of class dendrogram, hclust, agnes, diana, hcut,
 #'   hkmeans or HCPC (FactoMineR).
 #' @param k the number of groups for cutting the tree.
 #' @param h a numeric value. Cut the dendrogram by cutting at height h. (k 
 #'   overrides h)
 #' @param k_colors,palette a vector containing colors to be used for the groups.
-#'   It should contains k number of colors. Allowed values include also "grey" 
+#'   It should contain \code{k} colors. Allowed values also include "grey"
 #'   for grey color palettes; brewer palettes e.g. "RdBu", "Blues", ...;  and 
 #'   scientific journal palettes from ggsci R package, e.g.: "npg", "aaas", 
 #'   "lancet", "jco", "ucscgb", "uchicago", "simpsons" and "rickandmorty".
@@ -28,7 +32,8 @@
 #' @param labels_track_height a positive numeric value for adjusting the room for the 
 #'   labels. Used only when type = "rectangle".
 #' @param repel logical value. Use repel = TRUE to avoid label overplotting when
-#'   type = "phylogenic".
+#'   \code{type = "phylogenic"}. The literal \code{"phylogenic"} value is a
+#'   historical API token retained for compatibility.
 #' @param lwd a numeric value specifying dendrogram branch and rectangle line
 #'   width.
 #' @param highlight an optional character vector of leaf labels; the branches
@@ -40,9 +45,10 @@
 #' @param highlight.lwd line width for the highlighted branches. \code{NULL}
 #'   (default) uses \code{2 * lwd} so the emphasis stands out by thickness
 #'   regardless of colour; set \code{highlight.lwd = lwd} for colour-only emphasis.
-#' @param type type of plot. Allowed values are one of "rectangle",
-#'   "circular", "phylogenic".
-#' @param phylo_layout the layout to be used for phylogenic trees. Default value
+#' @param type type of plot. Allowed values are \code{"rectangle"},
+#'   \code{"circular"}, and the historical compatibility token
+#'   \code{"phylogenic"} for a phylogenetic-style tree.
+#' @param phylo_layout the layout used for phylogenetic-style trees. Default value
 #'   is "layout.auto", which is kept as a compatibility alias for
 #'   \code{"layout_nicely"}. Allowed values include:
 #'   \code{\link[igraph]{layout.auto}}, \code{\link[igraph]{layout_nicely}},
@@ -56,7 +62,7 @@
 #' @param rect_fill a logical value. If TRUE, fill the rectangle.
 #' @param lower_rect a value of how low should the lower part of the rectangle 
 #'   around clusters. Ignored when rect = FALSE.
-#' @param horiz a logical value. If TRUE, an horizontal dendrogram is drawn.
+#' @param horiz a logical value. If TRUE, a horizontal dendrogram is drawn.
 #' @param cex size of labels
 #' @param main,xlab,ylab main and axis titles
 #' @param sub Plot subtitle. Default is NULL (no subtitle). Set to a character
@@ -97,6 +103,8 @@
 #'   Both dendrograms must share the same leaf labels.
 #' @seealso \code{\link[dendextend]{tanglegram}}, \code{\link[dendextend]{entanglement}}
 #'   for comparing two dendrograms (see \strong{Details}).
+#'   Online tutorials: \href{https://www.datanovia.com/learn/machine-learning/clustering/visualizing-dendrograms}{Visualizing Dendrograms in R: Color, Zoom & Customize}
+#'   and \href{https://www.datanovia.com/learn/machine-learning/clustering/comparing-dendrograms}{Comparing Dendrograms in R: Tanglegrams & Correlation}.
 #' @examples
 #' \donttest{
 #' # Load and scale the data
@@ -135,7 +143,7 @@
 #'    k_colors = c("blue", "green3", "red", "black"),
 #'    label_cols =  km.clust[res.hc$order], cex = 0.6)
 #' 
-#'  # Phylogenic tree layouts support both compatibility aliases and
+#'  # Phylogenetic-style tree layouts support both compatibility aliases and
 #'  # current igraph layout names
 #'  if (requireNamespace("igraph", quietly = TRUE)) {
 #'    fviz_dend(res.hc, type = "phylogenic", phylo_layout = "layout_nicely",
@@ -302,14 +310,16 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
                              phylo_layout = "layout.auto", ...){
   
   if (!requireNamespace("igraph", quietly = TRUE)) {
-    stop("igraph package needed for phylogenic tree. Please install it using install.packages('igraph').")
+    stop("The igraph package is required for a phylogenetic-style tree. ",
+         "Install it with install.packages('igraph').")
   }
   
   
   allowed_layouts <- c("layout.auto", "layout_nicely", "layout_with_drl", "layout_as_tree",
                       "layout.gem", "layout_with_gem", "layout.mds", "layout_with_mds", "layout_with_lgl")
   
-  if(!(phylo_layout %in% allowed_layouts)) stop( phylo_layout, " is not supported as layout. ", "Allowed phylogenic layout are: ",
+  if(!(phylo_layout %in% allowed_layouts)) stop(phylo_layout, " is not a supported layout. ",
+                                                "Allowed phylogenetic-style layouts are: ",
                                                 paste( allowed_layouts, collapse = ", "))
   
   layout_func <- switch(phylo_layout,
@@ -452,6 +462,11 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
     p <- p + ggpubr::geom_exec(geom_text, data = data$labels,
                                x = "x", y = "y", label = "label", color = label_cols, size = "cex",
                                 angle = "angle", hjust = "hjust", vjust = "vjust")
+    # Map the label size through an identity scale so `cex` (stored per leaf in
+    # data$labels$cex) sets the text size directly. Without this, ggplot2's
+    # default continuous size scale rescales a single per-plot cex value to a
+    # fixed midpoint, so `cex` had no visible effect on the leaf labels (#281).
+    p <- p + scale_size_identity()
     # Apply a single font face to all leaf labels (e.g. "italic") as a fixed
     # layer parameter. Only when non-default, so the "plain" path is untouched (#121).
     if(!identical(labels_font, "plain"))
@@ -551,13 +566,25 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   if (!dendextend::is.dendrogram(dend)) stop("x is not a dendrogram object.")
   if (length(h) > 1L || length(k) > 1L) 
     stop("'k' and 'h' must be a scalar(i.e.: of length 1)")
+  if(!is.null(k)){
+    n_leaves <- length(stats::order.dendrogram(dend))
+    k <- .coerce_integerish(
+      k, "k", lower = 1L, upper = n_leaves,
+      value_label = "single integer value"
+    )
+  }
   tree_heights <- dendextend::heights_per_k.dendrogram(dend)[-1]
   tree_order <- stats::order.dendrogram(dend)
   if (!is.null(h)) {
     if (!is.null(k)) 
       stop("specify exactly one of 'k' and 'h'")
-    ss_ks <- tree_heights < h
-    k <- min(as.numeric(names(ss_ks))[ss_ks])
+    if (!is.numeric(h) || length(h) != 1L || is.na(h) || !is.finite(h))
+      stop("'h' must be a single finite numeric value", call. = FALSE)
+    candidate_k <- as.numeric(names(tree_heights))[tree_heights < h]
+    if (!length(candidate_k))
+      stop("'h' is at or below the lowest merge height; increase 'h'",
+           call. = FALSE)
+    k <- min(candidate_k)
     k <- max(k, 2)
   }
   k
@@ -605,10 +632,10 @@ fviz_dend <- function(x, k = NULL, h = NULL, k_colors = NULL, palette = NULL,  s
   tree_order <- stats::order.dendrogram(dend)
   
   if (is.null(k)) stop("specify k")
-  if (k < 2) {
-      stop(gettextf("k must be between 2 and %d", length(tree_heights)), 
-              domain = NA)
-  }
+  k <- .coerce_integerish(
+    k, "k", lower = 2L, upper = length(tree_order),
+    value_label = "single integer value"
+  )
 
   cluster <- dendextend::cutree(dend, k = k)
   clustab <- table(cluster)[unique(cluster[tree_order])]

@@ -7,7 +7,7 @@ NULL
 #'   selects the number of clusters. Hierarchical backends may validly return
 #'   \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
 #'   without silhouette information. Read more:
-#'  \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
+#'  \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Enhanced Cluster Analysis in R with factoextra's eclust()}.
 #' @param x numeric vector, data matrix or data frame. For hierarchical
 #'   clustering (\code{FUNcluster} = "hclust", "agnes" or "diana"), a
 #'   precomputed dissimilarity matrix (an object of class \code{"dist"}) may be
@@ -39,12 +39,12 @@ NULL
 #'   "agnes" or "diana". Ignored when \code{x} is already a \code{"dist"} object.
 #' @param hc_method the agglomeration method to be used (?hclust): "ward.D", 
 #'   "ward.D2", "single", "complete", "average", ...
-#' @param gap_maxSE a list containing the parameters (method and SE.factor) for 
-#'   determining the location of the maximum of the gap statistic (Read the 
-#'   documentation ?cluster::maxSE).
+#' @param gap_maxSE a list containing the \code{method} and \code{SE.factor}
+#'   parameters passed to \code{\link[cluster]{maxSE}}. The default is
+#'   \code{list(method = "firstSEmax", SE.factor = 1)}.
 #' @param nboot integer, number of Monte Carlo ("bootstrap") samples. Used only 
-#'   for determining the number of clusters using gap statistic.
-#' @param verbose logical value. If TRUE, the result of progress is printed.
+#'   for determining the number of clusters using the gap statistic.
+#' @param verbose logical value. If TRUE, progress information is printed.
 #' @param seed integer used for seeding the random number generator.
 #' @param ... other arguments to be passed to FUNcluster.
 #' @return Returns an object of class "eclust" containing the result of the 
@@ -58,9 +58,11 @@ NULL
 #'   width of each cluster) and $avg.width (average width of all clusters)
 #'   \item size: the size of clusters \item data: a matrix containing the
 #'   original or the standardized data (if stand = TRUE) } The "eclust" class
-#'   has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
-#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, 
-#'   \code{\link{fviz_cluster}}
+#'   has methods for fviz_silhouette(), fviz_dend(), and fviz_cluster().
+#' @seealso \code{\link{fviz_silhouette}}, \code{\link{fviz_dend}},
+#'   \code{\link{fviz_cluster}}.
+#'   Online tutorials: \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Enhanced Cluster Analysis in R with factoextra's eclust()}
+#'   and \href{https://www.datanovia.com/learn/machine-learning/clustering/choosing-best-algorithm}{Choosing the Best Clustering Algorithm in R}.
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'   
 #' @examples 
@@ -231,7 +233,7 @@ eclust <- function(x, FUNcluster = c("kmeans", "pam", "clara", "fanny", "hclust"
 
 # Compute gap stat and get k
 .gap_stat <- function(x, fun_clust, k.max = 10, nboot = 100,
-                   gap_maxSE = list(method = "firstmax", SE.factor = 1),
+                   gap_maxSE = list(method = "firstSEmax", SE.factor = 1),
                    verbose = interactive(), ...)
   {
   gap_stat <- cluster::clusGap(x, fun_clust, K.max = k.max,  B = nboot, 

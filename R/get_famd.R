@@ -10,15 +10,20 @@ NULL
 #' \item get_famd_ind(): Extract the results for individuals only
 #' \item get_famd_var(): Extract the results for quantitative and qualitative variables only
 #' }
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
+#'
 #' @param res.famd an object of class FAMD [FactoMineR].
 #' @param element the element to subset from the output. Possible values are
 #'   "ind", "var", "quanti.var", "quali.var" or "quali.sup".
 #' @return a list of matrices containing the results for the active 
-#' individuals and variables, including : 
+#' individuals and variables, including:
 #' \item{coord}{coordinates of individuals/variables.}
 #' \item{cos2}{cos2 values representing the quality of representation on the factor map.}
 #' \item{contrib}{contributions of individuals / variables to the principal components.}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#' @seealso \code{\link{fviz_famd}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' 
 #'  # Compute FAMD

@@ -17,9 +17,8 @@ test_that("get_clust_tendency Hopkins value matches regression baseline", {
 
   res <- get_clust_tendency(iris[, 1:4], n = 10, graph = FALSE, seed = 123)
   # BLAS matrix operations (tcrossprod/outer) yield slightly different
-
   # floating-point results across platforms; use a wider tolerance.
-  expect_equal(res$hopkins_stat, 0.989362891844348, tolerance = 0.01)
+  expect_equal(res$hopkins_stat, 0.989087156491451, tolerance = 0.01)
 })
 
 test_that("get_clust_tendency low-memory fallback matches vectorized computation", {
@@ -608,6 +607,44 @@ test_that("fviz_dend keeps leaf labels out of the legend (#14 sibling)", {
   }
 })
 
+test_that("fviz_dend leaf-label size responds to cex (#281)", {
+  skip_if_not_installed("dendextend")
+  hc <- hclust(dist(scale(USArrests)), method = "ward.D2")
+
+  leaf_size <- function(p) {
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1)))[1]
+    unique(ggplot2::ggplot_build(p)$data[[i]]$size)
+  }
+
+  # BITING: the rendered leaf-text size must scale linearly with cex (5 * cex),
+  # not collapse to a single value. Fails if scale_size_identity() is removed
+  # (the default continuous size scale would map every cex to a fixed midpoint).
+  for (type in c("rectangle", "circular")) {
+    expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 1.0, type = type)), 5)
+    expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 0.8, type = type)), 4)
+    expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 0.4, type = type)), 2)
+  }
+  # horizontal rectangle path too
+  expect_equal(leaf_size(fviz_dend(hc, k = 4, cex = 0.4, horiz = TRUE)), 2)
+
+  # per-leaf cex (a dendextend labels_cex vector) is preserved, not flattened
+  dend <- dendextend::set(as.dendrogram(hc), "labels_cex",
+                          rep(c(1, 0.4), length.out = nobs.hc <- length(hc$order)))
+  sizes <- leaf_size(fviz_dend(dend))
+  expect_setequal(round(sizes, 6), c(5, 2))
+
+  # NO-REGRESSION: the phylogenic path derives label size from font.label
+  # (ggpubr), a separate mechanism this fix does not touch; it still responds
+  # to cex and yields a single GeomText layer.
+  skip_if_not_installed("igraph")
+  psize <- function(cx) {
+    p <- fviz_dend(hc, k = 4, type = "phylogenic", cex = cx)
+    i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomText"), logical(1)))[1]
+    p$layers[[i]]$aes_params$size
+  }
+  expect_gt(psize(1), psize(0.4))
+})
+
 test_that("fviz_dend rectangles match k even with tied heights (#154, #168)", {
   nrects <- function(p) {
     i <- which(vapply(p$layers, function(l) inherits(l$geom, "GeomRect"), logical(1)))[1]
@@ -863,6 +900,7 @@ test_that("prcomp/princomp get_pca_ind unchanged by the dudi fix (#126 no-regres
     expect_true(is.matrix(ind$coord) && is.matrix(ind$cos2) && is.matrix(ind$contrib))
     expect_equal(nrow(ind$coord), nrow(iris))
     expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+    expect_true(all(abs(colSums(ind$contrib) - 100) < 1e-6))
   }
 })
 
@@ -1057,6 +1095,32 @@ test_that("as_factoextra_pca() builds a fviz-ready object from coordinates (cons
   expect_equal(co_native, co_constr, tolerance = 1e-8)
 })
 
+test_that("as_factoextra_pca() infers representable large eigenvalues without overflow", {
+  shape <- cbind(
+    c(-1, -0.5, 0.5, 1),
+    c(-0.5, -0.25, 0.25, 0.5)
+  )
+  coord <- shape * 1e154
+  naive_variance <- sum((coord[, 1] - mean(coord[, 1]))^2) /
+    (nrow(coord) - 1)
+  expect_false(is.finite(naive_variance))
+
+  obj <- as_factoextra_pca(coord)
+  expected <- c(5 / 6, 5 / 24) * 1e308
+
+  expect_equal(obj$eig.values, expected, tolerance = 1e-12)
+  expect_equal(
+    unname(get_eig(obj)[, "variance.percent"]),
+    c(80, 20), tolerance = 1e-12
+  )
+  expect_true(all(is.finite(obj$ind$cos2)))
+  expected_contrib <- cbind(
+    c(40, 10, 10, 40),
+    c(40, 10, 10, 40)
+  )
+  expect_equal(unname(obj$ind$contrib), expected_contrib, tolerance = 1e-12)
+})
+
 test_that("as_factoextra_pca() validates inputs and errors clearly", {
   mds <- stats::cmdscale(dist(scale(mtcars)), k = 2)
   o <- as_factoextra_pca(ind.coord = mds)               # no var.coord
@@ -1066,6 +1130,22 @@ test_that("as_factoextra_pca() validates inputs and errors clearly", {
                "same number of dimensions")
   expect_error(as_factoextra_pca(mds, eig = 1),         # too few eigenvalues
                "at least 2")
+
+  # PR #274 additive constructor validation
+  expect_error(as_factoextra_pca(mds, scale.unit = "yes"), "must be TRUE or FALSE")
+  expect_error(as_factoextra_pca(mds, eig = c(NA, 1)), "finite values only")
+  expect_error(as_factoextra_pca(mds, eig = c(-1, -2)), "non-negative")
+  expect_error(as_factoextra_pca(mds, eig = c(0, 0)), "at least one positive")
+  expect_error(as_factoextra_pca(mds[1, , drop = FALSE]), "At least two observations")
+  mds_inf <- mds; mds_inf[1, 1] <- Inf
+  expect_error(as_factoextra_pca(mds_inf), "finite values only")
+  expect_error(as_factoextra_pca(mds, var.coord = mds, var.cos2 = matrix(Inf, nrow(mds), 2)),
+               "finite values only")
+  # a within-tolerance negative eigenvalue is clamped to 0, not rejected
+  tiny_negative <- -sqrt(.Machine$double.eps) / 2
+  clamped <- as_factoextra_pca(matrix(c(-1, 1, -2, 2), ncol = 2),
+                               eig = c(1, tiny_negative, 0))
+  expect_identical(clamped$eig.values, c(1, 0, 0))
 })
 
 test_that("as_factoextra_pca() does not change existing prcomp/PCA paths (no-regression)", {
@@ -1077,6 +1157,11 @@ test_that("as_factoextra_pca() does not change existing prcomp/PCA paths (no-reg
   expect_equal(nrow(ind$coord), nrow(iris))
   expect_false(inherits(pca, "factoextra_pca"))
   expect_s3_class(fviz_pca_biplot(pca), "ggplot")
+
+  printed <- capture.output(print(get_pca_var(pca)))
+  expect_true(any(grepl("Coordinates for the variables", printed, fixed = TRUE)))
+  expect_true(any(grepl("Cos2 for the variables", printed, fixed = TRUE)))
+  expect_true(any(grepl("contributions of the variables", printed, fixed = TRUE)))
 })
 
 test_that("hcut()/hkmeans() let the NATIVE k > n error surface (chooseGCM revdep guard, CRAN)", {
@@ -1091,4 +1176,315 @@ test_that("hcut()/hkmeans() let the NATIVE k > n error surface (chooseGCM revdep
   expect_error(hcut(stats::dist(x), k = 100, isdiss = TRUE),
                "elements of 'k' must be between 1 and 11")
   expect_error(hkmeans(x, k = 100), "elements of 'k' must be between 1 and 11")
+})
+
+test_that("fviz_mclust honors ggtheme for every plot type", {
+  skip_if_not_installed("mclust")
+  suppressPackageStartupMessages(library(mclust))
+  on.exit(detach("package:mclust", unload = FALSE), add = TRUE)
+
+  set.seed(4)
+  model <- Mclust(iris[, -5], G = 2:4, verbose = FALSE)
+  custom_theme <- ggplot2::theme_minimal() +
+    ggplot2::theme(plot.background = ggplot2::element_rect(fill = "linen"))
+
+  for (what in c("classification", "uncertainty", "BIC")) {
+    plot <- fviz_mclust(model, what = what, ggtheme = custom_theme)
+    expect_equal(plot$theme$plot.background$fill, "linen")
+  }
+})
+
+# ---- Batch D1 (PR #274) get_pca contribution normalization ----------------
+
+test_that("ade4 dudi.pca individual results respect nonuniform row weights", {
+  skip_if_not_installed("ade4")
+  row_weights <- seq_len(nrow(iris))
+  row_weights <- row_weights / sum(row_weights)
+  pca <- ade4::dudi.pca(
+    iris[, -5], row.w = row_weights, scannf = FALSE, nf = 3
+  )
+
+  ind <- get_pca_ind(pca)
+  inertia <- ade4::inertia.dudi(pca, row.inertia = TRUE)
+  ade4_contrib <- as.matrix(
+    inertia$row.abs[, seq_len(ncol(ind$contrib)), drop = FALSE]
+  )
+
+  expect_equal(unname(ind$contrib), unname(ade4_contrib), tolerance = 1e-8)
+  expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+               tolerance = 1e-8)
+  expect_true(all(rowSums(ind$cos2) <= 1 + 1e-9))
+})
+
+test_that("PCA individual contributions are backend-independent and zero-safe", {
+  x <- iris[, -5]
+  fits <- list(
+    prcomp(x, center = TRUE, scale. = TRUE),
+    prcomp(x, center = TRUE, scale. = FALSE),
+    princomp(x, cor = TRUE),
+    princomp(x, cor = FALSE)
+  )
+  for(fit in fits) {
+    ind <- get_pca_ind(fit)
+    truth <- sweep(ind$coord^2, 2, colSums(ind$coord^2), "/") * 100
+    expect_equal(ind$contrib, truth, tolerance = 1e-10,
+                 ignore_attr = TRUE)
+    expect_equal(unname(colSums(ind$contrib)), rep(100, ncol(ind$contrib)),
+                 tolerance = 1e-10)
+  }
+
+  coord <- cbind(nonzero = c(-1, 1), zero = c(0, 0))
+  out <- factoextra:::.get_pca_ind_results(
+    coord, data = cbind(c(-1, 1), c(0, 0)), eigenvalues = c(1, 0),
+    pca.center = c(0, 0), pca.scale = c(1, 1)
+  )
+  expect_true(all(is.finite(out$contrib)))
+  expect_equal(unname(out$contrib[, 2]), c(0, 0))
+  expect_equal(sum(out$contrib[, 1]), 100)
+})
+
+
+test_that("get_pca contributions/cos2 match FactoMineR::PCA (independent-engine cross-validation)", {
+  skip_if_not_installed("FactoMineR")
+  X <- iris[, -5]
+  pc <- prcomp(X, scale. = TRUE)
+  fm <- FactoMineR::PCA(X, scale.unit = TRUE, graph = FALSE, ncp = 4)
+  ind <- get_pca_ind(pc); var <- get_pca_var(pc)
+  # Contributions and cos2 are sign-invariant, so they must match FactoMineR
+  # exactly even though prcomp's axis signs may differ.
+  expect_equal(unname(ind$contrib), unname(fm$ind$contrib), tolerance = 1e-8)
+  expect_equal(unname(var$contrib), unname(fm$var$contrib), tolerance = 1e-8)
+  expect_equal(unname(ind$cos2),    unname(fm$ind$cos2),    tolerance = 1e-8)
+  expect_equal(unname(var$cos2),    unname(fm$var$cos2),    tolerance = 1e-8)
+})
+
+# ---- Batch D2 (PR #274) Horn parallel analysis ----------------------------
+
+test_that("Horn thresholds use the original prcomp variable dimension", {
+  reference_threshold <- function(n_obs, n_var, iterations, seed){
+    set.seed(seed)
+    simulated <- matrix(NA_real_, nrow = iterations,
+                        ncol = min(n_obs - 1L, n_var))
+    for(i in seq_len(iterations)){
+      random_data <- matrix(rnorm(n_obs * n_var), nrow = n_obs,
+                            ncol = n_var)
+      simulated[i, ] <- eigen(
+        cor(random_data), symmetric = TRUE, only.values = TRUE
+      )$values[seq_len(ncol(simulated))]
+    }
+    unname(apply(simulated, 2, quantile, probs = 0.95, names = FALSE))
+  }
+
+  set.seed(301)
+  x <- matrix(rnorm(80 * 6), nrow = 80, ncol = 6)
+  x_df <- as.data.frame(x)
+  truncated <- prcomp(
+    ~ ., data = x_df, center = TRUE, scale. = TRUE, rank. = 2
+  )
+  seed <- 17
+  iterations <- 7
+
+  got <- factoextra:::.parallel_analysis_threshold(
+    truncated, iterations = iterations, seed = seed
+  )
+  expected <- reference_threshold(nrow(x), ncol(x), iterations, seed)
+
+  expect_equal(ncol(truncated$rotation), 2)
+  expect_equal(length(got), ncol(x))
+  expect_equal(got, expected, tolerance = 1e-12)
+
+  # prcomp.default() does not retain its call, so a rank-truncated object cannot
+  # prove that its numeric stored scale came from literal unit-variance scaling.
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = TRUE, scale. = TRUE, rank. = 2)
+    ),
+    "literal scale. = TRUE"
+  )
+
+  set.seed(302)
+  wide <- matrix(rnorm(8 * 12), nrow = 8, ncol = 12)
+  wide_fit <- prcomp(wide, center = TRUE, scale. = TRUE)
+  wide_got <- factoextra:::.parallel_analysis_threshold(
+    wide_fit, iterations = iterations, seed = seed
+  )
+  wide_expected <- reference_threshold(
+    nrow(wide), ncol(wide), iterations, seed
+  )
+  expect_equal(length(wide_got), min(nrow(wide) - 1L, ncol(wide)))
+  expect_equal(wide_got, wide_expected, tolerance = 1e-12)
+})
+
+test_that("Horn prcomp analysis fails closed when preprocessing is unrecoverable", {
+  set.seed(305)
+  x <- matrix(rnorm(60 * 4), nrow = 60, ncol = 4)
+
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = FALSE, scale. = TRUE)
+    ),
+    "mean-centered"
+  )
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = TRUE, scale. = c(1, 2, 3, 4))
+    ),
+    "custom scale"
+  )
+  target_variances <- c(0.5, 0.5, 1.5, 1.5)
+  custom_scale <- apply(x, 2, stats::sd) / sqrt(target_variances)
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = TRUE, scale. = custom_scale, rank. = 2)
+    ),
+    "literal scale. = TRUE"
+  )
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(x, center = TRUE, scale. = TRUE, retx = FALSE)
+    ),
+    "retx = TRUE"
+  )
+
+  tiny <- x * 1e-10
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(tiny, center = rep(0, ncol(tiny)), scale. = FALSE)
+    ),
+    "centered at the variable means"
+  )
+  expect_error(
+    factoextra:::.parallel_analysis_spec(
+      prcomp(tiny, center = TRUE, scale. = FALSE, rank. = 1)
+    ),
+    "truncated covariance prcomp"
+  )
+
+  x_na <- as.data.frame(x)
+  x_na[c(2, 11), 1] <- NA_real_
+  fit_na <- prcomp(
+    ~ ., data = x_na, center = TRUE, scale. = TRUE,
+    na.action = na.exclude
+  )
+  spec_na <- factoextra:::.parallel_analysis_spec(fit_na)
+  expect_equal(spec_na$n_obs, sum(complete.cases(fit_na$x)))
+})
+
+
+test_that("Horn thresholds preserve covariance-PCA marginal scales", {
+  reference_threshold <- function(x, iterations, seed, divisor){
+    target_sd <- sqrt(colSums(sweep(x, 2, colMeans(x), "-")^2) / divisor)
+    set.seed(seed)
+    simulated <- matrix(NA_real_, nrow = iterations, ncol = ncol(x))
+    for(i in seq_len(iterations)){
+      random_data <- sweep(
+        matrix(rnorm(length(x)), nrow = nrow(x), ncol = ncol(x)),
+        2, target_sd, "*"
+      )
+      centered <- scale(random_data, center = TRUE, scale = FALSE)
+      covariance <- crossprod(centered) / divisor
+      simulated[i, ] <- pmax(
+        eigen(covariance, symmetric = TRUE, only.values = TRUE)$values, 0
+      )
+    }
+    unname(apply(simulated, 2, quantile, probs = 0.95, names = FALSE))
+  }
+
+  set.seed(303)
+  x <- sweep(matrix(rnorm(90 * 4), nrow = 90), 2,
+             c(0.25, 1, 3, 8), "*")
+  iterations <- 8
+  seed <- 23
+
+  pc <- prcomp(x, center = TRUE, scale. = FALSE)
+  pc_spec <- factoextra:::.parallel_analysis_spec(pc)
+  expect_equal(pc_spec$marginal_sd, apply(x, 2, sd), tolerance = 1e-12)
+  expect_equal(
+    factoextra:::.parallel_analysis_threshold(pc, iterations, seed),
+    reference_threshold(x, iterations, seed, nrow(x) - 1),
+    tolerance = 1e-12
+  )
+
+  pc_truncated <- prcomp(x, center = TRUE, scale. = FALSE, rank. = 2)
+  expect_error(
+    factoextra:::.parallel_analysis_threshold(pc_truncated, iterations, seed),
+    "truncated covariance prcomp"
+  )
+
+  pn <- princomp(x, cor = FALSE, scores = FALSE)
+  pn_spec <- factoextra:::.parallel_analysis_spec(pn)
+  expected_ml_sd <- sqrt(colSums(sweep(x, 2, colMeans(x), "-")^2) / nrow(x))
+  expect_equal(pn_spec$marginal_sd, expected_ml_sd, tolerance = 1e-12)
+  expect_equal(
+    factoextra:::.parallel_analysis_threshold(pn, iterations, seed),
+    reference_threshold(x, iterations, seed, nrow(x)),
+    tolerance = 1e-12
+  )
+})
+
+test_that("Horn correlation mode is reproducible and seed-safe for princomp", {
+  set.seed(304)
+  x <- matrix(rnorm(70 * 4), nrow = 70, ncol = 4)
+  pn <- princomp(x, cor = TRUE, scores = FALSE)
+
+  set.seed(812)
+  seed_before <- .Random.seed
+  got <- factoextra:::.parallel_analysis_threshold(pn, 6, seed = 31)
+  expect_identical(.Random.seed, seed_before)
+
+  set.seed(31)
+  simulated <- matrix(NA_real_, nrow = 6, ncol = ncol(x))
+  for(i in seq_len(6)){
+    random_data <- matrix(rnorm(length(x)), nrow = nrow(x), ncol = ncol(x))
+    simulated[i, ] <- eigen(
+      cor(random_data), symmetric = TRUE, only.values = TRUE
+    )$values
+  }
+  expected <- unname(apply(
+    simulated, 2, quantile, probs = 0.95, names = FALSE
+  ))
+  expect_equal(got, expected, tolerance = 1e-12)
+
+  expect_false(factoextra:::.princomp_uses_correlation(
+    princomp(x, cor = 0, scores = FALSE)
+  ))
+  expect_true(factoextra:::.princomp_uses_correlation(
+    princomp(x, cor = 1, scores = FALSE)
+  ))
+
+  symbolic_princomp <- function(data, use_cor){
+    princomp(data, cor = use_cor, scores = FALSE)
+  }
+  symbolic_covariance <- symbolic_princomp(x, FALSE)
+  expect_false(factoextra:::.princomp_uses_correlation(symbolic_covariance))
+  expect_length(
+    factoextra:::.parallel_analysis_threshold(
+      symbolic_covariance, iterations = 4, seed = 32
+    ),
+    ncol(x)
+  )
+  symbolic_correlation <- symbolic_princomp(x, TRUE)
+  expect_true(factoextra:::.princomp_uses_correlation(symbolic_correlation))
+
+  # A correlation fit whose stored scale has been made unit-valued remains
+  # indistinguishable from the all-unit-variance covariance corner.
+  ambiguous <- symbolic_correlation
+  ambiguous$scale <- rep(1, ncol(x))
+  expect_error(
+    factoextra:::.parallel_analysis_spec(ambiguous),
+    "Cannot determine"
+  )
+
+  old_seed_exists <- exists(".Random.seed", envir = .GlobalEnv,
+                            inherits = FALSE)
+  if(old_seed_exists) old_seed <- get(".Random.seed", envir = .GlobalEnv)
+  on.exit({
+    if(old_seed_exists) assign(".Random.seed", old_seed, envir = .GlobalEnv)
+    else if(exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+      rm(".Random.seed", envir = .GlobalEnv)
+  }, add = TRUE)
+  if(exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
+    rm(".Random.seed", envir = .GlobalEnv)
+  factoextra:::.parallel_analysis_threshold(pn, 2, seed = 31)
+  expect_false(exists(".Random.seed", envir = .GlobalEnv, inherits = FALSE))
 })

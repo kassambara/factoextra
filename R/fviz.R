@@ -9,13 +9,13 @@ NULL
 #'  "text"). Use "point" (to show only points); "text" to show only labels; 
 #'  c("point", "text") or c("arrow", "text") to show both types.
 #'@param label a text specifying the elements to be labelled. Default value is 
-#'  "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+#'  "all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 #'  "quali", "var", "quanti.sup", "group.sup"). "ind" can be used to label only 
 #'  active individuals. "ind.sup" is for supplementary individuals. "quali" is 
 #'  for supplementary qualitative variables. "var" is for active variables. 
 #'  "quanti.sup" is for quantitative supplementary variables.
 #'@param invisible a text specifying the elements to be hidden on the plot. 
-#'  Default value is "none". Allowed values are the combination of c("ind", 
+#'  Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 #'  "ind.sup", "quali", "var", "quanti.sup", "group.sup").
 #'@param labelsize font size for the labels
 #'@param pointsize the size of points
@@ -24,8 +24,8 @@ NULL
 #'@param arrow.linetype linetype of the variable arrows (e.g. "solid",
 #'  "dashed", "dotted"). Default is "solid".
 #'@param title the title of the graph
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param habillage an optional factor variable for coloring the observations by 
 #'  groups. Default value is "none". If X is a PCA object from FactoMineR 
@@ -72,8 +72,8 @@ NULL
 #'  \code{fviz_pca_var}, \code{fviz_pca_biplot}).
 #'@param axes.linetype linetype of x and y axes.
 #'@param color color to be used for the specified geometries (point, text). Can 
-#'  be a continuous variable or a factor variable. Possible values include also 
-#'  : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+#'  be a continuous variable or a factor variable. Possible values also include
+#'  "cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 #'  individuals/variables are automatically controlled by their qualities of 
 #'  representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 #'  "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -81,8 +81,8 @@ NULL
 #'@param fill same as the argument \code{color}, but for point fill color. 
 #'  Useful when pointshape = 21, for example.
 #'@param alpha controls the transparency of individual and variable colors, 
-#'  respectively. The value can variate from 0 (total transparency) to 1 (no 
-#'  transparency). Default value is 1. Possible values include also : "cos2", 
+#'  respectively. The value can vary from 0 (total transparency) to 1 (no
+#'  transparency). Default value is 1. Possible values also include "cos2",
 #'  "contrib", "coord", "x" or "y". In this case, the transparency for the 
 #'  individual/variable colors are automatically controlled by their qualities 
 #'  ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, "coord"), x 
@@ -222,8 +222,21 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   if(element == "partial.axes" || (element == "quali.var" && facto.class == "HMFA")) 
     summary.res <- c("coord", "contrib")
   else if(element == "group" && facto.class == "HMFA") summary.res <- "coord"
+  if(inherits(X, "factoextra_pca")){
+    available <- get_pca(X, element)
+    summary.res <- summary.res[!vapply(
+      summary.res, function(metric) is.null(available[[metric]]), logical(1)
+    )]
+  }
   df <- facto_summarize(X, element = element, axes = axes, result = summary.res)
   colnames(df)[2:3] <-  c("x", "y")
+  uses_missing_cos2 <- function(value){
+    is.character(value) && length(value) == 1L && identical(value, "cos2") &&
+      !("cos2" %in% names(df))
+  }
+  if(any(vapply(list(color, fill, alpha, pointsize),
+                uses_missing_cos2, logical(1))))
+    stop("`cos2` is not available for element = '", element, "'.", call. = FALSE)
   # Color by grouping variables
   #::::::::::::::::::::::::::::::::::::::
   is_grouping_var_exists <- !("none" %in% habillage) || .is_grouping_var(color) || .is_grouping_var(fill)
@@ -278,14 +291,48 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   }
   # Selection
   df.all <- df
+  # Resolve supplementary elements before validating selection names so a name
+  # that belongs only to a supplementary point is not reported as a typo.
+  esup <- .define_element_sup(
+    X, element, geom = geom, lab = lab, hide = hide,
+    col.row.sup = col.row.sup, col.col.sup = col.col.sup, ...
+  )
   if(!is.null(select) && !is.null(select$name) && .factominer_needs_category_map(facto.class, element)){
     select$name <- map_factominer_legacy_names(X, select$name, element = element)
   }
-  if(!is.null(select) && !is.null(select$contrib) && !("contrib" %in% colnames(df))
-     && !isTRUE(select$union)){
-    stop("Contributions are not available for element = '", element, "'.")
+  if(!is.null(select) && !is.null(select$name)){
+    valid_selection_names <- as.character(df$name)
+    if(!is.null(esup$name)){
+      for(sup_element in esup$name){
+        sup_data <- tryCatch(
+          .get_supp(X, element = sup_element, axes = axes, result = "coord"),
+          error = function(e) NULL
+        )
+        if(!is.null(sup_data))
+          valid_selection_names <- c(valid_selection_names,
+                                     as.character(sup_data$name))
+      }
+    }
+    unmatched <- unique(setdiff(as.character(select$name),
+                                unique(valid_selection_names)))
+    if(length(unmatched))
+      warning("Selection name(s) not found: ",
+              paste0('"', unmatched, '"', collapse = ", "), ".",
+              call. = FALSE)
   }
-  if(!is.null(select)) df <- .select(df, select)
+  if(!is.null(select) && !is.null(select$cos2) && !("cos2" %in% colnames(df)))
+    stop("Cos2 is not available for element = '", element, "'.", call. = FALSE)
+  n_select_conditions <- if(is.null(select)) 0L else
+    sum(!is.null(select$name), !is.null(select$cos2), !is.null(select$contrib))
+  union_has_alternative <- !is.null(select) && isTRUE(select$union) &&
+    n_select_conditions >= 2L
+  if(!is.null(select) && !is.null(select$contrib) && !("contrib" %in% colnames(df))
+     && !union_has_alternative){
+    stop("Contributions are not available for element = '", element, "'.",
+         call. = FALSE)
+  }
+  if(!is.null(select))
+    df <- .select(df, select, warn_unmatched = FALSE)
   
   # Special cases: data transformation
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -453,8 +500,6 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # Supplementary elements: available only for FactoMineR
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   scale. <- ifelse(is.null(extra_args$scale.), 1, extra_args$scale.)
-  esup <- .define_element_sup(X, element, geom = geom, lab = lab, hide = hide,
-                              col.row.sup = col.row.sup, col.col.sup = col.col.sup,...) 
   ca_map = extra_args$map
   if(element == "mca.cor") ca_map = NULL
   
@@ -662,7 +707,8 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
     res <- list(name = "ind.sup", addlabel = (lab$ind.sup && "text" %in% geom))
   # Supplementary quantitative variables
   else if(element == "var" && inherits(X, "PCA") && !hide$quanti.sup)
-    res <- list(name = "quanti", addlabel = (lab$quanti.sup && "text" %in% geom))
+    res <- list(name = "quanti.sup",
+                addlabel = (lab$quanti.sup && "text" %in% geom))
   else if(element == "mca.cor" && inherits(X, "MCA") && !hide$quanti)
     res <- list(name = c("quanti.sup", "quali.sup$eta2"), addlabel = (lab$quanti && "text" %in% geom))
   else if(element %in% "var" && inherits(X, "MCA") && !hide$quali.sup)
@@ -676,7 +722,7 @@ fviz <- function(X, element, axes = c(1, 2), geom = "auto",
   # CA
   else if(element == "row" && inherits(X, c("CA", "ca")) && !hide$row.sup)
     res <- list(name = "row.sup", addlabel = (lab$row.sup && "text" %in% geom))
-  else if(element == "col" && inherits(X, c("CA", "ca")) && !hide$row.sup)
+  else if(element == "col" && inherits(X, c("CA", "ca")) && !hide$col.sup)
     res <- list(name = "col.sup", addlabel = (lab$col.sup && "text" %in% geom))
   else if(element == "group" && inherits(X, "MFA") && !hide$group.sup)
     res <- list(name = "group", addlabel = (lab$group.sup && "text" %in% geom))

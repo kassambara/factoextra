@@ -8,13 +8,22 @@
 #'  using principal components if ncol(data) > 2. An ellipse is drawn around
 #'  each cluster. When \code{stand = TRUE}, the plotting data must remain
 #'  finite after scaling.
-#'@param object an object of class "partition" created by the functions pam(),
-#'  clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
-#'  [in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
-#'  Possible value are also any list object with data and cluster components
-#'  (e.g.: object = list(data = mydata, cluster = myclust)).
-#'@param data the data that has been used for clustering. Required only when
-#'  object is a class of kmeans or dbscan.
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
+#'
+#'@param object an object of class "partition" created by \code{pam()},
+#'  \code{clara()}, or \code{fanny()} [cluster]; "kmeans" [stats]; "dbscan"
+#'  [fpc]; "Mclust" [mclust]; or "hkmeans" or "eclust" [factoextra]. A custom
+#'  list may instead contain \code{data} plus either \code{cluster} or
+#'  \code{clustering}. When the assignments and the data both carry complete,
+#'  unique, matching names, the assignments are aligned to the data rows by name;
+#'  otherwise they are used in their given (positional) order. The exception is a
+#'  clustering fitted from dissimilarities and plotted with external \code{data}:
+#'  complete, unique, non-matching name sets are rejected because positional use
+#'  would attach clusters to the wrong observations.
+#'@param data the data used for clustering. It is required for kmeans and dbscan
+#'  objects, and for partition or hcut objects fitted from dissimilarities when
+#'  those objects do not retain the original observations.
 #'@param choose.vars a character vector containing variables to be considered
 #'  for plotting.
 #'@param stand logical value; if TRUE, data is standardized before principal
@@ -25,8 +34,8 @@
 #'@param geom a text specifying the geometry to be used for the graph. Allowed
 #'  values are the combination of c("point", "text"). Use "point" (to show only
 #'  points);  "text" to show only labels; c("point", "text") to show both types.
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param show.clust.cent logical; if TRUE, shows cluster centers
 #'@param ellipse logical value; if TRUE, draws outline around points of each
@@ -70,7 +79,8 @@
 #'@return a ggplot2 object.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
 #'@seealso \code{\link{fviz_silhouette}}, \code{\link{hcut}},
-#'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
+#'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
 #' @examples
 #' set.seed(123)
 #'
@@ -103,13 +113,13 @@
 #' # PAM clustering
 #' # ++++++++++++++++++++
 #' requireNamespace("cluster", quietly = TRUE)
-#' pam.res <- pam(iris.scaled, 3)
+#' pam.res <- cluster::pam(iris.scaled, 3)
 #'  # Visualize pam clustering
 #' fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 #'
 #' # Hierarchical clustering
 #' # ++++++++++++++++++++++++
-#' # Use hcut() which compute hclust and cut the tree
+#' # Use hcut(), which computes hclust and cuts the tree
 #' hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 #' # Visualize dendrogram
 #' fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
@@ -181,26 +191,17 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
                                    c("jitter", "frame", "frame.type", "frame.level", "frame.alpha", "title"))]
   
   
+  dissimilarity_uses_external_data <- FALSE
   # object from cluster package
   if(inherits(object, c("partition", "hkmeans", "eclust"))){
     # Use the object's own data when present; otherwise keep the user-supplied
-    # `data=`. pam()/fanny() fitted on a dissimilarity matrix store no
-    # coordinates (object$data is NULL), so the original data is needed for the
-    # 2-D layout; the cluster assignments still come from the object (#128).
-    if(!is.null(object$data)) data <- object$data
-    else if(!is.null(data)){
-      # Align the object's clustering to the supplied data's rows by name, so
-      # points are not silently mis-coloured if `data` is ordered differently
-      # from the dissimilarity. Error on a genuine set mismatch.
-      cl <- object$clustering
-      if(!is.null(cl) && !is.null(names(cl)) && !is.null(rownames(data))){
-        if(!setequal(names(cl), rownames(data)))
-          stop("The row names of `data` do not match the observations used to ",
-               "build the clustering. Pass the same data used for the ",
-               "dissimilarity matrix.", call. = FALSE)
-        object$clustering <- cl[rownames(data)]
-      }
-    }
+    # `data=`. Fits built from dissimilarities store no plottable coordinates
+    # (object$data is NULL or a dist object), so the original observations are
+    # needed for the 2-D layout; assignments still come from the object (#128).
+    stored_data <- object[["data"]]
+    dissimilarity_uses_external_data <-
+      is.null(stored_data) || inherits(stored_data, "dist")
+    if(!dissimilarity_uses_external_data) data <- stored_data
     if(is.null(data))
       stop("This clustering has no stored data (e.g. pam()/fanny() on a ",
            "dissimilarity matrix). Supply the original data via 'data=' - it is ",
@@ -213,12 +214,12 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   } 
   # Object from mclust package
   else if(inherits(object, "Mclust")) {
-    object$cluster <- object$classification
-    data <- object$data
+    object[["cluster"]] <- object[["classification"]]
+    data <- object[["data"]]
   }
   # HCPC in FactoMineR
   else if(inherits(object, "HCPC")) {
-    object$cluster <- object$call$X$clust
+    object[["cluster"]] <- object$call$X$clust
     data <- res.hcpc <- object
     stand <- FALSE # to avoid trying to standardize HCPC results
 #     data <- object$data.clust[, -ncol(object$data.clust), drop = FALSE]
@@ -226,14 +227,15 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
   }
   else if(inherits(object, "hcut")){
     if(inherits(object$data, "dist")){
+      dissimilarity_uses_external_data <- TRUE
       if(is.null(data)) stop("The option 'data' is required for an object of class hcut." )
     }
     else data <- object$data
   }
   # Any obects containing data and cluster elements
-  else if(!is.null(object$data) && !is.null(object$cluster)){
-    data <- object$data
-    cluster <- object$cluster
+  else if(!is.null(object[["data"]]) &&
+          (!is.null(object[["cluster"]]) || !is.null(object[["clustering"]]))){
+    data <- object[["data"]]
   }
   else stop("Can't handle an object of class ", paste(class(object), collapse = ", "))
   
@@ -245,7 +247,32 @@ fviz_cluster <- function(object, data = NULL, choose.vars = NULL, stand = TRUE,
     if(anyNA(data))
       stop("Scaling produced NA values. Check for constant columns or non-finite values.")
   }
-  cluster <- as.factor(object$cluster)
+  cluster <- .cluster_assignments(object)
+  if(inherits(data, c("matrix", "data.frame"))){
+    observation_names <- rownames(data)
+    n_obs <- nrow(data)
+  } else if(inherits(data, "HCPC")){
+    observation_names <- rownames(data$call$X)
+    n_obs <- nrow(data$call$X)
+  } else {
+    observation_names <- NULL
+    n_obs <- length(cluster)
+  }
+  if(dissimilarity_uses_external_data){
+    cluster_names <- names(cluster)
+    complete_cluster_names <- !is.null(cluster_names) &&
+      length(cluster_names) == n_obs && !anyNA(cluster_names) &&
+      all(nzchar(cluster_names)) && !anyDuplicated(cluster_names)
+    complete_observation_names <- !is.null(observation_names) &&
+      length(observation_names) == n_obs && !anyNA(observation_names) &&
+      all(nzchar(observation_names)) && !anyDuplicated(observation_names)
+    if(complete_cluster_names && complete_observation_names &&
+       !setequal(cluster_names, observation_names))
+      stop("The row names of data do not match the observations used to build ",
+           "the clustering.", call. = FALSE)
+  }
+  cluster <- .align_cluster_assignments(cluster, observation_names, n_obs)
+  cluster <- as.factor(cluster)
   
   pca_performed <- FALSE
   

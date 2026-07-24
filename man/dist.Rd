@@ -52,9 +52,8 @@ the ordered dissimilarity image. The element "mid" can take the value of NULL.}
 \description{
 Clustering methods classify data samples into groups of similar 
   objects. This process requires some methods for measuring the distance or 
-  the (dis)similarity between the observations. Read more: 
-  \href{https://www.datanovia.com/en/lessons/clustering-distance-measures/}{STHDA
-   website - clarifying distance measures.}. \itemize{ \item get_dist():
+  the (dis)similarity between the observations. Read more:
+  \href{https://www.datanovia.com/learn/machine-learning/clustering/distance-measures}{Clustering Distance Measures in R}. \itemize{ \item get_dist():
   Computes a distance matrix between the rows of a data matrix. Compared to
   the standard \code{\link[stats]{dist}}() function, it supports
   correlation-based distance measures including "pearson", "kendall" and
@@ -72,7 +71,8 @@ fviz_dist(res.dist,
    gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
 }
 \seealso{
-\code{\link[stats]{dist}}
+\code{\link[stats]{dist}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/distance-measures}{Clustering Distance Measures in R}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

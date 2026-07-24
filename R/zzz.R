@@ -6,7 +6,7 @@
 
 .onAttach <- function(libname, pkgname) {
   packageStartupMessage("Welcome to factoextra!")
-  packageStartupMessage("Want to learn more? See two factoextra-related books at https://www.datanovia.com/en/product/practical-guide-to-principal-component-methods-in-r/")
+  packageStartupMessage("Want to learn more? See two factoextra-related books at https://www.datanovia.com/library/principal-component-methods")
 }
 
 #' Clean up stale package lock files
@@ -22,20 +22,20 @@
 #' @param lib Library path to check. Default is the first library in .libPaths().
 #' @param ask Logical. If TRUE (default), asks for confirmation before removing.
 #'
-#' @return Invisibly returns TRUE if files were removed, FALSE otherwise.
+#' @return Invisibly returns \code{TRUE} only when every discovered lock
+#'   directory is removed. Returns \code{FALSE} when no lock directories are
+#'   found, removal is declined, or any removal fails.
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
-#' # Remove factoextra lock file
-#' clean_lock_files()
-#'
-#' # Remove all lock files
-#' clean_lock_files("all")
-#'
-#' # Remove without confirmation
-#' clean_lock_files(ask = FALSE)
-#' }
+#' # Use a temporary library so the example cannot affect installed packages.
+#' example_lib <- tempfile("factoextra-lock-example-")
+#' example_lock <- file.path(example_lib, "00LOCK-factoextra")
+#' dir.create(example_lock, recursive = TRUE)
+#' clean_locks <- getFromNamespace("clean_lock_files", "factoextra")
+#' clean_locks(lib = example_lib, ask = FALSE)
+#' stopifnot(!dir.exists(example_lock))
+#' unlink(example_lib, recursive = TRUE)
 clean_lock_files <- function(package = "factoextra", lib = .libPaths()[1], ask = TRUE) {
 
   if (package == "all") {

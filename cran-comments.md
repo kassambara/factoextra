@@ -1,72 +1,93 @@
-## Submission — factoextra 2.1.0
+## Submission — factoextra 2.2.0
 
-A minor release adding new visualization features and bug fixes; no breaking
-changes (new behavior is gated, existing inputs are unchanged).
+A minor release. Most changes are additive or opt-in, but this version also
+**corrects a few numeric outputs** and clarifies several error/warning messages
+(all documented in NEWS.md and listed below), so a small number of results differ
+from 2.1.0. We checked the reverse dependencies with this in mind (see
+"Downstream dependencies").
 
-## Resubmission
+## Corrected / changed outputs in this version
 
-This is a resubmission addressing the auto-check feedback on the previous
-2.1.0 upload:
+For transparency, the changes that alter a value or message returned by 2.1.0:
 
-* **Reverse dependency (chooseGCM) fixed.** `hcut()`/`hkmeans()` had added a
-  custom early error for `k > number-of-observations` that pre-empted (and so
-  changed the message of) `stats::cutree()`'s native error. chooseGCM's test
-  pins that native message (`"elements of 'k' must be between 1 and 11"`). We
-  removed the custom early error so the native message is restored — matching the
-  long-published behaviour. chooseGCM's tests pass again. A regression test now
-  guards this so it cannot recur.
-* **Spelling NOTE fixed.** "phylogenic" → "phylogenetic" in DESCRIPTION.
-* The "examples > 5s" NOTE comes from a few `fviz_*` examples that run inherently
-  slow FactoMineR computations (MCA/MFA/CA); these are correctness illustrations.
-  Happy to wrap them in `\donttest{}` if preferred.
+* `get_pca_ind()`: individual contributions for `prcomp` and non-uniform-weight
+  `ade4` PCA objects are now normalized to sum to 100% per axis, matching
+  `FactoMineR::PCA()` (the `prcomp` values previously summed to `100 * (n - 1) / n`).
+  Coordinates, `princomp` contributions, and ordinary full-rank cos2 are
+  unchanged. Variable contributions are unchanged on nonzero, ordinarily scaled
+  axes; zero-inertia and extreme-magnitude axes now return stable finite values.
+* `get_clust_tendency()`: the Hopkins statistic now samples the observed points
+  without replacement (a correctness fix), so its value changes for a given seed.
+* `fviz_gap_stat()` / `fviz_nbclust(method = "gap_stat")`: when a partial `maxSE`
+  list omits `method`, the fallback is now `"firstSEmax"` (the documented default)
+  instead of `"firstmax"`.
+* `fviz_dend()`: the `cex` argument now scales the leaf-label size for the
+  `"rectangle"`/`"circular"` types (it previously had no effect, as the size was
+  rescaled away by a continuous size scale). Only the leaf-label font size
+  changes; at the default `cex = 0.8` the labels are marginally smaller. No
+  other element of the plot, and no returned value, changes.
+* Opt-in paths only: `fviz_eig(parallel = TRUE)` (Horn parallel analysis, with the
+  covariance-PCA reference corrected) and
+  `fviz_pca_biplot(biplot.type = "form"/"covariance")` (now the exact Gabriel
+  factorization, matching `stats::biplot(scale = 0/1)`).
+* Clearer input-validation errors/warnings across `fviz_umap()`/`fviz_tsne()`,
+  `fviz_dend()`, `fviz_nbclust()`, `get_clust_tendency()`, and `as_factoextra_pca()`.
+* `fviz_pca_var()` / `fviz_pca_biplot()` now draw the supplementary quantitative
+  variables of a FactoMineR `PCA(..., quanti.sup=)` object, which were previously
+  omitted (the code read the wrong slot). PCA objects without supplementary
+  quantitative variables are unchanged.
+* New adapter/plotting guards raise clear errors on previously-unsupported inputs:
+  `as_factoextra_pca()` requires `step_pca()` to be the final recipe step and
+  rejects case-weighted fits; `fviz_cluster()` errors (rather than mis-colouring)
+  when a clustering and its supplied `data` both have complete, unique, but
+  non-matching row names.
+
+The remaining output and message changes are itemized in NEWS.md.
+
+## New features (additive)
+
+See NEWS.md; highlights: `fviz_umap()` / `fviz_tsne()`; `theme_factoextra()` and
+`factoextra_palette()`; `as_factoextra_pca()` `recipe` / `workflow` methods; and new
+opt-in arguments (`fviz_dend(highlight=)`, `max.points`, `display = "heatmap"`,
+`mark_optimal`, `fviz_mca_*(quanti.sup=)`, and a `union` element in `select.*`).
 
 ## Test environments
 
-* Local: macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
-* win-builder: R release — OK
-* GitHub Actions: macOS (release), Windows (release), Ubuntu 22.04
-  (release, devel, oldrel-1) — all pass
+* Local: macOS — R 4.5.1 / R 4.6.1 (`R CMD check --as-cran --run-donttest`: OK)
+* GitHub Actions: macOS (release), Windows (release), Ubuntu
+  (release, devel, oldrel-1), and an Ubuntu leg against ggplot2 development —
+  all pass.
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 0 notes on the CI environments (which include pandoc).
 
-(A local "unable to verify current time" / future-file-timestamps NOTE seen on a
-sandboxed machine without network is environment-specific and does not occur on
-win-builder or the CI machines.)
-
-## Additional local pre-submission checks (June 26, 2026)
-
-* macOS Tahoe 26.5.1 — R 4.6.0 (2026-04-24)
-* `R CMD check --as-cran factoextra_2.1.0.tar.gz`: 0 errors | 0 warnings | 0 notes
-* `devtools::test()`: 404 passed, 0 failed, 0 warnings, 0 skipped
-* `tools::checkRd()`: no Rd issues
-* `urlchecker::url_check()`: no problems
-
-## Changes in this version (2.1.0)
-
-Minor update from 2.0.0. Highlights (see NEWS.md for the full list):
-
-* New `as_factoextra_pca()` constructor to visualize coordinates from any
-  dimension-reduction method with the `fviz_pca_*()` family.
-* New arguments: `shape.ind` (shape individuals by a second factor),
-  `rotate.labels` (ggbiplot-style variable-label rotation).
-* Support for ade4 between-class / within-class PCA (`bca()`/`wca()`).
-* New vignette "Extending factoextra to support new analysis backends".
-* Bug fixes: `fviz_mca_biplot()` `map` argument, `get_pca_ind()` for ade4
-  `dudi.pca`, `fviz_dend()` honoring `k` for HCPC, and clearer warnings for
-  unrecognized `label`/`invisible` values.
-
-(The last CRAN release was 1.0.7; version 2.0.0 introduced the larger
-modernization documented in NEWS.md.)
-
-## Notes
-
-* No local notes.
+A local `R CMD check --as-cran` reports only environment-only NOTEs that do not
+appear where the tooling is current: "Files 'README.md' or 'NEWS.md' cannot be
+checked without 'pandoc'", an HTML Tidy version notice, and an "unable to verify
+current time" timestamp notice. As in 2.1.0, a few `fviz_*` examples (MCA / MFA /
+CA) run inherently slow FactoMineR computations and may trip the "examples > 5s"
+NOTE on slower machines; we can wrap them in `\donttest{}` if preferred.
 
 ## Downstream dependencies
 
-The previously failing reverse dependency **chooseGCM** now passes: its
-`hclust_gcms()` k > n test again receives `stats::cutree()`'s native
-`"elements of 'k' must be between 1 and N"` error (verified against the fixed
-package). No other reverse dependency is affected by this change.
+We checked all 49 reverse dependencies by downloading their sources and reading
+the code, tests, and vignettes that call the functions whose output or messages
+changed. No reverse dependency snapshots the changed numeric outputs
+(`get_pca_ind()` contributions, the Hopkins statistic) or uses the opt-in changed
+paths (`biplot.type`, `fviz_eig(parallel = TRUE)`). The `fviz_dend()` `cex` change
+is a leaf-label font-size adjustment in a returned ggplot object; no reverse
+dependency asserts against dendrogram label sizes.
+
+The one reverse dependency that pins a factoextra error message — **chooseGCM**,
+whose tests assert `stats::cutree()`'s native "k must be between 1 and N" error via
+`hcut()` — is unaffected: `hcut()` / `hkmeans()` are unchanged and still surface
+that native message verbatim (verified). RelativeDistClust reads
+`get_pca_ind()$coord` (coordinates are unchanged), and PLNmodels calls
+`get_pca_ind()` on a non-`prcomp` object (the contribution change does not apply).
+No new problems.
+
+## Notes
+
+* `datanovia.com` URLs can return HTTP 503 to automated crawlers but resolve
+  correctly in a browser.

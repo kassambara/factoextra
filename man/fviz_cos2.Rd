@@ -40,7 +40,11 @@ Allowed values are "none" (no sorting), "asc" (for ascending) or "desc"
 
 \item{xtickslab.rt}{rotation angle for x axis tick labels. Default is 45 degrees.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
@@ -65,6 +69,8 @@ representation (cos2) of rows/columns from the results of Principal Component
 Analysis (PCA), Correspondence Analysis (CA), Multiple Correspondence
 Analysis (MCA), Factor Analysis of Mixed Data (FAMD), Multiple Factor
 Analysis (MFA) and Hierarchical Multiple Factor Analysis (HMFA) functions.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 \donttest{
@@ -131,7 +137,11 @@ fviz_cos2(res.mfa, choice ="quali.var", axes = 1)
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_contrib}}, \code{\link{get_pca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

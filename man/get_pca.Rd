@@ -13,8 +13,10 @@ get_pca_ind(res.pca, ...)
 get_pca_var(res.pca)
 }
 \arguments{
-\item{res.pca}{an object of class PCA [FactoMineR]; 
-prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].}
+\item{res.pca}{an object of class PCA [FactoMineR]; \code{prcomp} or
+\code{princomp} [stats]; \code{factoextra_pca}; \code{pca}, \code{dudi},
+\code{between}, or \code{within} [ade4]; or \code{expoOutput}/\code{epPCA}
+[ExPosition].}
 
 \item{element}{the element to subset from the output. Allowed values are 
 "var" (for active variables) or "ind" (for active individuals).}
@@ -24,17 +26,29 @@ prcomp and princomp [stats]; pca, dudi [adea4]; epPCA [ExPosition].}
 \value{
 a list of matrices containing all the results for the active individuals/variables including: 
 \item{coord}{coordinates for the individuals/variables}
-\item{cos2}{cos2 for the individuals/variables}
-\item{contrib}{contributions of the individuals/variables}
+\item{cos2}{cos2 for the individuals/variables. For an adapted recipe/workflow
+object this is \code{NULL} when the metric cannot be recovered. For a
+rank-truncated \code{prcomp} object, individual cos2 is the quality within the
+retained component subspace because the discarded row inertia is not stored
+in the fitted object.}
+\item{contrib}{contributions of the individuals/variables; contributions to
+each nonzero-inertia axis sum to 100 percent, while a zero-inertia axis
+contains zeros}
+\item{cor}{loading-times-component-standard-deviation coordinates for PCA
+objects from \code{stats}; these equal variable-component correlations when
+the input variables were standardized. Returned for variables; for an adapted
+recipe/workflow object it is \code{NULL} when correlations cannot be recovered.}
 }
 \description{
-Extract all the results (coordinates, squared cosine, contributions) for 
+Extract all the results (coordinates, squared cosines, and contributions) for
 the active individuals/variables from Principal Component Analysis (PCA) outputs.\cr\cr
 \itemize{
 \item get_pca(): Extract the results for variables and individuals
 \item get_pca_ind(): Extract the results for individuals only
 \item get_pca_var(): Extract the results for variables only
 }
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 \donttest{
@@ -62,7 +76,11 @@ the active individuals/variables from Principal Component Analysis (PCA) outputs
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_pca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

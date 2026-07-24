@@ -2,13 +2,16 @@
 NULL
 #'Visualize Hierarchical Multiple Factor Analysis
 #'
-#'@description Hierarchical Multiple Factor Analysis (HMFA) is, an extension of
+#'@description Hierarchical Multiple Factor Analysis (HMFA) is an extension of
 #'  MFA, used in a situation where the data are organized into a hierarchical
 #'  structure.  fviz_hmfa() provides ggplot2-based elegant visualization of HMFA
 #'  outputs from the R function: HMFA [FactoMineR].\cr\cr \itemize{
 #'  \item fviz_hmfa_ind(): Graph of individuals \item fviz_hmfa_var(): Graph of
 #'  variables \item fviz_hmfa_quali_biplot(): Biplot of individuals and
 #'  qualitative variables \item fviz_hmfa(): An alias of fviz_hmfa_ind() }
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
+#'
 #'@param X an object of class HMFA [FactoMineR].
 #'@inheritParams fviz_mca
 #'@inheritParams fviz_pca
@@ -19,7 +22,7 @@ NULL
 #'  data.
 #'@param col.ind,col.var color for individuals, partial individuals and 
 #'  variables, respectively. Can be a continuous variable or a factor variable.
-#'  Possible values include also : "cos2", "contrib", "coord", "x" or "y". In
+#'  Possible values also include "cos2", "contrib", "coord", "x", and "y". In
 #'  this case, the colors for individuals/variables are automatically controlled
 #'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 +
 #'  y^2 , "coord"), x values("x") or y values("y"). To use automatic coloring
@@ -27,9 +30,9 @@ NULL
 #'@param col.partial color for partial individuals. By default, points are 
 #'  colored according to the groups.
 #'@param alpha.ind,alpha.var controls the transparency of individual, partial 
-#'  individual and variable, respectively. The value can variate from 0 (total 
+#'  individual and variable, respectively. The value can vary from 0 (total
 #'  transparency) to 1 (no transparency). Default value is 1. Possible values 
-#'  include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+#'  also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 #'  transparency for individual/variable colors are automatically controlled by 
 #'  their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
 #'  , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -37,7 +40,7 @@ NULL
 #'@param shape.ind,shape.var point shapes of individuals and variables, 
 #'  respectively.
 #'@param group.names a vector containing the name of the groups (by default, 
-#'  NULL and the group are named group.1, group.2 and so on).
+#'  NULL and the groups are named group.1, group.2, and so on).
 #'@param node.level a single number indicating the HMFA node level to plot.
 #'@param title the title of the graph
 #'@param select.ind,select.var a selection of individuals and variables to be 
@@ -47,7 +50,11 @@ NULL
 #'  then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5, 
 #'  then the top 5 individuals/variables with the highest cos2 are drawn. \item 
 #'  contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with 
-#'  the highest cos2 are drawn }
+#'  the highest contributions are drawn \item union: logical. When several of
+#'  name/cos2/contrib are given, FALSE (default) combines them with AND (each
+#'  condition further narrows the selection); TRUE combines them with OR (an
+#'  element is kept if it matches any condition), e.g. named items \emph{plus}
+#'  the top-cos2 ones. }
 #'@param choice the graph to plot. Allowed values include one of c("quanti.var",
 #'  "quali.var", "group") for plotting quantitative variables, qualitative 
 #'  variables and group of variables, respectively.
@@ -56,13 +63,15 @@ NULL
 #'  drawn. (by default, partial = NULL and no partial points are drawn). Use
 #'  partial = "all" to visualize partial points for all individuals.
 #'@param col.var.sup color for supplementary variables.
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@return a ggplot
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@references \url{https://www.sthda.com/english/}
+#'@references \url{https://www.datanovia.com/learn/}
+#'@seealso \code{\link{get_hmfa}}, \code{\link{fviz_mfa}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 #' @examples
 #' # Hierarchical Multiple Factor Analysis
 #' # ++++++++++++++++++++++++
@@ -151,7 +160,12 @@ fviz_hmfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FA
     # user-facing selection + any union message already happened in fviz() above,
     # so use check = FALSE to stay silent and avoid a duplicate message).
     ind.all <- ind
-    if(!is.null(select.ind)) ind <- .select(ind, select.ind, check = FALSE)
+    if(!is.null(select.ind)) {
+      ind <- .select(ind, select.ind, check = FALSE)
+      ind.partial <- ind.partial[
+        ind.partial$name %in% ind$name, , drop = FALSE
+      ]
+    }
     if(!is.null(select.partial)) {
       if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
       ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial, check = FALSE)$name, , drop = FALSE]

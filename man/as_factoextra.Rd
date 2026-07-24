@@ -64,7 +64,8 @@ An object of class \code{c("factoextra_pca", "list")} holding the
 variable) coordinates into an object that the \code{\link{fviz_pca}} family
 (\code{fviz_pca_ind()}, \code{fviz_pca_var()}, \code{fviz_pca_biplot()}),
 \code{\link{fviz_eig}}, \code{\link{fviz_contrib}} and \code{\link{fviz_cos2}}
-can plot directly.
+can plot directly. Read more:
+\href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 
 It lets you apply factoextra's visualizations to the output of an
 \emph{eigenvalue-based} dimension reduction - for example
@@ -99,19 +100,32 @@ workflow, \code{workflows::extract_mold()}), the loadings from
 \code{tidy(step, type = "coef")}, and the \emph{full} set of eigenvalues from
 \code{tidy(step, type = "variance")} (so the scree plot and axis percentages are
 honest even when \code{num_comp} keeps only a few components). Variable
-coordinates are the true variable-component correlations (loading times the
-square root of the eigenvalue), and \code{scale.unit} is set to \code{TRUE} when
-a \code{step_normalize()}/\code{step_scale()} precedes the PCA, so the
-correlation circle is drawn only when it is meaningful. Variable coordinates,
-cos2 and contributions, and the eigenvalue percentages, match a full
-\code{FactoMineR::PCA()} of the same (scaled) data regardless of how many
+coordinates are loading times the square root of the eigenvalue. Exact
+variable-component correlations and cos2 are recovered from the full PCA
+inertia when every PCA input is provably centered. When those metrics cannot
+be recovered (for example, for a bare \code{step_pca()} with no centering or a
+zero-inertia variable), their entries in \code{get_pca_var()} are \code{NULL}.
+Scores, eigenvalues, variable coordinates and contributions are still returned,
+so the individual, scree, variable-arrow and biplot displays remain available;
+correlation/cos2-dependent displays fail with an explicit unavailable-metric
+error. The correlation circle is omitted and a warning explains how to recover
+the metrics. \code{scale.unit} is set to \code{TRUE} only when every
+PCA input is both centered and unit-scaled at the PCA boundary; partial scaling
+therefore does not draw a correlation circle. For fully normalized data,
+variable coordinates, correlations, cos2 and contributions, and the eigenvalue
+percentages match a full \code{FactoMineR::PCA()} regardless of how many
 components \code{step_pca()} keeps; the \emph{individual} cos2 is computed over
 the retained components (it equals the full-space cos2 only when all components
 are kept). The two-dimensional plots (\code{fviz_pca_ind()},
 \code{fviz_pca_var()}, \code{fviz_pca_biplot()}) need \code{num_comp >= 2}. The
-recipe must be prepped and its PCA step must be \code{step_pca()} (non-linear
-embedding steps such as \code{step_umap()} have no eigenvalues and are rejected
-with a message). For the loadings display of a recipe PCA see also
+recipe must be prepped, and its single PCA step must be an unweighted
+\code{step_pca()} and must be the final recipe step. Case-weighted PCA is
+rejected because the adapter cannot yet propagate those weights into individual
+contributions. Later steps could transform the baked/mold PCA
+scores without updating the fitted PCA loadings or eigenvalues, so such recipes
+fail explicitly instead of returning internally inconsistent geometry.
+Non-linear embedding steps such as \code{step_umap()} have no eigenvalues and
+are rejected with a message. For the loadings display of a recipe PCA see also
 \code{learntidymodels::plot_top_loadings()}.
 }
 \examples{
@@ -126,8 +140,9 @@ fviz_eig(obj)
 pca <- prcomp(iris[, -5], scale. = TRUE)
 obj2 <- as_factoextra_pca(
   ind.coord = pca$x,
-  var.coord = pca$rotation,
-  eig       = pca$sdev^2
+  var.coord = sweep(pca$rotation, 2, pca$sdev, "*"),
+  eig       = pca$sdev^2,
+  scale.unit = TRUE
 )
 fviz_pca_biplot(obj2, label = "var", col.ind = "steelblue")
 
@@ -146,6 +161,7 @@ if (requireNamespace("recipes", quietly = TRUE)) {
 \seealso{
 For UMAP / t-SNE embeddings, which have no eigenvalues, use
   \code{\link{fviz_umap}} / \code{\link{fviz_tsne}} instead.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

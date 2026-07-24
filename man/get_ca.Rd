@@ -19,7 +19,7 @@ correspondence [MASS].}
 \item{element}{the element to subset from the output. Possible values are "row" or "col".}
 }
 \value{
-a list of matrices containing the results for the active rows/columns including : 
+a list of matrices containing the results for the active rows/columns, including:
 \item{coord}{coordinates for the rows/columns}
 \item{cos2}{cos2 for the rows/columns}
 \item{contrib}{contributions of the rows/columns}
@@ -33,6 +33,8 @@ for the active row/column variables from Correspondence Analysis (CA) outputs.\c
 \item get_ca_row(): Extract the results for rows only
 \item get_ca_col(): Extract the results for columns only
 }
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
 }
 \examples{
 \donttest{
@@ -62,7 +64,11 @@ for the active row/column variables from Correspondence Analysis (CA) outputs.\c
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_ca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

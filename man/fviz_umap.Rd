@@ -63,7 +63,8 @@ fviz_tsne(
 \code{umap::umap()} result (\code{$layout}), or a numeric matrix / data frame
 of coordinates (one column per dimension).}
 
-\item{dims}{length-2 integer vector: which two embedding dimensions to plot.}
+\item{dims}{two distinct positive integer indices specifying which embedding
+dimensions to plot.}
 
 \item{habillage}{an optional factor / vector used to colour the points by group
 (discrete). Its length must equal the number of embedded observations.}
@@ -128,15 +129,19 @@ percentage of variance, so they are labelled \code{UMAP1}/\code{UMAP2}
 scree plot, no variable loadings, and no correlation circle - those are
 meaningless for an embedding. For methods that \emph{do} have eigenvalues (PCA,
 CA, MCA, MDS) see \code{\link{fviz_pca}} and \code{\link{as_factoextra_pca}}.
+
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap}{UMAP in R: Nonlinear Dimension Reduction & Visualization}
+and \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne}{t-SNE in R: Visualize High-Dimensional Data}.
 }
 \details{
 UMAP and t-SNE produce a low-dimensional embedding, not a variance
-decomposition. In the layout, \strong{tight local neighbourhoods are
-trustworthy}, but the \strong{size} of a cluster, the \strong{distance} between
-well-separated clusters and the amount of empty space between them are not
-quantitatively meaningful and change with the method's \code{perplexity} /
-\code{n_neighbors} settings (Wattenberg et al., 2016) - read groupings, not
-geometry. Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
+decomposition. Local relationships are often more informative than global
+geometry, but both remain method- and parameter-dependent. In particular, the
+\strong{size} of a cluster, the \strong{distance} between well-separated
+clusters, and the amount of empty space between them are not quantitatively
+meaningful and change with \code{perplexity} or \code{n_neighbors}
+(Wattenberg et al., 2016). Similar embedding scatter plots are drawn by \code{Seurat::DimPlot()}
 / \code{FeaturePlot()} and \code{ggpca}.
 }
 \examples{
@@ -160,4 +165,6 @@ t-SNE Effectively. \emph{Distill}. \doi{10.23915/distill.00002}.
 \seealso{
 \code{\link{fviz_pca}}, \code{\link{as_factoextra_pca}},
   \code{\link{fviz_cluster}}.
+  Online tutorials: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap}{UMAP in R: Nonlinear Dimension Reduction & Visualization}
+  and \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne}{t-SNE in R: Visualize High-Dimensional Data}.
 }

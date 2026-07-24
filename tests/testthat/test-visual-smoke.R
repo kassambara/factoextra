@@ -91,10 +91,125 @@ test_that("fviz_dend applies lwd to branch segments without adding a linewidth g
 
 test_that("fviz_pca_biplot supports form and covariance scaling modes", {
   res.pca <- stats::prcomp(iris[, 1:4], scale. = TRUE)
-  p_form <- fviz_pca_biplot(res.pca, biplot.type = "form")
-  p_cov <- fviz_pca_biplot(res.pca, biplot.type = "covariance")
+  p_form <- fviz_pca_biplot(
+    res.pca, biplot.type = "form", geom.ind = "point",
+    geom.var = "arrow", label = "none"
+  )
+  p_cov <- fviz_pca_biplot(
+    res.pca, biplot.type = "covariance", geom.ind = "point",
+    geom.var = "arrow", label = "none"
+  )
   expect_s3_class(p_form, "ggplot")
   expect_s3_class(p_cov, "ggplot")
+
+  layer_data <- function(p, geom){
+    layer <- Filter(function(x) inherits(x$geom, geom), p$layers)[[1]]
+    as.data.frame(layer$data)[, c("x", "y"), drop = FALSE]
+  }
+  # form == Gabriel scale = 0 (stats::biplot(scale = 0)): scores + rotation
+  expect_equal(
+    unname(as.matrix(layer_data(p_form, "GeomPoint"))),
+    unname(res.pca$x[, 1:2]), tolerance = 1e-12
+  )
+  expect_equal(
+    unname(as.matrix(layer_data(p_form, "GeomSegment"))),
+    unname(res.pca$rotation[, 1:2]), tolerance = 1e-12
+  )
+  # covariance == Gabriel scale = 1 (stats::biplot(scale = 1))
+  lambda <- sqrt(nrow(res.pca$x)) * res.pca$sdev[1:2]
+  expect_equal(
+    unname(as.matrix(layer_data(p_cov, "GeomPoint"))),
+    unname(sweep(res.pca$x[, 1:2], 2, lambda, "/")),
+    tolerance = 1e-12
+  )
+  expect_equal(
+    unname(as.matrix(layer_data(p_cov, "GeomSegment"))),
+    unname(sweep(res.pca$rotation[, 1:2], 2, lambda, "*")),
+    tolerance = 1e-12
+  )
+
+  # princomp: same Gabriel factorization, using n = n.obs
+  pr <- stats::princomp(iris[, 1:4], cor = TRUE)
+  loads <- unclass(pr$loadings)[, 1:2]
+  pf2 <- fviz_pca_biplot(pr, biplot.type = "form", geom.ind = "point",
+                         geom.var = "arrow", label = "none")
+  expect_equal(unname(as.matrix(layer_data(pf2, "GeomPoint"))),
+               unname(pr$scores[, 1:2]), tolerance = 1e-10)
+  expect_equal(unname(as.matrix(layer_data(pf2, "GeomSegment"))),
+               unname(loads), tolerance = 1e-10)
+  pcv2 <- fviz_pca_biplot(pr, biplot.type = "covariance", geom.ind = "point",
+                          geom.var = "arrow", label = "none")
+  lam2 <- sqrt(pr$n.obs) * pr$sdev[1:2]
+  expect_equal(unname(as.matrix(layer_data(pcv2, "GeomPoint"))),
+               unname(sweep(pr$scores[, 1:2], 2, lam2, "/")), tolerance = 1e-10)
+  expect_equal(unname(as.matrix(layer_data(pcv2, "GeomSegment"))),
+               unname(sweep(loads, 2, lam2, "*")), tolerance = 1e-10)
+
+  # Rank-truncated prcomp keeps the full sdev vector but only retained loadings.
+  # Form-mode arrows must use the retained loadings without recycling warnings.
+  truncated <- stats::prcomp(USArrests, scale. = TRUE, rank. = 2)
+  expect_no_warning(
+    truncated_form <- fviz_pca_biplot(
+      truncated, biplot.type = "form", geom.ind = "point",
+      geom.var = "arrow", label = "none"
+    )
+  )
+  expect_equal(
+    unname(as.matrix(layer_data(truncated_form, "GeomSegment"))),
+    unname(truncated$rotation[, 1:2]), tolerance = 1e-12
+  )
+  expect_no_warning(
+    truncated_covariance <- fviz_pca_biplot(
+      truncated, biplot.type = "covariance", geom.ind = "point",
+      geom.var = "arrow", label = "none"
+    )
+  )
+  truncated_lambda <- sqrt(nrow(truncated$x)) * truncated$sdev[1:2]
+  expect_equal(
+    unname(as.matrix(layer_data(truncated_covariance, "GeomSegment"))),
+    unname(sweep(truncated$rotation[, 1:2], 2, truncated_lambda, "*")),
+    tolerance = 1e-12
+  )
+
+  # Formula fits with na.exclude retain excluded score rows. Exact modes should
+  # preserve those rows, and princomp covariance scaling must use n.obs.
+  with_na <- iris[, 1:4]
+  with_na[c(2, 11), 1] <- NA_real_
+  pc_na <- stats::prcomp(
+    ~ ., data = with_na, center = TRUE, scale. = TRUE,
+    na.action = stats::na.exclude
+  )
+  expect_no_error(
+    pc_na_form <- fviz_pca_biplot(
+      pc_na, biplot.type = "form", geom.ind = "point",
+      geom.var = "arrow", label = "none"
+    )
+  )
+  expect_equal(
+    unname(as.matrix(layer_data(pc_na_form, "GeomPoint"))),
+    unname(pc_na$x[, 1:2]), tolerance = 1e-12
+  )
+
+  pn_na <- stats::princomp(
+    ~ ., data = with_na, cor = TRUE, scores = TRUE,
+    na.action = stats::na.exclude
+  )
+  expect_no_error(
+    pn_na_covariance <- fviz_pca_biplot(
+      pn_na, biplot.type = "covariance", geom.ind = "point",
+      geom.var = "arrow", label = "none"
+    )
+  )
+  pn_na_lambda <- sqrt(pn_na$n.obs) * pn_na$sdev[1:2]
+  expect_equal(
+    unname(as.matrix(layer_data(pn_na_covariance, "GeomSegment"))),
+    unname(sweep(unclass(pn_na$loadings)[, 1:2, drop = FALSE],
+                 2, pn_na_lambda, "*")),
+    tolerance = 1e-12
+  )
+
+  # the default 'auto' path still renders (byte-identity proven separately)
+  expect_s3_class(fviz_pca_biplot(res.pca), "ggplot")
 })
 
 test_that("fviz_eig parallel analysis is reproducible with parallel.seed", {
@@ -268,14 +383,30 @@ test_that("fviz_mfa_ind respects multi-element invisible vectors for partial plo
 
   p <- fviz_mfa_ind(res.mfa, partial = "all", invisible = c("quali.var", "ind"), repel = TRUE)
   layer_rows <- vapply(ggplot2::ggplot_build(p)$data, nrow, integer(1))
-  partial_n <- nrow(facto_summarize(
+  mfa_summary <- facto_summarize(
     res.mfa, element = "ind",
     result = c("coord", "contrib", "cos2", "coord.partial"),
     axes = 1:2
-  )$res.partial)
+  )
+  partial_n <- nrow(mfa_summary$res.partial)
+
+  top_two <- mfa_summary$res$name[
+    order(mfa_summary$res$cos2, decreasing = TRUE)[1:2]
+  ]
+  named <- setdiff(mfa_summary$res$name, top_two)[1]
+  selection <- list(name = named, cos2 = 2, union = TRUE)
+  selected_names <- .select(mfa_summary$res, selection, check = FALSE)$name
+  selected <- suppressMessages(fviz_mfa_ind(
+    res.mfa, partial = "all", select.ind = selection, geom = "point"
+  ))
+  selected_layer_rows <- tail(
+    vapply(ggplot2::ggplot_build(selected)$data, nrow, integer(1)), 2
+  )
+  expected_partial_n <- sum(mfa_summary$res.partial$name %in% selected_names)
 
   expect_s3_class(p, "ggplot")
   expect_false(any(layer_rows == partial_n))
+  expect_equal(selected_layer_rows, rep(expected_partial_n, 2))
 })
 
 test_that("fviz_hmfa_ind respects multi-element invisible vectors for partial plots", {
@@ -287,14 +418,26 @@ test_that("fviz_hmfa_ind respects multi-element invisible vectors for partial pl
 
   p <- fviz_hmfa_ind(res.hmfa, partial = "all", invisible = c("quali.var", "ind"), repel = TRUE)
   layer_rows <- vapply(ggplot2::ggplot_build(p)$data, nrow, integer(1))
-  partial_n <- nrow(facto_summarize(
+  hmfa_partial <- facto_summarize(
     res.hmfa, element = "partial.node", node.level = 1,
     group.names = rownames(res.hmfa$group$coord[[1]]),
     result = c("coord.node.partial"), axes = 1:2
-  ))
+  )
+  partial_n <- nrow(hmfa_partial)
+
+  selected_name <- rownames(wine)[1]
+  selected <- fviz_hmfa_ind(
+    res.hmfa, partial = "all", select.ind = list(name = selected_name),
+    geom = "point"
+  )
+  selected_layer_rows <- tail(
+    vapply(ggplot2::ggplot_build(selected)$data, nrow, integer(1)), 2
+  )
+  expected_partial_n <- sum(hmfa_partial$name == selected_name)
 
   expect_s3_class(p, "ggplot")
   expect_false(any(layer_rows == partial_n))
+  expect_equal(selected_layer_rows, rep(expected_partial_n, 2))
 })
 
 test_that("quali.sup plots reject contrib-based selection cleanly", {
@@ -326,6 +469,20 @@ test_that("quali.sup plots reject contrib-based selection cleanly", {
   )
   expect_error(
     fviz_mfa_var(res.mfa, choice = "quali.sup", select.var = list(contrib = 1)),
+    "Contributions are not available"
+  )
+  expect_error(
+    fviz_famd_var(
+      res.famd, choice = "quali.sup",
+      select.var = list(contrib = 1, union = TRUE)
+    ),
+    "Contributions are not available"
+  )
+  expect_error(
+    fviz_mfa_var(
+      res.mfa, choice = "quali.sup",
+      select.var = list(contrib = 1, union = TRUE)
+    ),
     "Contributions are not available"
   )
 

@@ -67,7 +67,7 @@ fviz_mca_biplot(
 fviz_mca(X, ...)
 }
 \arguments{
-\item{X}{an object of class MCA [FactoMineR], acm [ade4] and expOutput/epMCA
+\item{X}{an object of class MCA [FactoMineR], acm [ade4] and expoOutput/epMCA
 [ExPosition].}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
@@ -84,8 +84,8 @@ variables.}
 respectively. Default is geom.ind = c("point", "text), geom.var =
 c("point", "text").}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by 
@@ -106,8 +106,8 @@ case a basic color palette is created using the function
 individuals when habillage != "none".}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. Can 
-be a continuous variable or a factor variable. Possible values include also
-: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+be a continuous variable or a factor variable. Possible values also include
+"cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 individuals/variables are automatically controlled by their qualities
 ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
 values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
@@ -116,9 +116,9 @@ values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var}{controls the transparency of individual and 
-variable colors, respectively. The value can variate from 0 (total 
+variable colors, respectively. The value can vary from 0 (total
 transparency) to 1 (no transparency). Default value is 1. Possible values 
-include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 transparency for individual/variable colors are automatically controlled by 
 their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 
 , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -152,8 +152,8 @@ and \code{fviz_mca_biplot()}.}
 \item{col.quanti.sup, col.quali.sup}{a color for the quantitative/qualitative
 supplementary variables.}
 
-\item{...}{Additional arguments. \itemize{ \item in fviz_mca_ind(), 
-fviz_mca_var() and fviz_mca_cor(): Additional arguments are passed to the 
+\item{...}{Additional arguments. \itemize{ \item in fviz_mca_ind() and
+fviz_mca_var() (including \code{choice = "mca.cor"}): Additional arguments are passed to the
 functions fviz() and ggpubr::ggpar(). \item in fviz_mca_biplot() and 
 fviz_mca(): Additional arguments are passed to fviz_mca_ind() and 
 fviz_mca_var().}}
@@ -164,7 +164,7 @@ dimensions; ii) "var.cat" for variable categories and iii) "quanti.sup" for
 the supplementary quantitative variables.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
-"all". Allowed values are "none" or the combination of c("ind", 
+"all". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup","var", "quali.sup",  "quanti.sup"). "ind" can be used to label 
 only active individuals. "ind.sup" is for supplementary individuals. "var" 
 is for active variable categories. "quali.sup" is for supplementary 
@@ -172,7 +172,7 @@ qualitative variable categories. "quanti.sup" is for quantitative
 supplementary variables.}
 
 \item{invisible}{a text specifying the elements to be hidden on the plot. 
-Default value is "none". Allowed values are the combination of c("ind", 
+Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup","var", "quali.sup",  "quanti.sup").}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain 
@@ -188,10 +188,9 @@ a ggplot
 Multiple Correspondence Analysis (MCA) is an extension of simple 
  CA to analyse a data table containing more than two categorical variables. 
  fviz_mca() provides ggplot2-based elegant visualization of MCA outputs from 
- the R functions: MCA [in FactoMineR], acm [in ade4], and expOutput/epMCA [in
- ExPosition]. Read more: 
- \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/114-mca-multiple-correspondence-analysis-in-r-essentials/}{Multiple
-  Correspondence Analysis Essentials.}
+ the R functions: MCA [in FactoMineR], acm [in ade4], and expoOutput/epMCA [in
+ ExPosition]. Read more:
+ \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
  
  \itemize{ \item fviz_mca_ind(): Graph of individuals \item fviz_mca_var():
  Graph of variables \item fviz_mca_biplot(): Biplot of individuals and
@@ -238,7 +237,7 @@ fviz_mca_ind(res.mca, col.ind = "steelblue")
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the individuals on the factor map
 # 2. To keep only point or text use geom = "point" or geom = "text".
-# 3. Change themes: http://www.sthda.com/english/wiki/ggplot2-themes
+# 3. Change themes: https://www.datanovia.com/learn/data-visualization/ggplot2/themes
 
 fviz_mca_ind(res.mca, col.ind = "cos2", repel = TRUE)
 
@@ -263,12 +262,12 @@ fviz_mca_ind(res.mca2, label = "none", habillage = poison$Vomiting,
 
 
 # Change group colors using RColorBrewer color palettes
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+# Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 p + scale_color_brewer(palette="Dark2") +
     scale_fill_brewer(palette="Dark2") 
      
 # Change group colors manually
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+# Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 p + scale_color_manual(values=c("#999999", "#E69F00"))+
  scale_fill_manual(values=c("#999999", "#E69F00"))
              
@@ -330,7 +329,8 @@ fviz_mca_biplot(res.mca,
 }
 \seealso{
 \code{\link{get_mca}}, \code{\link{fviz_pca}}, \code{\link{fviz_ca}},
- \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}
+ \code{\link{fviz_mfa}}, \code{\link{fviz_hmfa}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

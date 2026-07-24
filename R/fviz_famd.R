@@ -2,7 +2,7 @@
 NULL
 #' Visualize Factor Analysis of Mixed Data
 #' 
-#' @description Factor analysis of mixed data (FAMD) is, a particular case of 
+#' @description Factor analysis of mixed data (FAMD) is a particular case of
 #'   MFA, used to analyze a data set containing both quantitative and
 #'   qualitative variables. fviz_famd() provides ggplot2-based elegant
 #'   visualization of FAMD outputs from the R function: FAMD [FactoMineR].\cr\cr
@@ -10,6 +10,9 @@ NULL
 #'   \item fviz_famd_var(): Graph of variables \item fviz_famd(): An alias of
 #'   fviz_famd_ind(res.famd) }
 #'   
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
+#'
 #' @param X an object of class FAMD [FactoMineR].
 #' @inheritParams fviz_mca
 #' @inheritParams fviz_pca
@@ -18,12 +21,12 @@ NULL
 #' @param choice The graph to plot in fviz_famd_var(). Allowed values include
 #'   one of c("var", "quanti.var", "quali.var", "quali.sup").
 #' @param habillage an optional factor variable for coloring the observations by
-#'   groups. Default value is "none". If X is an MFA object from FactoMineR 
+#'   groups. Default value is "none". If X is a FAMD object from FactoMineR
 #'   package, habillage can also specify the index of the factor variable in the
 #'   data.
 #' @param col.ind,col.var color for individuals and variables, respectively. Can
-#'   be a continuous variable or a factor variable. Possible values include also
-#'   : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for
+#'   be a continuous variable or a factor variable. Possible values also include
+#'   "cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 #'   individuals/variables are automatically controlled by their qualities
 #'   ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x
 #'   values("x") or y values("y"). To use automatic coloring (by cos2, contrib,
@@ -32,8 +35,8 @@ NULL
 #' @param col.quali.var color for qualitative variables in fviz_famd_ind(). 
 #'   Default is "black".
 #' @param alpha.ind,alpha.var controls the transparency of individuals and 
-#'   variables, respectively. The value can variate from 0 (total transparency) 
-#'   to 1 (no transparency). Default value is 1. Possible values include also : 
+#'   variables, respectively. The value can vary from 0 (total transparency)
+#'   to 1 (no transparency). Default value is 1. Possible values also include
 #'   "cos2", "contrib", "coord", "x" or "y". In this case, the transparency for 
 #'   individual/variable colors are automatically controlled by their qualities 
 #'   ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 , "coord"), x 
@@ -48,17 +51,19 @@ NULL
 #'   then individuals/variables with a cos2 > 0.6 are drawn. if cos2 > 1, ex: 5,
 #'   then the top 5 individuals/variables with the highest cos2 are drawn. \item
 #'   contrib if contrib > 1, ex: 5,  then the top 5 individuals/variables with
-#'   the highest cos2 are drawn \item union: logical. When several of
+#'   the highest contributions are drawn \item union: logical. When several of
 #'   name/cos2/contrib are given, FALSE (default) combines them with AND (each
 #'   condition further narrows the selection); TRUE combines them with OR (an
 #'   element is kept if it matches any condition), e.g. named items \emph{plus}
 #'   the top-cos2 ones. }
 #' @param ... Arguments to be passed to the function fviz()
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'   labels or not. The old \code{jitter} argument is kept for backward
+#' @param repel logical; whether to use ggrepel to avoid overplotting text
+#'   labels. The old \code{jitter} argument is kept for backward
 #'   compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
+#' @seealso \code{\link{get_famd}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/factor-analysis-of-mixed-data}{Factor Analysis of Mixed Data (FAMD) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' # Compute FAMD
 #'  library("FactoMineR")

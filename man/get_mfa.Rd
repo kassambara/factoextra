@@ -30,7 +30,8 @@ get_mfa_partial_axes(res.mfa)
 }
 \value{
 a list of matrices containing the results for the active 
-individuals/quantitative variable categories/qualitative variable categories/groups/partial axes including : 
+individuals, quantitative variables, qualitative variable categories, groups,
+and partial axes, including:
 \item{coord}{coordinates for the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
 \item{cos2}{cos2 for the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
 \item{contrib}{contributions of the individuals/quantitative variable categories/qualitative variable categories/groups/partial axes}
@@ -42,9 +43,14 @@ for the active individuals/quantitative variables/qualitative variable categorie
 \itemize{
 \item get_mfa(): Extract the results for variables and individuals
 \item get_mfa_ind(): Extract the results for individuals only
-\item get_mfa_var(): Extract the results for variables (quantitatives, qualitatives and groups)
+\item get_mfa_var(): Extract the results for quantitative variables,
+qualitative variables, and groups
 \item get_mfa_partial_axes(): Extract the results for partial axes only
-}
+}   
+    
+
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 }
 \examples{
 # Multiple Factor Analysis
@@ -76,6 +82,10 @@ graph = FALSE)
  get_mfa(res.mfa, "quali.var") # Results for qualitative variable categories
  get_mfa(res.mfa, "quali.sup") # Results for supplementary qualitative variable categories
  
+}
+\seealso{
+\code{\link{fviz_mfa}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

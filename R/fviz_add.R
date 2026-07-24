@@ -14,14 +14,14 @@
 #' @param pointsize the size of points
 #' @param shape point shape when geom ="point"
 #' @param linetype the linetype to be used when geom ="arrow"
-#' @param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'   labels or not. The old \code{jitter} argument is kept for backward
+#' @param repel logical; whether to use ggrepel to avoid overplotting text
+#'   labels. The old \code{jitter} argument is kept for backward
 #'   compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #' @param font.family character vector specifying font family.
 #' @param ... Additional arguments, not used
 #' @return a ggplot2 plot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references \url{https://www.sthda.com/english/}
+#' @references \url{https://www.datanovia.com/learn/}
 #' @examples
 #' \donttest{
 #' # Principal component analysis

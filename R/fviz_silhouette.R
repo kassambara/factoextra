@@ -1,44 +1,46 @@
 #' @include eigenvalue.R get_pca.R hcut.R
  NULL
 #'Visualize Silhouette Information from Clustering
-#'@description Silhouette (Si) analysis is a cluster validation approach that
-#'  measures how well an observation is clustered and it estimates the average
-#'  distance between clusters. fviz_silhouette() provides ggplot2-based elegant
-#'  visualization of silhouette information from i) the result of
+#'@description Silhouette (Si) analysis compares an observation's average
+#'  dissimilarity within its assigned cluster with its average dissimilarity to
+#'  the nearest alternative cluster. \code{fviz_silhouette()} provides a
+#'  ggplot2-based visualization of silhouette information from i) the result of
 #'  \code{\link[cluster]{silhouette}}(), \code{\link[cluster]{pam}}(),
 #'  \code{\link[cluster]{clara}}() and \code{\link[cluster]{fanny}}() [in
 #'  cluster package]; ii) \code{\link{eclust}}() and \code{\link{hcut}}() [in
 #'  factoextra]. Results without silhouette information, such as one-cluster
 #'  \code{eclust}/\code{hcut} objects, are rejected with a package-level error.
 #'  
-#'  Read more: 
-#'  \href{https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/}{Clustering
-#'   Validation Statistics}.
-#'@details - Observations with a large silhouhette Si (almost 1) are very well 
+#'  Read more:
+#'  \href{https://www.datanovia.com/learn/machine-learning/clustering/cluster-validation-statistics}{Cluster Validation Statistics in R}.
+#'@details - Observations with a large silhouette Si (almost 1) are very well
 #'  clustered.
 #'  
 #'  - A small Si (around 0) means that the observation lies between two
 #'  clusters.
 #'  
-#'  - Observations with a negative Si are probably placed in the wrong cluster.
+#'  - A negative Si means that the observation is, on average, closer to another
+#'  cluster than to its assigned cluster.
 #'
 #'  - Silhouette plots require at least two clusters and available silhouette
 #'  widths.
 #'  
-#'@param sil.obj an object of class silhouette: pam, clara, fanny [in cluster
-#'  package]; eclust and hcut [in factoextra]. For \code{eclust} and
+#'@param sil.obj an object of class \code{silhouette}, \code{pam},
+#'  \code{clara}, or \code{fanny} [cluster], or \code{eclust} or \code{hcut}
+#'  [factoextra]. For \code{eclust} and
 #'  \code{hcut}, silhouette information must be available, which requires at
 #'  least two clusters.
 #'@param label logical value. If true, x axis tick labels are shown
-#'@param print.summary logical value. If true a summary of cluster silhouettes 
-#'  are printed in fviz_silhouette().
+#'@param print.summary logical value. If TRUE, a summary of cluster silhouettes
+#'  is printed by \code{fviz_silhouette()}.
 #' @param ... other arguments to be passed to the function ggpubr::ggpar().
 #'  
 #'@return a ggplot2 object.
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@seealso \code{\link{fviz_cluster}}, \code{\link{hcut}}, 
-#'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
-#' @examples 
+#'@seealso \code{\link{fviz_cluster}}, \code{\link{hcut}},
+#'  \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/cluster-validation-statistics}{Cluster Validation Statistics in R}.
+#' @examples
 #' set.seed(123)
 #' 
 #' # Data preparation

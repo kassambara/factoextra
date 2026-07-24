@@ -26,10 +26,10 @@ and princomp [stats]; dudi, pca, coa and acm [ade4]; ca [ca package]; expoOutput
 \item{node.level}{a single number indicating the HMFA node level.}
 
 \item{group.names}{a vector containing the name of the groups (by default, 
-NULL and the group are named group.1, group.2 and so on).}
+NULL and the groups are named group.1, group.2, and so on).}
 
 \item{result}{the result to be extracted for the element. Possible values are
-the combination of c("cos2", "contrib", "coord")}
+any combination of \code{c("coord", "cos2", "contrib")}.}
 
 \item{axes}{a numeric vector specifying the axes of interest. Values must be
 positive integer indices within the available dimensions. Default values
@@ -41,12 +41,12 @@ NULL, cos2 = NULL, contrib = NULL): \itemize{ \item name: is a character
 vector containing variable names to be selected \item cos2: if cos2 is in 
 [0, 1], ex: 0.6, then variables with a cos2 > 0.6 are selected. if cos2 > 
 1, ex: 5, then the top 5 variables with the highest cos2 are selected \item
-contrib: if contrib > 1, ex: 5,  then the top 5 variables with the highest 
-cos2 are selected. }}
+contrib: if contrib > 1, ex: 5, then the top 5 variables with the highest
+contributions are selected. }}
 }
 \value{
-A data frame containing the (total) coord, cos2 and the contribution 
-  for the axes.
+A data frame containing the requested coordinates and the cos2 and
+  contribution metrics aggregated over the requested axes.
 }
 \description{
 Subset and summarize the results of Principal Component
@@ -60,7 +60,7 @@ Subset and summarize the results of Principal Component
 \details{
 If length(axes) > 1, then the columns contrib and cos2 correspond to
   the total contributions and total cos2 of the axes. In this case, the 
-  column coord is calculated as x^2 + y^2 + ...+; x, y, ... are the 
+  column coord is calculated as x^2 + y^2 + ...; x, y, ... are the
   coordinates of the points on the specified axes.
 }
 \examples{
@@ -128,7 +128,7 @@ res <- facto_summarize(res.mfa, "ind", axes = 1:2)
 head(res)
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

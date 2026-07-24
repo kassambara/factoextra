@@ -69,7 +69,7 @@ fviz_pca_biplot(
 }
 \arguments{
 \item{X}{an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
-dudi and pca [ade4]; expOutput/epPCA [ExPosition].}
+dudi and pca [ade4]; expoOutput/epPCA [ExPosition].}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_pca_ind() and 
 fviz_pca_var(): Additional arguments are passed to the functions fviz() and
@@ -90,8 +90,8 @@ variables.}
 respectively. Default is geom.ind = c("point", "text), geom.var = 
 c("arrow", "text").}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{habillage}{an optional factor variable for coloring the observations by
@@ -113,8 +113,8 @@ case a basic color palette is created using the function
 individuals when habillage != "none".}
 
 \item{col.ind, col.var}{color for individuals and variables, respectively. Can
-be a continuous variable or a factor variable. Possible values include also
-: "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+be a continuous variable or a factor variable. Possible values also include
+"cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 individuals/variables are automatically controlled by their qualities of 
 representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -125,9 +125,9 @@ cos2, contrib, ....), make sure that habillage ="none".}
 \item{col.ind.sup}{color for supplementary individuals}
 
 \item{alpha.ind, alpha.var}{controls the transparency of individual and 
-variable colors, respectively. The value can variate from 0 (total 
+variable colors, respectively. The value can vary from 0 (total
 transparency) to 1 (no transparency). Default value is 1. Possible values 
-include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 transparency for the individual/variable colors are automatically 
 controlled by their qualities ("cos2"), contributions ("contrib"), 
 coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
@@ -182,14 +182,14 @@ PCA output.}
 values include brewer and ggsci color palettes.}
 
 \item{label}{a text specifying the elements to be labelled. Default value is 
-"all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+"all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 "quali", "var", "quanti.sup"). "ind" can be used to label only active 
 individuals. "ind.sup" is for supplementary individuals. "quali" is for 
 supplementary qualitative variables. "var" is for active variables. 
 "quanti.sup" is for quantitative supplementary variables.}
 
 \item{invisible}{a text specifying the elements to be hidden on the plot. 
-Default value is "none". Allowed values are the combination of c("ind", 
+Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 "ind.sup", "quali", "var", "quanti.sup").}
 
 \item{title}{the title of the graph}
@@ -197,10 +197,15 @@ Default value is "none". Allowed values are the combination of c("ind",
 \item{biplot.type}{type of biplot scaling for fviz_pca_biplot(). Options are:
 \itemize{
   \item "auto" (default): Uses range-based rescaling for visualization
-  \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
-    readability of individual relationships.
-  \item "covariance": Covariance-oriented scaling (Gabriel-style).
-    Prioritizes readability of variable relationships.
+  \item "form": Gabriel form biplot scaling (equivalent to
+    \code{stats::biplot(..., scale = 0)}), preserving the score geometry
+    used to compare individuals.
+  \item "covariance": Gabriel covariance biplot scaling (equivalent to
+    \code{stats::biplot(..., scale = 1)}), preserving the variable
+    covariance geometry. Because both clouds share a single set of axes
+    (unlike \code{stats::biplot()}'s dual axes), the individuals can appear
+    compressed relative to the variable arrows; use "form" or "auto" if the
+    individual cloud is the focus.
 }
 Note: "form" and "covariance" scaling requires prcomp or princomp objects.}
 }
@@ -213,9 +218,8 @@ Principal component analysis (PCA) reduces the dimensionality of
   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
   stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA 
-  [ExPosition]. Read more: 
-  \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/}{Principal
-   Component Analysis}
+  [ExPosition]. Read more:
+  \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
   
   \itemize{ \item fviz_pca_ind(): Graph of individuals \item fviz_pca_var():
   Graph of variables \item fviz_pca_biplot(): Biplot of individuals and
@@ -247,21 +251,21 @@ fviz_pca_ind(res.pca, col.ind = "#00AFBB",
    # using the "cos2" or the contributions "contrib"
    # cos2 = the quality of the individuals on the factor map
 # 2. To keep only point or text use geom = "point" or geom = "text".
-# 3. Change themes using ggtheme: http://www.sthda.com/english/wiki/ggplot2-themes
+# 3. Change themes using ggtheme: https://www.datanovia.com/learn/data-visualization/ggplot2/themes
 
 fviz_pca_ind(res.pca, col.ind="cos2", geom = "point",
    gradient.cols = c("white", "#2E9FDF", "#FC4E07" ))
 
 # Color individuals by groups, add concentration ellipses
 # Change group colors using RColorBrewer color palettes
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+# Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 # Remove labels: label = "none".
 fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
      addEllipses=TRUE, ellipse.level=0.95, palette = "Dark2")
              
      
 # Change group colors manually
-# Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+# Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
      addEllipses=TRUE, ellipse.level=0.95,
      palette = c("#999999", "#E69F00", "#56B4E9"))
@@ -313,7 +317,8 @@ fviz_pca_biplot(res.pca, biplot.type = "covariance",
 
 }
 \seealso{
-\code{\link{fviz_ca}}, \code{\link{fviz_mca}}
+\code{\link{fviz_ca}}, \code{\link{fviz_mca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

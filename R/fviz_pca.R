@@ -8,9 +8,8 @@
 #'   minimal loss of information. fviz_pca() provides ggplot2-based elegant 
 #'   visualization of PCA outputs from: i) prcomp and princomp [in built-in R 
 #'   stats], ii) PCA [in FactoMineR], iii) dudi.pca [in ade4] and epPCA 
-#'   [ExPosition]. Read more: 
-#'   \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/112-pca-principal-component-analysis-essentials/}{Principal
-#'    Component Analysis}
+#'   [ExPosition]. Read more:
+#'   \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #'   
 #'   \itemize{ \item fviz_pca_ind(): Graph of individuals \item fviz_pca_var():
 #'   Graph of variables \item fviz_pca_biplot(): Biplot of individuals and
@@ -23,7 +22,7 @@
 #'   \code{\link{fviz_pca_ind}()} and \code{\link{fviz_pca_var}()}.
 #'   
 #' @param X an object of class PCA [FactoMineR]; prcomp and princomp [stats]; 
-#'   dudi and pca [ade4]; expOutput/epPCA [ExPosition].
+#'   dudi and pca [ade4]; expoOutput/epPCA [ExPosition].
 #' @param axes a numeric vector of length 2 specifying the dimensions to be 
 #'   plotted.
 #' @param geom a text specifying the geometry to be used for the graph. Allowed 
@@ -36,13 +35,13 @@
 #'   respectively. Default is geom.ind = c("point", "text), geom.var = 
 #'   c("arrow", "text").
 #' @param label a text specifying the elements to be labelled. Default value is 
-#'   "all". Allowed values are "none" or the combination of c("ind", "ind.sup", 
+#'   "all". Allowed values are "all", "none", or a combination of c("ind", "ind.sup",
 #'   "quali", "var", "quanti.sup"). "ind" can be used to label only active 
 #'   individuals. "ind.sup" is for supplementary individuals. "quali" is for 
 #'   supplementary qualitative variables. "var" is for active variables. 
 #'   "quanti.sup" is for quantitative supplementary variables.
 #' @param invisible a text specifying the elements to be hidden on the plot. 
-#'   Default value is "none". Allowed values are the combination of c("ind", 
+#'   Default value is "none". Allowed values are "all", "none", or a combination of c("ind",
 #'   "ind.sup", "quali", "var", "quanti.sup").
 #' @param title the title of the graph
 #' @param habillage an optional factor variable for coloring the observations by
@@ -53,8 +52,8 @@
 #' @param addEllipses logical value. If TRUE, draws ellipses around the 
 #'   individuals when habillage != "none".
 #' @param col.ind,col.var color for individuals and variables, respectively. Can
-#'   be a continuous variable or a factor variable. Possible values include also
-#'   : "cos2", "contrib", "coord", "x" or "y". In this case, the colors for 
+#'   be a continuous variable or a factor variable. Possible values also include
+#'   "cos2", "contrib", "coord", "x", and "y". In this case, the colors for
 #'   individuals/variables are automatically controlled by their qualities of 
 #'   representation ("cos2"), contributions ("contrib"), coordinates (x^2+y^2, 
 #'   "coord"), x values ("x") or y values ("y"). To use automatic coloring (by 
@@ -69,9 +68,9 @@
 #'   to rename the legends.
 #' @param col.ind.sup color for supplementary individuals
 #' @param alpha.ind,alpha.var controls the transparency of individual and 
-#'   variable colors, respectively. The value can variate from 0 (total 
+#'   variable colors, respectively. The value can vary from 0 (total
 #'   transparency) to 1 (no transparency). Default value is 1. Possible values 
-#'   include also : "cos2", "contrib", "coord", "x" or "y". In this case, the 
+#'   also include "cos2", "contrib", "coord", "x", and "y". In this case, the
 #'   transparency for the individual/variable colors are automatically 
 #'   controlled by their qualities ("cos2"), contributions ("contrib"), 
 #'   coordinates (x^2+y^2, "coord"), x values("x") or y values("y"). To use 
@@ -92,10 +91,15 @@
 #' @param biplot.type type of biplot scaling for fviz_pca_biplot(). Options are:
 #'   \itemize{
 #'     \item "auto" (default): Uses range-based rescaling for visualization
-#'     \item "form": Form-oriented scaling (Gabriel-style). Prioritizes
-#'       readability of individual relationships.
-#'     \item "covariance": Covariance-oriented scaling (Gabriel-style).
-#'       Prioritizes readability of variable relationships.
+#'     \item "form": Gabriel form biplot scaling (equivalent to
+#'       \code{stats::biplot(..., scale = 0)}), preserving the score geometry
+#'       used to compare individuals.
+#'     \item "covariance": Gabriel covariance biplot scaling (equivalent to
+#'       \code{stats::biplot(..., scale = 1)}), preserving the variable
+#'       covariance geometry. Because both clouds share a single set of axes
+#'       (unlike \code{stats::biplot()}'s dual axes), the individuals can appear
+#'       compressed relative to the variable arrows; use "form" or "auto" if the
+#'       individual cloud is the focus.
 #'   }
 #'   Note: "form" and "covariance" scaling requires prcomp or princomp objects.
 #' @inheritParams ggpubr::ggpar
@@ -108,7 +112,8 @@
 #'   
 #' @return a ggplot
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}
+#' @seealso \code{\link{fviz_ca}}, \code{\link{fviz_mca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 #' @examples
 #' \donttest{
 #' # Principal component analysis
@@ -129,21 +134,21 @@
 #'    # using the "cos2" or the contributions "contrib"
 #'    # cos2 = the quality of the individuals on the factor map
 #' # 2. To keep only point or text use geom = "point" or geom = "text".
-#' # 3. Change themes using ggtheme: http://www.sthda.com/english/wiki/ggplot2-themes
+#' # 3. Change themes using ggtheme: https://www.datanovia.com/learn/data-visualization/ggplot2/themes
 #' 
 #' fviz_pca_ind(res.pca, col.ind="cos2", geom = "point",
 #'    gradient.cols = c("white", "#2E9FDF", "#FC4E07" ))
 #' 
 #' # Color individuals by groups, add concentration ellipses
 #' # Change group colors using RColorBrewer color palettes
-#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+#' # Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 #' # Remove labels: label = "none".
 #' fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
 #'      addEllipses=TRUE, ellipse.level=0.95, palette = "Dark2")
 #'              
 #'      
 #' # Change group colors manually
-#' # Read more: http://www.sthda.com/english/wiki/ggplot2-colors
+#' # Read more: https://www.datanovia.com/learn/data-visualization/ggplot2/colors
 #' fviz_pca_ind(res.pca, label="none", habillage=iris$Species,
 #'      addEllipses=TRUE, ellipse.level=0.95,
 #'      palette = c("#999999", "#E69F00", "#56B4E9"))
@@ -271,39 +276,72 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   
   # Data frame to be used for plotting
-  var <- facto_summarize(X, element = "var", 
-                         result = c("coord", "contrib", "cos2"), axes = axes)
+  var.results <- c("coord", "contrib", "cos2")
+  if(inherits(X, "factoextra_pca") && is.null(X$var$cos2))
+    var.results <- setdiff(var.results, "cos2")
+  var <- facto_summarize(X, element = "var", result = var.results, axes = axes)
   colnames(var)[2:3] <-  c("x", "y")
   
   pca.ind <- get_pca_ind(X)
   ind <- data.frame(pca.ind$coord[, axes, drop=FALSE])
   colnames(ind)<- c("x", "y")
   
-  # Rescale variable coordinates based on biplot.type
-
-  # Heuristic Gabriel-style scaling choices for improved readability.
+  # Rescale both score and loading coordinates according to Gabriel's biplot
+  # factorization. The default auto mode retains factoextra's historical
+  # range-based display scaling.
+  plot_X <- X
+  var_scale <- NULL
   if(biplot.type == "form" || biplot.type == "covariance") {
-    # Get eigenvalues (singular values squared for scaling)
-    if(inherits(X, "prcomp")) {
-      sdev <- X$sdev[axes]
-    } else if(inherits(X, "princomp")) {
-      sdev <- X$sdev[axes]
-    } else {
+    if(!inherits(X, c("prcomp", "princomp"))) {
       # Fall back to auto for other object types
       warning("biplot.type 'form' or 'covariance' requires prcomp/princomp objects. Using 'auto'.")
       biplot.type <- "auto"
-    }
+    } else {
+      sdev <- as.numeric(X$sdev)
+      if(any(!is.finite(sdev[axes])) || any(sdev[axes] <= 0))
+        stop("The selected axes must have positive finite standard deviations for ",
+             "form/covariance biplot scaling.", call. = FALSE)
 
-    if(biplot.type == "form") {
-      # Form biplot (scale=0): preserves distances between individuals
-      # Variables are scaled down, individuals keep their scores
-      r <- 1 / max(abs(var[, c("x", "y")])) * 0.8 * max(abs(ind[, c("x", "y")]))
-    } else if(biplot.type == "covariance") {
-      # Covariance biplot (scale=1): preserves correlations between variables
-      # Variables scaled by sqrt(n) * sdev, individuals scaled down
-      n_obs <- nrow(ind)
-      # Scale factor to make variable vectors meaningful while keeping individuals visible
-      r <- sqrt(n_obs) * 0.15
+      pca.var <- get_pca_var(X)
+      display_ind <- pca.ind$coord
+      display_var <- pca.var$coord
+      if(biplot.type == "form") {
+        # scale = 0: score coordinates and unscaled loading vectors.
+        display_var[, axes] <- sweep(
+          display_var[, axes, drop = FALSE], 2, sdev[axes], "/"
+        )
+      } else {
+        # scale = 1: scores divided by sqrt(n)*sdev and loadings multiplied
+        # by the same factor.
+        n_factor <- if(inherits(X, "princomp")) X[["n.obs"]] else nrow(display_ind)
+        if(!is.numeric(n_factor) || length(n_factor) != 1L ||
+           !is.finite(n_factor) || n_factor <= 0)
+          stop("Could not determine the number of fitted observations for ",
+               "covariance biplot scaling.", call. = FALSE)
+        lambda <- sqrt(n_factor) * sdev[axes]
+        display_ind[, axes] <- sweep(
+          display_ind[, axes, drop = FALSE], 2, lambda, "/"
+        )
+        display_var[, axes] <- sweep(
+          display_var[, axes, drop = FALSE], 2, sqrt(n_factor), "*"
+        )
+      }
+      # Formula fits with na.exclude retain NA score rows so predictions line up
+      # with the original data. Keep those rows for plotting, while preserving
+      # the already validated PCA metrics; the public constructor intentionally
+      # rejects non-finite user input and is therefore not appropriate here.
+      plot_X <- structure(
+        list(
+          ind = list(coord = display_ind, cos2 = pca.ind$cos2,
+                     contrib = pca.ind$contrib),
+          var = list(coord = display_var, cor = pca.var$cor,
+                     cos2 = pca.var$cos2, contrib = pca.var$contrib),
+          eig.values = as.numeric(X$sdev)^2,
+          scale.unit = FALSE
+        ),
+        class = c("factoextra_pca", "list")
+      )
+      var_scale <- 1
     }
   }
 
@@ -315,6 +353,7 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
     valid_ratios <- c(ratio_x, ratio_y)
     valid_ratios <- valid_ratios[is.finite(valid_ratios) & valid_ratios > 0]
     r <- if(length(valid_ratios) > 0) min(valid_ratios) else 1
+    var_scale <- r * 0.7
   }
   
   # When fill.ind = grouping variable & col.var = continuous variable,
@@ -329,17 +368,17 @@ fviz_pca_biplot <- function(X,  axes = c(1,2), geom = c("point", "text"),
   
   
   # Individuals
-  p <- fviz_pca_ind(X,  axes = axes, geom = geom.ind, repel = repel,
+  p <- fviz_pca_ind(plot_X,  axes = axes, geom = geom.ind, repel = repel,
                     col.ind = col.ind, fill.ind = fill.ind, shape.ind = shape.ind,
                     label = label, invisible=invisible, habillage = habillage,
                     addEllipses = addEllipses, # palette = palette,
                     ellipse.border.remove = ellipse.border.remove,
                     ...)
   # Add variables
-  p <- fviz_pca_var(X, axes = axes, geom =  geom.var, repel = repel,
+  p <- fviz_pca_var(plot_X, axes = axes, geom =  geom.var, repel = repel,
                     col.var = col.var, fill.var = fill.var,
                     label = label, invisible = invisible,
-                    scale.= r*0.7, ggp = p,  ...)
+                    scale.= var_scale, ggp = p,  ...)
   
   if(!is.null(gradient.cols)){
     if(is.gradient.color) p <- p + ggpubr::gradient_color(gradient.cols)

@@ -12,6 +12,9 @@ NULL
 #'  "all") \item fviz_mfa_quali_biplot(): Biplot of individuals and qualitative
 #'  variables }
 #'  
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
+#'
 #'@param X an object of class MFA [FactoMineR].
 #'@inheritParams fviz_mca
 #'@inheritParams fviz_pca
@@ -27,7 +30,7 @@ NULL
 #'  data.
 #'@param col.ind,col.var,col.axes color for individuals, variables and col.axes 
 #'  respectively. Can be a continuous variable or a factor variable. Possible
-#'  values include also : "cos2", "contrib", "coord", "x" or "y". In this case,
+#'  values also include "cos2", "contrib", "coord", "x", and "y". In this case,
 #'  the colors for individuals/variables are automatically controlled by their
 #'  qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + y^2 ,
 #'  "coord"), x values("x") or y values("y"). To use automatic coloring (by
@@ -36,9 +39,9 @@ NULL
 #'  colored according to the groups.
 #'@param col.var.sup color for supplementary variables.
 #'@param alpha.ind,alpha.var,alpha.axes controls the transparency of individual,
-#'  variable, group and axes colors, respectively. The value can variate from 0 
+#'  variable, group and axes colors, respectively. The value can vary from 0
 #'  (total transparency) to 1 (no transparency). Default value is 1. Possible 
-#'  values include also : "cos2", "contrib", "coord", "x" or "y". In this case, 
+#'  values also include "cos2", "contrib", "coord", "x", and "y". In this case,
 #'  the transparency for individual/variable colors are automatically controlled
 #'  by their qualities ("cos2"), contributions ("contrib"), coordinates (x^2 + 
 #'  y^2 , "coord"), x values("x") or y values("y"). To use this, make sure that 
@@ -55,14 +58,14 @@ NULL
 #'  if cos2 is in [0, 1], ex: 0.6, then individuals/variables with a cos2 > 0.6 
 #'  are drawn. if cos2 > 1, ex: 5, then the top 5 individuals/variables with the
 #'  highest cos2 are drawn. \item contrib if contrib > 1, ex: 5,  then the top 5
-#'  individuals/variables with the highest cos2 are drawn \item union: logical.
+#'  individuals/variables with the highest contributions are drawn \item union: logical.
 #'  When several of name/cos2/contrib are given, FALSE (default) combines them
 #'  with AND (each condition further narrows the selection); TRUE combines them
 #'  with OR (an element is kept if it matches any condition), e.g. named items
 #'  \emph{plus} the top-cos2 ones. }
 #'@param ... Arguments to be passed to the function fviz()
-#'@param repel a boolean, whether to use ggrepel to avoid overplotting text
-#'  labels or not. The old \code{jitter} argument is kept for backward
+#'@param repel logical; whether to use ggrepel to avoid overplotting text
+#'  labels. The old \code{jitter} argument is kept for backward
 #'  compatibility and is converted to \code{repel = TRUE} with a deprecation warning.
 #'@param partial list of the individuals for which the partial points should be
 #'  drawn. (by default, partial = NULL and no partial points are drawn). Use
@@ -71,7 +74,9 @@ NULL
 #'@return a ggplot2 plot
 #'@author Fabian Mundt \email{f.mundt@inventionate.de}
 #'@author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#'@references \url{https://www.sthda.com/english/}
+#'@references \url{https://www.datanovia.com/learn/}
+#'@seealso \code{\link{get_mfa}}.
+#'  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-factor-analysis}{Multiple Factor Analysis (MFA) in R: Analyze Groups of Variables}.
 #' @examples
 #' # Compute Multiple Factor Analysis
 #' library("FactoMineR")
@@ -174,7 +179,12 @@ fviz_mfa_ind <- function(X,  axes = c(1,2), geom=c("point", "text"), repel = FAL
     # user-facing selection + any union message already happened in fviz() above,
     # so use check = FALSE to stay silent and avoid a duplicate message).
     ind.all <- ind
-    if(!is.null(select.ind)) ind <- .select(ind, select.ind, check = FALSE)
+    if(!is.null(select.ind)) {
+      ind <- .select(ind, select.ind, check = FALSE)
+      ind.partial <- ind.partial[
+        ind.partial$name %in% ind$name, , drop = FALSE
+      ]
+    }
     if(!is.null(select.partial)) {
       if(nrow(ind) != nrow(ind.all)) warning("You've already selected individuals. Partial points are only calculated for them.")
       ind.partial <-  ind.partial[ind.partial$name %in% .select(ind, select.partial, check = FALSE)$name, , drop = FALSE]

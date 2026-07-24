@@ -10,16 +10,21 @@ NULL
 #' \item get_ca_row(): Extract the results for rows only
 #' \item get_ca_col(): Extract the results for columns only
 #' }
+#'
+#' Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
+#'
 #' @param res.ca an object of class CA [FactoMineR], ca [ca], coa [ade4];
 #'  correspondence [MASS].
 #' @param element the element to subset from the output. Possible values are "row" or "col".
-#' @return a list of matrices containing the results for the active rows/columns including : 
+#' @return a list of matrices containing the results for the active rows/columns, including:
 #' \item{coord}{coordinates for the rows/columns}
 #' \item{cos2}{cos2 for the rows/columns}
 #' \item{contrib}{contributions of the rows/columns}
 #' \item{inertia}{inertia of the rows/columns}
 #' @author Alboukadel Kassambara \email{alboukadel.kassambara@@gmail.com}
-#' @references \url{https://www.sthda.com/english/}
+#' @references \url{https://www.datanovia.com/learn/}
+#' @seealso \code{\link{fviz_ca}}.
+#'   Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
 #' @examples
 #' \donttest{
 #' # Install and load FactoMineR to compute CA
@@ -225,4 +230,3 @@ get_ca_row <- function(res.ca){
   class(row)<-c("factoextra", "ca_row")
   return(row)
 }
-

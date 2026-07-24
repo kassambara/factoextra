@@ -35,6 +35,9 @@ palette does not apply there. It introduces no global option and no hidden
 state. The colors are ordered so the highest-contrast hues come first; yellow,
 the palest on a white background, is placed late, so plots with a few groups
 stay crisp.
+
+
+Read more: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/colors}{ggplot2 Colours in R: Change Colours by Group}.
 }
 \details{
 The Okabe-Ito colors are those of \code{grDevices::palette.colors(
@@ -65,5 +68,6 @@ Wong, B. (2011). Points of view: Color blindness. \emph{Nature Methods}, 8(6),
 441. \doi{10.1038/nmeth.1618}.
 }
 \seealso{
-\code{\link{theme_factoextra}}
+\code{\link{theme_factoextra}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/data-visualization/ggplot2/colors}{ggplot2 Colours in R: Change Colours by Group}.
 }

@@ -61,14 +61,14 @@ FUNcluster is a hierarchical clustering function such as one of "hclust",
 \item{hc_method}{the agglomeration method to be used (?hclust): "ward.D", 
 "ward.D2", "single", "complete", "average", ...}
 
-\item{gap_maxSE}{a list containing the parameters (method and SE.factor) for 
-determining the location of the maximum of the gap statistic (Read the 
-documentation ?cluster::maxSE).}
+\item{gap_maxSE}{a list containing the \code{method} and \code{SE.factor}
+parameters passed to \code{\link[cluster]{maxSE}}. The default is
+\code{list(method = "firstSEmax", SE.factor = 1)}.}
 
 \item{nboot}{integer, number of Monte Carlo ("bootstrap") samples. Used only 
-for determining the number of clusters using gap statistic.}
+for determining the number of clusters using the gap statistic.}
 
-\item{verbose}{logical value. If TRUE, the result of progress is printed.}
+\item{verbose}{logical value. If TRUE, progress information is printed.}
 
 \item{seed}{integer used for seeding the random number generator.}
 
@@ -86,7 +86,7 @@ Returns an object of class "eclust" containing the result of the
   width of each cluster) and $avg.width (average width of all clusters)
   \item size: the size of clusters \item data: a matrix containing the
   original or the standardized data (if stand = TRUE) } The "eclust" class
-  has method for fviz_silhouette(), fviz_dend(), fviz_cluster().
+  has methods for fviz_silhouette(), fviz_dend(), and fviz_cluster().
 }
 \description{
 Provides a convenient workflow for clustering analyses and
@@ -94,7 +94,7 @@ Provides a convenient workflow for clustering analyses and
   selects the number of clusters. Hierarchical backends may validly return
   \code{k = 1}; in that case \code{eclust()} returns a one-cluster result
   without silhouette information. Read more:
- \href{https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/}{Visual enhancement of clustering analysis}.
+ \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Enhanced Cluster Analysis in R with factoextra's eclust()}.
 }
 \examples{
 # Load and scale data
@@ -120,8 +120,10 @@ if (res.hc$nbclust > 1) fviz_silhouette(res.hc) # silhouette plot
  
 }
 \seealso{
-\code{\link{fviz_silhouette}}, \code{\link{fviz_dend}}, 
-  \code{\link{fviz_cluster}}
+\code{\link{fviz_silhouette}}, \code{\link{fviz_dend}},
+  \code{\link{fviz_cluster}}.
+  Online tutorials: \href{https://www.datanovia.com/blog/cluster-analysis-in-r-eclust}{Enhanced Cluster Analysis in R with factoextra's eclust()}
+  and \href{https://www.datanovia.com/learn/machine-learning/clustering/choosing-best-algorithm}{Choosing the Best Clustering Algorithm in R}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

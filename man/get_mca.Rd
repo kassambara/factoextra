@@ -22,7 +22,7 @@ quantitative supplementary variables in FactoMineR MCA results.}
 }
 \value{
 a list of matrices containing the results for the active 
-  individuals/variable categories including : \item{coord}{coordinates for 
+  individuals/variable categories, including: \item{coord}{coordinates for
   the individuals/variable categories} \item{cos2}{cos2 for the 
   individuals/variable categories} \item{contrib}{contributions of the 
   individuals/variable categories} \item{inertia}{inertia of the 
@@ -40,6 +40,8 @@ Extract all the results (coordinates, squared cosine and
   support \code{element = "quanti.sup"} for quantitative supplementary
   variables and report a clean package-level error when that result is
   absent.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 }
 \examples{
 \donttest{
@@ -74,7 +76,11 @@ res.mca <- MCA(poison, quanti.sup = 1:2, graph = FALSE)
  
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_mca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/multiple-correspondence-analysis}{Multiple Correspondence Analysis (MCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

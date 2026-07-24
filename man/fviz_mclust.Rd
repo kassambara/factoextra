@@ -41,7 +41,11 @@ fviz_mclust_bic(
 probability. Passed for \code{ggplot2::stat_ellipse} 's level. Ignored in
 'convex'. Default value is 0.95.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
@@ -81,6 +85,7 @@ A ggplot2 object.
 }
 \description{
 Plots the classification, the uncertainty and the BIC values returned by the Mclust() function.
+  Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/model-based-clustering}{Model-Based Clustering in R (Mclust)}.
 }
 \section{Functions}{
 \itemize{
@@ -105,4 +110,8 @@ fviz_mclust_bic(mc)
 fviz_mclust(mc, "classification", geom = "point")
 }
 
+}
+\seealso{
+\code{\link{fviz_cluster}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/model-based-clustering}{Model-Based Clustering in R (Mclust)}.
 }

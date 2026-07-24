@@ -55,7 +55,7 @@ fviz_ca(X, ...)
 }
 \arguments{
 \item{X}{an object of class CA [FactoMineR], ca [ca], coa [ade4]; 
-correspondence [MASS] and expOutput/epCA [ExPosition].}
+correspondence [MASS] and expoOutput/epCA [ExPosition].}
 
 \item{axes}{a numeric vector of length 2 specifying the dimensions to be 
 plotted.}
@@ -76,8 +76,8 @@ variables. Default values are 19 for rows and 17 for columns.}
 "symmetric", "rowprincipal", "colprincipal", "symbiplot", "rowgab", 
 "colgab", "rowgreen" and "colgreen". See details}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{...}{Additional arguments. \itemize{ \item in fviz_ca_row() and 
@@ -87,7 +87,7 @@ arguments are passed to fviz_ca_row() and fviz_ca_col().}}
 
 \item{col.col, col.row}{color for column/row points. The default values are 
 "red" and "blue", respectively. Can be a continuous variable or a factor
-variable. Allowed values include also : "cos2", "contrib", "coord", "x" or
+variable. Allowed values also include "cos2", "contrib", "coord", "x", and
 "y". In this case, the colors for row/column variables are automatically
 controlled by their qualities ("cos2"), contributions ("contrib"),
 coordinates (x^2 + y^2, "coord"), x values("x") or y values("y")}
@@ -95,9 +95,9 @@ coordinates (x^2 + y^2, "coord"), x values("x") or y values("y")}
 \item{col.col.sup, col.row.sup}{colors for the supplementary column and row 
 points, respectively.}
 
-\item{alpha.col, alpha.row}{controls the transparency of colors. The value can 
-variate from 0 (total transparency) to 1 (no transparency). Default value is
-1. Allowed values include also : "cos2", "contrib", "coord", "x" or "y" as 
+\item{alpha.col, alpha.row}{controls the transparency of colors. The value
+ranges from 0 (total transparency) to 1 (no transparency). Default value is
+1. Allowed values also include "cos2", "contrib", "coord", "x", and "y", as
 for the arguments col.col and col.row.}
 
 \item{select.col, select.row}{a selection of columns/rows to be drawn. Allowed 
@@ -113,12 +113,12 @@ with OR (an element is kept if it matches any condition), e.g. named items
 \emph{plus} the top-cos2 ones. }}
 
 \item{label}{a character vector specifying the elements to be labelled. 
-Default value is "all". Allowed values are "none" or the combination of 
+Default value is "all". Allowed values are "all", "none", or a combination of
 c("row", "row.sup", "col", "col.sup"). Use "col" to label only active column
 variables; "col.sup" to label only supplementary columns; etc}
 
 \item{invisible}{a character value specifying the elements to be hidden on the
-plot. Default value is "none". Allowed values are the combination of 
+plot. Default value is "none". Allowed values are "all", "none", or a combination of
 c("row", "row.sup","col", "col.sup").}
 
 \item{arrows}{Vector of two logicals specifying if the plot should contain 
@@ -135,10 +135,9 @@ Correspondence analysis (CA) is an extension of Principal
  Component Analysis (PCA) suited to analyze frequencies formed by two 
  categorical variables. fviz_ca() provides ggplot2-based elegant 
  visualization of CA outputs from the R functions: CA [in FactoMineR], ca [in
- ca], coa [in ade4], correspondence [in MASS] and expOutput/epCA [in
- ExPosition]. Read more: 
- \href{https://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/113-ca-correspondence-analysis-in-r-essentials/}{Correspondence
-  Analysis}
+ ca], coa [in ade4], correspondence [in MASS] and expoOutput/epCA [in
+ ExPosition]. Read more:
+ \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
  
  \itemize{ \item fviz_ca_row(): Graph of row variables \item fviz_ca_col():
  Graph of column variables \item fviz_ca_biplot(): Biplot of row and column
@@ -179,12 +178,12 @@ res.ca <- CA(housetasks, graph=FALSE)
 
 # Biplot of rows and columns
 # ++++++++++++++++++++++++++
-# Symetric Biplot of rows and columns
+# Symmetric biplot of rows and columns
 fviz_ca_biplot(res.ca)
 
-# Asymetric biplot, use arrows for columns
+# Asymmetric biplot, use arrows for columns
 fviz_ca_biplot(res.ca, map ="rowprincipal",
- arrow = c(FALSE, TRUE))
+ arrows = c(FALSE, TRUE))
  
 # Keep only the labels for row points
 fviz_ca_biplot(res.ca, label ="row")
@@ -243,10 +242,11 @@ fviz_ca_col(res.ca, select.col = list(contrib = 3))
  
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
 }
 \seealso{
-\code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}
+\code{\link{get_ca}}, \code{\link{fviz_pca}}, \code{\link{fviz_mca}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/correspondence-analysis}{Correspondence Analysis (CA) in R: Contingency Tables, Biplot & Interpretation}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

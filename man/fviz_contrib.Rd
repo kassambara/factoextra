@@ -45,14 +45,18 @@ PCA or MCA; "var", "ind", "quanti.var", "quali.var" and "group" for FAMD, MFA an
 
 \item{color}{an outline color for the bar plot.}
 
-\item{sort.val}{a string specifying whether the value should be sorted. 
+\item{sort.val}{a string specifying whether the value should be sorted.
 Allowed values are "none" (no sorting), "asc" (for ascending) or "desc" (for descending).}
 
 \item{top}{a numeric value specifying the number of top elements to be shown.}
 
 \item{xtickslab.rt}{rotation angle for x axis tick labels. Default is 45 degrees.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
@@ -78,6 +82,8 @@ This function can be used to visualize the contribution of rows/columns
 from the results of Principal Component Analysis (PCA),
 Correspondence Analysis (CA), Multiple Correspondence Analysis (MCA), Factor Analysis of Mixed Data (FAMD),
 and Multiple Factor Analysis (MFA) functions.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \details{
 The function fviz_contrib() creates a barplot of row/column contributions.
@@ -162,7 +168,11 @@ fviz_contrib(res.mfa, choice ="quali.var", axes = 1)
  }
 }
 \references{
-\url{https://www.sthda.com/english/}
+\url{https://www.datanovia.com/learn/}
+}
+\seealso{
+\code{\link{fviz_cos2}}, \code{\link{get_pca}}.
+  Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/dimension-reduction/principal-component-analysis}{Principal Component Analysis (PCA) in R: Compute, Visualize & Interpret}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}

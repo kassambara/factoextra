@@ -34,14 +34,20 @@ fviz_cluster(
 )
 }
 \arguments{
-\item{object}{an object of class "partition" created by the functions pam(),
-clara() or fanny() in cluster package; "kmeans" [in stats package]; "dbscan"
-[in fpc package]; "Mclust" [in mclust]; "hkmeans", "eclust" [in factoextra].
-Possible value are also any list object with data and cluster components
-(e.g.: object = list(data = mydata, cluster = myclust)).}
+\item{object}{an object of class "partition" created by \code{pam()},
+\code{clara()}, or \code{fanny()} [cluster]; "kmeans" [stats]; "dbscan"
+[fpc]; "Mclust" [mclust]; or "hkmeans" or "eclust" [factoextra]. A custom
+list may instead contain \code{data} plus either \code{cluster} or
+\code{clustering}. When the assignments and the data both carry complete,
+unique, matching names, the assignments are aligned to the data rows by name;
+otherwise they are used in their given (positional) order. The exception is a
+clustering fitted from dissimilarities and plotted with external \code{data}:
+complete, unique, non-matching name sets are rejected because positional use
+would attach clusters to the wrong observations.}
 
-\item{data}{the data that has been used for clustering. Required only when
-object is a class of kmeans or dbscan.}
+\item{data}{the data used for clustering. It is required for kmeans and dbscan
+objects, and for partition or hcut objects fitted from dissimilarities when
+those objects do not retain the original observations.}
 
 \item{choose.vars}{a character vector containing variables to be considered
 for plotting.}
@@ -57,8 +63,8 @@ plotted.}
 values are the combination of c("point", "text"). Use "point" (to show only
 points);  "text" to show only labels; c("point", "text") to show both types.}
 
-\item{repel}{a boolean, whether to use ggrepel to avoid overplotting text
-labels or not. The old \code{jitter} argument is kept for backward
+\item{repel}{logical; whether to use ggrepel to avoid overplotting text
+labels. The old \code{jitter} argument is kept for backward
 compatibility and is converted to \code{repel = TRUE} with a deprecation warning.}
 
 \item{show.clust.cent}{logical; if TRUE, shows cluster centers}
@@ -93,7 +99,11 @@ respectively.}
 \item{outlier.pointsize, outlier.color, outlier.shape, outlier.labelsize}{arguments for customizing outliers, which can be detected only in DBSCAN
 clustering.}
 
-\item{ggtheme}{function, ggplot2 theme name. Default value is theme_pubr().
+\item{ggtheme}{function, ggplot2 theme name. The default is set by each
+function's \code{ggtheme} argument; see the function usage for the actual
+default. Set \code{ggtheme = NULL} to skip applying a ggpubr theme, so the
+plot keeps ggplot2 default theme or the theme set globally via
+\code{theme_set()}.
 Allowed values include ggplot2 official themes: theme_gray(), theme_bw(),
 theme_minimal(), theme_classic(), theme_void(), ....}
 
@@ -126,6 +136,8 @@ Provides ggplot2-based elegant visualization of partitioning
  using principal components if ncol(data) > 2. An ellipse is drawn around
  each cluster. When \code{stand = TRUE}, the plotting data must remain
  finite after scaling.
+
+Read more: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
 }
 \examples{
 set.seed(123)
@@ -159,13 +171,13 @@ fviz_cluster(km.res, iris[, -5], geom = "text")
 # PAM clustering
 # ++++++++++++++++++++
 requireNamespace("cluster", quietly = TRUE)
-pam.res <- pam(iris.scaled, 3)
+pam.res <- cluster::pam(iris.scaled, 3)
  # Visualize pam clustering
 fviz_cluster(pam.res, geom = "point", ellipse.type = "norm")
 
 # Hierarchical clustering
 # ++++++++++++++++++++++++
-# Use hcut() which compute hclust and cut the tree
+# Use hcut(), which computes hclust and cuts the tree
 hc.cut <- hcut(iris.scaled, k = 3, hc_method = "complete")
 # Visualize dendrogram
 fviz_dend(hc.cut, show_labels = FALSE, rect = TRUE)
@@ -179,7 +191,8 @@ fviz_cluster(hc.cut, ellipse.type = "convex")
 }
 \seealso{
 \code{\link{fviz_silhouette}}, \code{\link{hcut}},
- \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}
+ \code{\link{hkmeans}},  \code{\link{eclust}}, \code{\link{fviz_dend}}.
+ Online tutorial: \href{https://www.datanovia.com/learn/machine-learning/clustering/kmeans}{K-Means Clustering in R: Algorithm, Visualization & Interpretation}.
 }
 \author{
 Alboukadel Kassambara \email{alboukadel.kassambara@gmail.com}
