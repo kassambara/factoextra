@@ -134,7 +134,7 @@ The current maintenance baseline targets:
 library("factoextra")
 ```
 
-## What's new in the development version
+## What's new in 2.2.0
 
 - **tidymodels on-ramp**: a PCA fitted in a `recipes` recipe (`step_pca()`) or a fitted `workflow` plots directly with the `fviz_pca_*` family via `as_factoextra_pca()` (honest scree, real variable-component correlations)
 - **UMAP / t-SNE**: `fviz_umap()` and `fviz_tsne()` visualize a 2-D embedding (from `uwot`, `Rtsne`, `umap`, or a coordinate matrix), including colouring by a continuous feature value; axes carry no percentage and there is no scree/loadings surface (embeddings have no eigenvalues). Read more: [UMAP](https://www.datanovia.com/learn/machine-learning/dimension-reduction/umap) and [t-SNE](https://www.datanovia.com/learn/machine-learning/dimension-reduction/t-sne)

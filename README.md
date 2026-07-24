@@ -164,7 +164,7 @@ The current maintenance baseline targets:
 library("factoextra")
 ```
 
-## What’s new in the development version
+## What’s new in 2.2.0
 
   - **tidymodels on-ramp**: a PCA fitted in a `recipes` recipe
     (`step_pca()`) or a fitted `workflow` plots directly with the
